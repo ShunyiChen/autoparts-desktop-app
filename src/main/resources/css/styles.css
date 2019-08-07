@@ -1,0 +1,29 @@
+.label {
+    -fx-text-fill: rgb(108,108,108);
+}
+
+//toolbar
+#bg {
+    -fx-background-color: rgb(63,81,181);
+}
+#dockedleft_bg {
+     -fx-background-color: white;
+}
+#title{
+    -fx-font-size:18;
+    -fx-font-weight:bold;
+    -fx-text-fill: white;
+}
+
+
+//clickableitem
+#clickableitem_selected_bg {
+    -fx-background-color: lightgrey;
+}
+#clickableitem_bg {
+    -fx-background-color: white;
+}
+//Navigation
+#navigation_bg {
+    -fx-background-color: white;
+}

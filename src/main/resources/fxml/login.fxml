@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.Reflection?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.shunyi.spareparts.ui.LoginController">
+  <children>
+    <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+      <children>
+            <Label layoutX="159.0" layoutY="92.0" text="用户名:">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <TextField fx:id="userNameTxtField" layoutX="222.0" layoutY="88.0" prefHeight="29.0" prefWidth="208.0">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </TextField>
+            <PasswordField fx:id="passwordField" layoutX="222.0" layoutY="141.0" prefHeight="29.0" prefWidth="208.0">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </PasswordField>
+            <CheckBox layoutX="222.0" layoutY="192.0" mnemonicParsing="false" text="记住用户名" />
+            <CheckBox layoutX="337.0" layoutY="192.0" mnemonicParsing="false" text="下次自动登录" />
+            <Button layoutX="222.0" layoutY="226.0" mnemonicParsing="false" onAction="#loggingIn" prefHeight="34.0" prefWidth="208.0" text="登  录">
+               <font>
+                  <Font size="16.0" />
+               </font>
+               <effect>
+                  <Reflection />
+               </effect>
+            </Button>
+            <Label layoutX="167.0" layoutY="145.0" text="密码:">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+      </children>
+    </AnchorPane>
+  </children>
+</VBox>
