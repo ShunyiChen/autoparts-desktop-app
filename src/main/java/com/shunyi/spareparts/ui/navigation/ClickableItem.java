@@ -10,24 +10,29 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
+import javafx.util.Callback;
 
 
 public class ClickableItem extends HBox implements EventHandler<MouseEvent>{
     private Image icon;
     private String txt;
     private Label rightTxt;
+    private Callback action;
     private static final int DEFAULT_ITEM_HEIGHT = 50;
     private static final int DEFAULT_FONT_SIZE = 16;
     public static final int DEFAULT_MAX_WIDTH = 240;
     public static final int DEFAULT_MINI_WIDTH = 60;
+
     /**
      *
      * @param icon
      * @param txt
+     * @param action
      */
-    public ClickableItem(Image icon, String txt) {
+    public ClickableItem(Image icon, String txt, Callback action) {
         this.icon = icon;
         this.txt = txt;
+        this.action = action;
         initComponents();
     }
 
@@ -48,6 +53,7 @@ public class ClickableItem extends HBox implements EventHandler<MouseEvent>{
     private void initEvents() {
         this.setOnMouseEntered(this);
         this.setOnMouseExited(this);
+        this.setOnMouseReleased(this);
     }
 
     @Override
@@ -57,6 +63,9 @@ public class ClickableItem extends HBox implements EventHandler<MouseEvent>{
         }
         else if (MouseEvent.MOUSE_EXITED.getName().equals(event.getEventType().getName())) {
             this.setId("clickableitem_bg");
+        }
+        else if (MouseEvent.MOUSE_RELEASED.getName().equals(event.getEventType().getName())) {
+            action.call("");
         }
     }
 

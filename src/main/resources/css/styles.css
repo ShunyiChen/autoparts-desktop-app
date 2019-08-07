@@ -15,6 +15,14 @@
     -fx-text-fill: white;
 }
 
+//ContentPane
+#contentpane_bg {
+    -fx-background-color: white;
+    -fx-background-radius: 5px;
+    -fx-border-radius: 5px;
+    -fx-border-color: rgb(235,235,235)
+}
+
 
 //clickableitem
 #clickableitem_selected_bg {
