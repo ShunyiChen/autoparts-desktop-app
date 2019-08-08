@@ -1,10 +1,10 @@
 package com.shunyi.spareparts.ui.purchase;
 
-import com.shunyi.spareparts.ui.LoginController;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Separator;
+import javafx.scene.control.TableView;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -24,6 +24,8 @@ public class PurchaseOrderForm extends BorderPane {
         Button btnSave = new Button("保存");
         Button btnCancel = new Button("作废");
         Button btnSubmit = new Button("结算");
+
+        btnSave.setDisable(true);
 
         btnNew.setFont(Font.font(16));
         btnSave.setFont(Font.font(16));
@@ -48,10 +50,31 @@ public class PurchaseOrderForm extends BorderPane {
             e.printStackTrace();
         }
         root.setPadding(new Insets(10));
+
+        TableView table = dataTable();
+
         BorderPane mainForm = new BorderPane();
         mainForm.setTop(root);
-        mainForm.setCenter(new Button("1221"));
+        mainForm.setCenter(table);
 
+
+        table.prefWidthProperty().bind(mainForm.widthProperty());
+        table.prefHeightProperty().bind(mainForm.heightProperty().subtract(90));
         return mainForm;
+    }
+
+    private TableView dataTable() {
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource(
+                        "/fxml/purchase_data_table.fxml"
+                )
+        );
+        TableView root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return root;
     }
 }

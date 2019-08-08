@@ -11,13 +11,12 @@ import javafx.util.Callback;
 
 
 public class Dashboard extends BorderPane {
-
     private MainApp application;
     private Toolbar toolbar;
     private Navigation navigation;
     private ContentPane contentPane;
 
-    PurchaseOrderForm form = new PurchaseOrderForm();
+    private PurchaseOrderForm form = new PurchaseOrderForm();
 
     /**
      * Constructor

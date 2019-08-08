@@ -5,6 +5,7 @@ module desktopapp {
     
     opens com.shunyi.spareparts.ui to javafx.fxml;
     exports com.shunyi.spareparts.ui;
+    exports com.shunyi.spareparts.ui.purchase;
 //    opens org.openjfx to javafx.fxml;
 //    exports org.openjfx;
 }
