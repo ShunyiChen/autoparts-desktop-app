@@ -35,3 +35,15 @@
 #navigation_bg {
     -fx-background-color: white;
 }
+
+//Purchase tableview
+.table-row-cell:selected {
+   -fx-background-color: rgb(63,81,181);
+   -fx-text-background-color: white;
+}
+.table-view .table-cell{
+    /* -fx-font-weight:bold; */
+    -fx-font-size:14px;           //the font size you asked in the comments below
+    /* -fx-text-fill:orange; */
+
+}
