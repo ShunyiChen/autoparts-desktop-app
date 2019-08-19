@@ -52,6 +52,10 @@ public class MainApp extends Application {
         return scene;
     }
 
+    public Stage getStage() {
+        return stage;
+    }
+
     public Dashboard getDashboard() {
         return dashboard;
     }

@@ -22,8 +22,8 @@ public class Navigation extends VBox {
         this.prefHeightProperty().bind(application.getScene().heightProperty());
     }
 
-    public void addClickableItem(ClickableItem item) {
-        this.getChildren().add(item);
+    public void addClickableItem(ClickableItem... items) {
+        this.getChildren().addAll(items);
     }
 
     public void minimize(boolean bool) {

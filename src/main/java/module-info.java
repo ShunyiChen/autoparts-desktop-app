@@ -10,6 +10,9 @@ module desktopapp {
     exports com.shunyi.spareparts.ui.purchase;
     exports com.shunyi.spareparts.ui.purchase.model;
     exports com.shunyi.spareparts.ui.purchase.example;
+    exports com.shunyi.spareparts.ui.supplier;
+
+    opens com.shunyi.spareparts.ui.supplier;
 //    opens org.openjfx to javafx.fxml;
 //    exports org.openjfx;
 }

@@ -1,5 +1,6 @@
 package com.shunyi.spareparts.ui.purchase.model;
 
+import com.shunyi.spareparts.ui.common.BaseModel;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleLongProperty;
@@ -8,10 +9,10 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.util.Callback;
 
-import java.util.HashMap;
-import java.util.Map;
-
-public class Order {
+/**
+ * 配件模型
+ */
+public class Sparepart extends BaseModel {
 
     /** ID */
     private SimpleLongProperty id;
@@ -42,22 +43,8 @@ public class Order {
     /** 货位 */
     private SimpleStringProperty position;
 
+    private Callback<Sparepart, Void> comparator;
 
-    public boolean isCellValueUpdated() {
-        return updates.containsValue(true);
-    }
-
-    private Map<String, Boolean> updates = new HashMap<>();
-
-    private Callback<Boolean, Void> updateEvent;
-
-    public Callback<Boolean, Void> getUpdateEvent() {
-        return updateEvent;
-    }
-
-    public void setUpdateEvent(Callback<Boolean, Void> updateEvent) {
-        this.updateEvent = updateEvent;
-    }
 
     /**
      * Constructor
@@ -76,7 +63,7 @@ public class Order {
      * @param capitationPrice 均摊单价
      * @param position 货位
      */
-    public Order(String code, String name, String unit, Integer count, Double priceExcludingTax, Double amountExcludingTax, String warehouse, Integer num, String notes, String model, String brand, Double capitationPrice, String position) {
+    public Sparepart(String code, String name, String unit, Integer count, Double priceExcludingTax, Double amountExcludingTax, String warehouse, Integer num, String notes, String model, String brand, Double capitationPrice, String position) {
         this.code = new SimpleStringProperty(code);
         this.name = new SimpleStringProperty(name);
         this.unit = new SimpleStringProperty(unit);
@@ -90,37 +77,22 @@ public class Order {
         this.brand = new SimpleStringProperty(brand);
         this.capitationPrice = new SimpleDoubleProperty(capitationPrice);
         this.position = new SimpleStringProperty(position);
-
         initEvents();
     }
 
     private void initEvents() {
-        updates.put("code", false);
-        updates.put("name", false);
-        updates.put("unit", false);
-        updates.put("count", false);
-        updates.put("priceExcludingTax", false);
-        updates.put("amountExcludingTax", false);
-        updates.put("warehouse", false);
-        updates.put("num", false);
-        updates.put("notes", false);
-        updates.put("model", false);
-        updates.put("brand", false);
-        updates.put("capitationPrice", false);
-        updates.put("position", false);
-
         this.code.addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                updates.put("code", !oldValue.equals(newValue));
-                updateEvent.call(isCellValueUpdated());
+                if(comparator != null)
+                    comparator.call(Sparepart.this);
             }
         });
         this.name.addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                updates.put("name", !oldValue.equals(newValue));
-                updateEvent.call(isCellValueUpdated());
+                if(comparator != null)
+                    comparator.call(Sparepart.this);
             }
         });
     }
@@ -291,5 +263,33 @@ public class Order {
 
     public void setPosition(String position) {
         this.position.set(position);
+    }
+
+    public Callback<Sparepart, Void> getComparator() {
+        return comparator;
+    }
+
+    public void setComparator(Callback<Sparepart, Void> comparator) {
+        this.comparator = comparator;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Sparepart sparepart = (Sparepart) o;
+        if(code.get().equals(sparepart.getCode())
+                && name.get().equals(sparepart.getName())) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name.hashCode();
+        result = 31 * result + code.hashCode();
+        return result;
     }
 }
