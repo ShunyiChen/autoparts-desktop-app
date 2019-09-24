@@ -1,6 +1,7 @@
-package com.shunyi.spareparts.ui.navigation;
+package com.shunyi.spareparts.ui.dashboard;
 
 import com.shunyi.spareparts.ui.MainApp;
+import com.shunyi.spareparts.ui.dashboard.ClickableItem;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 

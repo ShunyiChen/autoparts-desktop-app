@@ -45,32 +45,26 @@
                               <Font size="13.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="codeField" GridPane.columnIndex="1">
-                           <font>
-                              <Font size="13.0" />
-                           </font>
+                        <TextField fx:id="codeField" prefHeight="30.0" prefWidth="99.0" GridPane.columnIndex="1">
+
                         </TextField>
                         <Label alignment="CENTER" text="联系人（L）" GridPane.columnIndex="2">
                            <font>
                               <Font size="13.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="contactsField" GridPane.columnIndex="3">
-                           <font>
-                              <Font size="13.0" />
-                           </font>
+                        <TextField fx:id="contactsField" prefHeight="30.0" prefWidth="106.0" GridPane.columnIndex="3">
+
                         </TextField>
                         <Label alignment="CENTER" prefHeight="18.0" prefWidth="72.0" text="电话（D）" GridPane.columnIndex="4">
                            <font>
                               <Font size="13.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="phoneField" GridPane.columnIndex="5">
-                           <font>
-                              <Font size="13.0" />
-                           </font>
+                        <TextField fx:id="phoneField" prefHeight="30.0" prefWidth="106.0" GridPane.columnIndex="5">
+
                         </TextField>
-                        <Button fx:id="searchButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#search" text="查询（S）" GridPane.columnIndex="6">
+                        <Button fx:id="searchButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#search" prefHeight="30.0" prefWidth="78.0" text="查询（S）" GridPane.columnIndex="6">
                            <font>
                               <Font size="13.0" />
                            </font>
@@ -94,22 +88,18 @@
                               <Font size="13.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="nameField" prefHeight="28.0" prefWidth="215.0" GridPane.columnIndex="1">
-                           <font>
-                              <Font size="13.0" />
-                           </font>
+                        <TextField fx:id="nameField" prefHeight="30.0" prefWidth="221.0" GridPane.columnIndex="1">
+
                         </TextField>
                         <Label alignment="CENTER" text="其他（T）" GridPane.columnIndex="2">
                            <font>
                               <Font size="13.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="otherField" GridPane.columnIndex="3">
-                           <font>
-                              <Font size="13.0" />
-                           </font>
+                        <TextField fx:id="otherField" prefHeight="30.0" prefWidth="169.0" GridPane.columnIndex="3">
+
                         </TextField>
-                        <Button fx:id="clearButton" mnemonicParsing="false" onAction="#cleanAllFields" text="清除（D）" GridPane.columnIndex="4">
+                        <Button fx:id="clearButton" mnemonicParsing="false" onAction="#cleanAllFields" prefHeight="30.0" prefWidth="79.0" text="清除（D）" GridPane.columnIndex="4">
                            <font>
                               <Font size="13.0" />
                            </font>

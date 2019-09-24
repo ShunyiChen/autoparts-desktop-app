@@ -8,8 +8,8 @@ module desktopapp {
     opens com.shunyi.spareparts.ui to javafx.fxml;
     exports com.shunyi.spareparts.ui;
     exports com.shunyi.spareparts.ui.purchase;
-    exports com.shunyi.spareparts.ui.purchase.model;
-    exports com.shunyi.spareparts.ui.purchase.example;
+    exports com.shunyi.spareparts.ui.model;
+//    exports com.shunyi.spareparts.ui.purchase.example;
     exports com.shunyi.spareparts.ui.supplier;
 
     opens com.shunyi.spareparts.ui.supplier;

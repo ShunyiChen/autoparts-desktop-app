@@ -1,4 +1,4 @@
-package com.shunyi.spareparts.ui.purchase.model;
+package com.shunyi.spareparts.ui.model;
 
 import com.shunyi.spareparts.ui.common.BaseModel;
 import javafx.beans.property.SimpleDoubleProperty;

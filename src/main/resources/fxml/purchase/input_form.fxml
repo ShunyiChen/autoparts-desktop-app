@@ -28,27 +28,27 @@
    <children>
       <Label alignment="CENTER" prefHeight="22.0" prefWidth="81.0" text="发票" GridPane.columnIndex="6">
          <font>
-            <Font size="16.0" />
+            <Font size="14.0" />
          </font>
       </Label>
       <Label prefHeight="22.0" prefWidth="89.0" text="供应商编码">
          <font>
-            <Font size="16.0" />
+            <Font size="14.0" />
          </font>
       </Label>
       <Label prefHeight="22.0" prefWidth="92.0" text="供应商名称" GridPane.rowIndex="1">
          <font>
-            <Font size="16.0" />
+            <Font size="14.0" />
          </font>
       </Label>
       <HBox alignment="CENTER" prefHeight="29.0" prefWidth="135.0" GridPane.columnIndex="1">
          <children>
-            <TextField prefHeight="28.0" prefWidth="146.0">
+            <TextField prefHeight="30.0" prefWidth="143.0">
                <font>
                   <Font size="14.0" />
                </font>
             </TextField>
-            <Button fx:id="btnChooser" mnemonicParsing="false" onAction="#chooseSupplier" prefHeight="28.0" prefWidth="28.0" text="C">
+            <Button fx:id="btnChooser" mnemonicParsing="false" onAction="#chooseSupplier" prefHeight="28.0" prefWidth="28.0" text="供">
                <font>
                   <Font size="14.0" />
                </font>
@@ -57,56 +57,56 @@
       </HBox>
       <Label alignment="CENTER" prefHeight="22.0" prefWidth="83.0" text="联系人" GridPane.columnIndex="2">
          <font>
-            <Font size="16.0" />
+            <Font size="14.0" />
          </font>
       </Label>
       <Label alignment="CENTER" prefHeight="22.0" prefWidth="81.0" text="电话" GridPane.columnIndex="2" GridPane.rowIndex="1">
          <font>
-            <Font size="16.0" />
+            <Font size="14.0" />
          </font>
       </Label>
-      <TextField prefHeight="5.0" prefWidth="0.0" GridPane.columnIndex="3">
+      <TextField prefHeight="30.0" prefWidth="195.0" GridPane.columnIndex="3">
          <font>
             <Font size="14.0" />
          </font>
       </TextField>
-      <ComboBox prefHeight="31.0" prefWidth="161.0" GridPane.columnIndex="5" />
-      <TextField GridPane.columnIndex="7">
+      <ComboBox prefHeight="30.0" prefWidth="161.0" GridPane.columnIndex="5" />
+      <TextField prefHeight="30.0" prefWidth="210.0" GridPane.columnIndex="7">
          <font>
             <Font size="14.0" />
          </font>
       </TextField>
-      <TextField prefHeight="29.0" prefWidth="78.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+      <TextField prefHeight="30.0" prefWidth="172.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
          <font>
             <Font size="14.0" />
          </font>
       </TextField>
-      <TextField GridPane.columnIndex="3" GridPane.rowIndex="1">
+      <TextField prefHeight="30.0" prefWidth="195.0" GridPane.columnIndex="3" GridPane.rowIndex="1">
          <font>
             <Font size="14.0" />
          </font>
       </TextField>
       <Label alignment="CENTER" prefHeight="22.0" prefWidth="91.0" text="发票类型" GridPane.columnIndex="4">
          <font>
-            <Font size="16.0" />
+            <Font size="14.0" />
          </font>
       </Label>
       <Label alignment="CENTER" prefHeight="22.0" prefWidth="93.0" text="运费" GridPane.columnIndex="4" GridPane.rowIndex="1">
          <font>
-            <Font size="16.0" />
+            <Font size="14.0" />
          </font>
       </Label>
-      <TextField GridPane.columnIndex="5" GridPane.rowIndex="1">
+      <TextField prefHeight="30.0" prefWidth="161.0" GridPane.columnIndex="5" GridPane.rowIndex="1">
          <font>
             <Font size="14.0" />
          </font>
       </TextField>
       <Label alignment="CENTER" prefHeight="22.0" prefWidth="77.0" text="备注" GridPane.columnIndex="6" GridPane.rowIndex="1">
          <font>
-            <Font size="16.0" />
+            <Font size="14.0" />
          </font>
       </Label>
-      <TextField GridPane.columnIndex="7" GridPane.rowIndex="1">
+      <TextField prefHeight="30.0" prefWidth="210.0" GridPane.columnIndex="7" GridPane.rowIndex="1">
          <font>
             <Font size="14.0" />
          </font>

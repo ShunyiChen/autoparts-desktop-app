@@ -2,7 +2,8 @@ package com.shunyi.spareparts.ui.purchase;
 
 import com.shunyi.spareparts.ui.MainApp;
 import com.shunyi.spareparts.ui.common.EditingCell;
-import com.shunyi.spareparts.ui.purchase.model.Sparepart;
+import com.shunyi.spareparts.ui.dashboard.SwitchContainer;
+import com.shunyi.spareparts.ui.model.Sparepart;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -22,7 +23,7 @@ import javafx.util.Callback;
 import java.io.IOException;
 import java.util.*;
 
-public class PurchaseOrderForm extends BorderPane {
+public class PurchaseOrderForm extends BorderPane implements SwitchContainer {
 
     private MainApp application;
 
@@ -30,9 +31,9 @@ public class PurchaseOrderForm extends BorderPane {
     private Button btnSave = new Button("保存");
     private Button btnDelete = new Button("作废");
     private Button btnSubmit = new Button("结算");
-
+    private Button btnPrint = new Button("打印");
+    private Button btnSettings = new Button("设置");
     private TableView<Sparepart> table;
-
     private TableColumn codeCol = new TableColumn("配件编码");
     private TableColumn nameCol = new TableColumn("名称");
 
@@ -58,12 +59,12 @@ public class PurchaseOrderForm extends BorderPane {
         btnSave.setFont(Font.font(16));
         btnDelete.setFont(Font.font(16));
         btnSubmit.setFont(Font.font(16));
-
-        toolBar.getItems().addAll(btnNew, new Separator(),btnSave, btnDelete, btnSubmit, new Separator());
+        btnPrint.setFont(Font.font(16));
+        btnSettings.setFont(Font.font(16));
+        toolBar.getItems().addAll(btnNew, new Separator(),btnSave, btnDelete, btnSubmit, new Separator(), btnPrint, btnSettings);
         this.setTop(toolBar);
         this.setCenter(form());
-
-        initActions();
+        initEvents();
     }
 
     private BorderPane form() {
@@ -103,7 +104,6 @@ public class PurchaseOrderForm extends BorderPane {
                 deleteSelectedRows();
             }
         });
-
         cm.getItems().add(mi2);
         table.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
 
@@ -114,17 +114,15 @@ public class PurchaseOrderForm extends BorderPane {
                 }
             }
         });
-
         BorderPane mainForm = new BorderPane();
         mainForm.setTop(root);
         mainForm.setCenter(table);
-
         table.prefWidthProperty().bind(mainForm.widthProperty());
         table.prefHeightProperty().bind(mainForm.heightProperty().subtract(90));
         return mainForm;
     }
 
-    private void initActions() {
+    private void initEvents() {
         btnNew.setOnAction(e -> {
             newItem();
         });
@@ -136,6 +134,12 @@ public class PurchaseOrderForm extends BorderPane {
         });
         btnSubmit.setOnAction(e -> {
             submit();
+        });
+        btnPrint.setOnAction(e -> {
+            print();
+        });
+        btnSettings.setOnAction(e -> {
+            settings();
         });
     }
 
@@ -171,12 +175,10 @@ public class PurchaseOrderForm extends BorderPane {
         TableView.TableViewSelectionModel selectionModel = table.getSelectionModel();
         selectionModel.clearSelection();
         selectionModel.select(0);
-
     }
 
     private void save() {
         initOldDataList();
-
         btnSave.setDisable(true);
     }
 
@@ -195,6 +197,14 @@ public class PurchaseOrderForm extends BorderPane {
     private void submit() {
         table.getItems().clear();
         btnSave.setDisable(true);
+    }
+
+    private void print() {
+
+    }
+
+    private void settings() {
+
     }
 
     private void initOldDataList() {
@@ -280,5 +290,15 @@ public class PurchaseOrderForm extends BorderPane {
             }
         });
         return root;
+    }
+
+    @Override
+    public void willShow() {
+
+    }
+
+    @Override
+    public void willClose() {
+
     }
 }

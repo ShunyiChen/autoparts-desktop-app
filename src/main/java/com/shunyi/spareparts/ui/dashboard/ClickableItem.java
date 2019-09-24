@@ -1,4 +1,4 @@
-package com.shunyi.spareparts.ui.navigation;
+package com.shunyi.spareparts.ui.dashboard;
 
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
