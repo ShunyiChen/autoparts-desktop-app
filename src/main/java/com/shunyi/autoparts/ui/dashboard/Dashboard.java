@@ -1,29 +1,19 @@
 package com.shunyi.autoparts.ui.dashboard;
 
 import com.shunyi.autoparts.ui.MainApp;
-import com.shunyi.autoparts.ui.purchase.PurchaseOrder;
-import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
-import javafx.util.Callback;
+import com.shunyi.autoparts.ui.main.BaseContainer;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.chart.*;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 
+public class Dashboard extends VBox implements BaseContainer {
 
-public class Dashboard extends BorderPane {
     private MainApp application;
-    private TitleBar toolbar;
-    private Navigation navigation;
-    private ContentPane contentPane;
-    private BaseContainer currentContainer;
-    private PurchaseOrder purchaseContainer;
-    private Image ICON_1 = new Image(getClass().getResourceAsStream("/img/grid.png"));
-    private Image ICON_2 = new Image(getClass().getResourceAsStream("/img/purchase.png"));
-    private Image ICON_3 = new Image(getClass().getResourceAsStream("/img/return.png"));
-    private Image ICON_4 = new Image(getClass().getResourceAsStream("/img/stats.png"));
-    private Image ICON_5 = new Image(getClass().getResourceAsStream("/img/return.png"));
+
 
     /**
-     * Constructor
      *
      * @param application
      */
@@ -33,69 +23,89 @@ public class Dashboard extends BorderPane {
     }
 
     private void initComponents() {
-        toolbar = new TitleBar(application);
-        navigation = new Navigation(application);
-        contentPane = new ContentPane();
-        contentPane.getViewport().setCenter(new Label("无显示内容"));
-        purchaseContainer = new PurchaseOrder(application);
-        this.setTop(toolbar);
-        this.setLeft(navigation);
-        this.setCenter(contentPane);
-        initEvents();
+        NumberAxis xAxis;
+        NumberAxis yAxis;
+        StackedAreaChart chart;
+        xAxis = new NumberAxis("X Values", 1.0d, 9.0d, 2.0d);
+        yAxis = new NumberAxis("Y Values", 0.0d, 30.0d, 2.0d);
+        ObservableList<StackedAreaChart.Series> areaChartData =
+                FXCollections.observableArrayList(
+                        new StackedAreaChart.Series("Series 1",
+                                FXCollections.observableArrayList(
+                                        new StackedAreaChart.Data(0,4),
+                                        new StackedAreaChart.Data(2,5),
+                                        new StackedAreaChart.Data(4,4),
+                                        new StackedAreaChart.Data(6,2),
+                                        new StackedAreaChart.Data(8,6),
+                                        new StackedAreaChart.Data(10,8)
+                                )),
+                        new StackedAreaChart.Series("Series 2",
+                                FXCollections.observableArrayList(
+                                        new StackedAreaChart.Data(0,8),
+                                        new StackedAreaChart.Data(2,2),
+                                        new StackedAreaChart.Data(4,9),
+                                        new StackedAreaChart.Data(6,7),
+                                        new StackedAreaChart.Data(8,5),
+                                        new StackedAreaChart.Data(10,7)
+                                )),
+                        new StackedAreaChart.Series("Series 3",
+                                FXCollections.observableArrayList(
+                                        new StackedAreaChart.Data(0,2),
+                                        new StackedAreaChart.Data(2,5),
+                                        new StackedAreaChart.Data(4,8),
+                                        new StackedAreaChart.Data(6,6),
+                                        new StackedAreaChart.Data(8,9),
+                                        new StackedAreaChart.Data(10,7)
+                                ))
+                );
+        chart = new StackedAreaChart(xAxis, yAxis, areaChartData);
+        this.getChildren().add(chart);
+
+        HBox hLayout = new HBox();
+
+        PieChart chart2;
+        ObservableList<PieChart.Data> data = FXCollections.observableArrayList(
+                new PieChart.Data("Sun", 20),
+                new PieChart.Data("IBM", 12),
+                new PieChart.Data("HP", 25),
+                new PieChart.Data("Dell", 22),
+                new PieChart.Data("Apple", 30));
+        chart2 = new PieChart(data);
+        chart2.setClockwise(false);
+        hLayout.getChildren().add(chart2);
+
+        BarChart chart3;
+        CategoryAxis xAxis3;
+        NumberAxis yAxis3;
+        final String imageBarChartCss =
+                getClass().getResource("/css/ImageBarChart.css").toExternalForm();
+        xAxis3 = new CategoryAxis();
+        yAxis3 = new NumberAxis();
+        chart3 = new BarChart(xAxis3, yAxis3);
+        chart3.setLegendVisible(false);
+        chart3.getStylesheets().add(imageBarChartCss);
+
+        chart3.getData().add(
+                new XYChart.Series<>("Sales Per Product",
+                        FXCollections.observableArrayList(
+                                new XYChart.Data<>("SUV", 120),
+                                new XYChart.Data<>("Sedan", 50),
+                                new XYChart.Data<>("Truck", 180),
+                                new XYChart.Data<>("Van", 20)
+                        )
+                )
+        );
+
+        hLayout.getChildren().add(chart3);
+        this.getChildren().add(hLayout);
     }
 
-    private void initEvents() {
-
-        ClickableItem item1 = new ClickableItem(ICON_1, "仪表盘", new Callback() {
-            @Override
-            public Object call(Object param) {
-                toolbar.setTitle("仪表盘");
-                contentPane.getViewport().setCenter(new Pane());
-                return null;
-            }
-        });
-        ClickableItem item2 = new ClickableItem(ICON_2, "进货单", new Callback() {
-            @Override
-            public Object call(Object param) {
-                toolbar.setTitle("进货单");
-//                contentPane.getViewport().setCenter(new BorderPane());
-                contentPane.getViewport().setCenter((PurchaseOrder)purchaseContainer);
-//                currentContainer = purchaseContainer;
-                return null;
-            }
-        });
-        ClickableItem item3 = new ClickableItem(ICON_3, "采购退货单", new Callback() {
-            @Override
-            public Object call(Object param) {
-                toolbar.setTitle("采购退货单");
-                contentPane.getViewport().setCenter(new Pane());
-                return null;
-            }
-        });
-        ClickableItem item4 = new ClickableItem(ICON_4, "销售单", new Callback() {
-            @Override
-            public Object call(Object param) {
-                toolbar.setTitle("销售单");
-                contentPane.getViewport().setCenter(new Pane());
-                return null;
-            }
-        });
-        ClickableItem item5 = new ClickableItem(ICON_5, "销售退回单", new Callback() {
-            @Override
-            public Object call(Object param) {
-                toolbar.setTitle("销售退回单");
-                contentPane.getViewport().setCenter(new Pane());
-                return null;
-            }
-        });
-        navigation.addClickableItem(item1,item2,item3,item4,item5);
+    @Override
+    public void willOpen() {
     }
 
-    public BaseContainer getCurrentContainer() {
-        return currentContainer;
-    }
+    @Override
+    public void willClose() {
 
-    public Navigation getNavigation() {
-        return navigation;
     }
 }

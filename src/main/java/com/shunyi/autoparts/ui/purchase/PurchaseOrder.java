@@ -2,7 +2,7 @@ package com.shunyi.autoparts.ui.purchase;
 
 import com.shunyi.autoparts.ui.MainApp;
 import com.shunyi.autoparts.ui.common.EditingCell;
-import com.shunyi.autoparts.ui.dashboard.BaseContainer;
+import com.shunyi.autoparts.ui.main.BaseContainer;
 import com.shunyi.autoparts.ui.model.AutoPart;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -52,7 +52,6 @@ public class PurchaseOrder extends BorderPane implements BaseContainer {
     }
 
     private void initComponents() {
-
         btnSave.setDisable(true);
         btnNew.setFont(Font.font(16));
         btnSave.setFont(Font.font(16));

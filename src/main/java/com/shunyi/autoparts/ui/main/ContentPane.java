@@ -1,4 +1,4 @@
-package com.shunyi.autoparts.ui.dashboard;
+package com.shunyi.autoparts.ui.main;
 
 import javafx.geometry.Insets;
 import javafx.scene.layout.*;

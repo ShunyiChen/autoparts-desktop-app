@@ -1,12 +1,12 @@
-package com.shunyi.autoparts.ui;
+package com.shunyi.autoparts.ui.login;
 
+import com.shunyi.autoparts.ui.MainApp;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Hyperlink;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.*;
 import org.apache.commons.lang3.StringUtils;
 
@@ -21,31 +21,29 @@ public class LoginController {
     private TextField userNameTxtField;
     @FXML
     private PasswordField passwordField;
+    @FXML
+    private Button button;
     private MainApp application;
-
-    public void setApp(MainApp application){
-        this.application = application;
-    }
 
     @FXML
     public void loggingIn(ActionEvent event) {
-        System.out.println("用户名:"+userNameTxtField.getText()+" 密码:"+passwordField.getText());
         if(StringUtils.isEmpty(userNameTxtField.getText().trim())) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("用户名密码输入错误提醒");
             alert.setHeaderText("用户名不能为空！");
             alert.showAndWait();
         } else {
-            System.out.println("application="+application);
             try {
                 application.gotoDashboard();
+                System.out.println("Logged in successfully.");
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
 
-    public void initialize() {
+    public void initialize(MainApp application) {
+        this.application = application;
         String javaVersion = System.getProperty("java.version");
         String javafxVersion = System.getProperty("javafx.version");
 //        label.setText("Hello, JavaFX " + javafxVersion + "\nRunning on Java " + javaVersion + ".");
@@ -57,8 +55,15 @@ public class LoginController {
         bgBox.setBackground(new Background(myBI));
         bgBox.setOpacity(0.2);
 
-        titleLink.setVisited(false);
-//        titleLink.
+        application.getScene().getAccelerators().put(
+                new KeyCodeCombination(KeyCode.ENTER),
+                new Runnable() {
+                    @FXML public void run() {
+
+                        button.fire();
+                    }
+                }
+        );
     }
 
 }

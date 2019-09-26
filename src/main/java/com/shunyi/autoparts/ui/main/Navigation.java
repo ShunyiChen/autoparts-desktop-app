@@ -1,4 +1,4 @@
-package com.shunyi.autoparts.ui.dashboard;
+package com.shunyi.autoparts.ui.main;
 
 import com.shunyi.autoparts.ui.MainApp;
 import javafx.scene.layout.*;

@@ -1,0 +1,21 @@
+
+.chart {
+    -fx-font-size: 0.9em;
+}
+.chart-bar {
+    -fx-background-color: rgba(0,168,355,0.05);
+    -fx-border-color: rgba(0,168,355,0.3) rgba(0,168,355,0.3) transparent rgba(0,168,355,0.3);
+    -fx-background-radius: 0;
+    -fx-background-position: center bottom;
+    -fx-background-repeat: no-repeat space;
+    -fx-background-image: url("../img/van-s.png");
+}
+.data0.chart-bar {
+    -fx-background-image: url("../img/suv-s.png");
+}
+.data1.chart-bar {
+    -fx-background-image: url("../img/sedan-s.png");
+}
+.data2.chart-bar {
+    -fx-background-image: url("../img/truck-s.png");
+}

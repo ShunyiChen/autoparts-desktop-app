@@ -1,24 +1,20 @@
 package com.shunyi.autoparts.ui;
 
-import com.shunyi.autoparts.ui.dashboard.Dashboard;
+import com.shunyi.autoparts.ui.login.LoginController;
+import com.shunyi.autoparts.ui.main.MainFrame;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.Collections;
 
 public class MainApp extends Application {
     private Stage stage;
     private Scene scene;
-    private Dashboard dashboard;
+    private MainFrame dashboard;
     private static String Name = "AutoParts Desktop Client";
     private static String VERSION = "v1.0";
 
@@ -34,7 +30,7 @@ public class MainApp extends Application {
     }
 
     public void gotoDashboard() throws IOException {
-        dashboard = new Dashboard(this);
+        dashboard = new MainFrame(this);
         scene.setRoot(dashboard);
         stage.setResizable(true);
         stage.setMaximized(true);
@@ -43,13 +39,12 @@ public class MainApp extends Application {
     public void gotoLogin() throws IOException {
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource(
-                        "/fxml/login.fxml"
+                        "/fxml/login/login.fxml"
                 )
         );
         StackPane root = loader.load();
         LoginController controller = loader.getController();
-        controller.initialize();
-        controller.setApp(this);
+        controller.initialize(this);
         scene.setRoot(root);
         stage.setResizable(false);
         stage.setMaximized(false);
@@ -68,7 +63,7 @@ public class MainApp extends Application {
         return stage;
     }
 
-    public Dashboard getDashboard() {
+    public MainFrame getDashboard() {
         return dashboard;
     }
 
