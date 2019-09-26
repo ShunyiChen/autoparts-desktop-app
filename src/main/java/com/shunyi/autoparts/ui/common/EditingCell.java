@@ -1,4 +1,4 @@
-package com.shunyi.spareparts.ui.common;
+package com.shunyi.autoparts.ui.common;
 
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;

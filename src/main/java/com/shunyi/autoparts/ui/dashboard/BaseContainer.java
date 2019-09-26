@@ -1,4 +1,4 @@
-package com.shunyi.spareparts.ui.dashboard;
+package com.shunyi.autoparts.ui.dashboard;
 
 public interface BaseContainer {
 

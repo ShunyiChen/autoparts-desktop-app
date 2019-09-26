@@ -1,7 +1,8 @@
-package com.shunyi.spareparts.ui;
+package com.shunyi.autoparts.ui;
 
-import com.shunyi.spareparts.ui.dashboard.Dashboard;
+import com.shunyi.autoparts.ui.dashboard.Dashboard;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -47,6 +48,11 @@ public class MainApp extends Application {
         scene.setRoot(root);
         stage.setResizable(false);
         stage.setMaximized(false);
+    }
+
+    public void quit() {
+        Platform.exit();
+        System.exit(0);
     }
 
     public Scene getScene() {

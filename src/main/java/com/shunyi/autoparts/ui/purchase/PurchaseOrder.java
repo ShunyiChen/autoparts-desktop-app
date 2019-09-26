@@ -1,9 +1,9 @@
-package com.shunyi.spareparts.ui.purchase;
+package com.shunyi.autoparts.ui.purchase;
 
-import com.shunyi.spareparts.ui.MainApp;
-import com.shunyi.spareparts.ui.common.EditingCell;
-import com.shunyi.spareparts.ui.dashboard.BaseContainer;
-import com.shunyi.spareparts.ui.model.Sparepart;
+import com.shunyi.autoparts.ui.MainApp;
+import com.shunyi.autoparts.ui.common.EditingCell;
+import com.shunyi.autoparts.ui.dashboard.BaseContainer;
+import com.shunyi.autoparts.ui.model.AutoPart;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -33,10 +33,10 @@ public class PurchaseOrder extends BorderPane implements BaseContainer {
     private Button btnPrint = new Button("打印");
     private Button btnSettings = new Button("设置");
     private Button btnClose = new Button("关闭");
-    private TableView<Sparepart> table;
+    private TableView<AutoPart> table;
     private TableColumn codeCol = new TableColumn("配件编码");
     private TableColumn nameCol = new TableColumn("名称");
-    private ObservableList<Sparepart> copiedDataList = FXCollections.observableList(new ArrayList<>());
+    private ObservableList<AutoPart> copiedDataList = FXCollections.observableList(new ArrayList<>());
     private Map<String, Boolean> compareResults = new HashMap<>();
     private BorderPane formPane;
 
@@ -160,12 +160,12 @@ public class PurchaseOrder extends BorderPane implements BaseContainer {
         });
     }
 
-    private Callback<Sparepart, Void> comparator(){
-        return new Callback<Sparepart, Void>() {
+    private Callback<AutoPart, Void> comparator(){
+        return new Callback<AutoPart, Void>() {
 
             @Override
-            public Void call(Sparepart updated) {
-                for(Sparepart sparepart : copiedDataList) {
+            public Void call(AutoPart updated) {
+                for(AutoPart sparepart : copiedDataList) {
                     if(updated.getCompareId().equals(sparepart.getCompareId())) {
                         compareResults.put(updated.getCompareId(), updated.equals(sparepart));
                         break;
@@ -187,7 +187,7 @@ public class PurchaseOrder extends BorderPane implements BaseContainer {
     }
 
     private void newItem() {
-        Sparepart newObj = new Sparepart("","","",0,0D,0D,"",0,"","","",0D, "");
+        AutoPart newObj = new AutoPart("","","",0,0D,0D,"",0,"","","",0D, "");
         newObj.setComparator(comparator());
         newObj.setCompareId(System.currentTimeMillis()+"");
         table.getItems().add(0, newObj);
@@ -237,11 +237,11 @@ public class PurchaseOrder extends BorderPane implements BaseContainer {
     private void initOldDataList() {
         compareResults.clear();
         copiedDataList.clear();
-        ObservableList<Sparepart> items = table.getItems();
-        Iterator<Sparepart> iter = items.iterator();
+        ObservableList<AutoPart> items = table.getItems();
+        Iterator<AutoPart> iter = items.iterator();
         while(iter.hasNext()) {
-            Sparepart original = iter.next();
-            Sparepart copied = new Sparepart(original.getCode(),original.getName(),original.getUnit(),original.getCount(),original.getPriceExcludingTax(),original.getAmountExcludingTax(),original.getWarehouse(),original.getNum(),original.getNotes(),original.getModel(),original.getBrand(),original.getCapitationPrice(),original.getPosition());
+            AutoPart original = iter.next();
+            AutoPart copied = new AutoPart(original.getCode(),original.getName(),original.getUnit(),original.getCount(),original.getPriceExcludingTax(),original.getAmountExcludingTax(),original.getWarehouse(),original.getNum(),original.getNotes(),original.getModel(),original.getBrand(),original.getCapitationPrice(),original.getPosition());
             copied.setCompareId(original.getCompareId());
             copiedDataList.add(copied);
             //Set true as default for each sparepart, true means no changes
@@ -255,7 +255,7 @@ public class PurchaseOrder extends BorderPane implements BaseContainer {
                 "/fxml/purchase/data_table.fxml"
             )
         );
-        TableView<Sparepart> root = null;
+        TableView<AutoPart> root = null;
         try {
             root = loader.load();
         } catch (IOException e) {
@@ -268,16 +268,16 @@ public class PurchaseOrder extends BorderPane implements BaseContainer {
                 }
             };
         codeCol.setCellValueFactory(
-            new PropertyValueFactory<Sparepart,String>("code")
+            new PropertyValueFactory<AutoPart,String>("code")
         );
         codeCol.setCellFactory(cellFactory);
-        codeCol.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Sparepart, String>>() {
+        codeCol.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<AutoPart, String>>() {
                 @Override
-                public void handle(TableColumn.CellEditEvent<Sparepart, String> t) {
-                    ObservableList<Sparepart> data = t.getTableView().getItems();
+                public void handle(TableColumn.CellEditEvent<AutoPart, String> t) {
+                    ObservableList<AutoPart> data = t.getTableView().getItems();
                     if(data != null) {
                         if(t.getTablePosition().getRow() < data.size()) {
-                            Sparepart selected = data.get( t.getTablePosition().getRow());
+                            AutoPart selected = data.get( t.getTablePosition().getRow());
                             if(selected != null) {
                                 selected.setCode(t.getNewValue());
                             }
@@ -288,13 +288,13 @@ public class PurchaseOrder extends BorderPane implements BaseContainer {
         );
 
         nameCol.setCellValueFactory(
-            new PropertyValueFactory<Sparepart,String>("name")
+            new PropertyValueFactory<AutoPart,String>("name")
         );
         nameCol.setCellFactory(cellFactory);
-        nameCol.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Sparepart, String>>() {
+        nameCol.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<AutoPart, String>>() {
                 @Override
-                public void handle(TableColumn.CellEditEvent<Sparepart, String> t) {
-                    ((Sparepart) t.getTableView().getItems().get(
+                public void handle(TableColumn.CellEditEvent<AutoPart, String> t) {
+                    ((AutoPart) t.getTableView().getItems().get(
                             t.getTablePosition().getRow())
                     ).setName(t.getNewValue());
                 }
@@ -306,10 +306,10 @@ public class PurchaseOrder extends BorderPane implements BaseContainer {
         root.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
         // Detect row added or deleted
-        ObservableList<Sparepart> myObservableList =  root.getItems();
-        myObservableList.addListener(new ListChangeListener<Sparepart>(){
+        ObservableList<AutoPart> myObservableList =  root.getItems();
+        myObservableList.addListener(new ListChangeListener<AutoPart>(){
             @Override
-            public void onChanged(javafx.collections.ListChangeListener.Change<? extends Sparepart> pChange) {
+            public void onChanged(javafx.collections.ListChangeListener.Change<? extends AutoPart> pChange) {
                 while(pChange.next()) {
                     // Do your changes here
                     btnSave.setDisable(false);

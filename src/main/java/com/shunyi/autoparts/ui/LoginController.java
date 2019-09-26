@@ -1,4 +1,4 @@
-package com.shunyi.spareparts.ui;
+package com.shunyi.autoparts.ui;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

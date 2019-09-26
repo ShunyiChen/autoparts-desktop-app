@@ -1,7 +1,6 @@
-package com.shunyi.spareparts.ui.dashboard;
+package com.shunyi.autoparts.ui.dashboard;
 
-import com.shunyi.spareparts.ui.MainApp;
-import com.shunyi.spareparts.ui.dashboard.ClickableItem;
+import com.shunyi.autoparts.ui.MainApp;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 

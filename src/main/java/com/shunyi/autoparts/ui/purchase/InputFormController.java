@@ -1,7 +1,7 @@
-package com.shunyi.spareparts.ui.purchase;
+package com.shunyi.autoparts.ui.purchase;
 
-import com.shunyi.spareparts.ui.MainApp;
-import com.shunyi.spareparts.ui.supplier.ChooserController;
+import com.shunyi.autoparts.ui.supplier.ChooserController;
+import com.shunyi.autoparts.ui.MainApp;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;

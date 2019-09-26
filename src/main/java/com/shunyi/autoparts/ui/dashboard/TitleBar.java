@@ -1,6 +1,6 @@
-package com.shunyi.spareparts.ui.dashboard;
+package com.shunyi.autoparts.ui.dashboard;
 
-import com.shunyi.spareparts.ui.MainApp;
+import com.shunyi.autoparts.ui.MainApp;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -22,12 +22,15 @@ import javafx.scene.layout.HBox;
 public class TitleBar extends HBox implements EventHandler<MouseEvent> {
     private MainApp application;
     private Label arrowIcon;
-    private Label menu = new Label();
+    private Label menuIcon = new Label();
     private Label title = new Label("仪表盘");
     private FlowPane leftComponent = new FlowPane();
     private BorderPane rightComponent = new BorderPane();
     private HBox rightSubComponent = new HBox();
     private HBox rightSubComponent2 = new HBox();
+    private ContextMenu rightClickMenu = new ContextMenu();
+    private MenuItem itemQuit = new MenuItem("退 出");
+    private MenuItem itemProfiles = new MenuItem("个人设置");
 
     /**
      *
@@ -48,7 +51,8 @@ public class TitleBar extends HBox implements EventHandler<MouseEvent> {
         this.getChildren().addAll(leftComponent, rightComponent);
         initLeftComponent();
         initRightComponent();
-        initMenu();
+        initMenuIcon();
+        initRightClickMenu();
         initEvents();
     }
 
@@ -76,16 +80,13 @@ public class TitleBar extends HBox implements EventHandler<MouseEvent> {
         title.setPadding(new Insets(20));
         Image profile = new Image(getClass().getResourceAsStream("/img/Profile.png"));
         ImageView profileImage = new ImageView(profile);
+        profileImage.setFitHeight(40);
+        profileImage.setFitWidth(40);
         profileImage.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent e) {
                 if(e.getButton() == MouseButton.PRIMARY) {
-                    MenuItem itemQuit = new MenuItem("退 出");
-                    MenuItem itemProfiles = new MenuItem("个人设置");
-                    ContextMenu menu = new ContextMenu();
-                    menu.setAutoHide(true);
-                    menu.getItems().addAll(itemProfiles, itemQuit);
-                    menu.show(TitleBar.this, e.getScreenX(), e.getScreenY());
+                    rightClickMenu.show(TitleBar.this, e.getScreenX(), e.getScreenY());
                 }
             }
         });
@@ -95,36 +96,46 @@ public class TitleBar extends HBox implements EventHandler<MouseEvent> {
         rightComponent.setRight(rightSubComponent2);
     }
 
-    private void initMenu() {
+    private void initRightClickMenu() {
+        rightClickMenu.setAutoHide(true);
+        rightClickMenu.getItems().addAll(itemProfiles, itemQuit);
+    }
+
+    private void initMenuIcon() {
         String MENU_URL = "/img/menu.png";
         Image ICON = new Image(getClass().getResourceAsStream(MENU_URL));
         ImageView menuImg = new ImageView(ICON);
-        menu.setGraphic(menuImg);
-        menu.setPadding(new Insets(20));
+        menuIcon.setGraphic(menuImg);
+        menuIcon.setPadding(new Insets(20));
     }
 
     private void initEvents() {
         arrowIcon.setOnMouseEntered(this);
         arrowIcon.setOnMouseExited(this);
         arrowIcon.setOnMouseReleased(this);
-        menu.setOnMouseReleased(new EventHandler<MouseEvent>() {
+        menuIcon.setOnMouseReleased(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 undock();
             }
         });
+        itemProfiles.setOnAction(e -> {
+        });
+        itemQuit.setOnAction(e -> {
+            application.quit();
+        });
     }
 
     private void dock() {
         this.getChildren().remove(leftComponent);
-        rightSubComponent.getChildren().add(0, menu);
+        rightSubComponent.getChildren().add(0, menuIcon);
         rightComponent.prefWidthProperty().bind(application.getScene().widthProperty());
         application.getDashboard().getNavigation().minimize(true);
     }
 
     private void undock() {
         this.getChildren().add(0, leftComponent);
-        rightSubComponent.getChildren().remove(menu);
+        rightSubComponent.getChildren().remove(menuIcon);
         rightComponent.prefWidthProperty().bind(application.getScene().widthProperty().subtract(240));
         application.getDashboard().getNavigation().minimize(false);
     }

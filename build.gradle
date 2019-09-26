@@ -14,7 +14,7 @@ javafx {
     modules = [ 'javafx.controls', 'javafx.fxml' ]
 }
 
-mainClassName = "$moduleName/com.shunyi.spareparts.ui.MainApp"
+mainClassName = "$moduleName/com.shunyi.autoparts.ui.MainApp"
 
 jlink {
     options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages']
@@ -39,7 +39,7 @@ jar {
     manifestContentCharset 'utf-8'
     metadataCharset 'utf-8'
     manifest {
-        attributes "Main-Class": "com.shunyi.spareparts.ui.MainApp"
+        attributes "Main-Class": "com.shunyi.autoparts.ui.MainApp"
     }
     if (project.hasProperty("allInOne")) {
         from {

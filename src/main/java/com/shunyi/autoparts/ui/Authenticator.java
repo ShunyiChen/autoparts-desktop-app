@@ -1,4 +1,4 @@
-package com.shunyi.spareparts.ui;
+package com.shunyi.autoparts.ui;
 
 import java.util.HashMap;
 import java.util.Map;

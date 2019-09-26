@@ -1,6 +1,6 @@
-package com.shunyi.spareparts.ui.model;
+package com.shunyi.autoparts.ui.model;
 
-import com.shunyi.spareparts.ui.common.BaseModel;
+import com.shunyi.autoparts.ui.common.BaseModel;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleLongProperty;
@@ -12,7 +12,7 @@ import javafx.util.Callback;
 /**
  * 配件模型
  */
-public class Sparepart extends BaseModel {
+public class AutoPart extends BaseModel {
 
     /** ID */
     private SimpleLongProperty id;
@@ -43,7 +43,7 @@ public class Sparepart extends BaseModel {
     /** 货位 */
     private SimpleStringProperty position;
 
-    private Callback<Sparepart, Void> comparator;
+    private Callback<AutoPart, Void> comparator;
 
 
     /**
@@ -63,7 +63,7 @@ public class Sparepart extends BaseModel {
      * @param capitationPrice 均摊单价
      * @param position 货位
      */
-    public Sparepart(String code, String name, String unit, Integer count, Double priceExcludingTax, Double amountExcludingTax, String warehouse, Integer num, String notes, String model, String brand, Double capitationPrice, String position) {
+    public AutoPart(String code, String name, String unit, Integer count, Double priceExcludingTax, Double amountExcludingTax, String warehouse, Integer num, String notes, String model, String brand, Double capitationPrice, String position) {
         this.code = new SimpleStringProperty(code);
         this.name = new SimpleStringProperty(name);
         this.unit = new SimpleStringProperty(unit);
@@ -85,14 +85,14 @@ public class Sparepart extends BaseModel {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
                 if(comparator != null)
-                    comparator.call(Sparepart.this);
+                    comparator.call(AutoPart.this);
             }
         });
         this.name.addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
                 if(comparator != null)
-                    comparator.call(Sparepart.this);
+                    comparator.call(AutoPart.this);
             }
         });
     }
@@ -265,11 +265,11 @@ public class Sparepart extends BaseModel {
         this.position.set(position);
     }
 
-    public Callback<Sparepart, Void> getComparator() {
+    public Callback<AutoPart, Void> getComparator() {
         return comparator;
     }
 
-    public void setComparator(Callback<Sparepart, Void> comparator) {
+    public void setComparator(Callback<AutoPart, Void> comparator) {
         this.comparator = comparator;
     }
 
@@ -278,7 +278,7 @@ public class Sparepart extends BaseModel {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Sparepart sparepart = (Sparepart) o;
+        AutoPart sparepart = (AutoPart) o;
         if(code.get().equals(sparepart.getCode())
                 && name.get().equals(sparepart.getName())) {
             return true;
