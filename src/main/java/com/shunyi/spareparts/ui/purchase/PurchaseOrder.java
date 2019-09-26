@@ -2,7 +2,7 @@ package com.shunyi.spareparts.ui.purchase;
 
 import com.shunyi.spareparts.ui.MainApp;
 import com.shunyi.spareparts.ui.common.EditingCell;
-import com.shunyi.spareparts.ui.dashboard.SwitchContainer;
+import com.shunyi.spareparts.ui.dashboard.BaseContainer;
 import com.shunyi.spareparts.ui.model.Sparepart;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -11,59 +11,60 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.util.Callback;
 
 import java.io.IOException;
 import java.util.*;
 
-public class PurchaseOrderForm extends BorderPane implements SwitchContainer {
-
+public class PurchaseOrder extends BorderPane implements BaseContainer {
     private MainApp application;
-
     private Button btnNew = new Button("新建");
     private Button btnSave = new Button("保存");
     private Button btnDelete = new Button("作废");
     private Button btnSubmit = new Button("结算");
+    private Button btnAddAutopart = new Button("添加配件");
     private Button btnPrint = new Button("打印");
     private Button btnSettings = new Button("设置");
+    private Button btnClose = new Button("关闭");
     private TableView<Sparepart> table;
     private TableColumn codeCol = new TableColumn("配件编码");
     private TableColumn nameCol = new TableColumn("名称");
-
-    /** copied data of table  */
     private ObservableList<Sparepart> copiedDataList = FXCollections.observableList(new ArrayList<>());
-    /** Compared results */
     private Map<String, Boolean> compareResults = new HashMap<>();
+    private BorderPane formPane;
+
 
     /**
      * Constructor
      *
      * @param application
      */
-    public PurchaseOrderForm(MainApp application) {
+    public PurchaseOrder(MainApp application) {
         this.application = application;
         initComponents();
     }
 
     private void initComponents() {
-        ToolBar toolBar = new ToolBar();
+
         btnSave.setDisable(true);
         btnNew.setFont(Font.font(16));
         btnSave.setFont(Font.font(16));
         btnDelete.setFont(Font.font(16));
         btnSubmit.setFont(Font.font(16));
+        btnAddAutopart.setFont(Font.font(16));
         btnPrint.setFont(Font.font(16));
         btnSettings.setFont(Font.font(16));
-        toolBar.getItems().addAll(btnNew, new Separator(),btnSave, btnDelete, btnSubmit, new Separator(), btnPrint, btnSettings);
+        btnClose.setFont(Font.font(16));
+        ToolBar toolBar = new ToolBar();
+        toolBar.getItems().addAll(btnNew, new Separator(), btnSave, btnDelete, btnSubmit, btnAddAutopart, new Separator(), btnPrint, btnSettings, new Separator(), btnClose);
         this.setTop(toolBar);
-        this.setCenter(form());
         initEvents();
     }
 
@@ -73,19 +74,16 @@ public class PurchaseOrderForm extends BorderPane implements SwitchContainer {
                         "/fxml/purchase/input_form.fxml"
                 )
         );
-        GridPane root = null;
+        GridPane inputForm = null;
         try {
-            root = loader.load();
+            inputForm = loader.load();
         } catch (IOException e) {
             e.printStackTrace();
         }
         InputFormController controller = loader.getController();
         controller.setApplication(application);
-
-        root.setPadding(new Insets(10));
-
+        inputForm.setPadding(new Insets(10));
         table = dataTable();
-
         ContextMenu cm = new ContextMenu();
         MenuItem mi1 = new MenuItem("添 加");
 
@@ -114,17 +112,33 @@ public class PurchaseOrderForm extends BorderPane implements SwitchContainer {
                 }
             }
         });
+
+        FXMLLoader loader2 = new FXMLLoader(
+                getClass().getResource(
+                        "/fxml/purchase/footer.fxml"
+                )
+        );
+        HBox footer = null;
+        try {
+            footer = loader2.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        FlowPane bottomPane = new FlowPane();
+        bottomPane.getChildren().add(footer);
+        bottomPane.setAlignment(Pos.CENTER_RIGHT);
         BorderPane mainForm = new BorderPane();
-        mainForm.setTop(root);
-        mainForm.setCenter(table);
-        table.prefWidthProperty().bind(mainForm.widthProperty());
-        table.prefHeightProperty().bind(mainForm.heightProperty().subtract(90));
+        mainForm.setTop(inputForm);
+        mainForm.setLeft(table);
+        mainForm.setBottom(bottomPane);
+        table.prefWidthProperty().bind(application.getStage().widthProperty().subtract(application.getDashboard().getNavigation().widthProperty().add(35)));
+        table.prefHeightProperty().bind(application.getStage().heightProperty().subtract(320));
         return mainForm;
     }
 
     private void initEvents() {
         btnNew.setOnAction(e -> {
-            newItem();
+            newOrder();
         });
         btnSave.setOnAction(e -> {
             save();
@@ -140,6 +154,9 @@ public class PurchaseOrderForm extends BorderPane implements SwitchContainer {
         });
         btnSettings.setOnAction(e -> {
             settings();
+        });
+        btnClose.setOnAction(e -> {
+            close();
         });
     }
 
@@ -162,6 +179,11 @@ public class PurchaseOrderForm extends BorderPane implements SwitchContainer {
                 return null;
             }
         };
+    }
+
+    private void newOrder() {
+        formPane = form();
+        setCenter(formPane);
     }
 
     private void newItem() {
@@ -205,6 +227,11 @@ public class PurchaseOrderForm extends BorderPane implements SwitchContainer {
 
     private void settings() {
 
+    }
+
+    private void close() {
+        if(formPane != null)
+            this.getChildren().remove(formPane);
     }
 
     private void initOldDataList() {
@@ -293,7 +320,7 @@ public class PurchaseOrderForm extends BorderPane implements SwitchContainer {
     }
 
     @Override
-    public void willShow() {
+    public void willOpen() {
 
     }
 

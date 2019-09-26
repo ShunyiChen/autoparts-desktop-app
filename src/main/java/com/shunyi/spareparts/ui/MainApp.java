@@ -11,10 +11,11 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class MainApp extends Application {
-
     private Stage stage;
     private Scene scene;
     private Dashboard dashboard;
+    private static String Name = "AutoParts Desktop Client";
+    private static String VERSION = "v1.0";
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -22,7 +23,7 @@ public class MainApp extends Application {
         scene = new Scene(new Pane());
         scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
         gotoLogin();
-        stage.setTitle("Spare parts");
+        stage.setTitle(Name+" "+VERSION);
         stage.setScene(scene);
         stage.show();
     }

@@ -1,6 +1,7 @@
 package com.shunyi.spareparts.ui.purchase;
 
 import com.shunyi.spareparts.ui.MainApp;
+import com.shunyi.spareparts.ui.supplier.ChooserController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -32,8 +33,11 @@ public class InputFormController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Scene scene = new Scene(root);
 
+        ChooserController controller = loader.getController();
+        controller.initTree();
+
+        Scene scene = new Scene(root);
         Stage dialog = new Stage();
         dialog.initOwner(application.getStage());
         dialog.initModality(Modality.APPLICATION_MODAL);

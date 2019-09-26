@@ -1,8 +1,8 @@
 package com.shunyi.spareparts.ui.dashboard;
 
-public interface SwitchContainer {
+public interface BaseContainer {
 
-    void willShow();
+    void willOpen();
 
     void willClose();
 }

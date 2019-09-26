@@ -1,7 +1,6 @@
 package com.shunyi.spareparts.ui.dashboard;
 
 import com.shunyi.spareparts.ui.MainApp;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -17,8 +16,10 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 
-public class Toolbar extends HBox implements EventHandler<MouseEvent> {
-
+/**
+ *
+ */
+public class TitleBar extends HBox implements EventHandler<MouseEvent> {
     private MainApp application;
     private Label arrowIcon;
     private Label menu = new Label();
@@ -32,7 +33,7 @@ public class Toolbar extends HBox implements EventHandler<MouseEvent> {
      *
      * @param application
      */
-    public Toolbar(MainApp application) {
+    public TitleBar(MainApp application) {
         this.application = application;
         initComponents();
     }
@@ -45,35 +46,15 @@ public class Toolbar extends HBox implements EventHandler<MouseEvent> {
         arrowIcon = new Label("", imageView);
         arrowIcon.setPadding(new Insets(16,20,15,15));
         this.getChildren().addAll(leftComponent, rightComponent);
-
         initLeftComponent();
-
         initRightComponent();
-
         initMenu();
-
         initEvents();
-
-//        profileMenu = contextMenu();
-//        left.setPrefWidth(240);
-//        left.setPrefHeight(65);
-//        left.getChildren().addAll(dockedLeft);
-//        left.setAlignment(Pos.CENTER_RIGHT);
-//        left.setId("dockedleft_bg");
-
-//        this.setId("bg");
-//        right.prefWidthProperty().bind(application.getScene().widthProperty().subtract(240));
-//        title.setId("title");
-//        title.setPadding(new Insets(20));
-////        right.setRight(title);
-//        right.getChildren().add(title);
-//        right.setEffect(new DropShadow());
-
-
-
-
     }
 
+    /**
+     *
+     */
     private void initLeftComponent() {
         leftComponent.setId("dockedleft_bg");
         leftComponent.setAlignment(Pos.CENTER_RIGHT);
@@ -82,6 +63,9 @@ public class Toolbar extends HBox implements EventHandler<MouseEvent> {
         leftComponent.setPrefHeight(65);
     }
 
+    /**
+     *
+     */
     private void initRightComponent() {
         rightComponent.setId("bg");
         rightComponent.setEffect(new DropShadow());
@@ -90,8 +74,6 @@ public class Toolbar extends HBox implements EventHandler<MouseEvent> {
         rightSubComponent.getChildren().addAll(title);
         title.setId("title");
         title.setPadding(new Insets(20));
-
-
         Image profile = new Image(getClass().getResourceAsStream("/img/Profile.png"));
         ImageView profileImage = new ImageView(profile);
         profileImage.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
@@ -103,7 +85,7 @@ public class Toolbar extends HBox implements EventHandler<MouseEvent> {
                     ContextMenu menu = new ContextMenu();
                     menu.setAutoHide(true);
                     menu.getItems().addAll(itemProfiles, itemQuit);
-                    menu.show(Toolbar.this, e.getScreenX(), e.getScreenY());
+                    menu.show(TitleBar.this, e.getScreenX(), e.getScreenY());
                 }
             }
         });
@@ -170,25 +152,5 @@ public class Toolbar extends HBox implements EventHandler<MouseEvent> {
 
     public void setTitle(String title) {
         this.title.setText(title);
-    }
-
-
-    private ContextMenu contextMenu() {
-        ContextMenu menu = new ContextMenu();
-        menu.setAutoHide(true);
-        MenuItem itemSettings = new MenuItem("个人设置");
-        MenuItem itemExit = new MenuItem("退 出");
-        itemSettings.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-            }
-        });
-        itemExit.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-            }
-        });
-        menu.getItems().addAll(itemSettings, itemExit);
-        return menu;
     }
 }

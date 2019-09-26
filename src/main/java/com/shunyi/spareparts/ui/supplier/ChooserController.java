@@ -2,10 +2,7 @@ package com.shunyi.spareparts.ui.supplier;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TreeView;
+import javafx.scene.control.*;
 
 public class ChooserController {
 
@@ -45,4 +42,17 @@ public class ChooserController {
     public void search(ActionEvent event) {
 
     }
+
+    public void initTree() {
+        TreeItem<String> root = new TreeItem<String>("Root Node");
+        root.setExpanded(true);
+        root.getChildren().addAll(
+                new TreeItem<String>("Item 1"),
+                new TreeItem<String>("Item 2"),
+                new TreeItem<String>("Item 3")
+        );
+//        TreeView<String> treeView = new TreeView<String>(root);
+        tree.setRoot(root);
+    }
+
 }
