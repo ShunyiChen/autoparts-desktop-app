@@ -4,9 +4,7 @@ import com.shunyi.autoparts.ui.MainApp;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -29,8 +27,9 @@ public class TitleBar extends HBox implements EventHandler<MouseEvent> {
     private HBox rightSubComponent = new HBox();
     private HBox rightSubComponent2 = new HBox();
     private ContextMenu rightClickMenu = new ContextMenu();
-    private MenuItem itemQuit = new MenuItem("退 出");
+
     private MenuItem itemProfiles = new MenuItem("个人设置");
+    private MenuItem itemQuit = new MenuItem("退 出");
 
     /**
      *
@@ -98,7 +97,7 @@ public class TitleBar extends HBox implements EventHandler<MouseEvent> {
 
     private void initRightClickMenu() {
         rightClickMenu.setAutoHide(true);
-        rightClickMenu.getItems().addAll(itemProfiles, itemQuit);
+        rightClickMenu.getItems().addAll(itemProfiles, new SeparatorMenuItem(), itemQuit);
     }
 
     private void initMenuIcon() {

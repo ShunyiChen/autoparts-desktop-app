@@ -144,7 +144,7 @@ public class PurchaseOrder extends BorderPane implements BaseContainer {
             save();
         });
         btnDelete.setOnAction(e -> {
-            cancel();
+            delete();
         });
         btnSubmit.setOnAction(e -> {
             submit();
@@ -204,10 +204,13 @@ public class PurchaseOrder extends BorderPane implements BaseContainer {
         btnSave.setDisable(true);
     }
 
-    private void cancel() {
+    private void delete() {
         table.getItems().clear();
         table.getSelectionModel().clearSelection();
         btnSave.setDisable(true);
+
+
+        close();
     }
 
     private void deleteSelectedRows() {

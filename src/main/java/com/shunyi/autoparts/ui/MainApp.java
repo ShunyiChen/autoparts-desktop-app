@@ -4,12 +4,16 @@ import com.shunyi.autoparts.ui.dashboard.Dashboard;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.Pane;
+import javafx.scene.image.Image;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Collections;
 
 public class MainApp extends Application {
     private Stage stage;
@@ -42,8 +46,9 @@ public class MainApp extends Application {
                         "/fxml/login.fxml"
                 )
         );
-        Parent root = loader.load();
-        LoginController controller = loader.<LoginController>getController();
+        StackPane root = loader.load();
+        LoginController controller = loader.getController();
+        controller.initialize();
         controller.setApp(this);
         scene.setRoot(root);
         stage.setResizable(false);
