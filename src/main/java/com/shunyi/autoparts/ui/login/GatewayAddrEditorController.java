@@ -52,7 +52,6 @@ public class GatewayAddrEditorController {
 
     @FXML
     public void add(ActionEvent event) {
-
     }
 
     @FXML
@@ -66,7 +65,6 @@ public class GatewayAddrEditorController {
 
     @FXML
     public void ok(ActionEvent event) {
-
         dialog.close();
     }
 
@@ -75,7 +73,6 @@ public class GatewayAddrEditorController {
         String[] v = {"http", "https"};
         cBoxProtocol.getItems().addAll(v);
         cBoxProtocol.setValue(v[0]);
-
         btnOk.setStyle(String.format("-fx-base: %s;", "rgb(63,81,181)"));
         final ObservableList<GatewayAddr> data = FXCollections.observableArrayList(
                 new GatewayAddr("localhost", "http", "localhost", 8080, true),
@@ -99,8 +96,6 @@ public class GatewayAddrEditorController {
         TableColumn colPort = new TableColumn("端口");
         colPort.setPrefWidth(60);
         colPort.setCellValueFactory(new PropertyValueFactory("port"));
-
-
         StringConverter<Object> sc = new StringConverter<Object>() {
             @Override
             public String toString(Object t) {
@@ -118,15 +113,12 @@ public class GatewayAddrEditorController {
         };
 
         TableColumn colDefault = new TableColumn("默认");
-//        colDefault.setPrefWidth(80);
         colDefault.setCellValueFactory(new PropertyValueFactory("default2"));
         colDefault.setCellFactory(TextFieldTableCell.forTableColumn(sc));
         colDefault.setMinWidth(100);
-
         final String css = getClass().getResource("/css/styles.css").toExternalForm();
         tableView.getStylesheets().add(css);
         tableView.getColumns().addAll(colName, colProtocol, colHost, colPort, colDefault);
         tableView.setEditable(false);
-
     }
 }

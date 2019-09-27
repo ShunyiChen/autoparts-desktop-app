@@ -29,7 +29,7 @@ public class PurchaseOrder extends BorderPane implements BaseContainer {
     private Button btnSave = new Button("保存");
     private Button btnDelete = new Button("作废");
     private Button btnSubmit = new Button("结算");
-    private Button btnAddAutopart = new Button("添加配件");
+    private Button btnAddAutoPart = new Button("添加配件");
     private Button btnPrint = new Button("打印");
     private Button btnSettings = new Button("设置");
     private Button btnClose = new Button("关闭");
@@ -57,12 +57,12 @@ public class PurchaseOrder extends BorderPane implements BaseContainer {
         btnSave.setFont(Font.font(16));
         btnDelete.setFont(Font.font(16));
         btnSubmit.setFont(Font.font(16));
-        btnAddAutopart.setFont(Font.font(16));
+        btnAddAutoPart.setFont(Font.font(16));
         btnPrint.setFont(Font.font(16));
         btnSettings.setFont(Font.font(16));
         btnClose.setFont(Font.font(16));
         ToolBar toolBar = new ToolBar();
-        toolBar.getItems().addAll(btnNew, new Separator(), btnSave, btnDelete, btnSubmit, btnAddAutopart, new Separator(), btnPrint, btnSettings, new Separator(), btnClose);
+        toolBar.getItems().addAll(btnNew, new Separator(), btnSave, btnDelete, btnSubmit, btnAddAutoPart, new Separator(), btnPrint, btnSettings, new Separator(), btnClose);
         this.setTop(toolBar);
         initEvents();
     }
@@ -82,17 +82,21 @@ public class PurchaseOrder extends BorderPane implements BaseContainer {
         InputFormController controller = loader.getController();
         controller.setApplication(application);
         inputForm.setPadding(new Insets(10));
+
+        VBox vLayout = new VBox();
         table = dataTable();
+        TableStatusBar statusBar = new TableStatusBar(table);
+        vLayout.getChildren().addAll(table, statusBar);
+
+
         ContextMenu cm = new ContextMenu();
         MenuItem mi1 = new MenuItem("添 加");
-
         mi1.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 newItem();
             }
         });
-
         cm.getItems().add(mi1);
         MenuItem mi2 = new MenuItem("删 除");
         mi2.setOnAction(new EventHandler<ActionEvent>() {
@@ -103,7 +107,6 @@ public class PurchaseOrder extends BorderPane implements BaseContainer {
         });
         cm.getItems().add(mi2);
         table.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-
             @Override
             public void handle(MouseEvent t) {
                 if(t.getButton() == MouseButton.SECONDARY) {
@@ -111,6 +114,7 @@ public class PurchaseOrder extends BorderPane implements BaseContainer {
                 }
             }
         });
+
 
         FXMLLoader loader2 = new FXMLLoader(
                 getClass().getResource(
@@ -128,10 +132,10 @@ public class PurchaseOrder extends BorderPane implements BaseContainer {
         bottomPane.setAlignment(Pos.CENTER_RIGHT);
         BorderPane mainForm = new BorderPane();
         mainForm.setTop(inputForm);
-        mainForm.setLeft(table);
+        mainForm.setLeft(vLayout);
         mainForm.setBottom(bottomPane);
         table.prefWidthProperty().bind(application.getStage().widthProperty().subtract(application.getDashboard().getNavigation().widthProperty().add(35)));
-        table.prefHeightProperty().bind(application.getStage().heightProperty().subtract(320));
+        table.prefHeightProperty().bind(application.getStage().heightProperty().subtract(350));
         return mainForm;
     }
 
@@ -207,8 +211,6 @@ public class PurchaseOrder extends BorderPane implements BaseContainer {
         table.getItems().clear();
         table.getSelectionModel().clearSelection();
         btnSave.setDisable(true);
-
-
         close();
     }
 
