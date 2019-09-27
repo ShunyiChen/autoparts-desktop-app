@@ -14,6 +14,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 
+import java.io.IOException;
+
 /**
  *
  */
@@ -29,6 +31,7 @@ public class TitleBar extends HBox implements EventHandler<MouseEvent> {
     private ContextMenu rightClickMenu = new ContextMenu();
 
     private MenuItem itemProfiles = new MenuItem("个人设置");
+    private MenuItem itemLogout = new MenuItem("注 销");
     private MenuItem itemQuit = new MenuItem("退 出");
 
     /**
@@ -97,7 +100,7 @@ public class TitleBar extends HBox implements EventHandler<MouseEvent> {
 
     private void initRightClickMenu() {
         rightClickMenu.setAutoHide(true);
-        rightClickMenu.getItems().addAll(itemProfiles, new SeparatorMenuItem(), itemQuit);
+        rightClickMenu.getItems().addAll(itemProfiles, new SeparatorMenuItem(), itemLogout, itemQuit);
     }
 
     private void initMenuIcon() {
@@ -119,6 +122,13 @@ public class TitleBar extends HBox implements EventHandler<MouseEvent> {
             }
         });
         itemProfiles.setOnAction(e -> {
+        });
+        itemLogout.setOnAction(e -> {
+            try {
+                application.gotoLogin();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
         });
         itemQuit.setOnAction(e -> {
             application.quit();

@@ -15,7 +15,7 @@ public class MainApp extends Application {
     private Stage stage;
     private Scene scene;
     private MainFrame dashboard;
-    private static String Name = "AutoParts Desktop Client";
+    private static String Name = "AutoParts-桌面客户端";
     private static String VERSION = "v1.0";
 
     @Override
@@ -29,7 +29,7 @@ public class MainApp extends Application {
         stage.show();
     }
 
-    public void gotoDashboard() throws IOException {
+    public void gotoDashboard() {
         dashboard = new MainFrame(this);
         scene.setRoot(dashboard);
         stage.setResizable(true);
@@ -38,9 +38,9 @@ public class MainApp extends Application {
 
     public void gotoLogin() throws IOException {
         FXMLLoader loader = new FXMLLoader(
-                getClass().getResource(
-                        "/fxml/login/login.fxml"
-                )
+            getClass().getResource(
+                    "/fxml/login/login.fxml"
+            )
         );
         StackPane root = loader.load();
         LoginController controller = loader.getController();

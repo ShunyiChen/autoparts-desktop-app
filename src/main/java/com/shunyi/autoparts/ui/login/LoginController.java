@@ -5,12 +5,11 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.*;
 import org.apache.commons.lang3.StringUtils;
-
-import java.io.IOException;
 
 public class LoginController {
     @FXML
@@ -18,27 +17,31 @@ public class LoginController {
     @FXML
     private Hyperlink titleLink;
     @FXML
-    private TextField userNameTxtField;
+    private TextField txtUsername;
     @FXML
-    private PasswordField passwordField;
+    private PasswordField txtPassword;
+    @FXML
+    private ComboBox cBoxGateway;
+    @FXML
+    private CheckBox cBoxRemember;
+    @FXML
+    private Button btnSettings;
+    @FXML
+    private CheckBox cBoxAutoLogin;
     @FXML
     private Button button;
     private MainApp application;
 
     @FXML
     public void loggingIn(ActionEvent event) {
-        if(StringUtils.isEmpty(userNameTxtField.getText().trim())) {
+        if(StringUtils.isEmpty(txtUsername.getText().trim())) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("用户名密码输入错误提醒");
             alert.setHeaderText("用户名不能为空！");
             alert.showAndWait();
         } else {
-            try {
-                application.gotoDashboard();
-                System.out.println("Logged in successfully.");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            application.gotoDashboard();
+            System.out.println("Logged in successfully.");
         }
     }
 
@@ -64,6 +67,11 @@ public class LoginController {
                     }
                 }
         );
+
+        // 初始化网关按钮
+        Image imgGear = new Image(getClass().getResourceAsStream("/img/Gear16.png"));
+        btnSettings.setGraphic(new ImageView(imgGear));
+//        btnSettings.setBackground(Background.EMPTY);
     }
 
 }

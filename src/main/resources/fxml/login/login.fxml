@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
@@ -28,24 +29,27 @@
                   </Hyperlink>
                </children></HBox>
             <ProgressBar layoutY="83.0" prefHeight="5.0" prefWidth="745.0" progress="0.0" />
-            <Label layoutX="209.0" layoutY="157.0" text="用户名:">
+            <Label layoutX="210.0" layoutY="115.0" text="用户名:">
                <font>
                   <Font size="16.0" />
                </font>
             </Label>
-            <TextField fx:id="userNameTxtField" layoutX="271.0" layoutY="151.0" prefHeight="34.0" prefWidth="204.0">
+            <TextField fx:id="txtUsername" layoutX="271.0" layoutY="109.0" prefHeight="34.0" prefWidth="204.0">
                <font>
                   <Font size="16.0" />
                </font>
             </TextField>
-            <PasswordField fx:id="passwordField" layoutX="271.0" layoutY="197.0" prefHeight="34.0" prefWidth="204.0">
+            <PasswordField fx:id="txtPassword" layoutX="271.0" layoutY="152.0" prefHeight="34.0" prefWidth="204.0">
                <font>
                   <Font size="16.0" />
                </font>
             </PasswordField>
-            <CheckBox layoutX="271.0" layoutY="262.0" mnemonicParsing="false" text="记住用户名" />
-            <CheckBox layoutX="380.0" layoutY="262.0" mnemonicParsing="false" text="下次自动登录" />
-            <Button fx:id="button" layoutX="271.0" layoutY="289.0" mnemonicParsing="false" onAction="#loggingIn" prefHeight="34.0" prefWidth="204.0" text="登  录">
+            <ComboBox fx:id="cBoxGateway" layoutX="271.0" layoutY="195.0" prefHeight="34.0" prefWidth="204.0" />
+            <Button fx:id="btnSettings" layoutX="486.0" layoutY="201.0" mnemonicParsing="false" prefHeight="16.0" prefWidth="16.0">
+            </Button>
+            <CheckBox fx:id="cBoxRemember" layoutX="271.0" layoutY="238.0" mnemonicParsing="false" text="记住用户名" />
+            <CheckBox fx:id="cBoxAutoLogin" layoutX="373.0" layoutY="238.0" mnemonicParsing="false" text="下次自动登录" />
+            <Button layoutX="271.0" layoutY="263.0" mnemonicParsing="false" onAction="#loggingIn" prefHeight="34.0" prefWidth="204.0" text="登  录">
                <font>
                   <Font size="16.0" />
                </font>
@@ -53,7 +57,12 @@
                   <Reflection />
                </effect>
             </Button>
-            <Label layoutX="210.0" layoutY="203.0" text="密   码:">
+            <Label layoutX="211.0" layoutY="158.0" text="密   码:">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <Label layoutX="194.0" layoutY="201.0" text="网关地址:">
                <font>
                   <Font size="16.0" />
                </font>
