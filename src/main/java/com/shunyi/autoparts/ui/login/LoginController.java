@@ -1,15 +1,22 @@
 package com.shunyi.autoparts.ui.login;
 
 import com.shunyi.autoparts.ui.MainApp;
+import com.shunyi.autoparts.ui.supplier.ChooserController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.*;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import org.apache.commons.lang3.StringUtils;
+
+import java.io.IOException;
 
 public class LoginController {
     @FXML
@@ -45,7 +52,34 @@ public class LoginController {
         }
     }
 
-    public void initialize(MainApp application) {
+    @FXML
+    public void openGatewayEditor(ActionEvent event) {
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource(
+                        "/fxml/login/GatewayAddrEditor.fxml"
+                )
+        );
+        VBox root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Scene scene = new Scene(root);
+        Stage dialog = new Stage();
+        GatewayAddrEditorController controller = loader.getController();
+        controller.initComponents(dialog);
+        dialog.setTitle("设置网关地址");
+        dialog.initOwner(application.getStage());
+        dialog.setResizable(false);
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.setScene(scene);
+        dialog.show();
+        // center stage on screen
+        dialog.centerOnScreen();
+    }
+
+    public void initComponents(MainApp application) {
         this.application = application;
         String javaVersion = System.getProperty("java.version");
         String javafxVersion = System.getProperty("javafx.version");
@@ -68,10 +102,14 @@ public class LoginController {
                 }
         );
 
+//        cBoxGateway.getItems().addAll();
+
         // 初始化网关按钮
         Image imgGear = new Image(getClass().getResourceAsStream("/img/Gear16.png"));
         btnSettings.setGraphic(new ImageView(imgGear));
 //        btnSettings.setBackground(Background.EMPTY);
+
+
     }
 
 }

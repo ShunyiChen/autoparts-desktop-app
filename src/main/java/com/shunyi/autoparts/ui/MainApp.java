@@ -44,7 +44,7 @@ public class MainApp extends Application {
         );
         StackPane root = loader.load();
         LoginController controller = loader.getController();
-        controller.initialize(this);
+        controller.initComponents(this);
         scene.setRoot(root);
         stage.setResizable(false);
         stage.setMaximized(false);
