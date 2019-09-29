@@ -15,6 +15,7 @@ module desktopapp {
     exports com.shunyi.autoparts.ui.dashboard;
 
 
+    opens com.shunyi.autoparts.ui.purchase;
     opens com.shunyi.autoparts.ui.supplier;
     opens com.shunyi.autoparts.ui.login;
 //    opens org.openjfx to javafx.fxml;

@@ -64,4 +64,27 @@ public class GatewayAddr {
     public void setPort(int port) {
         this.port.set(port);
     }
+
+    public boolean isDefault2() {
+        return default2.get();
+    }
+
+    public BooleanProperty default2Property() {
+        return default2;
+    }
+
+    public void setDefault2(boolean default2) {
+        this.default2.set(default2);
+    }
+
+    @Override
+    public String toString() {
+        return "GatewayAddr{" +
+                "name=" + name +
+                ", protocol=" + protocol +
+                ", host=" + host +
+                ", port=" + port +
+                ", default2=" + default2 +
+                '}';
+    }
 }

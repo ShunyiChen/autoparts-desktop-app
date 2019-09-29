@@ -74,9 +74,10 @@ public class LoginController {
         dialog.setResizable(false);
         dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.setScene(scene);
-        dialog.show();
+//        dialog.show();
         // center stage on screen
         dialog.centerOnScreen();
+        dialog.show();
     }
 
     public void initComponents(MainApp application) {

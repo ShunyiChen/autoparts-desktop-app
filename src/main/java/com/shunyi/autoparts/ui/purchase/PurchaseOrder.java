@@ -2,6 +2,8 @@ package com.shunyi.autoparts.ui.purchase;
 
 import com.shunyi.autoparts.ui.MainApp;
 import com.shunyi.autoparts.ui.common.EditingCell;
+import com.shunyi.autoparts.ui.common.MD5;
+import com.shunyi.autoparts.ui.login.GatewayAddrEditorController;
 import com.shunyi.autoparts.ui.main.BaseContainer;
 import com.shunyi.autoparts.ui.model.AutoPart;
 import javafx.collections.FXCollections;
@@ -12,12 +14,15 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import java.io.IOException;
@@ -34,12 +39,22 @@ public class PurchaseOrder extends BorderPane implements BaseContainer {
     private Button btnSettings = new Button("设置");
     private Button btnClose = new Button("关闭");
     private TableView<AutoPart> table;
-    private TableColumn codeCol = new TableColumn("配件编码");
-    private TableColumn nameCol = new TableColumn("名称");
-    private ObservableList<AutoPart> copiedDataList = FXCollections.observableList(new ArrayList<>());
-    private Map<String, Boolean> compareResults = new HashMap<>();
-    private BorderPane formPane;
+    private TableColumn colCode = new TableColumn("配件编码");
+    private TableColumn colName = new TableColumn("名称");
+    private TableColumn colUnit = new TableColumn("单位");
+    private TableColumn colCount = new TableColumn("数量");
+    private TableColumn colPriceWithoutTax = new TableColumn("不含税单价");
+    private TableColumn colAmountWithoutTax = new TableColumn("不含税金额");
+    private TableColumn colWarehouse = new TableColumn("仓库");
+    private TableColumn colAmountOfStocks = new TableColumn("本库现库存数");
+    private TableColumn colNotes = new TableColumn("备注");
+    private TableColumn colModel = new TableColumn("车型");
+    private TableColumn colBrand = new TableColumn("品牌");
+    private TableColumn colShareEqually = new TableColumn("均摊单价");
+    private TableColumn colSlot = new TableColumn("货位");
 
+    private BorderPane formPane;
+    private String oldHashText;
 
     /**
      * Constructor
@@ -87,8 +102,6 @@ public class PurchaseOrder extends BorderPane implements BaseContainer {
         table = dataTable();
         TableStatusBar statusBar = new TableStatusBar(table);
         vLayout.getChildren().addAll(table, statusBar);
-
-
         ContextMenu cm = new ContextMenu();
         MenuItem mi1 = new MenuItem("添 加");
         mi1.setOnAction(new EventHandler<ActionEvent>() {
@@ -114,8 +127,6 @@ public class PurchaseOrder extends BorderPane implements BaseContainer {
                 }
             }
         });
-
-
         FXMLLoader loader2 = new FXMLLoader(
                 getClass().getResource(
                         "/fxml/purchase/footer.fxml"
@@ -163,27 +174,6 @@ public class PurchaseOrder extends BorderPane implements BaseContainer {
         });
     }
 
-    private Callback<AutoPart, Void> comparator(){
-        return new Callback<AutoPart, Void>() {
-
-            @Override
-            public Void call(AutoPart updated) {
-                for(AutoPart sparepart : copiedDataList) {
-                    if(updated.getCompareId().equals(sparepart.getCompareId())) {
-                        compareResults.put(updated.getCompareId(), updated.equals(sparepart));
-                        break;
-                    }
-                }
-                if(compareResults.containsKey(updated.getCompareId())) {
-                    btnSave.setDisable(!compareResults.containsValue(false));
-                } else {
-                    btnSave.setDisable(false);
-                }
-                return null;
-            }
-        };
-    }
-
     private void newOrder() {
         formPane = form();
         setCenter(formPane);
@@ -191,11 +181,10 @@ public class PurchaseOrder extends BorderPane implements BaseContainer {
 
     private void newItem() {
         AutoPart newObj = new AutoPart("","","",0,0D,0D,"",0,"","","",0D, "");
-        newObj.setComparator(comparator());
         newObj.setCompareId(System.currentTimeMillis()+"");
         table.getItems().add(0, newObj);
         // Start editing
-        table.edit(0, codeCol);
+        table.edit(0, colCode);
         // Select row
         TableView.TableViewSelectionModel selectionModel = table.getSelectionModel();
         selectionModel.clearSelection();
@@ -203,7 +192,6 @@ public class PurchaseOrder extends BorderPane implements BaseContainer {
     }
 
     private void save() {
-        initOldDataList();
         btnSave.setDisable(true);
     }
 
@@ -226,11 +214,57 @@ public class PurchaseOrder extends BorderPane implements BaseContainer {
     }
 
     private void print() {
-
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource(
+                        "/fxml/purchase/printing.fxml"
+                )
+        );
+        VBox root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Scene scene = new Scene(root);
+        Stage dialog = new Stage();
+        PrintingController controller = loader.getController();
+        controller.initComponents(dialog);
+        dialog.setTitle("选择打印机和模板");
+        dialog.initOwner(application.getStage());
+        dialog.setResizable(false);
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.setScene(scene);
+//        dialog.show();
+        // center stage on screen
+        dialog.centerOnScreen();
+        dialog.show();
     }
 
     private void settings() {
-
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource(
+                        "/fxml/purchase/settings.fxml"
+                )
+        );
+        VBox root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Scene scene = new Scene(root);
+        Stage dialog = new Stage();
+        SettingsController controller = loader.getController();
+        controller.initComponents(dialog);
+        dialog.setTitle("自定义显示格式");
+        dialog.initOwner(application.getStage());
+        dialog.setResizable(false);
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.setScene(scene);
+//        dialog.show();
+        // center stage on screen
+        dialog.centerOnScreen();
+        dialog.show();
     }
 
     private void close() {
@@ -238,19 +272,14 @@ public class PurchaseOrder extends BorderPane implements BaseContainer {
             this.getChildren().remove(formPane);
     }
 
-    private void initOldDataList() {
-        compareResults.clear();
-        copiedDataList.clear();
-        ObservableList<AutoPart> items = table.getItems();
-        Iterator<AutoPart> iter = items.iterator();
-        while(iter.hasNext()) {
-            AutoPart original = iter.next();
-            AutoPart copied = new AutoPart(original.getCode(),original.getName(),original.getUnit(),original.getCount(),original.getPriceExcludingTax(),original.getAmountExcludingTax(),original.getWarehouse(),original.getNum(),original.getNotes(),original.getModel(),original.getBrand(),original.getCapitationPrice(),original.getPosition());
-            copied.setCompareId(original.getCompareId());
-            copiedDataList.add(copied);
-            //Set true as default for each sparepart, true means no changes
-            compareResults.put(original.getCompareId(), true);
-        }
+    private String generateMD5Str() {
+        String tableContentStr = getTableContentStr();
+        String hashText = MD5.getMD5(tableContentStr);
+        return hashText;
+    }
+
+    private String getTableContentStr() {
+        return "";
     }
 
     private TableView dataTable() {
@@ -271,11 +300,11 @@ public class PurchaseOrder extends BorderPane implements BaseContainer {
                     return new EditingCell();
                 }
             };
-        codeCol.setCellValueFactory(
+        colCode.setCellValueFactory(
             new PropertyValueFactory<AutoPart,String>("code")
         );
-        codeCol.setCellFactory(cellFactory);
-        codeCol.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<AutoPart, String>>() {
+        colCode.setCellFactory(cellFactory);
+        colCode.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<AutoPart, String>>() {
                 @Override
                 public void handle(TableColumn.CellEditEvent<AutoPart, String> t) {
                     ObservableList<AutoPart> data = t.getTableView().getItems();
@@ -291,11 +320,11 @@ public class PurchaseOrder extends BorderPane implements BaseContainer {
             }
         );
 
-        nameCol.setCellValueFactory(
+        colName.setCellValueFactory(
             new PropertyValueFactory<AutoPart,String>("name")
         );
-        nameCol.setCellFactory(cellFactory);
-        nameCol.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<AutoPart, String>>() {
+        colName.setCellFactory(cellFactory);
+        colName.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<AutoPart, String>>() {
                 @Override
                 public void handle(TableColumn.CellEditEvent<AutoPart, String> t) {
                     ((AutoPart) t.getTableView().getItems().get(
@@ -304,7 +333,9 @@ public class PurchaseOrder extends BorderPane implements BaseContainer {
                 }
             }
         );
-        root.getColumns().addAll(codeCol, nameCol);
+
+        colName.setPrefWidth(200);
+        root.getColumns().addAll(colCode, colName, colUnit, colCount, colPriceWithoutTax, colAmountWithoutTax, colWarehouse, colAmountOfStocks, colNotes, colModel, colBrand, colShareEqually, colSlot);
 
         //Set the table to multi selection mode
         root.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -332,4 +363,6 @@ public class PurchaseOrder extends BorderPane implements BaseContainer {
     public void willClose() {
 
     }
+
+
 }
