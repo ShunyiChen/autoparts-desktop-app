@@ -138,15 +138,24 @@ public class PurchaseOrder extends BorderPane implements BaseContainer {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        FlowPane bottomPane = new FlowPane();
-        bottomPane.getChildren().add(footer);
-        bottomPane.setAlignment(Pos.CENTER_RIGHT);
+
+
+        BorderPane borderPane = new BorderPane();
+//        FlowPane bottomPane = new FlowPane();
+//        borderPane.setStyle("-fx-background-color:yellow;");
+
+//        bottomPane.getChildren().add(footer);
+//        bottomPane.setAlignment(Pos.CENTER_RIGHT);
+        borderPane.setRight(footer);
+
+
         BorderPane mainForm = new BorderPane();
         mainForm.setTop(inputForm);
         mainForm.setLeft(vLayout);
-        mainForm.setBottom(bottomPane);
+        mainForm.setBottom(borderPane);
         table.prefWidthProperty().bind(application.getStage().widthProperty().subtract(application.getDashboard().getNavigation().widthProperty().add(35)));
         table.prefHeightProperty().bind(application.getStage().heightProperty().subtract(350));
+
         return mainForm;
     }
 

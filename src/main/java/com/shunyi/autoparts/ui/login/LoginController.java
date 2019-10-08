@@ -1,6 +1,9 @@
 package com.shunyi.autoparts.ui.login;
 
+import com.google.gson.Gson;
 import com.shunyi.autoparts.ui.MainApp;
+import com.shunyi.autoparts.ui.common.HttpRequest;
+import com.shunyi.autoparts.ui.common.HttpResponse;
 import com.shunyi.autoparts.ui.supplier.ChooserController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -41,14 +44,31 @@ public class LoginController {
 
     @FXML
     public void loggingIn(ActionEvent event) {
-        if(StringUtils.isEmpty(txtUsername.getText().trim())) {
+        if(StringUtils.isEmpty(txtUsername.getText().trim())
+            || StringUtils.isEmpty(txtPassword.getText().trim())) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("用户名密码输入错误提醒");
-            alert.setHeaderText("用户名不能为空！");
+            alert.setTitle("登录失败");
+            alert.setHeaderText("用户名或密码不能为空。");
             alert.showAndWait();
         } else {
-            application.gotoDashboard();
-            System.out.println("Logged in successfully.");
+            String url = "http://localhost:8080/authenticate";
+            String json = "{\"username\":\""+txtUsername.getText().trim()+"\",\"password\":\""+txtPassword.getText().trim()+"\"}";
+            try {
+                String data = HttpRequest.POST(url, json, "");
+                Gson gson = new Gson();
+                HttpResponse res = gson.fromJson(data, HttpResponse.class);
+                if(res.getToken() != null) {
+                    application.gotoDashboard();
+                    System.out.println("Logged in successfully.");
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("身份验证失败");
+                    alert.setHeaderText("用户名和密码不匹配。");
+                    alert.showAndWait();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -85,6 +105,14 @@ public class LoginController {
         String javaVersion = System.getProperty("java.version");
         String javafxVersion = System.getProperty("javafx.version");
 //        label.setText("Hello, JavaFX " + javafxVersion + "\nRunning on Java " + javaVersion + ".");
+
+        txtUsername.setText("shunyichen");
+        txtPassword.setText("123456");
+
+        String[] items = {"127.0.0.1"};
+        cBoxGateway.getItems().addAll(items);
+        cBoxGateway.setValue(items[0]);
+        cBoxGateway.setStyle("-fx-font-size: 14px;");
 
         Image bg = new Image(getClass().getResourceAsStream("/img/LoginBG.png"), 745,406,false,true);
         BackgroundImage myBI = new BackgroundImage(bg,

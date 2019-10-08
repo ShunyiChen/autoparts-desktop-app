@@ -4,8 +4,12 @@ module desktopapp {
     requires javafx.base;
     requires javafx.graphics;
     requires org.apache.commons.lang3;
+    requires okhttp3;
+    requires com.google.gson;
     
     opens com.shunyi.autoparts.ui to javafx.fxml;
+    opens com.shunyi.autoparts.ui.common to com.google.gson;
+
     exports com.shunyi.autoparts.ui;
     exports com.shunyi.autoparts.ui.purchase;
     exports com.shunyi.autoparts.ui.model;

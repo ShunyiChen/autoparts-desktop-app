@@ -45,10 +45,16 @@
                </font>
             </PasswordField>
             <ComboBox fx:id="cBoxGateway" layoutX="271.0" layoutY="195.0" prefHeight="34.0" prefWidth="204.0" />
-            <Button fx:id="btnSettings" layoutX="486.0" layoutY="201.0" mnemonicParsing="false" prefHeight="16.0" prefWidth="16.0" onAction="#openGatewayEditor">
+            <Button fx:id="btnSettings" layoutX="486.0" layoutY="199.0" mnemonicParsing="false" onAction="#openGatewayEditor" prefHeight="16.0" prefWidth="16.0">
             </Button>
-            <CheckBox fx:id="cBoxRemember" layoutX="271.0" layoutY="238.0" mnemonicParsing="false" text="记住用户名" />
-            <CheckBox fx:id="cBoxAutoLogin" layoutX="373.0" layoutY="238.0" mnemonicParsing="false" text="下次自动登录" />
+            <CheckBox fx:id="cBoxRemember" layoutX="271.0" layoutY="238.0" mnemonicParsing="false" text="记住用户名">
+               <font>
+                  <Font size="14.0" />
+               </font></CheckBox>
+            <CheckBox fx:id="cBoxAutoLogin" layoutX="373.0" layoutY="238.0" mnemonicParsing="false" text="下次自动登录">
+               <font>
+                  <Font size="14.0" />
+               </font></CheckBox>
             <Button layoutX="271.0" layoutY="263.0" mnemonicParsing="false" onAction="#loggingIn" prefHeight="34.0" prefWidth="204.0" text="登  录">
                <font>
                   <Font size="16.0" />
