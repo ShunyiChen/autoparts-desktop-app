@@ -1,5 +1,6 @@
 package com.shunyi.autoparts.ui;
 
+import com.shunyi.autoparts.ui.common.ENV;
 import com.shunyi.autoparts.ui.login.LoginController;
 import com.shunyi.autoparts.ui.main.MainFrame;
 import javafx.application.Application;

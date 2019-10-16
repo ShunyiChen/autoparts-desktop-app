@@ -2,15 +2,22 @@ package com.shunyi.autoparts.ui.supplier;
 
 import com.google.gson.Gson;
 import com.shunyi.autoparts.ui.MainApp;
+import com.shunyi.autoparts.ui.common.EditingCell;
 import com.shunyi.autoparts.ui.http.HttpClient;
+import com.shunyi.autoparts.ui.model.AutoPart;
+import com.shunyi.autoparts.ui.model.Supplier;
 import com.shunyi.autoparts.ui.model.SupplierCategory;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTreeCell;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
@@ -48,7 +55,7 @@ public class SupplierManagementController {
     @FXML
     TreeView<SupplierCategory> supplierCategoryTree;
     @FXML
-    TableView supplierTable;
+    TableView<Supplier> supplierTable;
     @FXML
     GridPane gridPane;
     @FXML
@@ -61,6 +68,17 @@ public class SupplierManagementController {
     TextField txtName;
     @FXML
     TextField txtOthers;
+    @FXML
+    private TableColumn colCode;
+    @FXML
+    private TableColumn colName;
+    @FXML
+    private TableColumn colContact;
+    @FXML
+    private TableColumn colPhone;
+    @FXML
+    private TableColumn colOther;
+
     private Gson gson = new Gson();
     private MainApp application;
 
@@ -73,7 +91,6 @@ public class SupplierManagementController {
                 if(param != null) {
                     selected.getValue().setParent(true);
                     String json = gson.toJson(selected.getValue());
-                    System.out.println("json="+json);
                     try {
                          HttpClient.PUT("/supplier/categories/"+selected.getValue().getId(),json);
                     } catch (IOException e) {
@@ -126,14 +143,130 @@ public class SupplierManagementController {
 
     @FXML
     public void newSupplier(ActionEvent event) {
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource(
+                        "/fxml/supplier/edit_supplier.fxml"
+                )
+        );
+        VBox root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Scene scene = new Scene(root);
+        Stage dialog = new Stage();
+        EditSupplierController controller = loader.getController();
+        Callback<Supplier, Object> cb = new Callback<Supplier, Object>() {
+            @Override
+            public Object call(Supplier param) {
+                String json = gson.toJson(param);
+                try {
+                    HttpClient.POST("/suppliers", json);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                supplierTable.getItems().add(param);
+                return null;
+            }
+        };
+        controller.prepare(dialog, null, cb);
+        dialog.setTitle("新建供应商");
+        dialog.initOwner(application.getStage());
+        dialog.setResizable(false);
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.setScene(scene);
+        // center stage on screen
+        dialog.centerOnScreen();
+        dialog.show();
+    }
+
+    @FXML
+    public void updateSupplier() {
+        Supplier supplier = supplierTable.getSelectionModel().getSelectedItem();
+        if(supplier == null) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
+            alert.setHeaderText("请在表格上选择一行记录");
+            alert.show();
+            return;
+        }
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource(
+                        "/fxml/supplier/edit_supplier.fxml"
+                )
+        );
+        VBox root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Scene scene = new Scene(root);
+        Stage dialog = new Stage();
+        dialog.setOnHiding( e -> {
+        });
+        EditSupplierController controller = loader.getController();
+        Callback<Supplier, Object> cb = new Callback<Supplier, Object>() {
+            @Override
+            public Object call(Supplier param) {
+                String json = gson.toJson(param);
+                try {
+                    HttpClient.PUT("/suppliers/"+param.getId(),json);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                Supplier supplier1 = supplierTable.getSelectionModel().getSelectedItem();
+                int index = supplierTable.getItems().indexOf(supplier1);
+                supplierTable.getItems().remove(index);
+                supplierTable.getItems().add(param);
+                supplierTable.getSelectionModel().select(param);
+                return null;
+            }
+        };
+        controller.prepare(dialog, supplier, cb);
+        dialog.setTitle("更改供应商");
+        dialog.initOwner(application.getStage());
+        dialog.setResizable(false);
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.setScene(scene);
+        // center stage on screen
+        dialog.centerOnScreen();
+        dialog.show();
     }
 
     @FXML
     public void removeSupplier(ActionEvent event) {
+        Supplier supplier = supplierTable.getSelectionModel().getSelectedItem();
+        if(supplier == null) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
+            alert.setHeaderText("请在表格上选择一行记录");
+            alert.show();
+            return;
+        }
+        Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.NO, ButtonType.YES);
+        alert.setHeaderText("是否删除该供应商？");
+        alert.showAndWait()
+                .filter(response -> response == ButtonType.YES)
+                .ifPresent(response -> {
+                    try {
+                        HttpClient.DELETE("/suppliers/"+supplier.getId());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    supplierTable.getItems().remove(supplier);
+                });
     }
 
     @FXML
     public void search(ActionEvent event) {
+//        TextField txtCode;
+//        TextField txtContact;
+//        TextField txtPhone;
+//        TextField txtName;
+//        TextField txtOthers;
+        if(!txtCode.getText().equals("")) {
+
+        }
     }
 
     @FXML
@@ -275,5 +408,59 @@ public class SupplierManagementController {
                 }
             }
         });
+        supplierCategoryTree.setOnMouseClicked((MouseEvent event) -> {
+            if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 1){
+                TreeItem<SupplierCategory> item = supplierCategoryTree.getSelectionModel().getSelectedItem();
+                if(item.getValue().getId() == 0) {
+                    supplierTable.getItems().clear();
+                    String json = null;
+                    try {
+                        json = HttpClient.GET("/suppliers");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    Supplier[] suppliers = gson.fromJson(json, Supplier[].class);
+                    supplierTable.getItems().addAll(suppliers);
+                }
+            }
+        });
+
+        // 初始化table
+        //Set the table to multi selection mode
+        supplierTable.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        supplierTable.setEditable(false);
+        supplierTable.setOnMouseClicked((MouseEvent event) -> {
+            if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2){
+                updateSupplier();
+            }
+        });
+        try {
+            String json = HttpClient.GET("/suppliers");
+            Supplier[] suppliers = gson.fromJson(json, Supplier[].class);
+            supplierTable.getItems().addAll(suppliers);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // 编码列设置
+        colCode.setCellValueFactory(
+                new PropertyValueFactory<Supplier, String>("code")
+        );
+        //名称列设置
+        colName.setCellValueFactory(
+                new PropertyValueFactory<Supplier, String>("name")
+        );
+        //联系人列设置
+        colContact.setCellValueFactory(
+                new PropertyValueFactory<Supplier, String>("contact")
+        );
+        //电话列设置
+        colPhone.setCellValueFactory(
+                new PropertyValueFactory<Supplier, String>("phone")
+        );
+        //其他列设置
+        colOther.setCellValueFactory(
+                new PropertyValueFactory<Supplier, String>("other")
+        );
     }
 }

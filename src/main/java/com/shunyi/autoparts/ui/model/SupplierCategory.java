@@ -1,7 +1,5 @@
 package com.shunyi.autoparts.ui.model;
 
-import com.google.gson.Gson;
-
 /** 供应商分类DTO */
 public class SupplierCategory {
 
@@ -56,23 +54,5 @@ public class SupplierCategory {
     @Override
     public String toString() {
         return name;
-    }
-
-    public static void main(String[] args) {
-        String json = "[\n" +
-                "    {\n" +
-                "        \"id\": 3,\n" +
-                "        \"name\": \"全部供应商\",\n" +
-                "        \"parentId\": 0,\n" +
-                "        \"parent\": true\n" +
-                "    }\n" +
-                "]";
-        Gson gson = new Gson();
-//        Type listType = new TypeToken<ArrayList<SupplierCategory>>(){}.getType();
-
-        SupplierCategory[] lst = gson.fromJson(json, SupplierCategory[].class);
-        for(SupplierCategory sc : lst) {
-            System.out.println(sc);
-        }
     }
 }
