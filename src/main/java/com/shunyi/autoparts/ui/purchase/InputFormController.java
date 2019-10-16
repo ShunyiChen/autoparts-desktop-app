@@ -1,6 +1,6 @@
 package com.shunyi.autoparts.ui.purchase;
 
-import com.shunyi.autoparts.ui.supplier.ChooserController;
+import com.shunyi.autoparts.ui.supplier.SupplierManagementController;
 import com.shunyi.autoparts.ui.MainApp;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -22,28 +22,26 @@ public class InputFormController {
 
     @FXML
     public void chooseSupplier(ActionEvent event) {
-        FXMLLoader loader = new FXMLLoader(
-                getClass().getResource(
-                        "/fxml/supplier/supplier_chooser.fxml"
-                )
-        );
-        SplitPane root = null;
-        try {
-            root = loader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        ChooserController controller = loader.getController();
-        controller.initTree();
-
-        Scene scene = new Scene(root);
-        Stage dialog = new Stage();
-        dialog.initOwner(application.getStage());
-        dialog.initModality(Modality.APPLICATION_MODAL);
-        dialog.setScene(scene);
-        dialog.show();
-        // center stage on screen
-        dialog.centerOnScreen();
+//        FXMLLoader loader = new FXMLLoader(
+//                getClass().getResource(
+//                        "/fxml/supplier/supplier_management.fxml"
+//                )
+//        );
+//        SplitPane root = null;
+//        try {
+//            root = loader.load();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        SupplierManagementController controller = loader.getController();
+//        controller.initTree();
+//        Scene scene = new Scene(root);
+//        Stage dialog = new Stage();
+//        dialog.initOwner(application.getStage());
+//        dialog.initModality(Modality.APPLICATION_MODAL);
+//        dialog.setScene(scene);
+//        dialog.show();
+//        // center stage on screen
+//        dialog.centerOnScreen();
     }
 }

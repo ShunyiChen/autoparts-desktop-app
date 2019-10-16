@@ -3,6 +3,7 @@ package com.shunyi.autoparts.ui.main;
 import com.shunyi.autoparts.ui.MainApp;
 import com.shunyi.autoparts.ui.dashboard.Dashboard;
 import com.shunyi.autoparts.ui.purchase.PurchaseOrder;
+import com.shunyi.autoparts.ui.supplier.SupplierManagement;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
@@ -17,6 +18,7 @@ public class MainFrame extends BorderPane {
     private ContentPane contentPane;
     private BaseContainer currentContainer;
     private PurchaseOrder purchaseContainer;
+
     private Dashboard dashboard;
     private Image ICON_1 = new Image(getClass().getResourceAsStream("/img/grid.png"));
     private Image ICON_2 = new Image(getClass().getResourceAsStream("/img/purchase.png"));
@@ -39,8 +41,9 @@ public class MainFrame extends BorderPane {
         navigation = new Navigation(application);
         contentPane = new ContentPane();
         contentPane.getViewport().setCenter(new Label("无显示内容"));
-        purchaseContainer = new PurchaseOrder(application);
         dashboard = new Dashboard(application);
+        purchaseContainer = new PurchaseOrder(application);
+
         this.setTop(toolbar);
         this.setLeft(navigation);
         this.setCenter(contentPane);
@@ -90,7 +93,67 @@ public class MainFrame extends BorderPane {
                 return null;
             }
         });
-        navigation.addClickableItem(item1,item2,item3,item4,item5);
+        ClickableItem item6 = new ClickableItem(ICON_5, "供应商管理", new Callback() {
+            @Override
+            public Object call(Object param) {
+
+                SupplierManagement supplierManagement = new SupplierManagement(application);
+
+                toolbar.setTitle("供应商管理");
+                contentPane.getViewport().setCenter(supplierManagement);
+                return null;
+            }
+        });
+        ClickableItem item7 = new ClickableItem(ICON_5, "仓库管理", new Callback() {
+            @Override
+            public Object call(Object param) {
+                toolbar.setTitle("仓库管理");
+                contentPane.getViewport().setCenter(new Pane());
+                return null;
+            }
+        });
+        ClickableItem item8 = new ClickableItem(ICON_5, "配件管理", new Callback() {
+            @Override
+            public Object call(Object param) {
+                toolbar.setTitle("配件管理");
+                contentPane.getViewport().setCenter(new Pane());
+                return null;
+            }
+        });
+        ClickableItem item9 = new ClickableItem(ICON_5, "SKU管理", new Callback() {
+            @Override
+            public Object call(Object param) {
+                toolbar.setTitle("SKU管理");
+                contentPane.getViewport().setCenter(new Pane());
+                return null;
+            }
+        });
+        ClickableItem item10 = new ClickableItem(ICON_5, "打包品管理", new Callback() {
+            @Override
+            public Object call(Object param) {
+                toolbar.setTitle("打包品管理");
+                contentPane.getViewport().setCenter(new Pane());
+                return null;
+            }
+        });
+        ClickableItem item11 = new ClickableItem(ICON_5, "组织机构管理", new Callback() {
+            @Override
+            public Object call(Object param) {
+                toolbar.setTitle("组织机构管理");
+                contentPane.getViewport().setCenter(new Pane());
+                return null;
+            }
+        });
+        ClickableItem item12 = new ClickableItem(ICON_5, "其它管理", new Callback() {
+            @Override
+            public Object call(Object param) {
+                toolbar.setTitle("其它管理");
+                contentPane.getViewport().setCenter(new Pane());
+                return null;
+            }
+        });
+
+        navigation.addClickableItem(item1,item2,item3,item4,item5,item6,item7,item8,item9,item10,item11,item12);
     }
 
     public BaseContainer getCurrentContainer() {

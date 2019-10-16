@@ -36,7 +36,7 @@ public class SettingsController {
         dialog.close();
     }
 
-    public void initComponents(Stage dialog) {
+    public void prepare(Stage dialog) {
         this.dialog = dialog;
         tabPane.setStyle("-fx-font-size: 14;");
         btnOk.setStyle(String.format("-fx-base: %s;", "rgb(63,81,181)"));

@@ -2,10 +2,13 @@ package com.shunyi.autoparts.ui.login;
 
 import com.google.gson.Gson;
 import com.shunyi.autoparts.ui.MainApp;
-import com.shunyi.autoparts.ui.common.HttpRequest;
-import com.shunyi.autoparts.ui.common.HttpResponse;
-import com.shunyi.autoparts.ui.supplier.ChooserController;
+import com.shunyi.autoparts.ui.common.ENV;
+import com.shunyi.autoparts.ui.h2.H2;
+import com.shunyi.autoparts.ui.http.HttpClient;
+import com.shunyi.autoparts.ui.http.AuthenticationResponse;
+import com.shunyi.autoparts.ui.model.RemoteConnection;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -20,6 +23,7 @@ import javafx.stage.Stage;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 public class LoginController {
     @FXML
@@ -27,11 +31,13 @@ public class LoginController {
     @FXML
     private Hyperlink titleLink;
     @FXML
+    private ProgressBar progressBar;
+    @FXML
     private TextField txtUsername;
     @FXML
     private PasswordField txtPassword;
     @FXML
-    private ComboBox cBoxGateway;
+    private ComboBox<RemoteConnection> cbRemoteConnection;
     @FXML
     private CheckBox cBoxRemember;
     @FXML
@@ -41,6 +47,7 @@ public class LoginController {
     @FXML
     private Button button;
     private MainApp application;
+    private Gson gson = new Gson();
 
     @FXML
     public void loggingIn(ActionEvent event) {
@@ -51,13 +58,17 @@ public class LoginController {
             alert.setHeaderText("用户名或密码不能为空。");
             alert.showAndWait();
         } else {
-            String url = "http://localhost:8080/authenticate";
+            RemoteConnection rc = cbRemoteConnection.getValue();
+            ENV.getInstance().addToEnvironment("RemoteConnection", rc);
+            String path = "/authenticate";
             String json = "{\"username\":\""+txtUsername.getText().trim()+"\",\"password\":\""+txtPassword.getText().trim()+"\"}";
             try {
-                String data = HttpRequest.POST(url, json, "");
-                Gson gson = new Gson();
-                HttpResponse res = gson.fromJson(data, HttpResponse.class);
+                String data = HttpClient.POST(path, json, "");
+                AuthenticationResponse res = gson.fromJson(data, AuthenticationResponse.class);
+                progressBar.setProgress(0.8);
                 if(res.getToken() != null) {
+                    ENV.getInstance().addToEnvironment("Authorization", "Bearer "+res.getToken());
+                    progressBar.setProgress(1);
                     application.gotoDashboard();
                     System.out.println("Logged in successfully.");
                 } else {
@@ -67,16 +78,19 @@ public class LoginController {
                     alert.showAndWait();
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("身份验证失败");
+                alert.setHeaderText(e.toString());
+                alert.showAndWait();
             }
         }
     }
 
     @FXML
-    public void openGatewayEditor(ActionEvent event) {
+    public void openRemoteConnectionEditor(ActionEvent event) {
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource(
-                        "/fxml/login/GatewayAddrEditor.fxml"
+                        "/fxml/login/RemoteConnectionEditor.fxml"
                 )
         );
         VBox root = null;
@@ -87,32 +101,48 @@ public class LoginController {
         }
         Scene scene = new Scene(root);
         Stage dialog = new Stage();
-        GatewayAddrEditorController controller = loader.getController();
-        controller.initComponents(dialog);
+        dialog.setOnHiding( e -> {
+            initComboBoxData();
+        });
+        RemoteConnectionEditorController controller = loader.getController();
+        controller.prepare(dialog);
         dialog.setTitle("设置网关地址");
         dialog.initOwner(application.getStage());
         dialog.setResizable(false);
         dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.setScene(scene);
-//        dialog.show();
         // center stage on screen
         dialog.centerOnScreen();
         dialog.show();
     }
 
-    public void initComponents(MainApp application) {
+    private void initComboBoxData() {
+        try {
+            cbRemoteConnection.getItems().clear();
+            cbRemoteConnection.getItems().addAll(H2.retrieveAll());
+            cbRemoteConnection.getItems().stream().forEach(e -> {
+                if(e.is_default()) {
+                    cbRemoteConnection.setValue(e);
+                }
+            });
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void prepare(MainApp application) {
         this.application = application;
         String javaVersion = System.getProperty("java.version");
         String javafxVersion = System.getProperty("javafx.version");
 //        label.setText("Hello, JavaFX " + javafxVersion + "\nRunning on Java " + javaVersion + ".");
 
+        progressBar.setProgress(0.1);
+
         txtUsername.setText("shunyichen");
         txtPassword.setText("123456");
 
-        String[] items = {"127.0.0.1"};
-        cBoxGateway.getItems().addAll(items);
-        cBoxGateway.setValue(items[0]);
-        cBoxGateway.setStyle("-fx-font-size: 14px;");
+        cbRemoteConnection.setStyle("-fx-font-size: 14px;");
+        initComboBoxData();
 
         Image bg = new Image(getClass().getResourceAsStream("/img/LoginBG.png"), 745,406,false,true);
         BackgroundImage myBI = new BackgroundImage(bg,
@@ -125,20 +155,17 @@ public class LoginController {
                 new KeyCodeCombination(KeyCode.ENTER),
                 new Runnable() {
                     @FXML public void run() {
-
                         button.fire();
                     }
                 }
         );
 
-//        cBoxGateway.getItems().addAll();
 
         // 初始化网关按钮
         Image imgGear = new Image(getClass().getResourceAsStream("/img/Gear16.png"));
         btnSettings.setGraphic(new ImageView(imgGear));
-//        btnSettings.setBackground(Background.EMPTY);
 
-
+        progressBar.setProgress(0.2);
     }
 
 }

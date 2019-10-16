@@ -11,8 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="519.0" prefWidth="600.0"  fx:controller="com.shunyi.autoparts.ui.login.GatewayAddrEditorController" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="519.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.shunyi.autoparts.ui.login.RemoteConnectionEditorController">
    <children>
       <TableView fx:id="tableView" prefHeight="323.0" prefWidth="600.0" style="-fx-border-color: rgb(63,81,181); ">
 
@@ -21,7 +20,7 @@
          <children>
             <Button fx:id="btnUp" mnemonicParsing="false" onAction="#up" prefWidth="100.0" text="上移">
                <FlowPane.margin>
-                  <Insets right="20.0" />
+                  <Insets right="10.0" />
                </FlowPane.margin>
                <font>
                   <Font size="14.0" />
@@ -29,7 +28,7 @@
             </Button>
             <Button fx:id="btnDown" mnemonicParsing="false" onAction="#down" prefWidth="100.0" text="下移">
                <FlowPane.margin>
-                  <Insets right="20.0" />
+                  <Insets right="10.0" />
                </FlowPane.margin>
                <font>
                   <Font size="14.0" />
@@ -37,7 +36,7 @@
             </Button>
             <Button fx:id="btnDefault" mnemonicParsing="false" onAction="#setDefault" prefWidth="100.0" text="默认">
                <FlowPane.margin>
-                  <Insets right="20.0" />
+                  <Insets right="10.0" />
                </FlowPane.margin>
                <font>
                   <Font size="14.0" />
@@ -47,6 +46,9 @@
                <font>
                   <Font size="14.0" />
                </font>
+               <FlowPane.margin>
+                  <Insets right="10.0" />
+               </FlowPane.margin>
             </Button>
          </children>
          <opaqueInsets>
@@ -94,11 +96,19 @@
             </Button>
             <Button fx:id="btnOk" mnemonicParsing="false" onAction="#ok" prefHeight="30.0" prefWidth="74.0" text="确   定">
                <FlowPane.margin>
-                  <Insets right="20.0" />
+                  <Insets right="10.0" />
                </FlowPane.margin>
                <font>
                   <Font size="14.0" />
                </font>
+            </Button>
+            <Button fx:id="btnReset" mnemonicParsing="false" onAction="#reset" prefWidth="74.0" text="重置">
+               <font>
+                  <Font size="14.0" />
+               </font>
+               <FlowPane.margin>
+                  <Insets right="10.0" />
+               </FlowPane.margin>
             </Button>
          </children>
       </FlowPane>

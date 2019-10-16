@@ -45,5 +45,18 @@
     /* -fx-font-weight:bold; */
     -fx-font-size:14px;           //the font size you asked in the comments below
     /* -fx-text-fill:orange; */
+}
+.tree-view .tree-cell{
+    -fx-font-size:14px;
+}
+.tree-cell:selected {
+   -fx-background-color: rgb(63,81,181);
+   -fx-text-background-color: white;
+}
 
+//menuItem
+.menu-item .label{
+    //-fx-text-fill: rgb(63,81,181);
+    -fx-font-size:14px;
+    //-fx-text-background-color: white;
 }

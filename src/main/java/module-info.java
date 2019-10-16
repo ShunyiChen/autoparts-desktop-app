@@ -6,9 +6,13 @@ module desktopapp {
     requires org.apache.commons.lang3;
     requires okhttp3;
     requires com.google.gson;
-    
+    requires com.h2database;
+
     opens com.shunyi.autoparts.ui to javafx.fxml;
     opens com.shunyi.autoparts.ui.common to com.google.gson;
+    opens com.shunyi.autoparts.ui.http to com.google.gson;
+    opens com.shunyi.autoparts.ui.model to com.google.gson;
+
 
     exports com.shunyi.autoparts.ui;
     exports com.shunyi.autoparts.ui.purchase;

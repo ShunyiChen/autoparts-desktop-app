@@ -3,20 +3,19 @@ package com.shunyi.autoparts.ui.purchase;
 import com.shunyi.autoparts.ui.MainApp;
 import com.shunyi.autoparts.ui.common.EditingCell;
 import com.shunyi.autoparts.ui.common.MD5;
-import com.shunyi.autoparts.ui.login.GatewayAddrEditorController;
 import com.shunyi.autoparts.ui.main.BaseContainer;
 import com.shunyi.autoparts.ui.model.AutoPart;
-import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
@@ -67,15 +66,18 @@ public class PurchaseOrder extends BorderPane implements BaseContainer {
     }
 
     private void initComponents() {
+        Image imageSettings = new Image(getClass().getResourceAsStream("/img/Settings_16.107023411371px_1183578_easyicon.net.png"));
+        btnSettings.setGraphic(new ImageView(imageSettings));
+
         btnSave.setDisable(true);
-        btnNew.setFont(Font.font(16));
-        btnSave.setFont(Font.font(16));
-        btnDelete.setFont(Font.font(16));
-        btnSubmit.setFont(Font.font(16));
-        btnAddAutoPart.setFont(Font.font(16));
-        btnPrint.setFont(Font.font(16));
-        btnSettings.setFont(Font.font(16));
-        btnClose.setFont(Font.font(16));
+        btnNew.setFont(Font.font(14));
+        btnSave.setFont(Font.font(14));
+        btnDelete.setFont(Font.font(14));
+        btnSubmit.setFont(Font.font(14));
+        btnAddAutoPart.setFont(Font.font(14));
+        btnPrint.setFont(Font.font(14));
+        btnSettings.setFont(Font.font(14));
+        btnClose.setFont(Font.font(14));
         ToolBar toolBar = new ToolBar();
         toolBar.getItems().addAll(btnNew, new Separator(), btnSave, btnDelete, btnSubmit, btnAddAutoPart, new Separator(), btnPrint, btnSettings, new Separator(), btnClose);
         this.setTop(toolBar);
@@ -237,7 +239,7 @@ public class PurchaseOrder extends BorderPane implements BaseContainer {
         Scene scene = new Scene(root);
         Stage dialog = new Stage();
         PrintingController controller = loader.getController();
-        controller.initComponents(dialog);
+        controller.prepare(dialog);
         dialog.setTitle("选择打印机和模板");
         dialog.initOwner(application.getStage());
         dialog.setResizable(false);
@@ -264,7 +266,7 @@ public class PurchaseOrder extends BorderPane implements BaseContainer {
         Scene scene = new Scene(root);
         Stage dialog = new Stage();
         SettingsController controller = loader.getController();
-        controller.initComponents(dialog);
+        controller.prepare(dialog);
         dialog.setTitle("自定义显示格式");
         dialog.initOwner(application.getStage());
         dialog.setResizable(false);

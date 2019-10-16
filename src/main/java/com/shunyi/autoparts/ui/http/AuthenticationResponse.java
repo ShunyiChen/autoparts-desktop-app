@@ -1,6 +1,7 @@
-package com.shunyi.autoparts.ui.common;
+package com.shunyi.autoparts.ui.http;
 
-public class HttpResponse {
+/** 用户身份验证的http相应 */
+public class AuthenticationResponse {
     private String token;
     private String timestamp;
     private String status;
