@@ -22,28 +22,28 @@
    <top>
       <ToolBar prefHeight="40.0" BorderPane.alignment="CENTER">
         <items>
-          <Button fx:id="btnNewCategory" mnemonicParsing="false" text="新建类目" onAction="#newCategory">
+          <Button fx:id="btnNewCategory" mnemonicParsing="false" onAction="#newCategory" text="新建类目">
                <font>
                   <Font size="14.0" />
                </font>
             </Button>
-            <Button fx:id="btnRemoveCategory" mnemonicParsing="false" text="删除类目" onAction="#removeCategory">
+            <Button fx:id="btnRemoveCategory" mnemonicParsing="false" onAction="#removeCategory" text="删除类目">
                <font>
                   <Font size="14.0" />
                </font>
             </Button>
             <Separator />
-            <Button fx:id="btnNewSupplier" mnemonicParsing="false" text="新建供应商" onAction="#newSupplier">
+            <Button fx:id="btnNewSupplier" mnemonicParsing="false" onAction="#newSupplier" text="新建供应商">
                <font>
                   <Font size="14.0" />
                </font>
             </Button>
-            <Button fx:id="btnUpdateSupplier" mnemonicParsing="false" text="更改供应商" onAction="#updateSupplier">
+            <Button fx:id="btnUpdateSupplier" mnemonicParsing="false" onAction="#updateSupplier" text="更改供应商">
                 <font>
                     <Font size="14.0" />
                 </font>
             </Button>
-            <Button fx:id="btnRemoveSupplier" mnemonicParsing="false" text="删除供应商" onAction="#removeSupplier">
+            <Button fx:id="btnRemoveSupplier" mnemonicParsing="false" onAction="#removeSupplier" text="删除供应商">
                <font>
                   <Font size="14.0" />
                </font>
@@ -72,11 +72,12 @@
                <center>
                   <TableView fx:id="supplierTable" prefHeight="598.0" BorderPane.alignment="CENTER">
                     <columns>
-                       <TableColumn prefWidth="156.0" text="编码" fx:id="colCode"/>
-                       <TableColumn prefWidth="282.0" text="名称" fx:id="colName"/>
-                       <TableColumn prefWidth="162.0" text="联系人" fx:id="colContact"/>
-                       <TableColumn prefWidth="165.0" text="电话" fx:id="colPhone"/>
-                        <TableColumn prefWidth="165.0" text="其他" fx:id="colOther"/>
+                       <TableColumn fx:id="colCode" prefWidth="156.0" text="编码" />
+                       <TableColumn fx:id="colName" prefWidth="282.0" text="名称" />
+                       <TableColumn fx:id="colContact" prefWidth="162.0" text="联系人" />
+                       <TableColumn fx:id="colPhone" prefWidth="165.0" text="电话" />
+                        <TableColumn fx:id="colOther" prefWidth="165.0" text="其他" />
+                        <TableColumn fx:id="colCategory" prefWidth="165.0" text="类目" />
                     </columns>
                   </TableView>
                </center>

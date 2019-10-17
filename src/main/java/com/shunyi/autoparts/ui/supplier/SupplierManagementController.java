@@ -78,7 +78,8 @@ public class SupplierManagementController {
     private TableColumn colPhone;
     @FXML
     private TableColumn colOther;
-
+    @FXML
+    private TableColumn colCategory;
     private Gson gson = new Gson();
     private MainApp application;
 
@@ -259,13 +260,20 @@ public class SupplierManagementController {
 
     @FXML
     public void search(ActionEvent event) {
-//        TextField txtCode;
-//        TextField txtContact;
-//        TextField txtPhone;
-//        TextField txtName;
-//        TextField txtOthers;
-        if(!txtCode.getText().equals("")) {
-
+        Supplier supplier = new Supplier();
+        supplier.setCode(txtCode.getText());
+        supplier.setName(txtName.getText());
+        supplier.setContact(txtContact.getText());
+        supplier.setPhone(txtPhone.getText());
+        supplier.setOther(txtOthers.getText());
+        String json = gson.toJson(supplier);
+        try {
+            String data = HttpClient.POST("/suppliers/search", json);
+            Supplier[] suppliers = gson.fromJson(data, Supplier[].class);
+            supplierTable.getItems().clear();
+            supplierTable.getItems().addAll(suppliers);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -329,7 +337,7 @@ public class SupplierManagementController {
     private void getNodes(TreeItem<SupplierCategory> parent, SupplierCategory[] all) {
         for(SupplierCategory sc : all) {
             if(sc.getParentId() == parent.getValue().getId()) {
-                TreeItem<SupplierCategory> node = new TreeItem<SupplierCategory>(sc);
+                TreeItem<SupplierCategory> node = new TreeItem<>(sc);
                 parent.getChildren().add(node);
                 parent.setExpanded(true);
                 getNodes(node, all);
@@ -343,7 +351,7 @@ public class SupplierManagementController {
      */
     public void prepare(MainApp application) {
         this.application = application;
-        final int initialValue = 50;
+        final int initialValue = 30;
         // Value factory.
         SpinnerValueFactory<Integer> valueFactory = //
                 new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, initialValue);
@@ -411,17 +419,15 @@ public class SupplierManagementController {
         supplierCategoryTree.setOnMouseClicked((MouseEvent event) -> {
             if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 1){
                 TreeItem<SupplierCategory> item = supplierCategoryTree.getSelectionModel().getSelectedItem();
-                if(item.getValue().getId() == 0) {
-                    supplierTable.getItems().clear();
-                    String json = null;
-                    try {
-                        json = HttpClient.GET("/suppliers");
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    Supplier[] suppliers = gson.fromJson(json, Supplier[].class);
-                    supplierTable.getItems().addAll(suppliers);
+                supplierTable.getItems().clear();
+                String json = null;
+                try {
+                    json = HttpClient.GET("/suppliers/category/"+item.getValue().getId());
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
+                Supplier[] suppliers = gson.fromJson(json, Supplier[].class);
+                supplierTable.getItems().addAll(suppliers);
             }
         });
 
@@ -441,7 +447,6 @@ public class SupplierManagementController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         // 编码列设置
         colCode.setCellValueFactory(
                 new PropertyValueFactory<Supplier, String>("code")
@@ -461,6 +466,10 @@ public class SupplierManagementController {
         //其他列设置
         colOther.setCellValueFactory(
                 new PropertyValueFactory<Supplier, String>("other")
+        );
+        //类目列设置
+        colCategory.setCellValueFactory(
+                new PropertyValueFactory<Supplier, String>("category")
         );
     }
 }

@@ -106,7 +106,7 @@
                   <Insets right="10.0" />
                </FlowPane.margin>
             </Button>
-            <Button mnemonicParsing="false" text="继续添加" onAction="#continueAdding">
+            <Button mnemonicParsing="false" text="继续添加" onAction="#continueAdding" fx:id="btnContinueAdding">
                <font>
                   <Font size="14.0" />
                </font>

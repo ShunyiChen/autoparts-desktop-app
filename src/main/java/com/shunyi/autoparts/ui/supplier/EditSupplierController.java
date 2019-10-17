@@ -35,6 +35,8 @@ public class EditSupplierController {
     private TextField txtOthers;
     @FXML
     private Button btnSave;
+    @FXML
+    private Button btnContinueAdding;
     private Stage dialog;
     private Supplier updatedSupplier;
     private SupplierCategory selectedCategory;
@@ -113,12 +115,12 @@ public class EditSupplierController {
 
     @FXML
     private void continueAdding(ActionEvent event) {
-        Supplier supplier = new Supplier(txtCode.getText(), txtName.getText(), txtContacts.getText(),txtPhone.getText(),txtOthers.getText(),selectedCategory.getId());
+        Supplier supplier = new Supplier(txtCode.getText(), txtName.getText(), txtContacts.getText(),txtPhone.getText(),txtOthers.getText(),selectedCategory);
         callback.call(supplier);
     }
 
     public void update() {
-        Supplier supplier = new Supplier(txtCode.getText(), txtName.getText(), txtContacts.getText(),txtPhone.getText(),txtOthers.getText(),selectedCategory.getId());
+        Supplier supplier = new Supplier(txtCode.getText(), txtName.getText(), txtContacts.getText(),txtPhone.getText(),txtOthers.getText(),selectedCategory);
         supplier.setId(updatedSupplier.getId());
         callback.call(supplier);
     }
@@ -134,7 +136,7 @@ public class EditSupplierController {
         btnSave.setStyle(String.format("-fx-base: %s;", "rgb(63,81,181)"));
         if(updatedSupplier != null) {
             try {
-                String json = HttpClient.GET("/supplier/categories/"+updatedSupplier.getSupplierCategoryId());
+                String json = HttpClient.GET("/supplier/categories/"+updatedSupplier.getCategory().getId());
                 selectedCategory = gson.fromJson(json, SupplierCategory.class);
                 String name = selectedCategory.getId() == 0 ? "全部供应商":selectedCategory.getName();
                 txtCategory.setText(name);
@@ -143,6 +145,7 @@ public class EditSupplierController {
                 txtContacts.setText(updatedSupplier.getContact());
                 txtPhone.setText(updatedSupplier.getPhone());
                 txtOthers.setText(updatedSupplier.getOther());
+                btnContinueAdding.setVisible(false);
             } catch (IOException e) {
                 e.printStackTrace();
             }
