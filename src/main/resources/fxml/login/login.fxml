@@ -55,7 +55,7 @@
                <font>
                   <Font size="14.0" />
                </font></CheckBox>
-            <Button layoutX="271.0" layoutY="263.0" mnemonicParsing="false" onAction="#loggingIn" prefHeight="34.0" prefWidth="204.0" text="登  录">
+            <Button layoutX="271.0" layoutY="263.0" mnemonicParsing="false" onAction="#loggingIn" prefHeight="34.0" prefWidth="204.0" text="登   录">
                <font>
                   <Font size="16.0" />
                </font>

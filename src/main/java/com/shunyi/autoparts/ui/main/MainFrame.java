@@ -3,6 +3,7 @@ package com.shunyi.autoparts.ui.main;
 import com.shunyi.autoparts.ui.MainApp;
 import com.shunyi.autoparts.ui.dashboard.Dashboard;
 import com.shunyi.autoparts.ui.purchase.PurchaseOrder;
+import com.shunyi.autoparts.ui.stock.StockManagement;
 import com.shunyi.autoparts.ui.supplier.SupplierManagement;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -96,7 +97,6 @@ public class MainFrame extends BorderPane {
         ClickableItem item6 = new ClickableItem(ICON_5, "供应商管理", new Callback() {
             @Override
             public Object call(Object param) {
-
                 SupplierManagement supplierManagement = new SupplierManagement(application);
 
                 toolbar.setTitle("供应商管理");
@@ -104,11 +104,13 @@ public class MainFrame extends BorderPane {
                 return null;
             }
         });
-        ClickableItem item7 = new ClickableItem(ICON_5, "仓库管理", new Callback() {
+        ClickableItem item7 = new ClickableItem(ICON_5, "库存管理", new Callback() {
             @Override
             public Object call(Object param) {
-                toolbar.setTitle("仓库管理");
-                contentPane.getViewport().setCenter(new Pane());
+                StockManagement stockManagement = new StockManagement(application);
+
+                toolbar.setTitle("库存管理");
+                contentPane.getViewport().setCenter(stockManagement);
                 return null;
             }
         });

@@ -8,7 +8,6 @@ import com.shunyi.autoparts.ui.http.HttpClient;
 import com.shunyi.autoparts.ui.http.AuthenticationResponse;
 import com.shunyi.autoparts.ui.model.RemoteConnection;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -135,6 +134,8 @@ public class LoginController {
         String javaVersion = System.getProperty("java.version");
         String javafxVersion = System.getProperty("javafx.version");
 //        label.setText("Hello, JavaFX " + javafxVersion + "\nRunning on Java " + javaVersion + ".");
+
+        System.out.println("javaVersion="+javaVersion+",javafxVersion="+javafxVersion);
 
         progressBar.setProgress(0.1);
 

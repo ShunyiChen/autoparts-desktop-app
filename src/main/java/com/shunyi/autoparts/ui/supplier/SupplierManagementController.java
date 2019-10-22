@@ -2,12 +2,9 @@ package com.shunyi.autoparts.ui.supplier;
 
 import com.google.gson.Gson;
 import com.shunyi.autoparts.ui.MainApp;
-import com.shunyi.autoparts.ui.common.EditingCell;
 import com.shunyi.autoparts.ui.http.HttpClient;
-import com.shunyi.autoparts.ui.model.AutoPart;
 import com.shunyi.autoparts.ui.model.Supplier;
 import com.shunyi.autoparts.ui.model.SupplierCategory;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;

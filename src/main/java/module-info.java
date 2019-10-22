@@ -9,6 +9,7 @@ module desktopapp {
     requires com.h2database;
 
     opens com.shunyi.autoparts.ui to javafx.fxml;
+    opens com.shunyi.autoparts.ui.stock to javafx.fxml;
     opens com.shunyi.autoparts.ui.common to com.google.gson;
     opens com.shunyi.autoparts.ui.http to com.google.gson;
     opens com.shunyi.autoparts.ui.model to com.google.gson;
@@ -21,6 +22,7 @@ module desktopapp {
     exports com.shunyi.autoparts.ui.login;
     exports com.shunyi.autoparts.ui.main;
     exports com.shunyi.autoparts.ui.dashboard;
+    exports com.shunyi.autoparts.ui.stock;
 
 
     opens com.shunyi.autoparts.ui.purchase;
