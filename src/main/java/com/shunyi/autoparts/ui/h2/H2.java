@@ -56,7 +56,6 @@ public class H2 {
         Connection connection = getDBConnection();
         PreparedStatement createPreparedStatement = null;
         PreparedStatement insertPreparedStatement = null;
-
         String createQuery = "CREATE TABLE IF NOT EXISTS REMOTE_CONNECTIONS(ID INT AUTO_INCREMENT PRIMARY KEY,NAME VARCHAR(255),PROTOCOL VARCHAR(255),HOSTNAME VARCHAR(255),PORT VARCHAR(255),_DEFAULT BOOLEAN,AORDER INT)";
         String insertQuery = "INSERT INTO REMOTE_CONNECTIONS" + "(NAME,PROTOCOL,HOSTNAME,PORT,_DEFAULT,AORDER) VALUES" + "(?,?,?,?,?,?)";
         try {
@@ -71,7 +70,6 @@ public class H2 {
             insertPreparedStatement.setString(4, rc.getPort());
             insertPreparedStatement.setBoolean(5, rc.is_default());
             insertPreparedStatement.setInt(6, rc.getaOrder());
-
             insertPreparedStatement.executeUpdate();
             insertPreparedStatement.close();
             connection.commit();
@@ -93,7 +91,6 @@ public class H2 {
     public static void update(RemoteConnection rc) throws SQLException {
         Connection connection = getDBConnection();
         PreparedStatement updatePreparedStatement = null;
-        PreparedStatement updatePreparedStatement2 = null;
         String updateQuery = "UPDATE REMOTE_CONNECTIONS SET _DEFAULT=?, AORDER=? WHERE ID=?";
         try {
             connection.setAutoCommit(false);
@@ -103,7 +100,6 @@ public class H2 {
             updatePreparedStatement.setLong(3, rc.getId());
             updatePreparedStatement.executeUpdate();
             updatePreparedStatement.close();
-
             connection.commit();
         } catch (SQLException e) {
             System.out.println("Exception Message " + e.getLocalizedMessage());
@@ -124,11 +120,9 @@ public class H2 {
         Connection connection = getDBConnection();
         PreparedStatement updatePreparedStatement = null;
         PreparedStatement selectPreparedStatement = null;
-
         String updateQuery = "DELETE FROM REMOTE_CONNECTIONS WHERE ID=?";
         try {
             connection.setAutoCommit(false);
-
             updatePreparedStatement = connection.prepareStatement(updateQuery);
             updatePreparedStatement.setLong(1, id);
             updatePreparedStatement.executeUpdate();
@@ -158,7 +152,6 @@ public class H2 {
             connection.setAutoCommit(false);
             selectPreparedStatement = connection.prepareStatement(selectQuery);
             ResultSet rs = selectPreparedStatement.executeQuery();
-            System.out.println("H2 Database inserted through PreparedStatement");
             while (rs.next()) {
                 int id = rs.getInt("id");
                 String name = rs.getString("name");
@@ -182,16 +175,14 @@ public class H2 {
         return list;
     }
 
-//    /**
-//     * 删除数据库文件
-//     *
-//     * @throws SQLException
-//     */
-//    public static void DeleteDbFiles() throws SQLException {
-//        DeleteDbFiles.execute("~", "test", true);
-////        RemoteConnection rc = new RemoteConnection(0,"默认服务(http://localhost:8080)", "http", "localhost", "8080", true, 0);
-////        create(rc);
-//    }
+    /**
+     * 删除数据库文件
+     *
+     * @throws SQLException
+     */
+    public static void DeleteDbFiles() throws SQLException {
+        DeleteDbFiles.execute("~", "test", true);
+    }
 
     /**
      * 建立数据库连接
@@ -243,10 +234,6 @@ public class H2 {
             lst.stream().forEach(e -> {
                 System.out.println(e);
             });
-
-//
-
-
         } catch (SQLException e) {
             e.printStackTrace();
         }

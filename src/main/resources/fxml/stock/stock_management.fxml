@@ -1,43 +1,150 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.control.TreeView?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="426.0" prefWidth="792.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.shunyi.autoparts.ui.stock.StockManagementController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="426.0" prefWidth="1178.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.shunyi.autoparts.ui.stock.StockManagementController">
    <center>
       <SplitPane dividerPositions="0.2" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <items>
-            <TreeView fx:id="treeView" prefHeight="398.0" prefWidth="190.0" />
+            <TreeView fx:id="treeView" prefHeight="384.0" prefWidth="190.0" />
             <BorderPane prefHeight="398.0" prefWidth="386.0">
-               <top>
-                  <VBox prefHeight="109.0" prefWidth="475.0" BorderPane.alignment="CENTER" />
-               </top>
                <center>
                   <SplitPane dividerPositions="0.5" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" BorderPane.alignment="CENTER">
                     <items>
-                        <TableView prefHeight="200.0" prefWidth="200.0">
+                        <TableView fx:id="topTable" prefHeight="200.0" prefWidth="200.0">
                           <columns>
-                            <TableColumn prefWidth="75.0" text="C1" />
-                            <TableColumn prefWidth="75.0" text="C2" />
+                            <TableColumn prefWidth="75.0" text="仓库" />
+                            <TableColumn prefWidth="75.0" text="货位名称" />
+                              <TableColumn prefWidth="75.0" text="库区编号" />
+                              <TableColumn prefWidth="75.0" text="通道编号" />
+                              <TableColumn prefWidth="75.0" text="货架组编号" />
+                              <TableColumn prefWidth="75.0" text="货架层号" />
+                              <TableColumn prefWidth="122.0" text="货架层中库位" />
+                              <TableColumn prefWidth="75.0" text="条形码" />
                           </columns>
                         </TableView>
-                        <TableView prefHeight="200.0" prefWidth="200.0">
+                        <TableView fx:id="bottomTable" prefHeight="200.0" prefWidth="200.0">
                           <columns>
-                            <TableColumn prefWidth="75.0" text="C1" />
-                            <TableColumn prefWidth="75.0" text="C2" />
+                              <TableColumn prefWidth="75.0" text="产品名称" />
+                              <TableColumn prefWidth="75.0" text="品牌" />
+                              <TableColumn prefWidth="75.0" text="不含税单价" />
+                              <TableColumn prefWidth="93.0" text="产品创建日期" />
+                              <TableColumn prefWidth="93.0" text="SKU编码" />
+                              <TableColumn prefWidth="73.0" text="SKU名称" />
+                              <TableColumn prefWidth="73.0" text="单位" />
+                              <TableColumn prefWidth="70.0" text="库存数量" />
+                              <TableColumn prefWidth="70.0" text="价格" />
+                              <TableColumn prefWidth="70.0" text="状态" />
+                              <TableColumn prefWidth="70.0" text="属性" />
+                              <TableColumn prefWidth="70.0" text="条形码" />
                           </columns>
                         </TableView>
                     </items>
                   </SplitPane>
                </center>
+               <top>
+                  <VBox prefHeight="78.0" prefWidth="938.0" BorderPane.alignment="CENTER">
+                     <children>
+                        <FlowPane alignment="CENTER_LEFT" hgap="5.0" prefHeight="40.0" prefWidth="938.0">
+                           <children>
+                              <Label text="货位名称:">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                                 <FlowPane.margin>
+                                    <Insets left="5.0" />
+                                 </FlowPane.margin>
+                              </Label>
+                              <TextField fx:id="txtName" prefHeight="29.0" prefWidth="150.0">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </TextField>
+                              <Label text="库区编号:">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                              <TextField fx:id="txtLevel_1" prefWidth="150.0">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </TextField>
+                              <Label text="通道编号:">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                              <TextField fx:id="txtLevel_2" prefWidth="150.0">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </TextField>
+                              <Button mnemonicParsing="false" onAction="#search" prefWidth="74.0" text="查   询">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Button>
+                              <Button mnemonicParsing="false" onAction="#clear" prefWidth="74.0" text="清   除">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Button>
+                           </children>
+                        </FlowPane>
+                        <FlowPane alignment="CENTER_LEFT" hgap="5.0" prefHeight="33.0" prefWidth="938.0">
+                           <children>
+                              <Label text="货架组号:">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                                 <FlowPane.margin>
+                                    <Insets left="5.0" />
+                                 </FlowPane.margin>
+                              </Label>
+                              <TextField fx:id="txtLevel_3" prefWidth="150.0">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </TextField>
+                              <Label text="货架层号:">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                              <TextField fx:id="txtLevel_4" prefWidth="150.0">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </TextField>
+                              <Label text="货架层列:">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                              <TextField fx:id="txtLevel_5" prefWidth="150.0">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </TextField>
+                           </children>
+                        </FlowPane>
+                     </children>
+                  </VBox>
+               </top>
             </BorderPane>
          </items>
       </SplitPane>
@@ -45,49 +152,33 @@
    <top>
       <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
         <items>
-          <Button fx:id="btnNewWarehouse" mnemonicParsing="false" text="新建仓库">
+          <Button fx:id="btnNewWarehouse" mnemonicParsing="false" onAction="#newWarehouse" text="新建仓库">
                <font>
                   <Font size="14.0" />
                </font>
             </Button>
-            <Button fx:id="btnUpdateWarehouse" mnemonicParsing="false" text="更改仓库">
+            <Button fx:id="btnUpdateWarehouse" mnemonicParsing="false" onAction="#updateWarehouse" text="更改仓库">
                <font>
                   <Font size="14.0" />
                </font>
             </Button>
-            <Button fx:id="btnRmWarehouse" mnemonicParsing="false" text="删除仓库">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Button>
-            <Separator />
-            <Button fx:id="btnNewLocation" mnemonicParsing="false" text="新建库位">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Button>
-            <Button fx:id="btnUpdateLocation" mnemonicParsing="false" text="修改库位">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Button>
-            <Button fx:id="btnRmLocation" mnemonicParsing="false" text="删除库位">
+            <Button fx:id="btnRmWarehouse" mnemonicParsing="false" onAction="#removeWarehouse" text="删除仓库">
                <font>
                   <Font size="14.0" />
                </font>
             </Button>
             <Separator />
-            <Button fx:id="btnView" mnemonicParsing="false" text="查看入库">
+            <Button fx:id="btnNewLocation" mnemonicParsing="false" onAction="#newCargoSpace" text="新建库位">
                <font>
                   <Font size="14.0" />
                </font>
             </Button>
-            <Button mnemonicParsing="false" text="查看出库">
+            <Button fx:id="btnUpdateLocation" mnemonicParsing="false" onAction="#updateCargoSpace" text="修改库位">
                <font>
                   <Font size="14.0" />
                </font>
             </Button>
-            <Button mnemonicParsing="false" text="仓库调拨">
+            <Button fx:id="btnRmLocation" mnemonicParsing="false" onAction="#removeCargoSpace" text="删除库位">
                <font>
                   <Font size="14.0" />
                </font>

@@ -82,27 +82,28 @@ public class SupplierManagementController {
 
     @FXML
     public void newCategory(ActionEvent event) {
-        TreeItem<SupplierCategory> selected = supplierCategoryTree.getSelectionModel().getSelectedItem();
+        TreeItem<SupplierCategory> parent = supplierCategoryTree.getSelectionModel().getSelectedItem();
         Callback callback = new Callback() {
             @Override
             public Object call(Object param) {
                 if(param != null) {
-                    selected.getValue().setParent(true);
-                    String json = gson.toJson(selected.getValue());
+                    parent.getValue().setParent(true);
+                    String json = gson.toJson(parent.getValue());
                     try {
-                         HttpClient.PUT("/supplier/categories/"+selected.getValue().getId(),json);
+                         HttpClient.PUT("/supplier/categories/"+parent.getValue().getId(),json);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    SupplierCategory sc = new SupplierCategory(param.toString(), selected.getValue().getId(),false);
+                    SupplierCategory sc = new SupplierCategory(param.toString(), parent.getValue().getId(),false);
                     try {
                         json = gson.toJson(sc, SupplierCategory.class);
-                        HttpClient.POST("/supplier/categories",json);
+                        String idStr = HttpClient.POST("/supplier/categories",json);
+                        sc.setId(Long.valueOf(idStr));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                     TreeItem<SupplierCategory> node = new TreeItem<>(sc);
-                    selected.getChildren().add(node);
+                    parent.getChildren().add(node);
                     // 选中新建的节点
                     supplierCategoryTree.getSelectionModel().select(node);
                 }
@@ -117,10 +118,17 @@ public class SupplierManagementController {
         TreeItem<SupplierCategory> selected = supplierCategoryTree.getSelectionModel().getSelectedItem();
         if(selected.getValue().getId() == 0) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
-            alert.setHeaderText("根节点不可删除。");
+            alert.setHeaderText("根节点不可删除");
             alert.show();
             return;
-        } else {
+        }
+        else if(selected.getValue().isParent()){
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
+            alert.setHeaderText("无法删除父节点");
+            alert.show();
+            return;
+        }
+        else {
             Alert alertConfirm = new Alert(Alert.AlertType.CONFIRMATION, "", ButtonType.NO, ButtonType.YES);
             alertConfirm.setHeaderText("是否删除该类目？");
             alertConfirm.showAndWait().filter(response -> response == ButtonType.YES).ifPresent(response -> {
@@ -134,6 +142,16 @@ public class SupplierManagementController {
                     parent.getChildren().remove(selected);
                     parent.setExpanded(true);
                     supplierCategoryTree.getSelectionModel().select(parent);
+                }
+                //设置节点是否为父节点
+                if(parent.isLeaf()) {
+                    parent.getValue().setParent(false);
+                    String json = gson.toJson(parent.getValue());
+                    try {
+                        HttpClient.PUT("/supplier/categories/"+parent.getValue().getId(), json);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             });
         }
