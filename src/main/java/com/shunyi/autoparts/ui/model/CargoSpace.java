@@ -28,7 +28,7 @@ public class CargoSpace {
 
     public CargoSpace() {}
 
-    public CargoSpace(Warehouse warehouse, String name, String barCode, String level_1, String level_2, String level_3, String level_4, String level_5, Set<SKUCargoSpaceMapping> SKUCargoSpaceMappings) {
+    public CargoSpace(Warehouse warehouse, String name, String barCode, String level_1, String level_2, String level_3, String level_4, String level_5) {
         this.warehouse = warehouse;
         this.name = name;
         this.barCode = barCode;
@@ -37,7 +37,6 @@ public class CargoSpace {
         this.level_3 = level_3;
         this.level_4 = level_4;
         this.level_5 = level_5;
-        this.SKUCargoSpaceMappings = SKUCargoSpaceMappings;
     }
 
     public String getBarCode() {

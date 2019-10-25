@@ -3,7 +3,7 @@ package com.shunyi.autoparts.ui.model;
 /** 仓库DTO */
 public class Warehouse {
     /** ID */
-    private Long id;
+    private Long id = 0L;
     /** 仓库编码 */
     private String code;
     /** 仓库名称 */

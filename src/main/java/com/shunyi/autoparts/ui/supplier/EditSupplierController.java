@@ -87,42 +87,57 @@ public class EditSupplierController {
 
     @FXML
     private void saveAndClose(ActionEvent event) {
-        if(selectedCategory == null) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
-            alert.setHeaderText("类目不能为空");
-            alert.show();
-            return;
-        }
-        if(txtCode.getText().trim().equals("")) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
-            alert.setHeaderText("编码不能为空");
-            alert.show();
-            return;
-        }
-        if(txtName.getText().trim().equals("")) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
-            alert.setHeaderText("供应商名称不能为空");
-            alert.show();
-            return;
-        }
-        dialog.close();
         if(updatedSupplier == null) {
-            continueAdding(event);
+            add(true);
         } else {
-            update();
+            update(true);
         }
     }
 
     @FXML
     private void continueAdding(ActionEvent event) {
-        Supplier supplier = new Supplier(txtCode.getText(), txtName.getText(), txtContacts.getText(),txtPhone.getText(),txtOthers.getText(),selectedCategory);
-        callback.call(supplier);
+        add(false);
     }
 
-    public void update() {
-        Supplier supplier = new Supplier(txtCode.getText(), txtName.getText(), txtContacts.getText(),txtPhone.getText(),txtOthers.getText(),selectedCategory);
-        supplier.setId(updatedSupplier.getId());
-        callback.call(supplier);
+    private boolean checkInputs() {
+        if(selectedCategory == null) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
+            alert.setHeaderText("类目不能为空");
+            alert.show();
+            return false;
+        }
+        if(txtCode.getText().trim().equals("")) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
+            alert.setHeaderText("编码不能为空");
+            alert.show();
+            return false;
+        }
+        if(txtName.getText().trim().equals("")) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
+            alert.setHeaderText("供应商名称不能为空");
+            alert.show();
+            return false;
+        }
+        return true;
+    }
+
+    void update(boolean closeStage) {
+        if(checkInputs()) {
+            if(closeStage)
+                dialog.close();
+            Supplier supplier = new Supplier(txtCode.getText(), txtName.getText(), txtContacts.getText(),txtPhone.getText(),txtOthers.getText(),selectedCategory);
+            supplier.setId(updatedSupplier.getId());
+            callback.call(supplier);
+        }
+    }
+
+    void add(boolean closeStage) {
+        if(checkInputs()) {
+            if(closeStage)
+                dialog.close();
+            Supplier supplier = new Supplier(txtCode.getText(), txtName.getText(), txtContacts.getText(),txtPhone.getText(),txtOthers.getText(),selectedCategory);
+            callback.call(supplier);
+        }
     }
 
     /**

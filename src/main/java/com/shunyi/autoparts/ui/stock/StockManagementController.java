@@ -3,15 +3,19 @@ package com.shunyi.autoparts.ui.stock;
 import com.google.gson.Gson;
 import com.shunyi.autoparts.ui.MainApp;
 import com.shunyi.autoparts.ui.http.HttpClient;
-import com.shunyi.autoparts.ui.model.*;
-import com.shunyi.autoparts.ui.supplier.EditSupplierController;
+import com.shunyi.autoparts.ui.model.CargoSpace;
+import com.shunyi.autoparts.ui.model.SKU;
+import com.shunyi.autoparts.ui.model.Warehouse;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTreeCell;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -54,12 +58,54 @@ public class StockManagementController {
     @FXML
     TableView<CargoSpace> topTable;
     @FXML
+    TableColumn colWarehouse;
+    @FXML
+    TableColumn colCargoSpaceName;
+    @FXML
+    TableColumn colLevel_1;
+    @FXML
+    TableColumn colLevel_2;
+    @FXML
+    TableColumn colLevel_3;
+    @FXML
+    TableColumn colLevel_4;
+    @FXML
+    TableColumn colLevel_5;
+    @FXML
+    TableColumn colCargoSpaceBarCode;
+
+    @FXML
     TableView<SKU> bottomTable;
+    @FXML
+    TableColumn colProductName;
+    @FXML
+    TableColumn colBrand;
+    @FXML
+    TableColumn colPriceExcludingTax;
+    @FXML
+    TableColumn colDateCreated;
+    @FXML
+    TableColumn colSkuCode;
+    @FXML
+    TableColumn colSkuName;
+    @FXML
+    TableColumn colUnit;
+    @FXML
+    TableColumn colStockQty;
+    @FXML
+    TableColumn colPrice;
+    @FXML
+    TableColumn colStatus;
+    @FXML
+    TableColumn colProperty;
+    @FXML
+    TableColumn colProductBarCode;
 
     @FXML
     private void search(ActionEvent event) {
         //定义货位
         CargoSpace cargoSpace = new CargoSpace();
+        cargoSpace.setBarCode("");
         cargoSpace.setName(txtName.getText());
         cargoSpace.setLevel_1(txtLevel_1.getText());
         cargoSpace.setLevel_2(txtLevel_2.getText());
@@ -206,9 +252,15 @@ public class StockManagementController {
     @FXML
     private void removeWarehouse(ActionEvent event) {
         TreeItem<Warehouse> selected = treeView.getSelectionModel().getSelectedItem();
+        if(selected.getValue() == null) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
+            alert.setHeaderText("选择一个节点删除");
+            alert.show();
+            return;
+        }
         if(selected.getValue().getId() == 0) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
-            alert.setHeaderText("根节点不可删除。");
+            alert.setHeaderText("根节点不可删除");
             alert.show();
             return;
         }
@@ -249,17 +301,116 @@ public class StockManagementController {
 
     @FXML
     private void newCargoSpace(ActionEvent event) {
-
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource(
+                        "/fxml/stock/edit_cargospace.fxml"
+                )
+        );
+        VBox root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Scene scene = new Scene(root);
+        Stage dialog = new Stage();
+        EditCargoSpaceController controller = loader.getController();
+        Callback<CargoSpace, Object> cb = new Callback<CargoSpace, Object>() {
+            @Override
+            public Object call(CargoSpace param) {
+                String json = gson.toJson(param);
+                try {
+                    HttpClient.POST("/cargoSpaces", json);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                topTable.getItems().add(param);
+                return null;
+            }
+        };
+        controller.prepare(dialog, null, cb);
+        dialog.setTitle("新建库位");
+        dialog.initOwner(application.getStage());
+        dialog.setResizable(false);
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.setScene(scene);
+        // center stage on screen
+        dialog.centerOnScreen();
+        dialog.show();
     }
 
     @FXML
-    private void updateCargoSpace(ActionEvent event) {
-
+    private void updateCargoSpace() {
+        CargoSpace cargoSpace = topTable.getSelectionModel().getSelectedItem();
+        if(cargoSpace == null) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
+            alert.setHeaderText("请在表格上选择一行记录");
+            alert.show();
+            return;
+        }
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource(
+                        "/fxml/stock/edit_cargospace.fxml"
+                )
+        );
+        VBox root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Scene scene = new Scene(root);
+        Stage dialog = new Stage();
+        EditCargoSpaceController controller = loader.getController();
+        Callback<CargoSpace, Object> cb = new Callback<CargoSpace, Object>() {
+            @Override
+            public Object call(CargoSpace param) {
+                String json = gson.toJson(param);
+                try {
+                    HttpClient.PUT("/cargoSpaces/"+param.getId(),json);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                CargoSpace cargoSpace1 = topTable.getSelectionModel().getSelectedItem();
+                int index = topTable.getItems().indexOf(cargoSpace1);
+                topTable.getItems().remove(index);
+                topTable.getItems().add(param);
+                topTable.getSelectionModel().select(param);
+                return null;
+            }
+        };
+        controller.prepare(dialog, cargoSpace, cb);
+        dialog.setTitle("更改库位");
+        dialog.initOwner(application.getStage());
+        dialog.setResizable(false);
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.setScene(scene);
+        // center stage on screen
+        dialog.centerOnScreen();
+        dialog.show();
     }
 
     @FXML
     private void removeCargoSpace(ActionEvent event) {
-
+        CargoSpace cargoSpace = topTable.getSelectionModel().getSelectedItem();
+        if(cargoSpace == null) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
+            alert.setHeaderText("请在表格上选择一行记录");
+            alert.show();
+            return;
+        }
+        Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.NO, ButtonType.YES);
+        alert.setHeaderText("是否删除该库位？");
+        alert.showAndWait()
+                .filter(response -> response == ButtonType.YES)
+                .ifPresent(response -> {
+                    try {
+                        HttpClient.DELETE("/cargoSpaces/"+cargoSpace.getId());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    topTable.getItems().remove(cargoSpace);
+                });
     }
 
     public void prepare(MainApp application) {
@@ -301,6 +452,21 @@ public class StockManagementController {
                 }
             }
         });
+        treeView.setOnMouseClicked((MouseEvent event) -> {
+            if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 1){
+                TreeItem<Warehouse> item = treeView.getSelectionModel().getSelectedItem();
+                topTable.getItems().clear();
+                bottomTable.getItems().clear();
+                String json = null;
+                try {
+                    json = HttpClient.GET("/cargoSpaces/warehouse/"+item.getValue().getId());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                CargoSpace[] suppliers = gson.fromJson(json, CargoSpace[].class);
+                topTable.getItems().addAll(suppliers);
+            }
+        });
 
         ContextMenu menu = new ContextMenu();
         MenuItem itemNew = new MenuItem("新建仓库");
@@ -321,8 +487,57 @@ public class StockManagementController {
         itemRN.setOnAction(e -> {
             treeView.edit(treeView.getSelectionModel().getSelectedItem());
         });
-
         treeView.setContextMenu(menu);
+
+        // 初始化上表格
+        initTopTable();
+        // 初始化下表格
+        initBottomTable();
+    }
+
+    private void initTopTable() {
+        topTable.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        topTable.setEditable(false);
+        topTable.setOnMouseClicked((MouseEvent event) -> {
+            if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2){
+                updateCargoSpace();
+            }
+        });
+        try {
+            String json = HttpClient.GET("/cargoSpaces");
+            CargoSpace[] cargoSpaces = gson.fromJson(json, CargoSpace[].class);
+            topTable.getItems().addAll(cargoSpaces);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        // 编码列设置
+        colWarehouse.setCellValueFactory(
+                new PropertyValueFactory<CargoSpace, String>("warehouse")
+        );
+        colCargoSpaceName.setCellValueFactory(
+                new PropertyValueFactory<CargoSpace, String>("name")
+        );
+        colLevel_1.setCellValueFactory(
+                new PropertyValueFactory<CargoSpace, String>("level_1")
+        );
+        colLevel_2.setCellValueFactory(
+                new PropertyValueFactory<CargoSpace, String>("level_2")
+        );
+        colLevel_3.setCellValueFactory(
+                new PropertyValueFactory<CargoSpace, String>("level_3")
+        );
+        colLevel_4.setCellValueFactory(
+                new PropertyValueFactory<CargoSpace, String>("level_4")
+        );
+        colLevel_5.setCellValueFactory(
+                new PropertyValueFactory<CargoSpace, String>("level_5")
+        );
+        colCargoSpaceBarCode.setCellValueFactory(
+                new PropertyValueFactory<CargoSpace, String>("barCode")
+        );
+    }
+
+    private void initBottomTable() {
 
     }
 
