@@ -8,6 +8,7 @@ import javafx.scene.layout.BorderPane;
 
 import java.io.IOException;
 
+/** 供应商管理 */
 public class SupplierManagement extends BorderPane implements BaseContainer {
 
     private MainApp application;

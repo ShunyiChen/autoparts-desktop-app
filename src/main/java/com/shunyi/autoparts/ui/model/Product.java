@@ -5,24 +5,34 @@ import java.util.Date;
 
 /** 产品（汽车配件）DTO */
 public class Product {
-    /** 自增ID */
+    /** ID */
     private Long id;
     /** 产品名称 */
     private String name;
-    /** 品牌ID */
-    private Long brandSeriesId;
-    /** 不含税单价 */
+    /** 品牌 */
+    private BrandSeries brandSeries;
+    /** 车型 */
+    private Car car;
+    /** 不含税单价/列表价 */
     private BigDecimal priceExcludingTax;
     /** 创建时间 */
     private Date dateCreated;
 
     public Product() {}
 
-    public Product(String name, Long brandSeriesId, BigDecimal priceExcludingTax, Date dateCreated) {
+    public Product(String name, BrandSeries brandSeries, BigDecimal priceExcludingTax, Date dateCreated) {
         this.name = name;
-        this.brandSeriesId = brandSeriesId;
+        this.brandSeries = brandSeries;
         this.priceExcludingTax = priceExcludingTax;
         this.dateCreated = dateCreated;
+    }
+
+    public BrandSeries getBrandSeries() {
+        return brandSeries;
+    }
+
+    public void setBrandSeries(BrandSeries brandSeries) {
+        this.brandSeries = brandSeries;
     }
 
     public Long getId() {
@@ -39,14 +49,6 @@ public class Product {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Long getBrandSeriesId() {
-        return brandSeriesId;
-    }
-
-    public void setBrandSeriesId(Long brandSeriesId) {
-        this.brandSeriesId = brandSeriesId;
     }
 
     public BigDecimal getPriceExcludingTax() {
@@ -67,12 +69,6 @@ public class Product {
 
     @Override
     public String toString() {
-        return "Product{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", brandSeriesId=" + brandSeriesId +
-                ", priceExcludingTax=" + priceExcludingTax +
-                ", dateCreated=" + dateCreated +
-                '}';
+        return name;
     }
 }

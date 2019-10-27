@@ -1,4 +1,4 @@
-package com.shunyi.autoparts.ui.stock;
+package com.shunyi.autoparts.ui.products;
 
 import com.shunyi.autoparts.ui.MainApp;
 import com.shunyi.autoparts.ui.main.BaseContainer;
@@ -9,11 +9,12 @@ import javafx.scene.layout.BorderPane;
 
 import java.io.IOException;
 
-/** 仓库管理 */
-public class StockManagement extends BorderPane implements BaseContainer {
+/**  配件管理 */
+public class ProductManagement extends BorderPane implements BaseContainer {
+
     private MainApp application;
 
-    public StockManagement(MainApp application) {
+    public ProductManagement(MainApp application) {
         this.application = application;
         initComponents();
     }
@@ -21,7 +22,7 @@ public class StockManagement extends BorderPane implements BaseContainer {
     private void initComponents() {
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource(
-                        "/fxml/stock/stock_management.fxml"
+                        "/fxml/products/product_management.fxml"
                 )
         );
         BorderPane root = null;
@@ -30,12 +31,12 @@ public class StockManagement extends BorderPane implements BaseContainer {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        StockManagementController controller = loader.getController();
+        ProductManagementController controller = loader.getController();
         controller.prepare(application);
 
-        root.prefWidthProperty().bind(application.getScene().widthProperty());
-        root.prefWidthProperty().bind(application.getStage().widthProperty().subtract(application.getDashboard().getNavigation().widthProperty().add(35)));
-        root.prefHeightProperty().bind(application.getStage().heightProperty().subtract(350));
+//        root.prefWidthProperty().bind(application.getScene().widthProperty());
+//        root.prefWidthProperty().bind(application.getStage().widthProperty().subtract(application.getDashboard().getNavigation().widthProperty().add(35)));
+//        root.prefHeightProperty().bind(application.getStage().heightProperty().subtract(350));
 
 
         //主面板右侧宽度

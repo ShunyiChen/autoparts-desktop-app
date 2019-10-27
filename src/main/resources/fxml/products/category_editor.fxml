@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="115.0" prefWidth="424.0" fx:controller="com.shunyi.autoparts.ui.products.CategoryEditorController" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <FlowPane alignment="CENTER" hgap="5.0" prefHeight="57.0" prefWidth="424.0">
+         <children>
+            <Label text="类目名称:">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <TextField prefHeight="29.0" prefWidth="329.0" fx:id="txtName">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </TextField>
+         </children>
+      </FlowPane>
+      <FlowPane alignment="CENTER" hgap="10.0" prefHeight="54.0" prefWidth="424.0">
+         <children>
+            <Button mnemonicParsing="false" prefHeight="29.0" prefWidth="74.0" text="取   消" onAction="#cancel">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Button>
+            <Button fx:id="btnOk" mnemonicParsing="false" prefHeight="29.0" prefWidth="75.0" text="确   定" onAction="#ok">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Button>
+         </children>
+      </FlowPane>
+   </children>
+</VBox>

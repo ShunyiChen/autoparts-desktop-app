@@ -60,3 +60,14 @@
     -fx-font-size:14px;
     //-fx-text-background-color: white;
 }
+
+// ListView
+.combo-box .list-view :hover {
+   -fx-background-color: rgb(63,81,181);
+   -fx-text-background-color: white;
+}
+.list-view :selected {
+   -fx-background-color: rgb(63,81,181);
+   -fx-text-background-color: white;
+}
+
