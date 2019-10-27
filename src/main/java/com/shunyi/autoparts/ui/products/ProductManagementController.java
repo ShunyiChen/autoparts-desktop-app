@@ -224,6 +224,13 @@ public class ProductManagementController {
 
     @FXML
     void newBrand(ActionEvent event) {
+        TreeItem<Category> selectedCategory = treeView.getSelectionModel().getSelectedItem();
+        if(selectedCategory.getValue().getId() == 0L) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
+            alert.setHeaderText("不能在根节点下创建品牌，请选中其他类目");
+            alert.show();
+            return;
+        }
         Callback<BrandSeries, Object> callback = e -> {
             String json = GSON.getInstance().toJson(e);
             try {
@@ -235,7 +242,7 @@ public class ProductManagementController {
             listView.getItems().add(e);
             return null;
         };
-        openBrandSeriesEditor(callback, null);
+        openBrandSeriesEditor(callback, null, selectedCategory==null?null:selectedCategory.getValue());
     }
 
     @FXML
@@ -251,7 +258,7 @@ public class ProductManagementController {
             e.setId(selected.getId());
             String json = GSON.getInstance().toJson(e);
             try {
-                HttpClient.PUT("/brandSeries", json);
+                HttpClient.PUT("/brandSeries/"+selected.getId(), json);
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
@@ -261,7 +268,8 @@ public class ProductManagementController {
             listView.getSelectionModel().select(e);
             return null;
         };
-        openBrandSeriesEditor(callback, selected);
+        //因为不需要重复赋值，所有最后参数设置null
+        openBrandSeriesEditor(callback, selected, null);
     }
 
     @FXML
@@ -285,7 +293,7 @@ public class ProductManagementController {
         });
     }
 
-    void openBrandSeriesEditor(Callback<BrandSeries, Object> callback, BrandSeries updatedBrandSeries) {
+    void openBrandSeriesEditor(Callback<BrandSeries, Object> callback, BrandSeries updatedBrandSeries, Category selectedCategory) {
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource(
                         "/fxml/products/brandseries_editor.fxml"
@@ -300,7 +308,7 @@ public class ProductManagementController {
         Scene scene = new Scene(root);
         Stage dialog = new Stage();
         BrandSeriesEditorController controller = loader.getController();
-        controller.prepare(dialog, updatedBrandSeries, callback);
+        controller.prepare(dialog, updatedBrandSeries, callback, selectedCategory);
         dialog.setTitle(updatedBrandSeries != null?"更改品牌":"新建品牌");
         dialog.initOwner(application.getStage());
         dialog.setResizable(false);
@@ -313,6 +321,20 @@ public class ProductManagementController {
 
     @FXML
     void newProduct(ActionEvent event) {
+        TreeItem<Category> selectedCategory = treeView.getSelectionModel().getSelectedItem();
+        if(selectedCategory == null) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
+            alert.setHeaderText("请选择产品分类");
+            alert.show();
+            return;
+        }
+        BrandSeries selectedBrand = listView.getSelectionModel().getSelectedItem();
+        if(selectedBrand == null) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
+            alert.setHeaderText("请选择品牌");
+            alert.show();
+            return;
+        }
         Callback<Product, Object> callback = e -> {
             String json = GSON.getInstance().toJson(e);
             try {
@@ -324,11 +346,25 @@ public class ProductManagementController {
             tableView.getItems().add(e);
             return null;
         };
-        openProductEditor(callback, null);
+        openProductEditor(callback, null, selectedCategory.getValue(), selectedBrand);
     }
 
     @FXML
     void updateProduct(ActionEvent event) {
+        TreeItem<Category> selectedCategory = treeView.getSelectionModel().getSelectedItem();
+        if(selectedCategory == null) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
+            alert.setHeaderText("请选择产品分类");
+            alert.show();
+            return;
+        }
+        BrandSeries selectedBrand = listView.getSelectionModel().getSelectedItem();
+        if(selectedBrand == null) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
+            alert.setHeaderText("请选择品牌");
+            alert.show();
+            return;
+        }
         Product selected = tableView.getSelectionModel().getSelectedItem();
         if(selected == null) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
@@ -348,10 +384,10 @@ public class ProductManagementController {
             tableView.getItems().add(index, e);
             return null;
         };
-        openProductEditor(callback, selected);
+        openProductEditor(callback, selected, selectedCategory.getValue(), selectedBrand);
     }
 
-    void openProductEditor(Callback<Product, Object> callback, Product updatedProduct) {
+    void openProductEditor(Callback<Product, Object> callback, Product updatedProduct, Category selectedCategory, BrandSeries selectedBrand) {
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource(
                         "/fxml/products/product_editor.fxml"
@@ -366,7 +402,7 @@ public class ProductManagementController {
         Scene scene = new Scene(root);
         Stage dialog = new Stage();
         ProductEditorController controller = loader.getController();
-        controller.prepare(dialog, updatedProduct, callback);
+        controller.prepare(dialog, updatedProduct, callback, selectedCategory, selectedBrand);
         dialog.setTitle(updatedProduct != null?"更改配件":"新建配件");
         dialog.initOwner(application.getStage());
         dialog.setResizable(false);
@@ -428,16 +464,16 @@ public class ProductManagementController {
         });
         treeView.setOnMouseClicked((MouseEvent event) -> {
             if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 1){
-//                TreeItem<Category> item = treeView.getSelectionModel().getSelectedItem();
-//                supplierTable.getItems().clear();
-//                String json = null;
-//                try {
-//                    json = HttpClient.GET("/suppliers/category/"+item.getValue().getId());
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//                Supplier[] suppliers = gson.fromJson(json, Supplier[].class);
-//                supplierTable.getItems().addAll(suppliers);
+                TreeItem<Category> item = treeView.getSelectionModel().getSelectedItem();
+                listView.getItems().clear();
+                String json = null;
+                try {
+                    json = HttpClient.GET("/brandSeries/category/"+item.getValue().getId());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                BrandSeries[] brands = GSON.getInstance().fromJson(json, BrandSeries[].class);
+                listView.getItems().addAll(brands);
             }
         });
 

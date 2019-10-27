@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="148.0" prefWidth="319.0" fx:controller="com.shunyi.autoparts.ui.products.CarEditorController" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <FlowPane alignment="CENTER" hgap="5.0" prefHeight="40.0" prefWidth="600.0">
+         <children>
+            <Label text="车型编号:">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <TextField fx:id="txtCode" prefHeight="29.0" prefWidth="210.0">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </TextField>
+         </children>
+         <VBox.margin>
+            <Insets top="10.0" />
+         </VBox.margin>
+      </FlowPane>
+      <FlowPane alignment="CENTER" hgap="5.0" prefHeight="40.0" prefWidth="600.0">
+         <children>
+            <Label text="车型名称:">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <TextField fx:id="txtName" prefHeight="29.0" prefWidth="210.0">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </TextField>
+         </children>
+         <VBox.margin>
+            <Insets bottom="10.0" />
+         </VBox.margin>
+      </FlowPane>
+      <FlowPane alignment="CENTER" hgap="10.0" prefHeight="58.0" prefWidth="319.0">
+         <children>
+            <Button mnemonicParsing="false" text="取   消" onAction="#cancel">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Button>
+            <Button fx:id="btnSaveAndClose" mnemonicParsing="false" text="保存并关闭" onAction="#saveAndClose">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Button>
+            <Button fx:id="btnContinueAdd" mnemonicParsing="false" text="继续添加" onAction="#continueAdd">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Button>
+         </children>
+      </FlowPane>
+   </children>
+</VBox>

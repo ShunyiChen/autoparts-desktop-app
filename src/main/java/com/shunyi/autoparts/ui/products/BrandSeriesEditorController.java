@@ -22,7 +22,7 @@ public class BrandSeriesEditorController {
     Stage dialog;
     BrandSeries brandSeries;
     Callback<BrandSeries, Object> callback;
-    Category  selectedCategory;;
+    Category  selectedCategory;
     Gson gson = new Gson();
     @FXML
     ImageView imgLogo;
@@ -129,7 +129,14 @@ public class BrandSeriesEditorController {
             alert.setHeaderText("产品类目不能为空");
             alert.show();
             return false;
-        } else if(txtChineseName.getText().trim().equals("")) {
+        }
+        else if(selectedCategory .getId() == 0L) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
+            alert.setHeaderText("不能在根节点下创建或更改品牌，请选中其他类目");
+            alert.show();
+            return false;
+        }
+        else if(txtChineseName.getText().trim().equals("")) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
             alert.setHeaderText("中文名不能为空");
             alert.show();
@@ -138,10 +145,11 @@ public class BrandSeriesEditorController {
         return true;
     }
 
-    public void prepare(Stage dialog, BrandSeries brandSeries, Callback<BrandSeries, Object> callback) {
+    public void prepare(Stage dialog, BrandSeries brandSeries, Callback<BrandSeries, Object> callback, Category selectedCategory) {
         this.dialog = dialog;
         this.brandSeries = brandSeries;
         this.callback = callback;
+        this.selectedCategory = selectedCategory;
         initComboBox();
         initButton();
         populate();
@@ -159,6 +167,9 @@ public class BrandSeriesEditorController {
 
     void populate() {
         txtCategory.setDisable(true);
+        if(selectedCategory != null) {
+            txtCategory.setText(selectedCategory.getName());
+        }
         if(brandSeries != null) {
             selectedCategory = brandSeries.getCategory();
             txtCategory.setText(selectedCategory.getName());
