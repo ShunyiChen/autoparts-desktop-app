@@ -1,5 +1,7 @@
 package com.shunyi.autoparts.ui.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
 
 /** 品牌系列DTO */
@@ -21,6 +23,7 @@ public class BrandSeries {
     /** 品牌官方网站 */
     private String officialSite;
     /** 创建时间 */
+    @JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ")
     private Date dateCreated;
 
     public BrandSeries() {

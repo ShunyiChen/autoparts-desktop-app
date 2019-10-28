@@ -13,6 +13,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTreeCell;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -55,6 +56,10 @@ public class ProductManagementController {
     TableColumn colImported;
     @FXML
     TableColumn colCar;
+    @FXML
+    TableColumn colPlace;
+    @FXML
+    TableColumn colDateCreated;
     @FXML
     TableColumn colOther;
     @FXML
@@ -373,6 +378,7 @@ public class ProductManagementController {
             return;
         }
         Callback<Product, Object> callback = e -> {
+            e.setId(selected.getId());
             String json = GSON.getInstance().toJson(e);
             try {
                 HttpClient.PUT("/products/"+selected.getId(),json);
@@ -415,17 +421,51 @@ public class ProductManagementController {
 
     @FXML
     void removeProduct(ActionEvent event) {
+        Product selectedProduct = tableView.getSelectionModel().getSelectedItem();
+        if(selectedProduct == null) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
+            alert.setHeaderText("请选择一个配件删除");
+            alert.show();
+            return;
+        }
+        try {
+            HttpClient.DELETE("/products/"+selectedProduct.getId());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        tableView.getItems().remove(selectedProduct);
     }
 
     @FXML
     void openProductAttributes(ActionEvent event) {
+
     }
 
     public void prepare(MainApp application) {
         this.application = application;
+        initTableView();
         initTreeView();
         initTreeContextMenu();
         initListView();
+    }
+
+    void initTableView() {
+        colCode.setCellValueFactory(new PropertyValueFactory<Product, String>("code"));
+        colName.setCellValueFactory(new PropertyValueFactory<Product, String>("name"));
+        colBrand.setCellValueFactory(new PropertyValueFactory<Product, String>("brandSeries"));
+        colPrice.setCellValueFactory(new PropertyValueFactory<Product, String>("priceExcludingTax"));
+        colUnit.setCellValueFactory(new PropertyValueFactory<Product, String>("unit"));
+        colImported.setCellValueFactory(new PropertyValueFactory<Product, String>("imported"));
+        colCar.setCellValueFactory(new PropertyValueFactory<Product, String>("car"));
+        colPlace.setCellValueFactory(new PropertyValueFactory<Product, String>("placeOfOrigin"));
+        colDateCreated.setCellValueFactory(new PropertyValueFactory<Product, String>("dateCreated"));
+        colOther.setCellValueFactory(new PropertyValueFactory<Product, String>("notes"));
+
+        tableView.setOnMouseClicked((MouseEvent event) -> {
+            if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2){
+                 updateProduct(null);
+            }
+        });
     }
 
     void initTreeView() {
@@ -540,9 +580,23 @@ public class ProductManagementController {
             e.printStackTrace();
         }
         listView.setOnMouseClicked((MouseEvent event) -> {
-            if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2){
-                updateBrand(null);
+            if (event.getButton().equals(MouseButton.PRIMARY)){
+                if(event.getClickCount() == 2) {
+                    updateBrand(null);
+                } else if(event.getClickCount() == 1) {
+                    BrandSeries selectedBrand = listView.getSelectionModel().getSelectedItem();
+                    String data = null;
+                    try {
+                        data = HttpClient.GET("/products/brandSeries/"+selectedBrand.getId());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    Product[] products = GSON.getInstance().fromJson(data, Product[].class);
+                    tableView.getItems().clear();
+                    tableView.getItems().addAll(products);
+                }
             }
         });
+
     }
 }

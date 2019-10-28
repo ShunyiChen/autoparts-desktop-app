@@ -75,6 +75,7 @@ public class CarEditorController {
         if(updatedCar != null) {
             txtCode.setText(updatedCar.getCode());
             txtName.setText(updatedCar.getModel());
+            btnContinueAdd.setVisible(false);
         }
     }
 

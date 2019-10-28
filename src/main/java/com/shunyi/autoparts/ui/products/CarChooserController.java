@@ -204,41 +204,42 @@ public class CarChooserController {
     }
     
     void initTreeView() {
+        treeView.setEditable(false);
         treeView.setOnMouseClicked(event -> {
             if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2){
                 choose();
             }
         });
-        treeView.setCellFactory(new Callback<TreeView<Car>, TreeCell<Car>>() {
-            @Override
-            public TreeCell<Car> call(TreeView<Car> p) {
-                return new TextFieldTreeCell<Car>(new StringConverter<Car>(){
-
-                    @Override
-                    public String toString(Car object) {
-                        return object.getModel();
-                    }
-
-                    @Override
-                    public Car fromString(String string) {
-                        p.getEditingItem().getValue().setModel(string);
-                        return p.getEditingItem().getValue();
-                    }
-                });
-            }
-        });
-        treeView.setOnEditCommit(new EventHandler<TreeView.EditEvent<Car>>() {
-            @Override
-            public void handle(TreeView.EditEvent<Car> event) {
-                String path = "/cars/"+event.getNewValue().getId();
-                String json = gson.toJson(event.getNewValue());
-                try {
-                    HttpClient.PUT(path, json);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+//        treeView.setCellFactory(new Callback<TreeView<Car>, TreeCell<Car>>() {
+//            @Override
+//            public TreeCell<Car> call(TreeView<Car> p) {
+//                return new TextFieldTreeCell<Car>(new StringConverter<Car>(){
+//
+//                    @Override
+//                    public String toString(Car object) {
+//                        return object.getModel();
+//                    }
+//
+//                    @Override
+//                    public Car fromString(String string) {
+//                        p.getEditingItem().getValue().setModel(string);
+//                        return p.getEditingItem().getValue();
+//                    }
+//                });
+//            }
+//        });
+//        treeView.setOnEditCommit(new EventHandler<TreeView.EditEvent<Car>>() {
+//            @Override
+//            public void handle(TreeView.EditEvent<Car> event) {
+//                String path = "/cars/"+event.getNewValue().getId();
+//                String json = gson.toJson(event.getNewValue());
+//                try {
+//                    HttpClient.PUT(path, json);
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        });
         
         btnChooser.setStyle(String.format("-fx-base: %s;", "rgb(63,81,181)"));
         TreeItem<Car> root = new TreeItem<Car>(new Car("","全部车型类目",0L, true));

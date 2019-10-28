@@ -1,6 +1,9 @@
 package com.shunyi.autoparts.ui.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Date;
 
 /** 产品（汽车配件）DTO */
@@ -23,12 +26,15 @@ public class Product {
     private String placeOfOrigin;
     /** 不含税单价 */
     private BigDecimal priceExcludingTax;
+    /** 其他 */
+    private String notes;
     /** 创建时间 */
+    @JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ")
     private Date dateCreated;
 
     public Product() {}
 
-    public Product(String code, String name, BrandSeries brandSeries, Car car, String unit, String imported, String placeOfOrigin, BigDecimal priceExcludingTax, Date dateCreated) {
+    public Product(String code, String name, BrandSeries brandSeries, Car car, String unit, String imported, String placeOfOrigin, BigDecimal priceExcludingTax, String notes) {
         this.code = code;
         this.name = name;
         this.brandSeries = brandSeries;
@@ -37,7 +43,15 @@ public class Product {
         this.imported = imported;
         this.placeOfOrigin = placeOfOrigin;
         this.priceExcludingTax = priceExcludingTax;
-        this.dateCreated = dateCreated;
+        this.notes = notes;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 
     public Long getId() {
@@ -109,15 +123,15 @@ public class Product {
     }
 
     public void setPriceExcludingTax(BigDecimal priceExcludingTax) {
-        this.priceExcludingTax = priceExcludingTax;
-    }
-
-    public Date getDateCreated() {
-        return dateCreated;
+        this.priceExcludingTax = priceExcludingTax.setScale(2, RoundingMode.HALF_UP);
     }
 
     public void setDateCreated(Date dateCreated) {
         this.dateCreated = dateCreated;
+    }
+
+    public Date getDateCreated() {
+        return dateCreated;
     }
 
     @Override

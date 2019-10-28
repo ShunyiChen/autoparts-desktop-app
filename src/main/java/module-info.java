@@ -7,6 +7,7 @@ module desktopapp {
     requires okhttp3;
     requires com.google.gson;
     requires com.h2database;
+    requires com.fasterxml.jackson.annotation;
 
     opens com.shunyi.autoparts.ui to javafx.fxml;
     opens com.shunyi.autoparts.ui.stock to javafx.fxml;

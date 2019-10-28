@@ -95,7 +95,9 @@
                         <TableColumn prefWidth="120.0" text="列表价" fx:id="colPrice"/>
                         <TableColumn prefWidth="75.0" text="单位" fx:id="colUnit" />
                         <TableColumn prefWidth="75.0" text="进口" fx:id="colImported"/>
+                        <TableColumn prefWidth="75.0" text="产地" fx:id="colPlace"/>
                         <TableColumn prefWidth="75.0" text="车型" fx:id="colCar"/>
+                        <TableColumn prefWidth="75.0" text="创建日期" fx:id="colDateCreated"/>
                         <TableColumn prefWidth="150.0" text="其他" fx:id="colOther"/>
                     </columns>
                   </TableView>
