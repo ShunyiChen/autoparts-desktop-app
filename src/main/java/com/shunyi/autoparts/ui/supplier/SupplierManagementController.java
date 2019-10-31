@@ -2,6 +2,7 @@ package com.shunyi.autoparts.ui.supplier;
 
 import com.google.gson.Gson;
 import com.shunyi.autoparts.ui.MainApp;
+import com.shunyi.autoparts.ui.common.GoogleJson;
 import com.shunyi.autoparts.ui.http.HttpClient;
 import com.shunyi.autoparts.ui.model.Supplier;
 import com.shunyi.autoparts.ui.model.SupplierCategory;
@@ -77,7 +78,6 @@ public class SupplierManagementController {
     private TableColumn colOther;
     @FXML
     private TableColumn colCategory;
-    private Gson gson = new Gson();
     private MainApp application;
 
     @FXML
@@ -88,7 +88,7 @@ public class SupplierManagementController {
             public Object call(Object param) {
                 if(param != null) {
                     parent.getValue().setParent(true);
-                    String json = gson.toJson(parent.getValue());
+                    String json = GoogleJson.GET().toJson(parent.getValue());
                     try {
                          HttpClient.PUT("/supplier/categories/"+parent.getValue().getId(),json);
                     } catch (IOException e) {
@@ -96,7 +96,7 @@ public class SupplierManagementController {
                     }
                     SupplierCategory sc = new SupplierCategory(param.toString(), parent.getValue().getId(),false);
                     try {
-                        json = gson.toJson(sc, SupplierCategory.class);
+                        json = GoogleJson.GET().toJson(sc, SupplierCategory.class);
                         String idStr = HttpClient.POST("/supplier/categories",json);
                         sc.setId(Long.valueOf(idStr));
                     } catch (IOException e) {
@@ -146,7 +146,7 @@ public class SupplierManagementController {
                 //设置节点是否为父节点
                 if(parent.isLeaf()) {
                     parent.getValue().setParent(false);
-                    String json = gson.toJson(parent.getValue());
+                    String json = GoogleJson.GET().toJson(parent.getValue());
                     try {
                         HttpClient.PUT("/supplier/categories/"+parent.getValue().getId(), json);
                     } catch (IOException e) {
@@ -176,7 +176,7 @@ public class SupplierManagementController {
         Callback<Supplier, Object> cb = new Callback<Supplier, Object>() {
             @Override
             public Object call(Supplier param) {
-                String json = gson.toJson(param);
+                String json = GoogleJson.GET().toJson(param);
                 try {
                     HttpClient.POST("/suppliers", json);
                 } catch (IOException e) {
@@ -225,7 +225,7 @@ public class SupplierManagementController {
         Callback<Supplier, Object> cb = new Callback<Supplier, Object>() {
             @Override
             public Object call(Supplier param) {
-                String json = gson.toJson(param);
+                String json = GoogleJson.GET().toJson(param);
                 try {
                     HttpClient.PUT("/suppliers/"+param.getId(),json);
                 } catch (IOException e) {
@@ -281,10 +281,10 @@ public class SupplierManagementController {
         supplier.setContact(txtContact.getText());
         supplier.setPhone(txtPhone.getText());
         supplier.setOther(txtOthers.getText());
-        String json = gson.toJson(supplier);
+        String json = GoogleJson.GET().toJson(supplier);
         try {
             String data = HttpClient.POST("/suppliers/search", json);
-            Supplier[] suppliers = gson.fromJson(data, Supplier[].class);
+            Supplier[] suppliers = GoogleJson.GET().fromJson(data, Supplier[].class);
             supplierTable.getItems().clear();
             supplierTable.getItems().addAll(suppliers);
         } catch (IOException e) {
@@ -337,7 +337,7 @@ public class SupplierManagementController {
         try {
             String path = "/supplier/categories";
             String data = HttpClient.GET(path);
-            SupplierCategory[] res = gson.fromJson(data, SupplierCategory[].class);
+            SupplierCategory[] res = GoogleJson.GET().fromJson(data, SupplierCategory[].class);
             getNodes(root, res);
         } catch (IOException e) {
             e.printStackTrace();
@@ -423,7 +423,7 @@ public class SupplierManagementController {
             @Override
             public void handle(TreeView.EditEvent<SupplierCategory> event) {
                 String path = "/supplier/categories/"+event.getNewValue().getId();
-                String json = gson.toJson(event.getNewValue());
+                String json = GoogleJson.GET().toJson(event.getNewValue());
                 try {
                     HttpClient.PUT(path, json);
                 } catch (IOException e) {
@@ -441,7 +441,7 @@ public class SupplierManagementController {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                Supplier[] suppliers = gson.fromJson(json, Supplier[].class);
+                Supplier[] suppliers = GoogleJson.GET().fromJson(json, Supplier[].class);
                 supplierTable.getItems().addAll(suppliers);
             }
         });
@@ -457,7 +457,7 @@ public class SupplierManagementController {
         });
         try {
             String json = HttpClient.GET("/suppliers");
-            Supplier[] suppliers = gson.fromJson(json, Supplier[].class);
+            Supplier[] suppliers = GoogleJson.GET().fromJson(json, Supplier[].class);
             supplierTable.getItems().addAll(suppliers);
         } catch (IOException e) {
             e.printStackTrace();

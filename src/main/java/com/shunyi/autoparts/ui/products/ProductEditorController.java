@@ -1,6 +1,6 @@
 package com.shunyi.autoparts.ui.products;
 
-import com.shunyi.autoparts.ui.common.GSON;
+import com.shunyi.autoparts.ui.common.GoogleJson;
 import com.shunyi.autoparts.ui.common.NumberValidationUtils;
 import com.shunyi.autoparts.ui.http.HttpClient;
 import com.shunyi.autoparts.ui.model.*;
@@ -95,7 +95,7 @@ public class ProductEditorController {
             BigDecimal price = new BigDecimal(Double.valueOf(txtPrice.getText())).setScale(2, RoundingMode.HALF_UP);
             Product newProduct = new Product(txtCode.getText(),
                     txtName.getText(),
-                    selectedBrand,
+                    boxBrand.getValue(),
                     selectedCar, txtUnit.getText(), boxImported.getValue(), txtPlace.getText(), price, txtOthers.getText());
             callback.call(newProduct);
         }
@@ -107,7 +107,7 @@ public class ProductEditorController {
             BigDecimal price = new BigDecimal(Double.valueOf(txtPrice.getText())).setScale(2, RoundingMode.HALF_UP);
             Product newProduct = new Product(txtCode.getText(),
                     txtName.getText(),
-                    selectedBrand,
+                    boxBrand.getValue(),
                     selectedCar, txtUnit.getText(), boxImported.getValue(), txtPlace.getText(), price, txtOthers.getText());
             callback.call(newProduct);
         }
@@ -139,7 +139,7 @@ public class ProductEditorController {
             alert.setHeaderText("价格不能为空");
             alert.show();
             return false;
-        } else if(!NumberValidationUtils.isPositiveDecimal(txtPrice.getText())) {
+        } else if(!NumberValidationUtils.isPositiveDecimal(txtPrice.getText()) && !NumberValidationUtils.isPositiveInteger(txtPrice.getText())) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
             alert.setHeaderText("请输入数字价格");
             alert.show();
@@ -196,7 +196,7 @@ public class ProductEditorController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        BrandSeries[] brands = GSON.getInstance().fromJson(json, BrandSeries[].class);
+        BrandSeries[] brands = GoogleJson.GET().fromJson(json, BrandSeries[].class);
         boxBrand.getItems().addAll(brands);
         //默认选中品牌
         Arrays.stream(brands).forEach(e -> {

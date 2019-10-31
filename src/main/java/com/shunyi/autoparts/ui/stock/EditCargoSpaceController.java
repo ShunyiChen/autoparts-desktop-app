@@ -1,6 +1,7 @@
 package com.shunyi.autoparts.ui.stock;
 
 import com.google.gson.Gson;
+import com.shunyi.autoparts.ui.common.GoogleJson;
 import com.shunyi.autoparts.ui.http.HttpClient;
 import com.shunyi.autoparts.ui.model.CargoSpace;
 import com.shunyi.autoparts.ui.model.SupplierCategory;
@@ -47,8 +48,6 @@ public class EditCargoSpaceController {
     CargoSpace updatedCargoSpace;
     Callback<CargoSpace, Object> callback;
     Warehouse selectedWarehouse;
-    Gson gson = new Gson();
-
     @FXML
     void choose(ActionEvent event) {
         FXMLLoader loader = new FXMLLoader(
@@ -165,7 +164,7 @@ public class EditCargoSpaceController {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            selectedWarehouse = gson.fromJson(json, Warehouse.class);
+            selectedWarehouse = GoogleJson.GET().fromJson(json, Warehouse.class);
             String name = selectedWarehouse.getId() == 0 ? "全部仓库":selectedWarehouse.getName();
             txtWarehouse.setText(name);
             txtName.setText(updatedCargoSpace.getName());

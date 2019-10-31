@@ -23,7 +23,6 @@ public class BrandSeries {
     /** 品牌官方网站 */
     private String officialSite;
     /** 创建时间 */
-    @JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ")
     private Date dateCreated;
 
     public BrandSeries() {
@@ -105,6 +104,10 @@ public class BrandSeries {
 
     public Date getDateCreated() {
         return dateCreated;
+    }
+
+    public void setDateCreated(Date dateCreated) {
+        this.dateCreated = dateCreated;
     }
 
     @Override

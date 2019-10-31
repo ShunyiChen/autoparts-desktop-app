@@ -3,7 +3,7 @@ package com.shunyi.autoparts.ui.common;
 import java.util.HashMap;
 import java.util.Map;
 
-/** 环境变量 */
+/** 系统全局环境变量 */
 public class ENV {
 
     private ENV() {}

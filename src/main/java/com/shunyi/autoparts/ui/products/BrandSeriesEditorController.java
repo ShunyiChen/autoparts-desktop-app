@@ -1,6 +1,7 @@
 package com.shunyi.autoparts.ui.products;
 
 import com.google.gson.Gson;
+import com.shunyi.autoparts.ui.common.GoogleJson;
 import com.shunyi.autoparts.ui.http.HttpClient;
 import com.shunyi.autoparts.ui.model.*;
 import javafx.event.ActionEvent;
@@ -23,7 +24,6 @@ public class BrandSeriesEditorController {
     BrandSeries brandSeries;
     Callback<BrandSeries, Object> callback;
     Category  selectedCategory;
-    Gson gson = new Gson();
     @FXML
     ImageView imgLogo;
     @FXML
@@ -102,7 +102,7 @@ public class BrandSeriesEditorController {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            Logo logo = gson.fromJson(json, Logo.class);
+            Logo logo = GoogleJson.GET().fromJson(json, Logo.class);
             BrandSeries newBrandSeries = new BrandSeries(selectedCategory, txtChineseName.getText(), txtEnglishName.getText(), txtDesc.getText(), logo, boxStatus.getValue(), txtOfficialWebSite.getText());
             callback.call(newBrandSeries);
         }
@@ -117,7 +117,7 @@ public class BrandSeriesEditorController {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            Logo logo = gson.fromJson(json, Logo.class);
+            Logo logo = GoogleJson.GET().fromJson(json, Logo.class);
             BrandSeries newBrandSeries = new BrandSeries(selectedCategory, txtChineseName.getText(), txtEnglishName.getText(), txtDesc.getText(), logo, boxStatus.getValue(), txtOfficialWebSite.getText());
             callback.call(newBrandSeries);
         }

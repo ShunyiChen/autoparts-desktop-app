@@ -1,7 +1,5 @@
 package com.shunyi.autoparts.ui.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Date;
@@ -29,7 +27,6 @@ public class Product {
     /** 其他 */
     private String notes;
     /** 创建时间 */
-    @JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ")
     private Date dateCreated;
 
     public Product() {}
@@ -125,7 +122,6 @@ public class Product {
     public void setPriceExcludingTax(BigDecimal priceExcludingTax) {
         this.priceExcludingTax = priceExcludingTax.setScale(2, RoundingMode.HALF_UP);
     }
-
     public void setDateCreated(Date dateCreated) {
         this.dateCreated = dateCreated;
     }
@@ -136,6 +132,18 @@ public class Product {
 
     @Override
     public String toString() {
-        return name;
+        return "Product{" +
+                "id=" + id +
+                ", code='" + code + '\'' +
+                ", name='" + name + '\'' +
+                ", brandSeries=" + brandSeries +
+                ", car=" + car +
+                ", unit='" + unit + '\'' +
+                ", imported='" + imported + '\'' +
+                ", placeOfOrigin='" + placeOfOrigin + '\'' +
+                ", priceExcludingTax=" + priceExcludingTax +
+                ", notes='" + notes + '\'' +
+                ", dateCreated=" + dateCreated +
+                '}';
     }
 }

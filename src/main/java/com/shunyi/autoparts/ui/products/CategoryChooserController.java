@@ -1,6 +1,7 @@
 package com.shunyi.autoparts.ui.products;
 
 import com.google.gson.Gson;
+import com.shunyi.autoparts.ui.common.GoogleJson;
 import com.shunyi.autoparts.ui.http.HttpClient;
 import com.shunyi.autoparts.ui.model.Category;
 import javafx.fxml.FXML;
@@ -21,7 +22,6 @@ public class CategoryChooserController {
     private Stage subStage;
     private Category selectedCategory;
     private Callback callback;
-    private Gson gson = new Gson();
 
     @FXML
     private void cancel() {
@@ -49,7 +49,7 @@ public class CategoryChooserController {
         try {
             String path = "/categories/sorted";
             String data = HttpClient.GET(path);
-            Category[] res = gson.fromJson(data, Category[].class);
+            Category[] res = GoogleJson.GET().fromJson(data, Category[].class);
             getNodes(root, res);
         } catch (IOException e) {
             e.printStackTrace();

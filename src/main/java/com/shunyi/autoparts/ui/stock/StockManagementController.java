@@ -2,6 +2,7 @@ package com.shunyi.autoparts.ui.stock;
 
 import com.google.gson.Gson;
 import com.shunyi.autoparts.ui.MainApp;
+import com.shunyi.autoparts.ui.common.GoogleJson;
 import com.shunyi.autoparts.ui.http.HttpClient;
 import com.shunyi.autoparts.ui.model.CargoSpace;
 import com.shunyi.autoparts.ui.model.SKU;
@@ -26,7 +27,6 @@ import java.io.IOException;
 
 public class StockManagementController {
 
-    private Gson gson = new Gson();
     private MainApp application;
 
     @FXML
@@ -112,10 +112,10 @@ public class StockManagementController {
         cargoSpace.setLevel_3(txtLevel_3.getText());
         cargoSpace.setLevel_4(txtLevel_4.getText());
         cargoSpace.setLevel_5(txtLevel_5.getText());
-        String json = gson.toJson(cargoSpace);
+        String json = GoogleJson.GET().toJson(cargoSpace);
         try {
             String data = HttpClient.POST("/cargoSpaces/search", json);
-            CargoSpace[] cargoSpaces = gson.fromJson(data, CargoSpace[].class);
+            CargoSpace[] cargoSpaces = GoogleJson.GET().fromJson(data, CargoSpace[].class);
             topTable.getItems().clear();
             topTable.getItems().addAll(cargoSpaces);
         } catch (IOException e) {
@@ -188,7 +188,7 @@ public class StockManagementController {
             public Object call(Warehouse param) {
                 if(param != null) {
                     selectedItem.getValue().setParent(true);
-                    String json = gson.toJson(selectedItem.getValue());
+                    String json = GoogleJson.GET().toJson(selectedItem.getValue());
                     try {
                         HttpClient.PUT("/warehouses/"+selectedItem.getValue().getId(),json);
                     } catch (IOException e) {
@@ -196,7 +196,7 @@ public class StockManagementController {
                     }
                     param.setParentId(selectedItem.getValue().getId()==null?0:selectedItem.getValue().getId());
                     param.setParent(false);
-                    json = gson.toJson(param);
+                    json = GoogleJson.GET().toJson(param);
                     try {
                         String idStr = HttpClient.POST("/warehouses", json);
                         param.setId(Long.valueOf(idStr));
@@ -229,7 +229,7 @@ public class StockManagementController {
                     param.setId(selected.getValue().getId());
                     param.setParent(selected.getValue().isParent());
                     param.setParentId(selected.getValue().getParentId());
-                    String json = gson.toJson(param);
+                    String json = GoogleJson.GET().toJson(param);
                     try {
                         HttpClient.PUT("/warehouses/"+selected.getValue().getId(), json);
                     } catch (IOException e) {
@@ -288,7 +288,7 @@ public class StockManagementController {
                 //设置节点是否为父节点
                 if(parent.isLeaf()) {
                     parent.getValue().setParent(false);
-                    String json = gson.toJson(parent.getValue());
+                    String json = GoogleJson.GET().toJson(parent.getValue());
                     try {
                         HttpClient.PUT("/warehouses/"+parent.getValue().getId(), json);
                     } catch (IOException e) {
@@ -318,7 +318,7 @@ public class StockManagementController {
         Callback<CargoSpace, Object> cb = new Callback<CargoSpace, Object>() {
             @Override
             public Object call(CargoSpace param) {
-                String json = gson.toJson(param);
+                String json = GoogleJson.GET().toJson(param);
                 try {
                     HttpClient.POST("/cargoSpaces", json);
                 } catch (IOException e) {
@@ -365,7 +365,7 @@ public class StockManagementController {
         Callback<CargoSpace, Object> cb = new Callback<CargoSpace, Object>() {
             @Override
             public Object call(CargoSpace param) {
-                String json = gson.toJson(param);
+                String json = GoogleJson.GET().toJson(param);
                 try {
                     HttpClient.PUT("/cargoSpaces/"+param.getId(),json);
                 } catch (IOException e) {
@@ -444,7 +444,7 @@ public class StockManagementController {
             @Override
             public void handle(TreeView.EditEvent<Warehouse> event) {
                 String path = "/warehouses/"+event.getNewValue().getId();
-                String json = gson.toJson(event.getNewValue());
+                String json = GoogleJson.GET().toJson(event.getNewValue());
                 try {
                     HttpClient.PUT(path, json);
                 } catch (IOException e) {
@@ -463,7 +463,7 @@ public class StockManagementController {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                CargoSpace[] suppliers = gson.fromJson(json, CargoSpace[].class);
+                CargoSpace[] suppliers = GoogleJson.GET().fromJson(json, CargoSpace[].class);
                 topTable.getItems().addAll(suppliers);
             }
         });
@@ -505,7 +505,7 @@ public class StockManagementController {
         });
         try {
             String json = HttpClient.GET("/cargoSpaces");
-            CargoSpace[] cargoSpaces = gson.fromJson(json, CargoSpace[].class);
+            CargoSpace[] cargoSpaces = GoogleJson.GET().fromJson(json, CargoSpace[].class);
             topTable.getItems().addAll(cargoSpaces);
         } catch (IOException e) {
             e.printStackTrace();
@@ -549,7 +549,7 @@ public class StockManagementController {
         try {
             String path = "/warehouses";
             String data = HttpClient.GET(path);
-            Warehouse[] res = gson.fromJson(data, Warehouse[].class);
+            Warehouse[] res = GoogleJson.GET().fromJson(data, Warehouse[].class);
             getNodes(root, res);
         } catch (IOException e) {
             e.printStackTrace();

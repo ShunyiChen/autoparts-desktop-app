@@ -3,6 +3,7 @@ package com.shunyi.autoparts.ui.login;
 import com.google.gson.Gson;
 import com.shunyi.autoparts.ui.MainApp;
 import com.shunyi.autoparts.ui.common.ENV;
+import com.shunyi.autoparts.ui.common.GoogleJson;
 import com.shunyi.autoparts.ui.h2.H2;
 import com.shunyi.autoparts.ui.http.HttpClient;
 import com.shunyi.autoparts.ui.http.AuthenticationResponse;
@@ -46,7 +47,6 @@ public class LoginController {
     @FXML
     private Button button;
     private MainApp application;
-    private Gson gson = new Gson();
 
     @FXML
     public void loggingIn(ActionEvent event) {
@@ -63,7 +63,7 @@ public class LoginController {
             String json = "{\"username\":\""+txtUsername.getText().trim()+"\",\"password\":\""+txtPassword.getText().trim()+"\"}";
             try {
                 String data = HttpClient.POST(path, json, "");
-                AuthenticationResponse res = gson.fromJson(data, AuthenticationResponse.class);
+                AuthenticationResponse res = GoogleJson.GET().fromJson(data, AuthenticationResponse.class);
                 progressBar.setProgress(0.8);
                 if(res.getToken() != null) {
                     ENV.getInstance().addToEnvironment("Authorization", "Bearer "+res.getToken());

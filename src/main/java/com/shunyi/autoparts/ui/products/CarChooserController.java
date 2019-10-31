@@ -1,7 +1,7 @@
 package com.shunyi.autoparts.ui.products;
 
 import com.google.gson.Gson;
-import com.shunyi.autoparts.ui.common.GSON;
+import com.shunyi.autoparts.ui.common.GoogleJson;
 import com.shunyi.autoparts.ui.http.HttpClient;
 import com.shunyi.autoparts.ui.model.Car;
 import javafx.event.ActionEvent;
@@ -10,13 +10,11 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.TextFieldTreeCell;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
-import javafx.util.StringConverter;
 
 import java.io.IOException;
 
@@ -99,7 +97,7 @@ public class CarChooserController {
         Callback<Car, Object> callback = e -> {
             e.setParent(false);
             e.setParentId(parent.getValue().getId());
-            String json = GSON.getInstance().toJson(e);
+            String json = GoogleJson.GET().toJson(e);
             try {
                 String idStr = HttpClient.POST("/cars", json);
                 e.setId(Long.valueOf(idStr));
@@ -130,7 +128,7 @@ public class CarChooserController {
         Callback<Car, Object> callback = e -> {
             selected.getValue().setCode(e.getCode());
             selected.getValue().setModel(e.getModel());
-            String json = GSON.getInstance().toJson(selected.getValue());
+            String json = GoogleJson.GET().toJson(selected.getValue());
             try {
                 HttpClient.PUT("/cars/"+selected.getValue().getId(), json);
             } catch (IOException ex) {

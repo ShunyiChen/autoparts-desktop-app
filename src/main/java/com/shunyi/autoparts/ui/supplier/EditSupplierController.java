@@ -1,6 +1,7 @@
 package com.shunyi.autoparts.ui.supplier;
 
 import com.google.gson.Gson;
+import com.shunyi.autoparts.ui.common.GoogleJson;
 import com.shunyi.autoparts.ui.http.HttpClient;
 import com.shunyi.autoparts.ui.model.Supplier;
 import com.shunyi.autoparts.ui.model.SupplierCategory;
@@ -40,7 +41,6 @@ public class EditSupplierController {
     private Stage dialog;
     private Supplier updatedSupplier;
     private SupplierCategory selectedCategory;
-    private Gson gson = new Gson();
     private Callback<Supplier, Object> callback;
 
     @FXML
@@ -152,7 +152,7 @@ public class EditSupplierController {
         if(updatedSupplier != null) {
             try {
                 String json = HttpClient.GET("/supplier/categories/"+updatedSupplier.getCategory().getId());
-                selectedCategory = gson.fromJson(json, SupplierCategory.class);
+                selectedCategory = GoogleJson.GET().fromJson(json, SupplierCategory.class);
                 String name = selectedCategory.getId() == 0 ? "全部供应商":selectedCategory.getName();
                 txtCategory.setText(name);
                 txtCode.setText(updatedSupplier.getCode());

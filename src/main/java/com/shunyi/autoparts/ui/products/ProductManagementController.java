@@ -1,10 +1,11 @@
 package com.shunyi.autoparts.ui.products;
 
-import com.google.gson.Gson;
 import com.shunyi.autoparts.ui.MainApp;
-import com.shunyi.autoparts.ui.common.GSON;
+import com.shunyi.autoparts.ui.common.GoogleJson;
+import com.shunyi.autoparts.ui.common.NumberValidationUtils;
 import com.shunyi.autoparts.ui.http.HttpClient;
 import com.shunyi.autoparts.ui.model.BrandSeries;
+import com.shunyi.autoparts.ui.model.Car;
 import com.shunyi.autoparts.ui.model.Category;
 import com.shunyi.autoparts.ui.model.Product;
 import javafx.event.ActionEvent;
@@ -25,23 +26,31 @@ import javafx.util.Callback;
 import javafx.util.StringConverter;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /** 配件管理Controller */
 public class ProductManagementController {
     MainApp application;
+    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
     @FXML
     TextField txtCode;
     @FXML
     TextField txtName;
     @FXML
-    TextField txtImported;
-    @FXML
-    TextField txtCar;
-    @FXML
     TextField txtBrand;
     @FXML
-    TextField txtOther;
-
+    TextField txtPrice;
+    @FXML
+    TextField txtUnit;
+    @FXML
+    TextField txtImported;
+    @FXML
+    TextField txtPlace;
+    @FXML
+    TextField txtCar;
     @FXML
     TableColumn colCode;
     @FXML
@@ -71,16 +80,47 @@ public class ProductManagementController {
 
     @FXML
     void search(ActionEvent event) {
+        Product condition = new Product();
+        condition.setCode(txtCode.getText());
+        condition.setName(txtName.getText());
+        BrandSeries brandSeries = new BrandSeries();
+        brandSeries.setChineseName(txtBrand.getText());
+        condition.setBrandSeries(brandSeries);
+        Car car = new Car();
+        car.setModel(txtCar.getText());
+        condition.setCar(car);
+        if(!txtPrice.getText().equals("") && (NumberValidationUtils.isPositiveInteger(txtPrice.getText()) || NumberValidationUtils.isDecimal(txtPrice.getText()))) {
+            condition.setPriceExcludingTax(BigDecimal.valueOf(Double.valueOf(txtPrice.getText())));
+        }
+        condition.setUnit(txtUnit.getText());
+        condition.setImported(txtImported.getText());
+        condition.setPlaceOfOrigin(txtPlace.getText());
+
+        String json = GoogleJson.GET().toJson(condition);
+        String data = null;
+        try {
+            data = HttpClient.POST("/products/search", json);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("rs="+data);
+
+//        Product[] products = GoogleJson.GET().fromJson(data, Product[].class);
+//        tableView.getItems().clear();
+//        tableView.getItems().addAll(products);
     }
 
     @FXML
     void clear(ActionEvent event) {
         txtCode.setText("");
         txtName.setText("");
-        txtImported.setText("");
-        txtCar.setText("");
         txtBrand.setText("");
-        txtOther.setText("");
+        txtPrice.setText("");
+        txtUnit.setText("");
+        txtImported.setText("");
+        txtPlace.setText("");
+        txtCar.setText("");
     }
 
     @FXML
@@ -97,7 +137,7 @@ public class ProductManagementController {
             public Object call(Category category) {
                 if(category != null) {
                     parent.getValue().setParent(true);
-                    String json = GSON.getInstance().toJson(parent.getValue());
+                    String json = GoogleJson.GET().toJson(parent.getValue());
                     try {
                         HttpClient.PUT("/categories/"+parent.getValue().getId(),json);
                     } catch (IOException e) {
@@ -106,7 +146,7 @@ public class ProductManagementController {
                     category.setParentId(parent.getValue().getId());
                     category.setParent(false);
                     try {
-                        json = GSON.getInstance().toJson(category, Category.class);
+                        json = GoogleJson.GET().toJson(category, Category.class);
                         String idStr = HttpClient.POST("/categories",json);
                         category.setId(Long.valueOf(idStr));
                     } catch (IOException e) {
@@ -138,7 +178,7 @@ public class ProductManagementController {
                     param.setId(selected.getValue().getId());
                     param.setParent(selected.getValue().isParent());
                     param.setParentId(selected.getValue().getParentId());
-                    String json = GSON.getInstance().toJson(param);
+                    String json = GoogleJson.GET().toJson(param);
                     try {
                         HttpClient.PUT("/categories/"+selected.getValue().getId(), json);
                     } catch (IOException e) {
@@ -216,7 +256,7 @@ public class ProductManagementController {
                 //设置节点是否为父节点
                 if(parent.isLeaf()) {
                     parent.getValue().setParent(false);
-                    String json = GSON.getInstance().toJson(parent.getValue());
+                    String json = GoogleJson.GET().toJson(parent.getValue());
                     try {
                         HttpClient.PUT("/categories/"+parent.getValue().getId(), json);
                     } catch (IOException e) {
@@ -230,14 +270,19 @@ public class ProductManagementController {
     @FXML
     void newBrand(ActionEvent event) {
         TreeItem<Category> selectedCategory = treeView.getSelectionModel().getSelectedItem();
-        if(selectedCategory.getValue().getId() == 0L) {
+        if(selectedCategory == null) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
+            alert.setHeaderText("请选择一个类目");
+            alert.show();
+            return;
+        } else if(selectedCategory.getValue().getId() == 0L) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
             alert.setHeaderText("不能在根节点下创建品牌，请选中其他类目");
             alert.show();
             return;
         }
         Callback<BrandSeries, Object> callback = e -> {
-            String json = GSON.getInstance().toJson(e);
+            String json = GoogleJson.GET().toJson(e);
             try {
                 String idStr = HttpClient.POST("/brandSeries", json);
                 e.setId(Long.valueOf(idStr));
@@ -259,11 +304,20 @@ public class ProductManagementController {
             alert.show();
             return;
         }
+
+        String data = null;
+        try {
+            data = HttpClient.GET("/brandSeries/"+selected.getId());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        BrandSeries selectedBrandSeries = GoogleJson.GET().fromJson(data, BrandSeries.class);
         Callback<BrandSeries, Object> callback = e -> {
-            e.setId(selected.getId());
-            String json = GSON.getInstance().toJson(e);
+            e.setId(selectedBrandSeries.getId());
+            e.setDateCreated(selectedBrandSeries.getDateCreated());
+            String json = GoogleJson.GET().toJson(e);
             try {
-                HttpClient.PUT("/brandSeries/"+selected.getId(), json);
+                HttpClient.PUT("/brandSeries/"+selectedBrandSeries.getId(), json);
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
@@ -341,14 +395,16 @@ public class ProductManagementController {
             return;
         }
         Callback<Product, Object> callback = e -> {
-            String json = GSON.getInstance().toJson(e);
+            String json = GoogleJson.GET().toJson(e);
             try {
                 String idStr = HttpClient.POST("/products",json);
                 e.setId(Long.valueOf(idStr));
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
+            //刷新表格
             tableView.getItems().add(e);
+            tableView.getSelectionModel().select(e);
             return null;
         };
         openProductEditor(callback, null, selectedCategory.getValue(), selectedBrand);
@@ -377,17 +433,27 @@ public class ProductManagementController {
             alert.show();
             return;
         }
+        String data = null;
+        try {
+            data = HttpClient.GET("/products/"+selected.getId());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Product selectedProduct = GoogleJson.GET().fromJson(data, Product.class);
         Callback<Product, Object> callback = e -> {
-            e.setId(selected.getId());
-            String json = GSON.getInstance().toJson(e);
+            e.setId(selectedProduct.getId());
+            e.setDateCreated(selectedProduct.getDateCreated());
+            String json = GoogleJson.GET().toJson(e);
             try {
-                HttpClient.PUT("/products/"+selected.getId(),json);
+                HttpClient.PUT("/products/"+selectedProduct.getId(),json);
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
+            //刷新表格
             int index = tableView.getSelectionModel().getSelectedIndex();
             tableView.getItems().remove(selected);
             tableView.getItems().add(index, e);
+            tableView.getSelectionModel().select(e);
             return null;
         };
         openProductEditor(callback, selected, selectedCategory.getValue(), selectedBrand);
@@ -428,12 +494,16 @@ public class ProductManagementController {
             alert.show();
             return;
         }
-        try {
-            HttpClient.DELETE("/products/"+selectedProduct.getId());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        tableView.getItems().remove(selectedProduct);
+        Alert alertConfirm = new Alert(Alert.AlertType.CONFIRMATION, "", ButtonType.NO, ButtonType.YES);
+        alertConfirm.setHeaderText("是否删除该商品？");
+        alertConfirm.showAndWait().filter(response -> response == ButtonType.YES).ifPresent(response -> {
+            try {
+                HttpClient.DELETE("/products/"+selectedProduct.getId());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            tableView.getItems().remove(selectedProduct);
+        });
     }
 
     @FXML
@@ -459,6 +529,23 @@ public class ProductManagementController {
         colCar.setCellValueFactory(new PropertyValueFactory<Product, String>("car"));
         colPlace.setCellValueFactory(new PropertyValueFactory<Product, String>("placeOfOrigin"));
         colDateCreated.setCellValueFactory(new PropertyValueFactory<Product, String>("dateCreated"));
+        colDateCreated.setCellFactory(column -> {
+            TableCell<Product, Date> cell = new TableCell<>() {
+                @Override
+                protected void updateItem(Date item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if(empty) {
+                        setText(null);
+                    }
+                    else {
+                        if(item == null)
+                            item = new Date();
+                        setText(format.format(item));
+                    }
+                }
+            };
+            return cell;
+        });
         colOther.setCellValueFactory(new PropertyValueFactory<Product, String>("notes"));
 
         tableView.setOnMouseClicked((MouseEvent event) -> {
@@ -466,6 +553,50 @@ public class ProductManagementController {
                  updateProduct(null);
             }
         });
+
+        ContextMenu menu = new ContextMenu();
+        MenuItem itemDuplicate = new MenuItem("复制");
+        MenuItem itemProperties = new MenuItem("属性");
+        itemDuplicate.setOnAction(e ->{
+            duplicate();
+        });
+        itemProperties.setOnAction(e ->{
+            viewProperties();
+        });
+        menu.getItems().addAll(itemDuplicate, new SeparatorMenuItem() ,itemProperties);
+        tableView.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent t) {
+                if(t.getButton() == MouseButton.SECONDARY) {
+                    menu.show(tableView, t.getScreenX(), t.getScreenY());
+                }
+            }
+        });
+    }
+
+    void duplicate() {
+        Product selected = tableView.getSelectionModel().getSelectedItem();
+        String json = null;
+        try {
+            json = HttpClient.GET("/products/"+selected.getId());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Product duplicated = GoogleJson.GET().fromJson(json, Product.class);
+        duplicated.setId(null);
+        json = GoogleJson.GET().toJson(duplicated);
+        try {
+            String idStr = HttpClient.POST("/products",json);
+            duplicated.setId(Long.valueOf(idStr));
+            tableView.getItems().add(duplicated);
+            tableView.getSelectionModel().select(duplicated);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    void viewProperties() {
+
     }
 
     void initTreeView() {
@@ -494,7 +625,7 @@ public class ProductManagementController {
             @Override
             public void handle(TreeView.EditEvent<Category> event) {
                 String path = "/categories/"+event.getNewValue().getId();
-                String json = GSON.getInstance().toJson(event.getNewValue());
+                String json = GoogleJson.GET().toJson(event.getNewValue());
                 try {
                     HttpClient.PUT(path, json);
                 } catch (IOException e) {
@@ -512,7 +643,7 @@ public class ProductManagementController {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                BrandSeries[] brands = GSON.getInstance().fromJson(json, BrandSeries[].class);
+                BrandSeries[] brands = GoogleJson.GET().fromJson(json, BrandSeries[].class);
                 listView.getItems().addAll(brands);
             }
         });
@@ -523,7 +654,7 @@ public class ProductManagementController {
         try {
             String path = "/categories/sorted";
             String data = HttpClient.GET(path);
-            Category[] res = GSON.getInstance().fromJson(data, Category[].class);
+            Category[] res = GoogleJson.GET().fromJson(data, Category[].class);
             getNodes(root, res);
         } catch (IOException e) {
             e.printStackTrace();
@@ -574,7 +705,7 @@ public class ProductManagementController {
         try {
             String path = "/brandSeries";
             String data = HttpClient.GET(path);
-            BrandSeries[] res = GSON.getInstance().fromJson(data, BrandSeries[].class);
+            BrandSeries[] res = GoogleJson.GET().fromJson(data, BrandSeries[].class);
             listView.getItems().addAll(res);
         } catch (IOException e) {
             e.printStackTrace();
@@ -591,7 +722,7 @@ public class ProductManagementController {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    Product[] products = GSON.getInstance().fromJson(data, Product[].class);
+                    Product[] products = GoogleJson.GET().fromJson(data, Product[].class);
                     tableView.getItems().clear();
                     tableView.getItems().addAll(products);
                 }
