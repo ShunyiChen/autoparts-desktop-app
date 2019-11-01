@@ -505,14 +505,8 @@ public class ProductManagementController {
     }
 
     @FXML
-    void openProductAttributes(ActionEvent event) {
+    void openCustomAttributes(ActionEvent event) {
         TreeItem<Category> selectedItem = treeView.getSelectionModel().getSelectedItem();
-//        if(selectedItem == null) {
-//            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
-//            alert.setHeaderText("请选择一个配件分类");
-//            alert.show();
-//            return;
-//        }
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource(
                         "/fxml/products/attributes_management.fxml"
@@ -539,7 +533,12 @@ public class ProductManagementController {
     }
 
     @FXML
-    void assignProductAttributes(ActionEvent event) {
+    void openProductAttributes(ActionEvent event) {
+
+    }
+
+    @FXML
+    void openProductSKU(ActionEvent event) {
 
     }
 

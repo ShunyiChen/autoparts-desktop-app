@@ -4,10 +4,9 @@
 <?import javafx.scene.control.TreeView?>
 <?import javafx.scene.layout.BorderPane?>
 
-
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="571.0" prefWidth="827.0" fx:controller="com.shunyi.autoparts.ui.products.AttributeManagementController" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="571.0" prefWidth="827.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.shunyi.autoparts.ui.products.AttributeManagementController">
    <center>
-      <SplitPane dividerPositions="0.2" prefHeight="377.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+      <SplitPane dividerPositions="0.25" prefHeight="377.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <items>
             <TreeView fx:id="categoryTree" prefHeight="398.0" prefWidth="211.0" />
             <BorderPane prefHeight="200.0" prefWidth="200.0">

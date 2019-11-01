@@ -6,12 +6,10 @@ import java.util.Date;
 public class Attribute {
     /** ID */
     private Long id;
-    /** 产品ID */
-    private Long productId;
-    /** 属性名ID */
-    private Long attributeNameId;
-    /** 属性值ID */
-    private Long attributeValueId;
+    /** 产品 */
+    private Product product;
+    /** 属性名 */
+    private AttributeName attributeName;
     /** 是否SKU */
     private Boolean sku;
     /** SKU ID */
@@ -21,13 +19,11 @@ public class Attribute {
 
     public Attribute() {}
 
-    public Attribute(Long productId, Long attributeNameId, Long attributeValueId, Boolean sku, Long skuId, Date dateCreated) {
-        this.productId = productId;
-        this.attributeNameId = attributeNameId;
-        this.attributeValueId = attributeValueId;
+    public Attribute(Product product, AttributeName attributeName, Boolean sku, Long skuId) {
+        this.product = product;
+        this.attributeName = attributeName;
         this.sku = sku;
         this.skuId = skuId;
-        this.dateCreated = dateCreated;
     }
 
     public Long getId() {
@@ -38,31 +34,23 @@ public class Attribute {
         this.id = id;
     }
 
-    public Long getProductId() {
-        return productId;
+    public Product getProduct() {
+        return product;
     }
 
-    public void setProductId(Long productId) {
-        this.productId = productId;
+    public void setProduct(Product product) {
+        this.product = product;
     }
 
-    public Long getAttributeNameId() {
-        return attributeNameId;
+    public AttributeName getAttributeName() {
+        return attributeName;
     }
 
-    public void setAttributeNameId(Long attributeNameId) {
-        this.attributeNameId = attributeNameId;
+    public void setAttributeName(AttributeName attributeName) {
+        this.attributeName = attributeName;
     }
 
-    public Long getAttributeValueId() {
-        return attributeValueId;
-    }
-
-    public void setAttributeValueId(Long attributeValueId) {
-        this.attributeValueId = attributeValueId;
-    }
-
-    public Boolean isSku() {
+    public Boolean getSku() {
         return sku;
     }
 
@@ -88,14 +76,6 @@ public class Attribute {
 
     @Override
     public String toString() {
-        return "Attribute{" +
-                "id=" + id +
-                ", productId=" + productId +
-                ", attributeNameId=" + attributeNameId +
-                ", attributeValueId=" + attributeValueId +
-                ", sku=" + sku +
-                ", skuId=" + skuId +
-                ", dateCreated=" + dateCreated +
-                '}';
+        return attributeName.toString();
     }
 }

@@ -1,12 +1,12 @@
 package com.shunyi.autoparts.ui.products;
 
-/** 属性状态 */
-public enum AttributeStatus {
+/** SKU状态 */
+public enum SKUStatus {
     AVAILABLE("可用"), DISABLED("不可用");
     /** 状态名 */
     private String name;
     /** 构造方法 */
-    private AttributeStatus(String name) {
+    private SKUStatus(String name) {
         this.name = name;
     }
 
