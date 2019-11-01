@@ -3,13 +3,7 @@ package com.shunyi.autoparts.ui.model;
 import java.util.Date;
 
 /** 产品属性名DTO */
-public class AttributeName {
-    /** ID */
-    private Long id;
-    /** 属性名 */
-    private String name;
-    /** 类目 */
-    private Category category;
+public class AttributeName extends AttributeBase {
     /** 是否允许别名 */
     private Boolean aliasAllowed;
     /** 是否颜色属性 */
@@ -28,12 +22,6 @@ public class AttributeName {
     private Boolean required;
     /** 是否多选 */
     private Boolean multiple;
-    /** 状态 */
-    private String status;
-    /** 排序 */
-    private Integer sort;
-    /** 创建时间 */
-    private Date dateCreated;
 
     public AttributeName() {}
 
@@ -133,7 +121,7 @@ public class AttributeName {
         this.searchField = searchField;
     }
 
-    public Boolean getRequired() {
+    public Boolean isRequired() {
         return required;
     }
 

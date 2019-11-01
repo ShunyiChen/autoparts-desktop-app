@@ -507,15 +507,15 @@ public class ProductManagementController {
     @FXML
     void openProductAttributes(ActionEvent event) {
         TreeItem<Category> selectedItem = treeView.getSelectionModel().getSelectedItem();
-        if(selectedItem == null) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
-            alert.setHeaderText("请选择一个配件分类");
-            alert.show();
-            return;
-        }
+//        if(selectedItem == null) {
+//            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
+//            alert.setHeaderText("请选择一个配件分类");
+//            alert.show();
+//            return;
+//        }
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource(
-                        "/fxml/products/attributes_editor.fxml"
+                        "/fxml/products/attributes_management.fxml"
                 )
         );
         BorderPane root = null;
@@ -526,8 +526,8 @@ public class ProductManagementController {
         }
         Scene scene = new Scene(root);
         Stage dialog = new Stage();
-        AttributeEditorController controller = loader.getController();
-        controller.prepare(dialog, selectedItem.getValue());
+        AttributeManagementController controller = loader.getController();
+        controller.prepare(dialog, selectedItem == null?null:selectedItem.getValue());
         dialog.setTitle("自定义属性");
         dialog.initOwner(application.getStage());
         dialog.setResizable(false);

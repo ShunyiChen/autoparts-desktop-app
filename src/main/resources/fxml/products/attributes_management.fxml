@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.BorderPane?>
 
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="571.0" prefWidth="827.0" fx:controller="com.shunyi.autoparts.ui.products.AttributeEditorController" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="571.0" prefWidth="827.0" fx:controller="com.shunyi.autoparts.ui.products.AttributeManagementController" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <center>
       <SplitPane dividerPositions="0.2" prefHeight="377.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <items>
@@ -15,7 +15,7 @@
                   <SplitPane dividerPositions="0.3" prefHeight="160.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                     <items>
                         <TreeView fx:id="attributeTree" prefHeight="200.0" prefWidth="200.0" />
-                        <BorderPane prefHeight="200.0" prefWidth="200.0" />
+                        <BorderPane fx:id="pnlCenter" prefHeight="200.0" prefWidth="200.0" />
                     </items>
                   </SplitPane>
                </center>

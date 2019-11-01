@@ -3,31 +3,28 @@ package com.shunyi.autoparts.ui.model;
 import java.util.Date;
 
 /** 产品属性值DTO */
-public class AttributeValue {
-    /** ID */
-    private Long id;
-    /** 属性值名称 */
-    private String name;
-    /** 产品类目 */
-    private Category category;
-    /** 属性名ID */
-    private Long attributeNameId;
-    /** 状态 */
-    private String status;
-    /** 排序 */
-    private Integer sort;
-    /** 创建时间 */
-    private Date dateCreated;
+public class AttributeValue extends AttributeBase{
+    /** 属性名 */
+    private AttributeName attributeName;
+    private String rgb;
 
     public AttributeValue() {}
 
-    public AttributeValue(String name, Category category, Long attributeNameId, String status, Integer sort, Date dateCreated) {
+    public AttributeValue(String name, String rgb, Category category, AttributeName attributeName, String status, Integer sort) {
         this.name = name;
+        this.rgb = rgb;
         this.category = category;
-        this.attributeNameId = attributeNameId;
+        this.attributeName = attributeName;
         this.status = status;
         this.sort = sort;
-        this.dateCreated = dateCreated;
+    }
+
+    public String getRgb() {
+        return rgb;
+    }
+
+    public void setRgb(String rgb) {
+        this.rgb = rgb;
     }
 
     public Long getId() {
@@ -54,12 +51,12 @@ public class AttributeValue {
         this.category = category;
     }
 
-    public Long getAttributeNameId() {
-        return attributeNameId;
+    public AttributeName getAttributeName() {
+        return attributeName;
     }
 
-    public void setAttributeNameId(Long attributeNameId) {
-        this.attributeNameId = attributeNameId;
+    public void setAttributeName(AttributeName attributeName) {
+        this.attributeName = attributeName;
     }
 
     public String getStatus() {
