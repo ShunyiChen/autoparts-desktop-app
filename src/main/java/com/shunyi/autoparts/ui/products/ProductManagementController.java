@@ -18,6 +18,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTreeCell;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
@@ -103,12 +104,9 @@ public class ProductManagementController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        System.out.println("rs="+data);
-
-//        Product[] products = GoogleJson.GET().fromJson(data, Product[].class);
-//        tableView.getItems().clear();
-//        tableView.getItems().addAll(products);
+        Product[] products = GoogleJson.GET().fromJson(data, Product[].class);
+        tableView.getItems().clear();
+        tableView.getItems().addAll(products);
     }
 
     @FXML
@@ -508,6 +506,40 @@ public class ProductManagementController {
 
     @FXML
     void openProductAttributes(ActionEvent event) {
+        TreeItem<Category> selectedItem = treeView.getSelectionModel().getSelectedItem();
+        if(selectedItem == null) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
+            alert.setHeaderText("请选择一个配件分类");
+            alert.show();
+            return;
+        }
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource(
+                        "/fxml/products/attributes_editor.fxml"
+                )
+        );
+        BorderPane root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Scene scene = new Scene(root);
+        Stage dialog = new Stage();
+        AttributeEditorController controller = loader.getController();
+        controller.prepare(dialog, selectedItem.getValue());
+        dialog.setTitle("自定义属性");
+        dialog.initOwner(application.getStage());
+        dialog.setResizable(false);
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.setScene(scene);
+        // center stage on screen
+        dialog.centerOnScreen();
+        dialog.show();
+    }
+
+    @FXML
+    void assignProductAttributes(ActionEvent event) {
 
     }
 
@@ -547,23 +579,25 @@ public class ProductManagementController {
             return cell;
         });
         colOther.setCellValueFactory(new PropertyValueFactory<Product, String>("notes"));
-
         tableView.setOnMouseClicked((MouseEvent event) -> {
             if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2){
                  updateProduct(null);
             }
         });
-
         ContextMenu menu = new ContextMenu();
         MenuItem itemDuplicate = new MenuItem("复制");
-        MenuItem itemProperties = new MenuItem("属性");
+        MenuItem itemProperties = new MenuItem("定义属性");
+        MenuItem itemAssignProperties = new MenuItem("分配属性");
         itemDuplicate.setOnAction(e ->{
             duplicate();
         });
         itemProperties.setOnAction(e ->{
             viewProperties();
         });
-        menu.getItems().addAll(itemDuplicate, new SeparatorMenuItem() ,itemProperties);
+        itemAssignProperties.setOnAction(e ->{
+            assignProperties();
+        });
+        menu.getItems().addAll(itemDuplicate, new SeparatorMenuItem() ,itemProperties, itemAssignProperties);
         tableView.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent t) {
@@ -596,6 +630,10 @@ public class ProductManagementController {
     }
 
     void viewProperties() {
+
+    }
+
+    void assignProperties() {
 
     }
 

@@ -8,8 +8,8 @@ public class AttributeName {
     private Long id;
     /** 属性名 */
     private String name;
-    /** 类目ID */
-    private Long categoryId;
+    /** 类目 */
+    private Category category;
     /** 是否允许别名 */
     private Boolean aliasAllowed;
     /** 是否颜色属性 */
@@ -37,9 +37,9 @@ public class AttributeName {
 
     public AttributeName() {}
 
-    public AttributeName(String name, Long categoryId, Boolean aliasAllowed, Boolean colorProperty, Boolean enumProperty, Boolean inputProperty, Boolean keyProperty, Boolean saleProperty, Boolean searchField, Boolean required, Boolean multiple, String status, Integer sort, Date dateCreated) {
+    public AttributeName(String name, Category category, Boolean aliasAllowed, Boolean colorProperty, Boolean enumProperty, Boolean inputProperty, Boolean keyProperty, Boolean saleProperty, Boolean searchField, Boolean required, Boolean multiple, String status, Integer sort) {
         this.name = name;
-        this.categoryId = categoryId;
+        this.category = category;
         this.aliasAllowed = aliasAllowed;
         this.colorProperty = colorProperty;
         this.enumProperty = enumProperty;
@@ -51,7 +51,6 @@ public class AttributeName {
         this.multiple = multiple;
         this.status = status;
         this.sort = sort;
-        this.dateCreated = dateCreated;
     }
 
     public Long getId() {
@@ -70,12 +69,12 @@ public class AttributeName {
         this.name = name;
     }
 
-    public Long getCategoryId() {
-        return categoryId;
+    public Category getCategory() {
+        return category;
     }
 
-    public void setCategoryId(Long categoryId) {
-        this.categoryId = categoryId;
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
     public Boolean isAliasAllowed() {
@@ -176,22 +175,6 @@ public class AttributeName {
 
     @Override
     public String toString() {
-        return "AttributeName{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", categoryId=" + categoryId +
-                ", aliasAllowed=" + aliasAllowed +
-                ", colorProperty=" + colorProperty +
-                ", enumProperty=" + enumProperty +
-                ", inputProperty=" + inputProperty +
-                ", keyProperty=" + keyProperty +
-                ", saleProperty=" + saleProperty +
-                ", searchField=" + searchField +
-                ", required=" + required +
-                ", multiple=" + multiple +
-                ", status='" + status + '\'' +
-                ", sort=" + sort +
-                ", dateCreated=" + dateCreated +
-                '}';
+        return name;
     }
 }

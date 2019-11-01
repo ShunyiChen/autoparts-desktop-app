@@ -73,6 +73,11 @@
                   <Font size="14.0" />
                </font>
             </Button>
+            <Button mnemonicParsing="false" onAction="#assignProductAttributes" text="分配属性">
+                <font>
+                    <Font size="14.0" />
+                </font>
+            </Button>
         </items>
       </ToolBar>
    </top>
