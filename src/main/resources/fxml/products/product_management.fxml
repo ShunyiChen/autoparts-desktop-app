@@ -73,11 +73,6 @@
                   <Font size="14.0" />
                </font>
             </Button>
-            <Button mnemonicParsing="false" onAction="#openProductAttributes" text="配件属性">
-                <font>
-                    <Font size="14.0" />
-                </font>
-            </Button>
             <Button mnemonicParsing="false" onAction="#openProductSKU" text="配件SKU">
                 <font>
                     <Font size="14.0" />

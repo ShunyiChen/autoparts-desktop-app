@@ -410,20 +410,20 @@ public class ProductManagementController {
 
     @FXML
     void updateProduct(ActionEvent event) {
-        TreeItem<Category> selectedCategory = treeView.getSelectionModel().getSelectedItem();
-        if(selectedCategory == null) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
-            alert.setHeaderText("请选择产品分类");
-            alert.show();
-            return;
-        }
-        BrandSeries selectedBrand = listView.getSelectionModel().getSelectedItem();
-        if(selectedBrand == null) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
-            alert.setHeaderText("请选择品牌");
-            alert.show();
-            return;
-        }
+//        TreeItem<Category> selectedCategory = treeView.getSelectionModel().getSelectedItem();
+//        if(selectedCategory == null) {
+//            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
+//            alert.setHeaderText("请选择产品分类");
+//            alert.show();
+//            return;
+//        }
+//        BrandSeries selectedBrand = listView.getSelectionModel().getSelectedItem();
+//        if(selectedBrand == null) {
+//            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
+//            alert.setHeaderText("请选择品牌");
+//            alert.show();
+//            return;
+//        }
         Product selected = tableView.getSelectionModel().getSelectedItem();
         if(selected == null) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
@@ -431,6 +431,8 @@ public class ProductManagementController {
             alert.show();
             return;
         }
+        BrandSeries selectedBrand = selected.getBrandSeries();
+        Category selectedCategory = selectedBrand.getCategory();
         String data = null;
         try {
             data = HttpClient.GET("/products/"+selected.getId());
@@ -454,7 +456,7 @@ public class ProductManagementController {
             tableView.getSelectionModel().select(e);
             return null;
         };
-        openProductEditor(callback, selected, selectedCategory.getValue(), selectedBrand);
+        openProductEditor(callback, selected, selectedCategory, selectedBrand);
     }
 
     void openProductEditor(Callback<Product, Object> callback, Product updatedProduct, Category selectedCategory, BrandSeries selectedBrand) {
@@ -533,13 +535,36 @@ public class ProductManagementController {
     }
 
     @FXML
-    void openProductAttributes(ActionEvent event) {
-
-    }
-
-    @FXML
     void openProductSKU(ActionEvent event) {
-
+        Product selectedProduct = tableView.getSelectionModel().getSelectedItem();
+        if(selectedProduct == null) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
+            alert.setHeaderText("请选择一个配件");
+            alert.show();
+            return;
+        }
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource(
+                        "/fxml/products/product_sku.fxml"
+                )
+        );
+        BorderPane root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Scene scene = new Scene(root);
+        Stage dialog = new Stage();
+        ProductSKUController controller = loader.getController();
+        controller.prepare(dialog, selectedProduct);
+        dialog.setTitle("配件SKU");
+        dialog.initOwner(application.getStage());
+        dialog.setMaximized(true);
+        dialog.setScene(scene);
+        // center stage on screen
+        dialog.centerOnScreen();
+        dialog.show();
     }
 
     public void prepare(MainApp application) {
@@ -585,18 +610,18 @@ public class ProductManagementController {
         });
         ContextMenu menu = new ContextMenu();
         MenuItem itemDuplicate = new MenuItem("复制");
-        MenuItem itemProperties = new MenuItem("定义属性");
-        MenuItem itemAssignProperties = new MenuItem("分配属性");
+        MenuItem itemDefineProperties = new MenuItem("定义属性");
+        MenuItem itemProductSKU = new MenuItem("配件SKU");
         itemDuplicate.setOnAction(e ->{
             duplicate();
         });
-        itemProperties.setOnAction(e ->{
-            viewProperties();
+        itemDefineProperties.setOnAction(e ->{
+            openCustomAttributes(e);
         });
-        itemAssignProperties.setOnAction(e ->{
-            assignProperties();
+        itemProductSKU.setOnAction(e ->{
+            openProductSKU(e);
         });
-        menu.getItems().addAll(itemDuplicate, new SeparatorMenuItem() ,itemProperties, itemAssignProperties);
+        menu.getItems().addAll(itemDuplicate, new SeparatorMenuItem() ,itemDefineProperties, itemProductSKU);
         tableView.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent t) {
@@ -626,14 +651,6 @@ public class ProductManagementController {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-    }
-
-    void viewProperties() {
-
-    }
-
-    void assignProperties() {
-
     }
 
     void initTreeView() {
