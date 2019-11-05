@@ -64,7 +64,6 @@ public class SKUGeneratorController {
         title.setText(attributeName.getName());
         row.getChildren().add(title);
         row.setAlignment(Pos.CENTER_LEFT);
-
         return row;
     }
 }
