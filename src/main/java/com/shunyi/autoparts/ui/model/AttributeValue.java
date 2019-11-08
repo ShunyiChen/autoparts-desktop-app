@@ -8,6 +8,7 @@ public class AttributeValue extends AttributeBase{
     private AttributeName attributeName;
     private String rgb;
 
+
     public AttributeValue() {}
 
     public AttributeValue(String name, String rgb, Category category, AttributeName attributeName, String status, Integer sort) {

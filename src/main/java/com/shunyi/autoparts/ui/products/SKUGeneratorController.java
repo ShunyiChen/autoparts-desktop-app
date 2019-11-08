@@ -3,67 +3,109 @@ package com.shunyi.autoparts.ui.products;
 import com.shunyi.autoparts.ui.common.GoogleJson;
 import com.shunyi.autoparts.ui.http.HttpClient;
 import com.shunyi.autoparts.ui.model.AttributeName;
-import com.shunyi.autoparts.ui.model.Category;
-import com.shunyi.autoparts.ui.model.SKU;
+import com.shunyi.autoparts.ui.model.Product;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.geometry.Pos;
-import javafx.scene.control.Label;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TreeTableView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 public class SKUGeneratorController {
 
     Stage subStage;
-    Category selectedCategory;
+    Product selectedProduct;
 
+    @FXML
+    ScrollPane scrollPane;
     @FXML
     VBox pnlRows;
+    @FXML
+    TreeTableView treeTableView;
 
     @FXML
-    void ok(ActionEvent actionEvent) {
+    void saveOrUpdate(ActionEvent actionEvent) {
         subStage.close();
     }
 
-    @FXML
-    void cancel(ActionEvent actionEvent) {
-        subStage.close();
-    }
-
-    public void prepare(Stage subStage, Category selectedCategory, Callback<SKU, Void> callback) {
+    public void prepare(Stage subStage, Product selectedProduct) {
         this.subStage = subStage;
-        this.selectedCategory = selectedCategory;
+        this.selectedProduct = selectedProduct;
+
+        pnlRows.prefWidthProperty().bind(subStage.widthProperty().subtract(20));
+
         initRows();
     }
 
     void initRows() {
         String json = "";
         try {
-            json = HttpClient.GET("/attributes/name/category/"+selectedCategory.getId());
+            json = HttpClient.GET("/attributes/name/category/"+selectedProduct.getBrandSeries().getCategory().getId());
         } catch (IOException e) {
             e.printStackTrace();
         }
         AttributeName[] attributeNames = GoogleJson.GET().fromJson(json, AttributeName[].class);
         for(AttributeName attributeName : attributeNames) {
-            FlowPane row = createRow(attributeName);
-            pnlRows.getChildren().add(row);
+            if(attributeName.isSaleProperty()) {
+                FlowPane row = createRow(attributeName);
+                row.prefWidthProperty().bind(pnlRows.widthProperty());
+                pnlRows.getChildren().add(row);
+            }
         }
     }
 
     FlowPane createRow(AttributeName attributeName) {
-        FlowPane row = new FlowPane();
-        row.setPrefHeight(49);
-        Label title = new Label();
-        title.setFont(Font.font(14));
-        title.setText(attributeName.getName());
-        row.getChildren().add(title);
-        row.setAlignment(Pos.CENTER_LEFT);
-        return row;
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource(
+                        "/fxml/products/sku_generator_row.fxml"
+                )
+        );
+        FlowPane root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        SKUGeneratorRowController controller = loader.getController();
+        controller.prepare(selectedProduct, attributeName, refreshTreeTable);
+        return root;
     }
+
+    Callback refreshTreeTable = new Callback() {
+        @Override
+        public Object call(Object param) {
+
+
+//            pnlRows.getChildren().stream().forEach(e -> {
+//
+//                FlowPane rootPanel = (FlowPane) e;
+//                rootPanel.getChildren().stream().forEach(e2 -> {
+//                    if(e2 instanceof AttributeValueCheckBox) {
+//                        AttributeValueCheckBox checkbox = (AttributeValueCheckBox) e2;
+//                        if(checkbox.isSelected()) {
+//
+//                        }
+//                    }
+//                    else if(e2 instanceof Label) {
+//                        Label title = (Label) e2;
+//                        TreeTableColumn<String, String> column = new TreeTableColumn<>(title.getText());
+//                        column.setPrefWidth(150);
+//                        treeTableView.getColumns().add(column);
+//                    }
+//                });
+//            });
+//            TreeTableColumn<String, String> columnPrice = new TreeTableColumn<>("价格");
+//            treeTableView.getColumns().add(columnPrice);
+//            TreeTableColumn<String, String> columnQuantity = new TreeTableColumn<>("数量");
+//            treeTableView.getColumns().add(columnQuantity);
+
+
+            return null;
+        }
+    };
 }

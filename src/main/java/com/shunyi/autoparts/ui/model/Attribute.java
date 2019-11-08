@@ -8,8 +8,10 @@ public class Attribute {
     private Long id;
     /** 产品 */
     private Product product;
-    /** 属性名 */
-    private AttributeName attributeName;
+    /** 属性名ID */
+    private Long attributeNameId;
+    /** 属性值ID */
+    private Long attributeValueId;
     /** 是否SKU */
     private Boolean sku;
     /** SKU ID */
@@ -19,9 +21,10 @@ public class Attribute {
 
     public Attribute() {}
 
-    public Attribute(Product product, AttributeName attributeName, Boolean sku, Long skuId) {
+    public Attribute(Product product, Long attributeNameId, Long attributeValueId, Boolean sku, Long skuId) {
         this.product = product;
-        this.attributeName = attributeName;
+        this.attributeNameId = attributeNameId;
+        this.attributeValueId = attributeValueId;
         this.sku = sku;
         this.skuId = skuId;
     }
@@ -42,12 +45,20 @@ public class Attribute {
         this.product = product;
     }
 
-    public AttributeName getAttributeName() {
-        return attributeName;
+    public Long getAttributeNameId() {
+        return attributeNameId;
     }
 
-    public void setAttributeName(AttributeName attributeName) {
-        this.attributeName = attributeName;
+    public void setAttributeNameId(Long attributeNameId) {
+        this.attributeNameId = attributeNameId;
+    }
+
+    public Long getAttributeValueId() {
+        return attributeValueId;
+    }
+
+    public void setAttributeValueId(Long attributeValueId) {
+        this.attributeValueId = attributeValueId;
     }
 
     public Boolean getSku() {
@@ -76,6 +87,14 @@ public class Attribute {
 
     @Override
     public String toString() {
-        return attributeName.toString();
+        return "Attribute{" +
+                "id=" + id +
+                ", product=" + product +
+                ", attributeNameId=" + attributeNameId +
+                ", attributeValueId=" + attributeValueId +
+                ", sku=" + sku +
+                ", skuId=" + skuId +
+                ", dateCreated=" + dateCreated +
+                '}';
     }
 }

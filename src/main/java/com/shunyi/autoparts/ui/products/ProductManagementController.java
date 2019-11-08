@@ -545,7 +545,7 @@ public class ProductManagementController {
         }
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource(
-                        "/fxml/products/product_sku.fxml"
+                        "/fxml/products/sku_generator.fxml"
                 )
         );
         BorderPane root = null;
@@ -556,9 +556,9 @@ public class ProductManagementController {
         }
         Scene scene = new Scene(root);
         Stage dialog = new Stage();
-        ProductSKUController controller = loader.getController();
+        SKUGeneratorController controller = loader.getController();
         controller.prepare(dialog, selectedProduct);
-        dialog.setTitle("配件SKU");
+        dialog.setTitle("生成SKU");
         dialog.initOwner(application.getStage());
         dialog.setMaximized(true);
         dialog.setScene(scene);

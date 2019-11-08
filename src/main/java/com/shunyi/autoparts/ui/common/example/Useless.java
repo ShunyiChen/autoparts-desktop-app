@@ -1,4 +1,4 @@
-package com.shunyi.autoparts.ui.common;
+package com.shunyi.autoparts.ui.common.example;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -44,13 +44,17 @@ public class Useless {
 //        BigDecimal value = number.divide(number2, 10, RoundingMode.CEILING);
 //        System.out.println("value="+value);
         // 2019 10 31
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-        try {
-            Date d= formatter.parse("2019-10-31T00:21:48.571+0000");
-            System.out.println(d);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+//        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+//        try {
+//            Date d= formatter.parse("2019-10-31T00:21:48.571+0000");
+//            System.out.println(d);
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+        //==========2019-11-16
+        BigDecimal decimal = new BigDecimal(24.0);
+        System.out.println(decimal.doubleValue() == 24.0);
+
     }
 
     void stepOver1() {

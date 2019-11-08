@@ -26,6 +26,7 @@ module desktopapp {
     exports com.shunyi.autoparts.ui.dashboard;
     exports com.shunyi.autoparts.ui.stock;
     exports com.shunyi.autoparts.ui.products;
+    exports com.shunyi.autoparts.ui.common.example;
 
     opens com.shunyi.autoparts.ui.purchase;
     opens com.shunyi.autoparts.ui.supplier;
