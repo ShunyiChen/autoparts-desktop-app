@@ -5,12 +5,15 @@ import com.shunyi.autoparts.ui.http.HttpClient;
 import com.shunyi.autoparts.ui.model.AttributeName;
 import com.shunyi.autoparts.ui.model.AttributeValue;
 import com.shunyi.autoparts.ui.model.Product;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.layout.FlowPane;
-import javafx.util.Callback;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 /** SKU */
 public class SKUGeneratorRowController {
@@ -19,7 +22,11 @@ public class SKUGeneratorRowController {
     @FXML
     FlowPane rootPanel;
 
-    public void prepare(Product selectedProduct, AttributeName attributeName, Callback<Void, Void> callback) {
+    public void prepare(Product selectedProduct,
+                        AttributeName attributeName,
+                        LinkedHashMap<Long, List<AttributeValueCheckBox>> groupMap,
+                        TableColumn<ObservableList<String>, String> tableColumn,
+                        TableView tableView) {
         titleLabel.setText(attributeName.getName()+":");
         String json = null;
         try {
@@ -27,10 +34,13 @@ public class SKUGeneratorRowController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        List<AttributeValueCheckBox> buttonGroup = new ArrayList<>();
+        groupMap.put(attributeName.getId(), buttonGroup);
         AttributeValue[] attributeValues = GoogleJson.GET().fromJson(json, AttributeValue[].class);
         for(AttributeValue attributeValue : attributeValues) {
-            AttributeValueCheckBox coloredCheckBox = new AttributeValueCheckBox(selectedProduct, attributeValue, attributeName.isColorProperty());
-            coloredCheckBox.setCallback(callback);
+            AttributeValueCheckBox coloredCheckBox = new AttributeValueCheckBox(selectedProduct, attributeValue, groupMap, tableColumn, tableView);
+            buttonGroup.add(coloredCheckBox);
             rootPanel.getChildren().add(coloredCheckBox);
         }
     }

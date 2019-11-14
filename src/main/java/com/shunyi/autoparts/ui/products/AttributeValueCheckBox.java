@@ -1,19 +1,22 @@
 package com.shunyi.autoparts.ui.products;
 
-import com.shunyi.autoparts.ui.common.GoogleJson;
-import com.shunyi.autoparts.ui.http.HttpClient;
-import com.shunyi.autoparts.ui.model.Attribute;
 import com.shunyi.autoparts.ui.model.AttributeValue;
 import com.shunyi.autoparts.ui.model.Product;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
-import javafx.util.Callback;
 
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /** 属性值Checkbox */
 public class AttributeValueCheckBox extends HBox {
@@ -22,18 +25,30 @@ public class AttributeValueCheckBox extends HBox {
     private HBox coloredBox = new HBox();
     private Label title = new Label();
     private AttributeValue attributeValue;
-    private Callback<Void, Void> callback;
+    private LinkedHashMap<Long, List<AttributeValueCheckBox>> groupMap;
+    private TableColumn<ObservableList<String>, String> tableColumn;
+    private TableView<ObservableList<String>> tableView;
 
     /**
      * Constructor
      *
-     * @param attributeValue 属性值
-     * @param colored 是否带颜色
+     * @param selectedProduct
+     * @param attributeValue
+     * @param groupMap
+     * @param tableColumn
+     * @param tableView
      */
-    AttributeValueCheckBox(Product selectedProduct, AttributeValue attributeValue, boolean colored) {
+    AttributeValueCheckBox(Product selectedProduct,
+                           AttributeValue attributeValue,
+                           LinkedHashMap<Long, List<AttributeValueCheckBox>> groupMap,
+                           TableColumn<ObservableList<String>, String> tableColumn,
+                           TableView tableView) {
         this.selectedProduct = selectedProduct;
         this.attributeValue = attributeValue;
-        if(colored) {
+        this.groupMap = groupMap;
+        this.tableColumn = tableColumn;
+        this.tableView = tableView;
+        if(attributeValue.getAttributeName().isColorProperty()) {
             coloredBox.setPrefSize(20, 15);
             String[] str = attributeValue.getRgb().split(",");
             int red = (int) (Double.parseDouble(str[0]) * 255);
@@ -63,49 +78,67 @@ public class AttributeValueCheckBox extends HBox {
     private void initEvents() {
         title.setOnMouseClicked(e -> {
             checkBoxWithoutName.setSelected(!checkBoxWithoutName.isSelected());
-            updateAttributeTable();
-            callback.call(null);
+            transformTree();
         });
         coloredBox.setOnMouseClicked(e -> {
             checkBoxWithoutName.setSelected(!checkBoxWithoutName.isSelected());
-            updateAttributeTable();
-            callback.call(null);
+            transformTree();
         });
         checkBoxWithoutName.setOnAction(e -> {
-            updateAttributeTable();
-            callback.call(null);
+            transformTree();
         });
+    }
+
+    private boolean isSelected() {
+        return checkBoxWithoutName.isSelected();
     }
 
     /** 更改商品属性表 */
-    private void updateAttributeTable() {
-        if(checkBoxWithoutName.isSelected()) {
-            Attribute attribute = new Attribute(selectedProduct, attributeValue.getAttributeName().getId(), attributeValue.getId(), true, null);
-            String json = GoogleJson.GET().toJson(attribute);
-            try {
-                HttpClient.POST("/attributes", json);
-            } catch (IOException e) {
-                e.printStackTrace();
+    private void transformTree() {
+        tableView.getItems().clear();
+        List<AttributeValueCheckBox> buttonGroup = groupMap.get(attributeValue.getAttributeName().getId());
+        long exist = buttonGroup.stream().filter(e -> e.isSelected()).count();
+        tableColumn.setVisible(exist > 0);
+        List<List<String>> list = new ArrayList<>();
+        groupMap.forEach((k,v) -> {
+            List<AttributeValueCheckBox> listBoxes = groupMap.get(k);
+            List<String> strlist = listBoxes.stream().filter(e -> e.isSelected()).map(e -> e.attributeValue.getName()).collect(Collectors.toList());
+            if(strlist.size() > 0) {
+                list.add(strlist);
             }
+        });
+        String result = multiRound(list, "", 0);
+        String[] array = result.split("\\$");
 
-        } else {
-            try {
-                HttpClient.DELETE("/attributes/"+selectedProduct.getId()+"/"+attributeValue.getId());
-            } catch (IOException e) {
-                e.printStackTrace();
+
+        for(String str : array) {
+            ObservableList<String> data = FXCollections.observableArrayList();
+            String[] subArray = str.split("/");
+            for(String v : subArray) {
+                data.add(v);
             }
+            data.add("0");//价格
+            data.add("0");//数量
+            tableView.getItems().add(data);
         }
     }
 
-    public void setCallback(Callback<Void, Void> callback) {
-        this.callback = callback;
-    }
-
-    public void setSelected(boolean selected) {
-        checkBoxWithoutName.setSelected(selected);
-    }
-
-    public boolean isSelected() {
-        return checkBoxWithoutName.isSelected();
+    public String multiRound(List<List<String>> dataList, String temp, int index) {
+        if (index >= dataList.size()) {
+            return "";
+        }
+        StringBuffer out = new StringBuffer();
+        String tmp = "";
+        List<String> data = dataList.get(index);
+        for (int i = 0; i < data.size(); i++) {
+            tmp = data.get(i) + "/";
+            if (index < dataList.size()) {
+                out.append(multiRound(dataList, temp + tmp, index + 1));
+            }
+            if (index == dataList.size() - 1) {
+                out.append(temp).append(tmp).append("$");
+            }
+        }
+        return out.toString();
     }
 }

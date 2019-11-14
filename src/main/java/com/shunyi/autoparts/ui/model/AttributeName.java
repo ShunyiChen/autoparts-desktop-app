@@ -25,6 +25,10 @@ public class AttributeName extends AttributeBase {
 
     public AttributeName() {}
 
+    public AttributeName(String name) {
+        this.name = name;
+    }
+
     public AttributeName(String name, Category category, Boolean aliasAllowed, Boolean colorProperty, Boolean enumProperty, Boolean inputProperty, Boolean keyProperty, Boolean saleProperty, Boolean searchField, Boolean required, Boolean multiple, String status, Integer sort) {
         this.name = name;
         this.category = category;

@@ -6,8 +6,8 @@ import java.util.Date;
 public class AttributeValue extends AttributeBase{
     /** 属性名 */
     private AttributeName attributeName;
+    /** RGB颜色 */
     private String rgb;
-
 
     public AttributeValue() {}
 

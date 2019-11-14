@@ -1,20 +1,24 @@
 package com.shunyi.autoparts.ui.common.example;
 
+import javafx.util.Callback;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.*;
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.stream.Collectors;
 
 public class Useless {
 
     public static void main(String[] args) throws InterruptedException {
+
 //        ReentrantLock lock = new ReentrantLock();
 //        lock.lock();
 //        System.out.println("锁定");
@@ -52,11 +56,101 @@ public class Useless {
 //            e.printStackTrace();
 //        }
         //==========2019-11-16
-        BigDecimal decimal = new BigDecimal(24.0);
-        System.out.println(decimal.doubleValue() == 24.0);
+//        BigDecimal decimal = new BigDecimal(24.0);
+//        System.out.println(decimal.doubleValue() == 24.0);
 
+        //2019/11/12
+        List<String> list1 = new ArrayList<>();
+        list1.add("Green");
+//        list1.add("Blue");
+        List<String> list2 = new ArrayList<>();
+        list2.add("XL");
+//        list2.add("XXL");
+        List<String> list3 = new ArrayList<>();
+        list3.add("Small");
+        list3.add("Middle");
+        list3.add("Big");
+
+        Map<Long, List<String>> map = new HashMap<>();
+        map.put(1l, list1);
+        map.put(2l, list2);
+        map.put(3l, list3);
+
+//        for(int i = 0;i < list1.size(); i++) {
+//            for(int j = 0;j < list2.size();j++) {
+//                for(int z = 0;z < list3.size();z++) {
+//                    String str = list1.get(i)+","+list2.get(j)+","+list3.get(z);
+//                    System.out.println(str);
+//                }
+//            }
+//        }
+
+
+
+
+        //2019/11/13
+//        Useless useless = new Useless();
+//        List<List<String>> cartItems = new ArrayList<>(map.values());
+//        String rs = useless.multiRound(cartItems, "", 0);
+//        System.out.println(rs);
+
+
+        //2019/11/13
+//        CB cb1 = new CB("Green", true);
+//        CB cb2 = new CB("Blue", false);
+//        CB cb3 = new CB("Red", true);
+//        List<CB> cblist = new ArrayList<>();
+//        cblist.add(cb1);
+//        cblist.add(cb2);
+//        cblist.add(cb3);
+//
+//        List<String> strlist = cblist.stream().filter(e -> e.isSelected()).map(e -> e.getName()).collect(Collectors.toList());
+//        System.out.println(strlist.size());
+//        for(String str : strlist) {
+//            System.out.print(str+"  ");
+//        }
+
+        //2019/11/14
+        String str = "Green/XL/Small/$Green/XL/Middle/$Blue/XL/Small/$Blue/XL/Middle/$";
+
+        String[] newStr = str.split("\\$");
+        System.out.println(newStr.length);
+        for(String s : newStr) {
+            String[] news = s.split("/");
+            System.out.println(news.length+"  "+news[1]);
+        }
     }
 
+    public String multiRound(List<List<String>> dataList, String temp, int index) {
+        if (index >= dataList.size()) {
+            return "";
+        }
+        StringBuffer out = new StringBuffer();
+        String tmp = "";
+        List<String> data = dataList.get(index);
+
+        for (int i = 0; i < data.size(); i++) {
+            tmp = data.get(i) + "/";
+
+            if (index < dataList.size()) {
+                out.append(multiRound(dataList, temp + tmp, index + 1));
+            }
+
+            if (index == dataList.size() - 1) {
+                out.append(temp).append(tmp).append("\n");
+            }
+        }
+
+        return out.toString();
+    }
+
+
+   /*
+    Geeen,XL,Small
+    Geeen,XL,Middle
+    Blue,XL,Small
+    Blue,XL,Middle
+   **/
     void stepOver1() {
         Thread t1 = new Thread(r1(null));
 

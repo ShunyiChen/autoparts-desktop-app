@@ -4,8 +4,7 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.ToolBar?>
-<?import javafx.scene.control.TreeTableColumn?>
-<?import javafx.scene.control.TreeTableView?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
@@ -19,12 +18,8 @@
                   <VBox fx:id="pnlRows" prefHeight="207.0" prefWidth="610.0" />
                </content>
             </ScrollPane>
-            <TreeTableView fx:id="treeTableView" prefHeight="200.0" prefWidth="200.0">
-              <columns>
-                <TreeTableColumn prefWidth="75.0" text="C1" />
-                <TreeTableColumn prefWidth="75.0" text="C2" />
-              </columns>
-            </TreeTableView>
+            <TableView fx:id="tableView" prefHeight="200.0" prefWidth="200.0">
+            </TableView>
         </items>
       </SplitPane>
    </center>
