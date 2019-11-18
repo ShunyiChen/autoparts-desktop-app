@@ -24,9 +24,10 @@ public class SKUGeneratorRowController {
 
     public void prepare(Product selectedProduct,
                         AttributeName attributeName,
-                        LinkedHashMap<Long, List<AttributeValueCheckBox>> groupMap,
+                        LinkedHashMap<Long, List<AttributeValueCheckBox>> checkboxGroup,
                         TableColumn<ObservableList<String>, String> tableColumn,
-                        TableView tableView) {
+                        TableView tableView,
+                        List<AttributeName> inputAttributes) {
         titleLabel.setText(attributeName.getName()+":");
         String json = null;
         try {
@@ -36,10 +37,10 @@ public class SKUGeneratorRowController {
         }
 
         List<AttributeValueCheckBox> buttonGroup = new ArrayList<>();
-        groupMap.put(attributeName.getId(), buttonGroup);
+        checkboxGroup.put(attributeName.getId(), buttonGroup);
         AttributeValue[] attributeValues = GoogleJson.GET().fromJson(json, AttributeValue[].class);
         for(AttributeValue attributeValue : attributeValues) {
-            AttributeValueCheckBox coloredCheckBox = new AttributeValueCheckBox(selectedProduct, attributeValue, groupMap, tableColumn, tableView);
+            AttributeValueCheckBox coloredCheckBox = new AttributeValueCheckBox(selectedProduct, attributeValue, checkboxGroup, tableColumn, tableView, inputAttributes);
             buttonGroup.add(coloredCheckBox);
             rootPanel.getChildren().add(coloredCheckBox);
         }

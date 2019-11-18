@@ -60,8 +60,8 @@ public class Main extends Application {
 
         //2019/11/12
         List<String> list1 = new ArrayList<>();
-//        list1.add("бли╚");
-//        list1.add("ю╤и╚");
+//        list1.add("О©╫О©╫и╚");
+//        list1.add("О©╫О©╫и╚");
         List<String> list2 = new ArrayList<>();
         list2.add("XL");
 //        list2.add("XXL");

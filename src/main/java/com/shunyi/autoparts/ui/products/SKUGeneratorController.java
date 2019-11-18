@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 public class SKUGeneratorController {
     private Stage subStage;
     private Product selectedProduct;
-    private LinkedHashMap<Long, List<AttributeValueCheckBox>> groupMap;
+    private LinkedHashMap<Long, List<AttributeValueCheckBox>> checkboxGroup;
 
     @FXML
     ScrollPane scrollPane;
@@ -41,20 +41,27 @@ public class SKUGeneratorController {
     public void prepare(Stage subStage, Product selectedProduct) {
         this.subStage = subStage;
         this.selectedProduct = selectedProduct;
-        this.groupMap = new LinkedHashMap();
+        this.checkboxGroup = new LinkedHashMap();
         pnlRows.prefWidthProperty().bind(subStage.widthProperty().subtract(20));
 
-        initRows();
+        initTable();
+        initTableColumns();
     }
 
-    private void initRows() {
+    private void initTable() {
+        final String css = getClass().getResource("/css/styles.css").toExternalForm();
+        tableView.getStylesheets().add(css);
+
+        tableView.setEditable(true);
+    }
+
+    private void initTableColumns() {
         String json = "";
         try {
             json = HttpClient.GET("/attributes/name/category/" + selectedProduct.getBrandSeries().getCategory().getId());
         } catch (IOException e) {
             e.printStackTrace();
         }
-
 
         AttributeName[] attributeNames = GoogleJson.GET().fromJson(json, AttributeName[].class);
         List<AttributeName> list = Arrays.asList(attributeNames);
@@ -63,41 +70,44 @@ public class SKUGeneratorController {
         //输入属性
         List<AttributeName> inputAttributes = list.stream().filter(e -> e.isInputProperty()).collect(Collectors.toList());
 
-        int i = 0;
+        int columnCount = 0;
+        //销售属性列
         for (AttributeName attributeName : saleAttributes) {
-            final int finalIdx = i;
+            final int finalIdx = columnCount;
             TableColumn<ObservableList<String>, String> tableColumn = new TableColumn<>(
                     attributeName.getName()
             );
+            tableColumn.setId(finalIdx+"");
+            tableColumn.setUserData("");
             tableColumn.setPrefWidth(120);
-            tableColumn.setCellValueFactory(param ->
-                    new ReadOnlyObjectWrapper<>(param.getValue().get(finalIdx))
-            );
-            tableColumn.setVisible(false);
-            tableView.getColumns().add(tableColumn);
-
-            FlowPane row = createRow(attributeName, tableColumn, tableView);
+            FlowPane row = createRow(attributeName, tableColumn, tableView, inputAttributes);
             row.prefWidthProperty().bind(pnlRows.widthProperty());
             pnlRows.getChildren().add(row);
-            i++;
+            columnCount++;
         }
-
+        //输入属性列
         for (AttributeName attributeName : inputAttributes) {
-            final int finalIdx = i;
+            final int finalIdx = columnCount;
             TableColumn<ObservableList<String>, String> tableColumn = new TableColumn<>(
                     attributeName.getName()
             );
+            tableColumn.setId(finalIdx+"");
+            tableColumn.setUserData("input");
             tableColumn.setPrefWidth(120);
-            tableColumn.setCellValueFactory(param ->
-                    new ReadOnlyObjectWrapper<>(param.getValue().get(finalIdx))
-            );
-            tableColumn.setVisible(true);
             tableView.getColumns().add(tableColumn);
-            i++;
+            columnCount++;
         }
     }
 
-    private FlowPane createRow(AttributeName attributeName, TableColumn<ObservableList<String>, String> tableColumn, TableView tableView) {
+    /**
+     *
+     * @param attributeName 属性名
+     * @param tableColumn  表格列
+     * @param tableView 表格
+     * @param inputAttributes 所有输入属性
+     * @return
+     */
+    private FlowPane createRow(AttributeName attributeName, TableColumn<ObservableList<String>, String> tableColumn, TableView tableView, List<AttributeName> inputAttributes) {
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource(
                         "/fxml/products/sku_generator_row.fxml"
@@ -110,7 +120,7 @@ public class SKUGeneratorController {
             e.printStackTrace();
         }
         SKUGeneratorRowController controller = loader.getController();
-        controller.prepare(selectedProduct, attributeName, groupMap, tableColumn, tableView);
+        controller.prepare(selectedProduct, attributeName, checkboxGroup, tableColumn, tableView, inputAttributes);
         return root;
     }
 }
