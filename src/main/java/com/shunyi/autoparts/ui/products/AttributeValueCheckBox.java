@@ -1,19 +1,18 @@
 package com.shunyi.autoparts.ui.products;
 
-import com.shunyi.autoparts.ui.common.EditingCell;
-import com.shunyi.autoparts.ui.model.AttributeName;
 import com.shunyi.autoparts.ui.model.AttributeValue;
 import com.shunyi.autoparts.ui.model.Product;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.*;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
-import javafx.util.Callback;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -30,7 +29,6 @@ public class AttributeValueCheckBox extends HBox {
     private LinkedHashMap<Long, List<AttributeValueCheckBox>> checkboxGroup;
     private TableColumn<ObservableList<String>, String> tableColumn;
     private TableView<ObservableList<String>> tableView;
-    private List<AttributeName> inputAttributes;
 
     /**
      * Constructor
@@ -40,21 +38,18 @@ public class AttributeValueCheckBox extends HBox {
      * @param checkboxGroup   复选框组
      * @param tableColumn     表格列
      * @param tableView       表格
-     * @param inputAttributes 所有输入属性名
      */
     AttributeValueCheckBox(Product selectedProduct,
                            AttributeValue attributeValue,
                            LinkedHashMap<Long, List<AttributeValueCheckBox>> checkboxGroup,
                            TableColumn<ObservableList<String>, String> tableColumn,
-                           TableView tableView,
-                           List<AttributeName> inputAttributes) {
+                           TableView tableView) {
 
         this.selectedProduct = selectedProduct;
         this.attributeValue = attributeValue;
         this.checkboxGroup = checkboxGroup;
         this.tableColumn = tableColumn;
         this.tableView = tableView;
-        this.inputAttributes = inputAttributes;
 
         if (attributeValue.getAttributeName().isColorProperty()) {
             coloredBox.setPrefSize(20, 15);
@@ -105,10 +100,8 @@ public class AttributeValueCheckBox extends HBox {
      * 更改商品属性表
      */
     private void transformTree() {
-
         List<AttributeValueCheckBox> buttonGroup = checkboxGroup.get(attributeValue.getAttributeName().getId());
         long exist = buttonGroup.stream().filter(e -> e.isSelected()).count();
-//        tableColumn.setVisible(exist > 0);
         if (exist > 0) {
             if (!tableView.getColumns().contains(tableColumn)) {
                 tableView.getColumns().add(tableColumn);
@@ -116,41 +109,14 @@ public class AttributeValueCheckBox extends HBox {
         } else {
             tableView.getColumns().remove(tableColumn);
         }
-
-        // 表格列排序
+        //表格销售属性列排序
         Collections.sort(tableView.getColumns(), Comparator.comparing(TableColumn::getId));
-
         for (int i = 0; i < tableView.getColumns().size(); i++) {
             final int index = i;
             TableColumn<ObservableList<String>, String> column = (TableColumn<ObservableList<String>, String>) tableView.getColumns().get(i);
             column.setCellValueFactory(param ->
                 new SimpleObjectProperty<>(param.getValue().get(index))
             );
-            if(column.getUserData().equals("input")) {
-                Callback<TableColumn<ObservableList<String>, String>, TableCell<ObservableList<String>, String>> cellFactory =
-                        new Callback<>() {
-                            @Override
-                            public TableCell call(TableColumn<ObservableList<String>, String> param) {
-                                return new EditingCell();
-                            }
-                        };
-                column.setCellFactory(cellFactory);
-                column.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<ObservableList<String>, String>>() {
-                                           @Override
-                                           public void handle(TableColumn.CellEditEvent<ObservableList<String>, String> t) {
-//                                            ObservableList<String> data = t.getTableView().getItems();
-//                                            if(data != null) {
-//                                                if(t.getTablePosition().getRow() < data.size()) {
-//                                                    AutoPart selected = data.get( t.getTablePosition().getRow());
-//                                                    if(selected != null) {
-//                                                        selected.setCode(t.getNewValue());
-//                                                    }
-//                                                }
-//                                            }
-                                           }
-                                       }
-                );
-            }
         }
 
         //清空表格内容
@@ -171,12 +137,13 @@ public class AttributeValueCheckBox extends HBox {
                 String[] subArray = str.split("/");
                 rowData.addAll(subArray);
             }
-            for (AttributeName inputAttributeName : inputAttributes) {
-                rowData.add("0");
-            }
+            rowData.add("0");
+            rowData.add("0");
+            rowData.add("");
+            rowData.add("");
+            rowData.add("");
+            rowData.add("");
             tableView.getItems().add(rowData);
-
-            System.out.println("rowData=" + rowData);
         }
     }
 
