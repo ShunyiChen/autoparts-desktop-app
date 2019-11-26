@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.Event;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 
@@ -16,6 +17,11 @@ import javafx.scene.input.KeyCode;
 public class EditingCell<S, T> extends TableCell<S, T> {
 
     private TextField textField;
+
+    public EditingCell() {
+        super();
+        this.setAlignment(Pos.CENTER);
+    }
 
     @Override
     public void startEdit() {

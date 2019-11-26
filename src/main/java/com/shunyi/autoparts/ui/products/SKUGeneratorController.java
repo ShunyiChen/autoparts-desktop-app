@@ -3,12 +3,15 @@ package com.shunyi.autoparts.ui.products;
 import com.shunyi.autoparts.ui.common.EditingCell;
 import com.shunyi.autoparts.ui.common.GoogleJson;
 import com.shunyi.autoparts.ui.http.HttpClient;
+import com.shunyi.autoparts.ui.model.Attribute;
 import com.shunyi.autoparts.ui.model.AttributeName;
 import com.shunyi.autoparts.ui.model.Product;
+import com.shunyi.autoparts.ui.model.SKU;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -29,13 +32,15 @@ public class SKUGeneratorController {
     private Stage subStage;
     private Product selectedProduct;
     private LinkedHashMap<Long, List<AttributeValueCheckBox>> checkboxGroup;
-    private TableColumn<ObservableList<String>, String> colNum = new TableColumn<>("数量");
-    private TableColumn<ObservableList<String>, String> colPrice = new TableColumn<>("价格");
+    private TableColumn<ObservableList<String>, String> colUnit = new TableColumn<>("*单位");
+    private TableColumn<ObservableList<String>, String> colNum = new TableColumn<>("*数量");
+    private TableColumn<ObservableList<String>, String> colPrice = new TableColumn<>("*价格");
     private TableColumn<ObservableList<String>, String> colStatus = new TableColumn<>("状态");
     private TableColumn<ObservableList<String>, String> colSKUName = new TableColumn<>("SKU名称");
     private TableColumn<ObservableList<String>, String> colBarCode = new TableColumn<>("条形码");
     private TableColumn<ObservableList<String>, String> colProductCode = new TableColumn<>("产品编码");
     private List<TableColumn<ObservableList<String>, String>> otherColumns = new ArrayList<>();
+    private Attribute[] attributes;
 
     @FXML
     ScrollPane scrollPane;
@@ -48,8 +53,13 @@ public class SKUGeneratorController {
     @FXML
     void saveOrUpdate() {
         subStage.close();
+        List<ObservableList<String>> data = tableView.getItems();
+        if(data.size() > 0) {
+            for (ObservableList<String> row : data) {
+//                SKU sku = new SKU(selectedProduct, row);
 
-
+            }
+        }
     }
 
     public void prepare(Stage subStage, Product selectedProduct) {
@@ -57,16 +67,21 @@ public class SKUGeneratorController {
         this.selectedProduct = selectedProduct;
         this.checkboxGroup = new LinkedHashMap();
         pnlRows.prefWidthProperty().bind(subStage.widthProperty().subtract(20));
-
-        initTable();
-        initTableColumns();
+        try {
+            String json = HttpClient.GET("/attributes/products/"+selectedProduct.getId());
+            attributes = GoogleJson.GET().fromJson(json, Attribute[].class);
+            initTable();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void initTable() {
         final String css = getClass().getResource("/css/styles.css").toExternalForm();
         tableView.getStylesheets().add(css);
-
         tableView.setEditable(true);
+
+        initTableColumns();
     }
 
     private void initTableColumns() {
@@ -86,26 +101,33 @@ public class SKUGeneratorController {
         //销售属性列
         for (AttributeName attributeName : saleAttributes) {
             final int finalIdx = columnCount;
-            TableColumn<ObservableList<String>, String> tableColumn = new TableColumn<>(
+            TableColumn<ObservableList<String>, String> saleColumn = new TableColumn<>(
                     attributeName.getName()
             );
-            tableColumn.setId(finalIdx+"");
-            tableColumn.setUserData("");
-            tableColumn.setPrefWidth(120);
-            FlowPane row = createRow(attributeName, tableColumn, tableView);
+
+            TableColumnMetadata meteData = new TableColumnMetadata(finalIdx, attributeName.getId());
+            saleColumn.setUserData(meteData);
+            saleColumn.setPrefWidth(120);
+            FlowPane row = createRow(attributeName, saleColumn, tableView);
             row.prefWidthProperty().bind(pnlRows.widthProperty());
             pnlRows.getChildren().add(row);
             columnCount++;
         }
 
+        otherColumns.add(colUnit);
         otherColumns.add(colNum);
         otherColumns.add(colPrice);
         otherColumns.add(colStatus);
         otherColumns.add(colSKUName);
         otherColumns.add(colBarCode);
         otherColumns.add(colProductCode);
+
+        initColumnWidth();
+
         for(TableColumn<ObservableList<String>, String> column : otherColumns) {
-            column.setId(columnCount+"");
+            TableColumnMetadata meteData = new TableColumnMetadata(columnCount, 0L);
+            column.setUserData(meteData);
+
             Callback<TableColumn<ObservableList<String>, String>, TableCell<ObservableList<String>, String>> cellFactory =
                     new Callback<>() {
                         @Override
@@ -123,6 +145,16 @@ public class SKUGeneratorController {
             columnCount++;
             tableView.getColumns().add(column);
         }
+    }
+
+    private void initColumnWidth() {
+        colUnit.setPrefWidth(80);
+        colNum.setPrefWidth(80);
+        colPrice.setPrefWidth(80);
+        colStatus.setPrefWidth(120);
+        colSKUName.setPrefWidth(220);
+        colBarCode.setPrefWidth(120);
+        colProductCode.setPrefWidth(120);
     }
 
     /**
@@ -145,7 +177,7 @@ public class SKUGeneratorController {
             e.printStackTrace();
         }
         SKUGeneratorRowController controller = loader.getController();
-        controller.prepare(selectedProduct, attributeName, checkboxGroup, tableColumn, tableView);
+        controller.prepare(selectedProduct, attributeName, checkboxGroup, tableColumn, tableView, attributes);
         return root;
     }
 }

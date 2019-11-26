@@ -1,5 +1,8 @@
 package com.shunyi.autoparts.ui.products;
 
+import com.shunyi.autoparts.ui.common.GoogleJson;
+import com.shunyi.autoparts.ui.http.HttpClient;
+import com.shunyi.autoparts.ui.model.Attribute;
 import com.shunyi.autoparts.ui.model.AttributeValue;
 import com.shunyi.autoparts.ui.model.Product;
 import javafx.beans.property.SimpleObjectProperty;
@@ -14,6 +17,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -81,14 +85,14 @@ public class AttributeValueCheckBox extends HBox {
     private void initEvents() {
         title.setOnMouseClicked(e -> {
             checkBoxWithoutName.setSelected(!checkBoxWithoutName.isSelected());
-            transformTree();
+            updateTable();
         });
         coloredBox.setOnMouseClicked(e -> {
             checkBoxWithoutName.setSelected(!checkBoxWithoutName.isSelected());
-            transformTree();
+            updateTable();
         });
         checkBoxWithoutName.setOnAction(e -> {
-            transformTree();
+            updateTable();
         });
     }
 
@@ -96,10 +100,14 @@ public class AttributeValueCheckBox extends HBox {
         return checkBoxWithoutName.isSelected();
     }
 
+    public void setSelected(boolean selected) {
+        checkBoxWithoutName.setSelected(selected);
+    }
+
     /**
      * 更改商品属性表
      */
-    private void transformTree() {
+    public void updateTable() {
         List<AttributeValueCheckBox> buttonGroup = checkboxGroup.get(attributeValue.getAttributeName().getId());
         long exist = buttonGroup.stream().filter(e -> e.isSelected()).count();
         if (exist > 0) {
@@ -110,7 +118,13 @@ public class AttributeValueCheckBox extends HBox {
             tableView.getColumns().remove(tableColumn);
         }
         //表格销售属性列排序
-        Collections.sort(tableView.getColumns(), Comparator.comparing(TableColumn::getId));
+//        Collections.sort(tableView.getColumns(), Comparator.comparing(TableColumn::getId));
+        Collections.sort(tableView.getColumns(), Comparator.comparing(e -> {
+            TableColumnMetadata metadata = (TableColumnMetadata) e.getUserData();
+            return metadata.getColumnId();
+        }));
+//        Collections.sort(tableView.getColumns(), (o1, o2) -> ((TableColumnMetadata)o1.getUserData()).getColumnId().compareTo(((TableColumnMetadata)o2.getUserData()).getColumnId()));
+
         for (int i = 0; i < tableView.getColumns().size(); i++) {
             final int index = i;
             TableColumn<ObservableList<String>, String> column = (TableColumn<ObservableList<String>, String>) tableView.getColumns().get(i);
@@ -136,14 +150,45 @@ public class AttributeValueCheckBox extends HBox {
             if (!str.equals("")) {
                 String[] subArray = str.split("/");
                 rowData.addAll(subArray);
+
+                rowData.add("个");
+                rowData.add("0");
+                rowData.add("0.00");
+                rowData.add("正常");
+                //SKU名称
+                if(str.endsWith("/")) {
+                    str = str.substring(0, str.length() -1);
+                    str = str.replaceAll("/", "-");
+                }
+                rowData.add(str);
+                rowData.add("");
+                rowData.add("");
+                tableView.getItems().add(rowData);
             }
-            rowData.add("0");
-            rowData.add("0");
-            rowData.add("");
-            rowData.add("");
-            rowData.add("");
-            rowData.add("");
-            tableView.getItems().add(rowData);
+        }
+        saveToAttributes(checkBoxWithoutName.isSelected());
+    }
+
+    private void saveToAttributes(boolean selected) {
+        try {
+            HttpClient.DELETE("/attributes/"+selectedProduct.getId()+"/"+attributeValue.getId());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if(selected) {
+            Attribute attribute = new Attribute();
+            attribute.setAttributeNameId(attributeValue.getAttributeName().getId());
+            attribute.setAttributeValueId(attributeValue.getId());
+            attribute.setProduct(selectedProduct);
+            attribute.setSku(true);
+            attribute.setSkuId(0L);
+            String json = GoogleJson.GET().toJson(attribute);
+            try {
+                String idStr = HttpClient.POST("/attributes", json);
+                attribute.setId(Long.valueOf(idStr));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
