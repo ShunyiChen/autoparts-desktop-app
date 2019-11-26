@@ -5,6 +5,10 @@ public class TableCellMetadata {
     private Long attributeValueId;
     private String text;
 
+    public TableCellMetadata(String text) {
+        this(0L, text);
+    }
+
     public TableCellMetadata(Long attributeValueId, String text) {
         this.attributeValueId = attributeValueId;
         this.text = text;
@@ -24,5 +28,10 @@ public class TableCellMetadata {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    @Override
+    public String toString() {
+        return text;
     }
 }

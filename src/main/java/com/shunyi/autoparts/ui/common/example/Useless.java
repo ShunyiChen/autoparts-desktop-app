@@ -111,14 +111,22 @@ public class Useless {
 //        }
 
         //2019/11/14
-        String str = "Green/XL/Small/$Green/XL/Middle/$Blue/XL/Small/$Blue/XL/Middle/$";
+//        String str = "Green/XL/Small/$Green/XL/Middle/$Blue/XL/Small/$Blue/XL/Middle/$";
+//
+//        String[] newStr = str.split("\\$");
+//        System.out.println(newStr.length);
+//        for(String s : newStr) {
+//            String[] news = s.split("/");
+//            System.out.println(news.length+"  "+news[1]);
+//        }
 
-        String[] newStr = str.split("\\$");
-        System.out.println(newStr.length);
-        for(String s : newStr) {
-            String[] news = s.split("/");
-            System.out.println(news.length+"  "+news[1]);
-        }
+        //2019/11/26
+//        String str = "Green:6-XL:3-Small:8";
+        String str = "Green:6/XL:3/Small:18/";
+        //去掉id
+        str = str.replaceAll(":\\d+/", "-");
+        str = str.substring(0, str.length()-1);
+        System.out.println("str="+str);
     }
 
     public String multiRound(List<List<String>> dataList, String temp, int index) {

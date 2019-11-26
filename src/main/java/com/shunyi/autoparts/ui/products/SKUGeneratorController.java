@@ -11,7 +11,6 @@ import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Pos;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -32,14 +31,14 @@ public class SKUGeneratorController {
     private Stage subStage;
     private Product selectedProduct;
     private LinkedHashMap<Long, List<AttributeValueCheckBox>> checkboxGroup;
-    private TableColumn<ObservableList<String>, String> colUnit = new TableColumn<>("*单位");
-    private TableColumn<ObservableList<String>, String> colNum = new TableColumn<>("*数量");
-    private TableColumn<ObservableList<String>, String> colPrice = new TableColumn<>("*价格");
-    private TableColumn<ObservableList<String>, String> colStatus = new TableColumn<>("状态");
-    private TableColumn<ObservableList<String>, String> colSKUName = new TableColumn<>("SKU名称");
-    private TableColumn<ObservableList<String>, String> colBarCode = new TableColumn<>("条形码");
-    private TableColumn<ObservableList<String>, String> colProductCode = new TableColumn<>("产品编码");
-    private List<TableColumn<ObservableList<String>, String>> otherColumns = new ArrayList<>();
+    private TableColumn<ObservableList<TableCellMetadata>, String> colUnit = new TableColumn<>("*单位");
+    private TableColumn<ObservableList<TableCellMetadata>, String> colNum = new TableColumn<>("*数量");
+    private TableColumn<ObservableList<TableCellMetadata>, String> colPrice = new TableColumn<>("*价格");
+    private TableColumn<ObservableList<TableCellMetadata>, String> colStatus = new TableColumn<>("状态");
+    private TableColumn<ObservableList<TableCellMetadata>, String> colSKUName = new TableColumn<>("SKU名称");
+    private TableColumn<ObservableList<TableCellMetadata>, String> colBarCode = new TableColumn<>("条形码");
+    private TableColumn<ObservableList<TableCellMetadata>, String> colProductCode = new TableColumn<>("产品编码");
+    private List<TableColumn<ObservableList<TableCellMetadata>, String>> otherColumns = new ArrayList<>();
     private Attribute[] attributes;
 
     @FXML
@@ -47,17 +46,21 @@ public class SKUGeneratorController {
     @FXML
     VBox pnlRows;
     @FXML
-    TableView<ObservableList<String>> tableView;
+    TableView<ObservableList<TableCellMetadata>> tableView;
 
 
     @FXML
     void saveOrUpdate() {
         subStage.close();
-        List<ObservableList<String>> data = tableView.getItems();
+        List<ObservableList<TableCellMetadata>> data = tableView.getItems();
         if(data.size() > 0) {
-            for (ObservableList<String> row : data) {
-//                SKU sku = new SKU(selectedProduct, row);
+            int columnSize = tableView.getColumns().size();
+            for (ObservableList<TableCellMetadata> row : data) {
 
+                for(int i = 0; i < columnSize; i++) {
+                    TableColumn<ObservableList<TableCellMetadata>, String> column = (TableColumn<ObservableList<TableCellMetadata>, String>) tableView.getColumns().get(i);
+                    //TODO
+                }
             }
         }
     }
@@ -101,7 +104,7 @@ public class SKUGeneratorController {
         //销售属性列
         for (AttributeName attributeName : saleAttributes) {
             final int finalIdx = columnCount;
-            TableColumn<ObservableList<String>, String> saleColumn = new TableColumn<>(
+            TableColumn<ObservableList<TableCellMetadata>, String> saleColumn = new TableColumn<>(
                     attributeName.getName()
             );
 
@@ -124,21 +127,21 @@ public class SKUGeneratorController {
 
         initColumnWidth();
 
-        for(TableColumn<ObservableList<String>, String> column : otherColumns) {
+        for(TableColumn<ObservableList<TableCellMetadata>, String> column : otherColumns) {
             TableColumnMetadata meteData = new TableColumnMetadata(columnCount, 0L);
             column.setUserData(meteData);
 
-            Callback<TableColumn<ObservableList<String>, String>, TableCell<ObservableList<String>, String>> cellFactory =
+            Callback<TableColumn<ObservableList<TableCellMetadata>, String>, TableCell<ObservableList<TableCellMetadata>, String>> cellFactory =
                     new Callback<>() {
                         @Override
-                        public TableCell call(TableColumn<ObservableList<String>, String> param) {
+                        public TableCell call(TableColumn<ObservableList<TableCellMetadata>, String> param) {
                             return new EditingCell();
                         }
                     };
             column.setCellFactory(cellFactory);
-            column.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<ObservableList<String>, String>>() {
+            column.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<ObservableList<TableCellMetadata>, String>>() {
                    @Override
-                   public void handle(TableColumn.CellEditEvent<ObservableList<String>, String> t) {
+                   public void handle(TableColumn.CellEditEvent<ObservableList<TableCellMetadata>, String> t) {
                    }
                }
             );
@@ -148,9 +151,9 @@ public class SKUGeneratorController {
     }
 
     private void initColumnWidth() {
-        colUnit.setPrefWidth(80);
-        colNum.setPrefWidth(80);
-        colPrice.setPrefWidth(80);
+        colUnit.setPrefWidth(120);
+        colNum.setPrefWidth(120);
+        colPrice.setPrefWidth(120);
         colStatus.setPrefWidth(120);
         colSKUName.setPrefWidth(220);
         colBarCode.setPrefWidth(120);
@@ -164,7 +167,7 @@ public class SKUGeneratorController {
      * @param tableView 表格
      * @return
      */
-    private FlowPane createRow(AttributeName attributeName, TableColumn<ObservableList<String>, String> tableColumn, TableView tableView) {
+    private FlowPane createRow(AttributeName attributeName, TableColumn<ObservableList<TableCellMetadata>, String> tableColumn, TableView tableView) {
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource(
                         "/fxml/products/sku_generator_row.fxml"

@@ -26,8 +26,8 @@ public class SKUGeneratorRowController {
     public void prepare(Product selectedProduct,
                         AttributeName attributeName,
                         LinkedHashMap<Long, List<AttributeValueCheckBox>> checkboxGroup,
-                        TableColumn<ObservableList<String>, String> tableColumn,
-                        TableView tableView, Attribute[] attributes) {
+                        TableColumn<ObservableList<TableCellMetadata>, String> tableColumn,
+                        TableView<ObservableList<TableCellMetadata>> tableView, Attribute[] attributes) {
         titleLabel.setText(attributeName.getName()+":");
         String json = null;
         try {

@@ -31,8 +31,8 @@ public class AttributeValueCheckBox extends HBox {
     private Label title = new Label();
     private AttributeValue attributeValue;
     private LinkedHashMap<Long, List<AttributeValueCheckBox>> checkboxGroup;
-    private TableColumn<ObservableList<String>, String> tableColumn;
-    private TableView<ObservableList<String>> tableView;
+    private TableColumn<ObservableList<TableCellMetadata>, String> tableColumn;
+    private TableView<ObservableList<TableCellMetadata>> tableView;
 
     /**
      * Constructor
@@ -46,7 +46,7 @@ public class AttributeValueCheckBox extends HBox {
     AttributeValueCheckBox(Product selectedProduct,
                            AttributeValue attributeValue,
                            LinkedHashMap<Long, List<AttributeValueCheckBox>> checkboxGroup,
-                           TableColumn<ObservableList<String>, String> tableColumn,
+                           TableColumn<ObservableList<TableCellMetadata>, String> tableColumn,
                            TableView tableView) {
 
         this.selectedProduct = selectedProduct;
@@ -118,18 +118,16 @@ public class AttributeValueCheckBox extends HBox {
             tableView.getColumns().remove(tableColumn);
         }
         //表格销售属性列排序
-//        Collections.sort(tableView.getColumns(), Comparator.comparing(TableColumn::getId));
         Collections.sort(tableView.getColumns(), Comparator.comparing(e -> {
             TableColumnMetadata metadata = (TableColumnMetadata) e.getUserData();
             return metadata.getColumnId();
         }));
-//        Collections.sort(tableView.getColumns(), (o1, o2) -> ((TableColumnMetadata)o1.getUserData()).getColumnId().compareTo(((TableColumnMetadata)o2.getUserData()).getColumnId()));
 
         for (int i = 0; i < tableView.getColumns().size(); i++) {
             final int index = i;
-            TableColumn<ObservableList<String>, String> column = (TableColumn<ObservableList<String>, String>) tableView.getColumns().get(i);
+            TableColumn<ObservableList<TableCellMetadata>, String> column = (TableColumn<ObservableList<TableCellMetadata>, String>) tableView.getColumns().get(i);
             column.setCellValueFactory(param ->
-                new SimpleObjectProperty<>(param.getValue().get(index))
+                new SimpleObjectProperty<>(param.getValue().get(index).getText())
             );
         }
 
@@ -138,7 +136,7 @@ public class AttributeValueCheckBox extends HBox {
         List<List<String>> paramList = new ArrayList<>();
         checkboxGroup.forEach((k, v) -> {
             List<AttributeValueCheckBox> listBoxes = checkboxGroup.get(k);
-            List<String> straits = listBoxes.stream().filter(e -> e.isSelected()).map(e -> e.attributeValue.getName()).collect(Collectors.toList());
+            List<String> straits = listBoxes.stream().filter(e -> e.isSelected()).map(e -> e.attributeValue.getName()+":"+e.attributeValue.getId()).collect(Collectors.toList());
             if (straits.size() > 0) {
                 paramList.add(straits);
             }
@@ -146,23 +144,26 @@ public class AttributeValueCheckBox extends HBox {
         String result = multiRound(paramList, "", 0);
         String[] array = result.split("\\$");
         for (String str : array) {
-            ObservableList<String> rowData = FXCollections.observableArrayList();
+            ObservableList<TableCellMetadata> rowData = FXCollections.observableArrayList();
             if (!str.equals("")) {
                 String[] subArray = str.split("/");
-                rowData.addAll(subArray);
-
-                rowData.add("个");
-                rowData.add("0");
-                rowData.add("0.00");
-                rowData.add("正常");
+                for(String subStr : subArray) {
+                    String attributeValueIdStr = subStr.substring(subStr.lastIndexOf(":")+1);
+                    String attributeValueName = subStr.substring(0, subStr.lastIndexOf(":"));
+                    TableCellMetadata cell = new TableCellMetadata(Long.valueOf(attributeValueIdStr), attributeValueName);
+                    rowData.add(cell);
+                }
+                rowData.add(new TableCellMetadata("个"));
+                rowData.add(new TableCellMetadata("0"));
+                rowData.add(new TableCellMetadata("0.00"));
+                rowData.add(new TableCellMetadata("正常"));
                 //SKU名称
                 if(str.endsWith("/")) {
-                    str = str.substring(0, str.length() -1);
-                    str = str.replaceAll("/", "-");
+                    str = str.replaceAll(":\\d+/", "-") + selectedProduct.getName();
                 }
-                rowData.add(str);
-                rowData.add("");
-                rowData.add("");
+                rowData.add(new TableCellMetadata(str));
+                rowData.add(new TableCellMetadata(""));
+                rowData.add(new TableCellMetadata(""));
                 tableView.getItems().add(rowData);
             }
         }
