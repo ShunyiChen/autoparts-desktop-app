@@ -96,18 +96,11 @@ public class AttributeValueCheckBox extends HBox {
         });
     }
 
-    private boolean isSelected() {
-        return checkBoxWithoutName.isSelected();
-    }
-
-    public void setSelected(boolean selected) {
-        checkBoxWithoutName.setSelected(selected);
-    }
-
     /**
      * 更改商品属性表
      */
-    public void updateTable() {
+    private void updateTable() {
+        System.out.println("call updateTable();");
         List<AttributeValueCheckBox> buttonGroup = checkboxGroup.get(attributeValue.getAttributeName().getId());
         long exist = buttonGroup.stream().filter(e -> e.isSelected()).count();
         if (exist > 0) {
@@ -122,7 +115,6 @@ public class AttributeValueCheckBox extends HBox {
             TableColumnMetadata metadata = (TableColumnMetadata) e.getUserData();
             return metadata.getColumnId();
         }));
-
         for (int i = 0; i < tableView.getColumns().size(); i++) {
             final int index = i;
             TableColumn<ObservableList<TableCellMetadata>, String> column = (TableColumn<ObservableList<TableCellMetadata>, String>) tableView.getColumns().get(i);
@@ -130,7 +122,6 @@ public class AttributeValueCheckBox extends HBox {
                 new SimpleObjectProperty<>(param.getValue().get(index).getText())
             );
         }
-
         //清空表格内容
         tableView.getItems().clear();
         List<List<String>> paramList = new ArrayList<>();
@@ -153,45 +144,51 @@ public class AttributeValueCheckBox extends HBox {
                     TableCellMetadata cell = new TableCellMetadata(Long.valueOf(attributeValueIdStr), attributeValueName);
                     rowData.add(cell);
                 }
+                //单位
                 rowData.add(new TableCellMetadata("个"));
+                //数量
                 rowData.add(new TableCellMetadata("0"));
+                //单价
                 rowData.add(new TableCellMetadata("0.00"));
+                //状态
                 rowData.add(new TableCellMetadata("正常"));
                 //SKU名称
                 if(str.endsWith("/")) {
                     str = str.replaceAll(":\\d+/", "-") + selectedProduct.getName();
                 }
                 rowData.add(new TableCellMetadata(str));
+                //SKU二维码
                 rowData.add(new TableCellMetadata(""));
-                rowData.add(new TableCellMetadata(""));
+                //产品编码
+                rowData.add(new TableCellMetadata(selectedProduct.getCode()));
                 tableView.getItems().add(rowData);
             }
         }
-        saveToAttributes(checkBoxWithoutName.isSelected());
+//        saveToAttributes(checkBoxWithoutName.isSelected());
     }
 
-    private void saveToAttributes(boolean selected) {
-        try {
-            HttpClient.DELETE("/attributes/"+selectedProduct.getId()+"/"+attributeValue.getId());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        if(selected) {
-            Attribute attribute = new Attribute();
-            attribute.setAttributeNameId(attributeValue.getAttributeName().getId());
-            attribute.setAttributeValueId(attributeValue.getId());
-            attribute.setProduct(selectedProduct);
-            attribute.setSku(true);
-            attribute.setSkuId(0L);
-            String json = GoogleJson.GET().toJson(attribute);
-            try {
-                String idStr = HttpClient.POST("/attributes", json);
-                attribute.setId(Long.valueOf(idStr));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
+//    private void saveToAttributes(boolean selected) {
+//        try {
+//            HttpClient.DELETE("/attributes/"+selectedProduct.getId()+"/"+attributeValue.getId());
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        if(selected) {
+//            Attribute attribute = new Attribute();
+//            attribute.setAttributeNameId(attributeValue.getAttributeName().getId());
+//            attribute.setAttributeValueId(attributeValue.getId());
+//            attribute.setProduct(selectedProduct);
+//            attribute.setSku(true);
+//            attribute.setSkuId(0L);
+//            String json = GoogleJson.GET().toJson(attribute);
+//            try {
+//                String idStr = HttpClient.POST("/attributes", json);
+//                attribute.setId(Long.valueOf(idStr));
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//    }
 
     public String multiRound(List<List<String>> dataList, String temp, int index) {
         if (index >= dataList.size()) {
@@ -210,5 +207,21 @@ public class AttributeValueCheckBox extends HBox {
             }
         }
         return out.toString();
+    }
+
+    public boolean isSelected() {
+        return checkBoxWithoutName.isSelected();
+    }
+
+    public void setSelected(boolean selected) {
+        checkBoxWithoutName.setSelected(selected);
+    }
+
+    public TableColumn<ObservableList<TableCellMetadata>, String> getTableColumn() {
+        return tableColumn;
+    }
+
+    public AttributeValue getAttributeValue() {
+        return attributeValue;
     }
 }

@@ -47,10 +47,7 @@ public class SKUGeneratorRowController {
             rootPanel.getChildren().add(coloredCheckBox);
         }
 
-        //当有数据初始化时，执行一次表格
-        if(coloredCheckBox != null) {
-            coloredCheckBox.updateTable();
-        }
+        rootPanel.setUserData(buttonGroup);
     }
 
     private boolean shouldBeSelected(AttributeValue attributeValue, Attribute[] attributes) {

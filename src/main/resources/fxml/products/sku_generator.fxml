@@ -9,6 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
+<?import javafx.scene.control.Separator?>
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="471.0" prefWidth="711.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.shunyi.autoparts.ui.products.SKUGeneratorController">
    <center>
       <SplitPane dividerPositions="0.5" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" BorderPane.alignment="CENTER">
@@ -30,6 +31,12 @@
                <font>
                   <Font size="14.0" />
                </font>
+            </Button>
+            <Separator/>
+            <Button fx:id="btnClose" mnemonicParsing="false" text="关闭" onAction="#closeWithoutSave">
+                <font>
+                    <Font size="14.0" />
+                </font>
             </Button>
         </items>
       </ToolBar>

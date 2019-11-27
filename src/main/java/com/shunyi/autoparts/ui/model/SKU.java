@@ -27,8 +27,6 @@ public class SKU {
     private String properties;
     /** 条形码 */
     private String barCode;
-    /** 产品编码 */
-    private String productCode;
     /** 创建时间 */
     private Date dateCreated;
     /** SKU与货位映射集合 */
@@ -36,7 +34,7 @@ public class SKU {
 
     public SKU() {}
 
-    public SKU(Product product, String skuName, String unit, Integer quantity, BigDecimal price, BigDecimal externalEdit, String status, String properties, String barCode, String productCode, Set<SKUCargoSpaceMapping> SKUCargoSpaceMappings) {
+    public SKU(Product product, String skuName, String unit, Integer quantity, BigDecimal price, BigDecimal externalEdit, String status, String properties, String barCode, Set<SKUCargoSpaceMapping> SKUCargoSpaceMappings) {
         this.product = product;
         this.skuName = skuName;
         this.unit = unit;
@@ -46,7 +44,6 @@ public class SKU {
         this.status = status;
         this.properties = properties;
         this.barCode = barCode;
-        this.productCode = productCode;
         this.SKUCargoSpaceMappings = SKUCargoSpaceMappings;
     }
 
@@ -138,14 +135,6 @@ public class SKU {
         this.barCode = barCode;
     }
 
-    public String getProductCode() {
-        return productCode;
-    }
-
-    public void setProductCode(String productCode) {
-        this.productCode = productCode;
-    }
-
     public Date getDateCreated() {
         return dateCreated;
     }
@@ -154,4 +143,21 @@ public class SKU {
         this.dateCreated = dateCreated;
     }
 
+    @Override
+    public String toString() {
+        return "SKU{" +
+                "id=" + id +
+                ", product=" + product +
+                ", skuName='" + skuName + '\'' +
+                ", unit='" + unit + '\'' +
+                ", quantity=" + quantity +
+                ", price=" + price +
+                ", externalEdit=" + externalEdit +
+                ", status='" + status + '\'' +
+                ", properties='" + properties + '\'' +
+                ", barCode='" + barCode + '\'' +
+                ", dateCreated=" + dateCreated +
+                ", SKUCargoSpaceMappings=" + SKUCargoSpaceMappings +
+                '}';
+    }
 }

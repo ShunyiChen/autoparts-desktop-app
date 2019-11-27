@@ -127,7 +127,7 @@ public class AttributeManagementController {
                 alert.show();
                 return;
             }
-            AttributeName newName = new AttributeName("未命名的属性", selectedCategory, false, false, false, false, false, false, false, false, false, "可用", 1 );
+            AttributeName newName = new AttributeName("新建属性", selectedCategory, false, false, false, false, false, false, false, false, false, "可用", 1 );
             String json = GoogleJson.GET().toJson(newName);
             try {
                 String idStr = HttpClient.POST("/attributes/name", json);
@@ -141,6 +141,7 @@ public class AttributeManagementController {
                     attributeTree.getSelectionModel().select(item);
                     attributeTree.edit(item);
                 });
+
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
@@ -149,7 +150,7 @@ public class AttributeManagementController {
             TreeItem<AttributeBase> parent =  attributeTree.getSelectionModel().getSelectedItem();
             if(parent.getValue().getId() != 0L) {
                 if(parent.getValue() instanceof AttributeName) {
-                    AttributeBase newValue = new AttributeValue("未命名的属性值", "0,0,0", selectedCategory, (AttributeName)parent.getValue(),AttributeStatus.AVAILABLE.getName(), 1);
+                    AttributeBase newValue = new AttributeValue("新建属性值", "0,0,0", selectedCategory, (AttributeName)parent.getValue(),AttributeStatus.AVAILABLE.getName(), 1);
                     String json = GoogleJson.GET().toJson(newValue);
                     try {
                         String idStr = HttpClient.POST("/attributes/value", json);

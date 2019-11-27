@@ -3,24 +3,21 @@ package com.shunyi.autoparts.ui.products;
 import com.shunyi.autoparts.ui.common.EditingCell;
 import com.shunyi.autoparts.ui.common.GoogleJson;
 import com.shunyi.autoparts.ui.http.HttpClient;
-import com.shunyi.autoparts.ui.model.Attribute;
-import com.shunyi.autoparts.ui.model.AttributeName;
-import com.shunyi.autoparts.ui.model.Product;
-import com.shunyi.autoparts.ui.model.SKU;
+import com.shunyi.autoparts.ui.model.*;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -34,9 +31,9 @@ public class SKUGeneratorController {
     private TableColumn<ObservableList<TableCellMetadata>, String> colUnit = new TableColumn<>("*单位");
     private TableColumn<ObservableList<TableCellMetadata>, String> colNum = new TableColumn<>("*数量");
     private TableColumn<ObservableList<TableCellMetadata>, String> colPrice = new TableColumn<>("*价格");
-    private TableColumn<ObservableList<TableCellMetadata>, String> colStatus = new TableColumn<>("状态");
-    private TableColumn<ObservableList<TableCellMetadata>, String> colSKUName = new TableColumn<>("SKU名称");
-    private TableColumn<ObservableList<TableCellMetadata>, String> colBarCode = new TableColumn<>("条形码");
+    private TableColumn<ObservableList<TableCellMetadata>, String> colStatus = new TableColumn<>("*状态");
+    private TableColumn<ObservableList<TableCellMetadata>, String> colSKUName = new TableColumn<>("*SKU名称");
+    private TableColumn<ObservableList<TableCellMetadata>, String> colBarCode = new TableColumn<>("*条形码");
     private TableColumn<ObservableList<TableCellMetadata>, String> colProductCode = new TableColumn<>("产品编码");
     private List<TableColumn<ObservableList<TableCellMetadata>, String>> otherColumns = new ArrayList<>();
     private Attribute[] attributes;
@@ -48,21 +45,106 @@ public class SKUGeneratorController {
     @FXML
     TableView<ObservableList<TableCellMetadata>> tableView;
 
+    @FXML
+    void closeWithoutSave() {
+        subStage.close();
+    }
 
     @FXML
     void saveOrUpdate() {
-        subStage.close();
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION,"", ButtonType.YES, ButtonType.NO);
+        alert.setTitle("请确认是否保存SKU");
+        alert.setHeaderText("点击保存将删除所有旧的SKU,重新生成新的SKU,请确认是否要执行该操作?");
+        alert.showAndWait();
+        if (alert.getResult() != ButtonType.YES) {
+            return;
+        }
+        //保存所有选中的复选框到Attribute表
+        pnlRows.getChildren().stream().forEach(e -> {
+            List<AttributeValueCheckBox> buttonGroup = (List<AttributeValueCheckBox>) e.getUserData();
+            buttonGroup.stream().forEach(c -> {
+                if(c.isSelected()) {
+                    Attribute attribute = new Attribute();
+                    attribute.setAttributeNameId(c.getAttributeValue().getAttributeName().getId());
+                    attribute.setAttributeValueId(c.getAttributeValue().getId());
+                    attribute.setProduct(selectedProduct);
+                    attribute.setSku(true);
+                    attribute.setSkuId(0L);
+                    String json = GoogleJson.GET().toJson(attribute);
+                    try {
+                        String idStr = HttpClient.POST("/attributes", json);
+                        attribute.setId(Long.valueOf(idStr));
+                    } catch (IOException e3) {
+                        e3.printStackTrace();
+                    }
+                } else {
+                    HttpClient.DELETE("/attributes/"+)
+                }
+            });
+        });
+
+        //删除旧的SKU
+        try {
+            String allData = HttpClient.GET("/sku/products/"+selectedProduct.getId());
+            SKU[] skuArray = GoogleJson.GET().fromJson(allData, SKU[].class);
+            for(SKU sku : skuArray) {
+                HttpClient.DELETE("/sku/"+sku.getId());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         List<ObservableList<TableCellMetadata>> data = tableView.getItems();
         if(data.size() > 0) {
+            List<SKU> list = new ArrayList<>();
             int columnSize = tableView.getColumns().size();
             for (ObservableList<TableCellMetadata> row : data) {
-
+                SKU sku = new SKU();
+                sku.setProduct(selectedProduct);
+                StringBuilder properties = new StringBuilder();
                 for(int i = 0; i < columnSize; i++) {
                     TableColumn<ObservableList<TableCellMetadata>, String> column = (TableColumn<ObservableList<TableCellMetadata>, String>) tableView.getColumns().get(i);
-                    //TODO
+                    if(column == colUnit) {
+                        sku.setUnit(row.get(i).getText());
+                    } else if(column == colNum) {
+                        sku.setQuantity(Integer.valueOf(row.get(i).getText()));
+                    } else if(column == colPrice) {
+                        sku.setPrice(new BigDecimal(row.get(i).getText()));
+                    } else if(column == colStatus) {
+                        sku.setStatus(row.get(i).getText());
+                    } else if(column == colSKUName) {
+                        sku.setSkuName(row.get(i).getText());
+                    } else if(column == colBarCode) {
+                        sku.setBarCode(row.get(i).getText());
+                    } else if(column == colProductCode) {
+                        //none 因为已经setProduct了
+                    } else {
+                        TableColumnMetadata metadata = (TableColumnMetadata) column.getUserData();
+                        properties.append(metadata.getAttributeNameId()+":"+row.get(i).getAttributeValueId());
+                        properties.append(";");
+                    }
                 }
+                sku.setProperties(properties.toString());
+                list.add(sku);
             }
+
+            //重新逐行保存
+            list.stream().forEach(e -> {
+                try {
+                    String json = GoogleJson.GET().toJson(e);
+                    HttpClient.POST("/sku", json);
+//                    String skuData = HttpClient.POST("/sku/products/properties", json);
+//                    SKU sku = GoogleJson.GET().fromJson(skuData, SKU.class);
+//                    if(sku == null) {
+//                        HttpClient.POST("/sku", json);
+//                    } else {
+//                        HttpClient.PUT("/sku/"+sku.getId(), json);
+//                    }
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            });
         }
+        subStage.close();
     }
 
     public void prepare(Stage subStage, Product selectedProduct) {
@@ -83,8 +165,8 @@ public class SKUGeneratorController {
         final String css = getClass().getResource("/css/styles.css").toExternalForm();
         tableView.getStylesheets().add(css);
         tableView.setEditable(true);
-
         initTableColumns();
+        initTableData();
     }
 
     private void initTableColumns() {
@@ -94,12 +176,10 @@ public class SKUGeneratorController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         AttributeName[] attributeNames = GoogleJson.GET().fromJson(json, AttributeName[].class);
         List<AttributeName> list = Arrays.asList(attributeNames);
         //销售属性
         List<AttributeName> saleAttributes = list.stream().filter(e -> e.isSaleProperty()).collect(Collectors.toList());
-
         int columnCount = 0;
         //销售属性列
         for (AttributeName attributeName : saleAttributes) {
@@ -107,7 +187,6 @@ public class SKUGeneratorController {
             TableColumn<ObservableList<TableCellMetadata>, String> saleColumn = new TableColumn<>(
                     attributeName.getName()
             );
-
             TableColumnMetadata meteData = new TableColumnMetadata(finalIdx, attributeName.getId());
             saleColumn.setUserData(meteData);
             saleColumn.setPrefWidth(120);
@@ -117,6 +196,17 @@ public class SKUGeneratorController {
             columnCount++;
         }
 
+        //再次打开初始化表格列
+        pnlRows.getChildren().stream().forEach(e -> {
+            List<AttributeValueCheckBox> buttonGroup = (List<AttributeValueCheckBox>) e.getUserData();
+            buttonGroup.stream().forEach(c -> {
+                if(c.isSelected()) {
+                    if (!tableView.getColumns().contains(c.getTableColumn())) {
+                        tableView.getColumns().add(c.getTableColumn());
+                    }
+                }
+            });
+        });
         otherColumns.add(colUnit);
         otherColumns.add(colNum);
         otherColumns.add(colPrice);
@@ -124,29 +214,84 @@ public class SKUGeneratorController {
         otherColumns.add(colSKUName);
         otherColumns.add(colBarCode);
         otherColumns.add(colProductCode);
-
         initColumnWidth();
-
+        //其它可输入列
         for(TableColumn<ObservableList<TableCellMetadata>, String> column : otherColumns) {
-            TableColumnMetadata meteData = new TableColumnMetadata(columnCount, 0L);
+            final int finalIdx = columnCount;
+            TableColumnMetadata meteData = new TableColumnMetadata(finalIdx, 0L);
             column.setUserData(meteData);
-
-            Callback<TableColumn<ObservableList<TableCellMetadata>, String>, TableCell<ObservableList<TableCellMetadata>, String>> cellFactory =
-                    new Callback<>() {
-                        @Override
-                        public TableCell call(TableColumn<ObservableList<TableCellMetadata>, String> param) {
-                            return new EditingCell();
+            if(column != colProductCode) {
+                Callback<TableColumn<ObservableList<TableCellMetadata>, String>, TableCell<ObservableList<TableCellMetadata>, String>> cellFactory =
+                        new Callback<>() {
+                            @Override
+                            public TableCell call(TableColumn<ObservableList<TableCellMetadata>, String> param) {
+                                return new EditingCell();
+                            }
+                        };
+                column.setCellFactory(cellFactory);
+                column.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<ObservableList<TableCellMetadata>, String>>() {
+                    @Override
+                    public void handle(TableColumn.CellEditEvent<ObservableList<TableCellMetadata>, String> t) {
+                        for(int i = 0; i < tableView.getColumns().size(); i++) {
+                            if(tableView.getColumns().get(i) == column) {
+                                t.getRowValue().remove(i);
+                                t.getRowValue().add(i, new TableCellMetadata(t.getNewValue()));
+                                break;
+                            }
                         }
-                    };
-            column.setCellFactory(cellFactory);
-            column.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<ObservableList<TableCellMetadata>, String>>() {
-                   @Override
-                   public void handle(TableColumn.CellEditEvent<ObservableList<TableCellMetadata>, String> t) {
-                   }
-               }
-            );
+                    }
+                });
+            }
             columnCount++;
             tableView.getColumns().add(column);
+        }
+    }
+
+    private void initTableData() {
+        for (int i = 0; i < tableView.getColumns().size(); i++) {
+            final int index = i;
+            TableColumn<ObservableList<TableCellMetadata>, String> column = (TableColumn<ObservableList<TableCellMetadata>, String>) tableView.getColumns().get(i);
+            column.setCellValueFactory(param ->
+                    {
+                        if(index < param.getValue().size() ) {
+                            return new SimpleObjectProperty<>(param.getValue().get(index).getText());
+                        }
+                        return  new SimpleObjectProperty<>("呜呜呜");
+                    }
+            );
+        }
+        try {
+            String json = HttpClient.GET("/sku/products/"+selectedProduct.getId());
+            SKU[] skuArray = GoogleJson.GET().fromJson(json, SKU[].class);
+            for(SKU sku : skuArray) {
+                ObservableList<TableCellMetadata> rowData = FXCollections.observableArrayList();
+                String properties = sku.getProperties();
+                String[] p = properties.split(";");
+                for(String kv : p) {
+                    String attributeValueId = kv.substring(kv.indexOf(":")+1);
+                    String data = HttpClient.GET("/attributes/value/"+attributeValueId);
+                    AttributeValue attributeValue = GoogleJson.GET().fromJson(data, AttributeValue.class);
+                    TableCellMetadata metadata = new TableCellMetadata(attributeValue.getId(), attributeValue.getName());
+                    rowData.add(metadata);
+                }
+                //单位
+                rowData.add(new TableCellMetadata(sku.getUnit()));
+                //数量
+                rowData.add(new TableCellMetadata(sku.getQuantity()+""));
+                //单价
+                rowData.add(new TableCellMetadata(sku.getPrice().toString()));
+                //状态
+                rowData.add(new TableCellMetadata(sku.getStatus()));
+                //SKU名称
+                rowData.add(new TableCellMetadata(sku.getSkuName()));
+                //SKU二维码
+                rowData.add(new TableCellMetadata(sku.getBarCode()));
+                //产品编码
+                rowData.add(new TableCellMetadata(sku.getProduct().getCode()));
+                tableView.getItems().add(rowData);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -183,4 +328,5 @@ public class SKUGeneratorController {
         controller.prepare(selectedProduct, attributeName, checkboxGroup, tableColumn, tableView, attributes);
         return root;
     }
+
 }
