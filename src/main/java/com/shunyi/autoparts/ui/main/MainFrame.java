@@ -3,7 +3,7 @@ package com.shunyi.autoparts.ui.main;
 import com.shunyi.autoparts.ui.MainApp;
 import com.shunyi.autoparts.ui.dashboard.Dashboard;
 import com.shunyi.autoparts.ui.products.ProductManagement;
-import com.shunyi.autoparts.ui.purchase.PurchaseOrder;
+import com.shunyi.autoparts.ui.buy.PurchaseOrder;
 import com.shunyi.autoparts.ui.stock.StockManagement;
 import com.shunyi.autoparts.ui.supplier.SupplierManagement;
 import javafx.scene.control.Label;
@@ -53,7 +53,7 @@ public class MainFrame extends BorderPane {
     }
 
     private void initEvents() {
-        ClickableItem item1 = new ClickableItem(ICON_1, "仪表盘", new Callback() {
+        ClickableItem item1 = new ClickableItem(ICON_1, "进销存统计", new Callback() {
             @Override
             public Object call(Object param) {
                 toolbar.setTitle("仪表盘");
@@ -61,13 +61,11 @@ public class MainFrame extends BorderPane {
                 return null;
             }
         });
-        ClickableItem item2 = new ClickableItem(ICON_2, "进货单", new Callback() {
+        ClickableItem item2 = new ClickableItem(ICON_2, "采购单", new Callback() {
             @Override
             public Object call(Object param) {
-                toolbar.setTitle("进货单");
-//                contentPane.getViewport().setCenter(new BorderPane());
+                toolbar.setTitle("采购单");
                 contentPane.getViewport().setCenter((PurchaseOrder)purchaseContainer);
-//                currentContainer = purchaseContainer;
                 return null;
             }
         });
@@ -123,24 +121,16 @@ public class MainFrame extends BorderPane {
             }
         });
 
-        ClickableItem item11 = new ClickableItem(ICON_5, "组织机构管理", new Callback() {
+        ClickableItem item11 = new ClickableItem(ICON_5, "系统维护", new Callback() {
             @Override
             public Object call(Object param) {
-                toolbar.setTitle("组织机构管理");
-                contentPane.getViewport().setCenter(new Pane());
-                return null;
-            }
-        });
-        ClickableItem item12 = new ClickableItem(ICON_5, "其它管理", new Callback() {
-            @Override
-            public Object call(Object param) {
-                toolbar.setTitle("配件属性管理");
+                toolbar.setTitle("系统维护");
                 contentPane.getViewport().setCenter(new Pane());
                 return null;
             }
         });
 
-        navigation.addClickableItem(item1,item2,item3,item4,item5,item6,item7,item8,item11,item12);
+        navigation.addClickableItem(item1,item2,item3,item4,item5,item6,item7,item8,item11);
     }
 
     public BaseContainer getCurrentContainer() {
