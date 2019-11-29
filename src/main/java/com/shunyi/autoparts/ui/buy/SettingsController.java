@@ -1,10 +1,9 @@
-package com.shunyi.autoparts.ui.purchase;
+package com.shunyi.autoparts.ui.buy;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TabPane;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class SettingsController {

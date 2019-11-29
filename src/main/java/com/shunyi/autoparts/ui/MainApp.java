@@ -16,7 +16,7 @@ public class MainApp extends Application {
     private Stage stage;
     private Scene scene;
     private MainFrame dashboard;
-    private static String Name = "AutoParts-桌面客户端";
+    private static String Name = "AutoParts 客户端";
     private static String VERSION = "v1.0";
 
     @Override

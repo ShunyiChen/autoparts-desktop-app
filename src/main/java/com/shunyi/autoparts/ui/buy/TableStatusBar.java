@@ -1,8 +1,6 @@
-package com.shunyi.autoparts.ui.purchase;
+package com.shunyi.autoparts.ui.buy;
 
-import javafx.collections.ObservableList;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;

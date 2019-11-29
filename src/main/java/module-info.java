@@ -19,7 +19,8 @@ module desktopapp {
 
 
     exports com.shunyi.autoparts.ui;
-    exports com.shunyi.autoparts.ui.purchase;
+    exports com.shunyi.autoparts.ui.buy;
+//    exports com.shunyi.autoparts.ui.sale;
     exports com.shunyi.autoparts.ui.model;
     exports com.shunyi.autoparts.ui.supplier;
     exports com.shunyi.autoparts.ui.login;
@@ -29,7 +30,7 @@ module desktopapp {
     exports com.shunyi.autoparts.ui.products;
     exports com.shunyi.autoparts.ui.common.example;
 
-    opens com.shunyi.autoparts.ui.purchase;
+    opens com.shunyi.autoparts.ui.buy;
     opens com.shunyi.autoparts.ui.supplier;
     opens com.shunyi.autoparts.ui.login;
 //    opens org.openjfx to javafx.fxml;

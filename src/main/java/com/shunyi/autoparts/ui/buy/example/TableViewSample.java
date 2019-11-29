@@ -1,4 +1,4 @@
-package com.shunyi.autoparts.ui.purchase.example;
+package com.shunyi.autoparts.ui.buy.example;
 
 
 import com.shunyi.autoparts.ui.common.EditingCell;

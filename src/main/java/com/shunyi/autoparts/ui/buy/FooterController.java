@@ -1,4 +1,4 @@
-package com.shunyi.autoparts.ui.purchase;
+package com.shunyi.autoparts.ui.buy;
 
 public class FooterController {
 

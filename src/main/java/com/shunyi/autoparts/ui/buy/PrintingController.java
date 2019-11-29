@@ -1,4 +1,4 @@
-package com.shunyi.autoparts.ui.purchase;
+package com.shunyi.autoparts.ui.buy;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

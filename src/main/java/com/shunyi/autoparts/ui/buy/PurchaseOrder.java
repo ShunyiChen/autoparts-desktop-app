@@ -1,4 +1,4 @@
-package com.shunyi.autoparts.ui.purchase;
+package com.shunyi.autoparts.ui.buy;
 
 import com.shunyi.autoparts.ui.MainApp;
 import com.shunyi.autoparts.ui.common.EditingCell;
@@ -87,7 +87,7 @@ public class PurchaseOrder extends BorderPane implements BaseContainer {
     private BorderPane form() {
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource(
-                        "/fxml/purchase/input_form.fxml"
+                        "/fxml/buy/input_form.fxml"
                 )
         );
         GridPane inputForm = null;
@@ -131,7 +131,7 @@ public class PurchaseOrder extends BorderPane implements BaseContainer {
         });
         FXMLLoader loader2 = new FXMLLoader(
                 getClass().getResource(
-                        "/fxml/purchase/footer.fxml"
+                        "/fxml/buy/footer.fxml"
                 )
         );
         HBox footer = null;
@@ -227,7 +227,7 @@ public class PurchaseOrder extends BorderPane implements BaseContainer {
     private void print() {
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource(
-                        "/fxml/purchase/printing.fxml"
+                        "/fxml/buy/printing.fxml"
                 )
         );
         VBox root = null;
@@ -254,7 +254,7 @@ public class PurchaseOrder extends BorderPane implements BaseContainer {
     private void settings() {
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource(
-                        "/fxml/purchase/settings.fxml"
+                        "/fxml/buy/settings.fxml"
                 )
         );
         VBox root = null;
@@ -296,7 +296,7 @@ public class PurchaseOrder extends BorderPane implements BaseContainer {
     private TableView dataTable() {
         FXMLLoader loader = new FXMLLoader(
             getClass().getResource(
-                "/fxml/purchase/data_table.fxml"
+                    "/fxml/buy/data_table.fxml"
             )
         );
         TableView<AutoPart> root = null;

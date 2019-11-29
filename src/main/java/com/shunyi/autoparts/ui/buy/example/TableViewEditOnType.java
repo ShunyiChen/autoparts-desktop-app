@@ -1,4 +1,4 @@
-package com.shunyi.autoparts.ui.purchase.example;
+package com.shunyi.autoparts.ui.buy.example;
 
 import java.util.ArrayList;
 import java.util.List;
