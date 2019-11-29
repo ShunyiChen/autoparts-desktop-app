@@ -8,6 +8,7 @@ module desktopapp {
     requires com.google.gson;
     requires com.h2database;
     requires com.fasterxml.jackson.annotation;
+    requires itextpdf;
 
     opens com.shunyi.autoparts.ui to javafx.fxml;
     opens com.shunyi.autoparts.ui.stock to javafx.fxml;

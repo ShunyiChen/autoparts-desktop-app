@@ -1,8 +1,6 @@
 package com.shunyi.autoparts.ui.products;
 
-import com.shunyi.autoparts.ui.common.GoogleJson;
 import com.shunyi.autoparts.ui.http.HttpClient;
-import com.shunyi.autoparts.ui.model.Attribute;
 import com.shunyi.autoparts.ui.model.AttributeValue;
 import com.shunyi.autoparts.ui.model.Product;
 import javafx.beans.property.SimpleObjectProperty;
@@ -47,7 +45,7 @@ public class AttributeValueCheckBox extends HBox {
                            AttributeValue attributeValue,
                            LinkedHashMap<Long, List<AttributeValueCheckBox>> checkboxGroup,
                            TableColumn<ObservableList<TableCellMetadata>, String> tableColumn,
-                           TableView tableView) {
+                           TableView<ObservableList<TableCellMetadata>> tableView) {
 
         this.selectedProduct = selectedProduct;
         this.attributeValue = attributeValue;
@@ -91,18 +89,15 @@ public class AttributeValueCheckBox extends HBox {
             checkBoxWithoutName.setSelected(!checkBoxWithoutName.isSelected());
             updateTable();
         });
-        checkBoxWithoutName.setOnAction(e -> {
-            updateTable();
-        });
+        checkBoxWithoutName.setOnAction(e -> updateTable());
     }
 
     /**
      * 更改商品属性表
      */
     private void updateTable() {
-        System.out.println("call updateTable();");
         List<AttributeValueCheckBox> buttonGroup = checkboxGroup.get(attributeValue.getAttributeName().getId());
-        long exist = buttonGroup.stream().filter(e -> e.isSelected()).count();
+        long exist = buttonGroup.stream().filter(AttributeValueCheckBox::isSelected).count();
         if (exist > 0) {
             if (!tableView.getColumns().contains(tableColumn)) {
                 tableView.getColumns().add(tableColumn);
@@ -111,7 +106,7 @@ public class AttributeValueCheckBox extends HBox {
             tableView.getColumns().remove(tableColumn);
         }
         //表格销售属性列排序
-        Collections.sort(tableView.getColumns(), Comparator.comparing(e -> {
+        tableView.getColumns().sort(Comparator.comparing(e -> {
             TableColumnMetadata metadata = (TableColumnMetadata) e.getUserData();
             return metadata.getColumnId();
         }));
@@ -127,7 +122,7 @@ public class AttributeValueCheckBox extends HBox {
         List<List<String>> paramList = new ArrayList<>();
         checkboxGroup.forEach((k, v) -> {
             List<AttributeValueCheckBox> listBoxes = checkboxGroup.get(k);
-            List<String> straits = listBoxes.stream().filter(e -> e.isSelected()).map(e -> e.attributeValue.getName()+":"+e.attributeValue.getId()).collect(Collectors.toList());
+            List<String> straits = listBoxes.stream().filter(AttributeValueCheckBox::isSelected).map(e -> e.attributeValue.getName()+":"+e.attributeValue.getId()).collect(Collectors.toList());
             if (straits.size() > 0) {
                 paramList.add(straits);
             }
@@ -151,54 +146,35 @@ public class AttributeValueCheckBox extends HBox {
                 //单价
                 rowData.add(new TableCellMetadata("0.00"));
                 //状态
-                rowData.add(new TableCellMetadata("正常"));
+                rowData.add(new TableCellMetadata(SKUStatus.AVAILABLE.getName()));
                 //SKU名称
                 if(str.endsWith("/")) {
                     str = str.replaceAll(":\\d+/", "-") + selectedProduct.getName();
                 }
                 rowData.add(new TableCellMetadata(str));
                 //SKU二维码
-                rowData.add(new TableCellMetadata(""));
+                try {
+                    String barcode = HttpClient.GET("/barcode");
+                    rowData.add(new TableCellMetadata(barcode));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 //产品编码
                 rowData.add(new TableCellMetadata(selectedProduct.getCode()));
                 tableView.getItems().add(rowData);
             }
         }
-//        saveToAttributes(checkBoxWithoutName.isSelected());
     }
-
-//    private void saveToAttributes(boolean selected) {
-//        try {
-//            HttpClient.DELETE("/attributes/"+selectedProduct.getId()+"/"+attributeValue.getId());
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        if(selected) {
-//            Attribute attribute = new Attribute();
-//            attribute.setAttributeNameId(attributeValue.getAttributeName().getId());
-//            attribute.setAttributeValueId(attributeValue.getId());
-//            attribute.setProduct(selectedProduct);
-//            attribute.setSku(true);
-//            attribute.setSkuId(0L);
-//            String json = GoogleJson.GET().toJson(attribute);
-//            try {
-//                String idStr = HttpClient.POST("/attributes", json);
-//                attribute.setId(Long.valueOf(idStr));
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//    }
 
     public String multiRound(List<List<String>> dataList, String temp, int index) {
         if (index >= dataList.size()) {
             return "";
         }
-        StringBuffer out = new StringBuffer();
-        String tmp = "";
+        StringBuilder out = new StringBuilder();
+        String tmp;
         List<String> data = dataList.get(index);
-        for (int i = 0; i < data.size(); i++) {
-            tmp = data.get(i) + "/";
+        for (String datum : data) {
+            tmp = datum + "/";
             if (index < dataList.size()) {
                 out.append(multiRound(dataList, temp + tmp, index + 1));
             }
