@@ -19,23 +19,24 @@ public class H2 {
     private static final String DB_PASSWORD = "";
 
     /**
+     * 批处理
      *
-     * @param list
-     * @throws SQLException
+     * @param connections 连接对象集合
+     * @throws SQLException 异常
      */
-    public static void batch(List<RemoteConnection> list) throws SQLException {
+    public static void batch(List<RemoteConnection> connections) throws SQLException {
         List<Long> updatedId = new ArrayList<>();
         List<RemoteConnection> exists = retrieveAll();
-        for(int i = 0; i < list.size(); i++) {
-            list.get(i).setaOrder(i);
-            if(list.get(i).getId() == 0) {
-                create(list.get(i));
+        for(int i = 0; i < connections.size(); i++) {
+            connections.get(i).setaOrder(i);
+            if(connections.get(i).getId() == 0) {
+                create(connections.get(i));
             } else {
-                update(list.get(i));
+                update(connections.get(i));
             }
-            updatedId.add(list.get(i).getId());
+            updatedId.add(connections.get(i).getId());
         }
-        exists.stream().forEach(e -> {
+        exists.forEach(e -> {
             if(!updatedId.contains(e.getId())) {
                 try {
                     delete(e.getId());
@@ -49,16 +50,15 @@ public class H2 {
     /**
      * 插入新记录
      *
-     * @param rc
-     * @throws SQLException
+     * @param rc 连接对象
+     * @throws SQLException 异常
      */
-    public static void create(RemoteConnection rc) throws SQLException {
-        Connection connection = getDBConnection();
-        PreparedStatement createPreparedStatement = null;
-        PreparedStatement insertPreparedStatement = null;
-        String createQuery = "CREATE TABLE IF NOT EXISTS REMOTE_CONNECTIONS(ID INT AUTO_INCREMENT PRIMARY KEY,NAME VARCHAR(255),PROTOCOL VARCHAR(255),HOSTNAME VARCHAR(255),PORT VARCHAR(255),_DEFAULT BOOLEAN,AORDER INT)";
-        String insertQuery = "INSERT INTO REMOTE_CONNECTIONS" + "(NAME,PROTOCOL,HOSTNAME,PORT,_DEFAULT,AORDER) VALUES" + "(?,?,?,?,?,?)";
-        try {
+    private static void create(RemoteConnection rc) throws SQLException {
+        try (Connection connection = getDBConnection()) {
+            PreparedStatement createPreparedStatement;
+            PreparedStatement insertPreparedStatement;
+            String createQuery = "CREATE TABLE IF NOT EXISTS REMOTE_CONNECTIONS(ID INT AUTO_INCREMENT PRIMARY KEY,NAME VARCHAR(255),PROTOCOL VARCHAR(255),HOSTNAME VARCHAR(255),PORT VARCHAR(255),_DEFAULT BOOLEAN,AORDER INT)";
+            String insertQuery = "INSERT INTO REMOTE_CONNECTIONS" + "(NAME,PROTOCOL,HOSTNAME,PORT,_DEFAULT,AORDER) VALUES" + "(?,?,?,?,?,?)";
             connection.setAutoCommit(false);
             createPreparedStatement = connection.prepareStatement(createQuery);
             createPreparedStatement.executeUpdate();
@@ -77,22 +77,19 @@ public class H2 {
             System.out.println("Exception Message " + e.getLocalizedMessage());
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            connection.close();
         }
     }
 
     /**
      * 更改
      *
-     * @param rc
-     * @throws SQLException
+     * @param rc 连接对象
+     * @throws SQLException 异常
      */
-    public static void update(RemoteConnection rc) throws SQLException {
-        Connection connection = getDBConnection();
-        PreparedStatement updatePreparedStatement = null;
-        String updateQuery = "UPDATE REMOTE_CONNECTIONS SET _DEFAULT=?, AORDER=? WHERE ID=?";
-        try {
+    private static void update(RemoteConnection rc) throws SQLException {
+        try (Connection connection = getDBConnection()) {
+            PreparedStatement updatePreparedStatement;
+            String updateQuery = "UPDATE REMOTE_CONNECTIONS SET _DEFAULT=?, AORDER=? WHERE ID=?";
             connection.setAutoCommit(false);
             updatePreparedStatement = connection.prepareStatement(updateQuery);
             updatePreparedStatement.setBoolean(1, rc.is_default());
@@ -105,21 +102,18 @@ public class H2 {
             System.out.println("Exception Message " + e.getLocalizedMessage());
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            connection.close();
         }
     }
 
     /**
-     * 删除
+     * 删除连接对象
      *
-     * @param id
-     * @throws SQLException
+     * @param id ID
+     * @throws SQLException 异常
      */
     public static void delete(long id) throws SQLException {
         Connection connection = getDBConnection();
-        PreparedStatement updatePreparedStatement = null;
-        PreparedStatement selectPreparedStatement = null;
+        PreparedStatement updatePreparedStatement;
         String updateQuery = "DELETE FROM REMOTE_CONNECTIONS WHERE ID=?";
         try {
             connection.setAutoCommit(false);
@@ -187,7 +181,7 @@ public class H2 {
     /**
      * 建立数据库连接
      *
-     * @return
+     * @return 数据库连接
      */
     private static Connection getDBConnection() {
         Connection dbConnection = null;
@@ -206,37 +200,5 @@ public class H2 {
         return dbConnection;
     }
 
-
-    public static void main(String[] args) throws Exception {
-        try {
-            // delete the H2 database named 'test' in the user home directory
-//            DeleteDbFiles.execute("~", "test", true);
-//            insertWithStatement();
-//            DeleteDbFiles.execute("~", "test", true);
-
-            RemoteConnection rc = new RemoteConnection();
-            rc.setName("hello(http://4545.0.75.1:8080)");
-            rc.setProtocol("http");
-            rc.setHostName("10.0.75.1");
-            rc.setPort("4545");
-            rc.set_default(false);
-            rc.setaOrder(3);
-
-//            insert(rc);
-
-//            delete(9);
-//            delete(10);
-//            delete(11);
-//            delete(12);
-
-
-            List<RemoteConnection> lst = retrieveAll();
-            lst.stream().forEach(e -> {
-                System.out.println(e);
-            });
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
 }
 
