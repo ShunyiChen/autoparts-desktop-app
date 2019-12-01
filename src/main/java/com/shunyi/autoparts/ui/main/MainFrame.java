@@ -6,6 +6,7 @@ import com.shunyi.autoparts.ui.products.ProductManagement;
 import com.shunyi.autoparts.ui.buy.PurchaseOrder;
 import com.shunyi.autoparts.ui.stock.StockManagement;
 import com.shunyi.autoparts.ui.supplier.SupplierManagement;
+import com.shunyi.autoparts.ui.system.Maintenance;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
@@ -124,8 +125,9 @@ public class MainFrame extends BorderPane {
         ClickableItem item11 = new ClickableItem(ICON_5, "系统维护", new Callback() {
             @Override
             public Object call(Object param) {
+                Maintenance systemMaintenance = new Maintenance(application);
                 toolbar.setTitle("系统维护");
-                contentPane.getViewport().setCenter(new Pane());
+                contentPane.getViewport().setCenter(systemMaintenance);
                 return null;
             }
         });
