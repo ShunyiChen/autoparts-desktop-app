@@ -3,7 +3,7 @@ package com.shunyi.autoparts.ui.model;
 import java.util.Date;
 
 /** 产品属性值DTO */
-public class AttributeValue extends AttributeBase{
+public class AttributeValue extends AttributeBase {
     /** 属性名 */
     private AttributeName attributeName;
     /** RGB颜色 */

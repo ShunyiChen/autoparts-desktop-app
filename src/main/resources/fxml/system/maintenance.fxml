@@ -17,12 +17,12 @@
          <content>
             <BorderPane prefHeight="200.0" prefWidth="200.0">
                <center>
-                  <SplitPane dividerPositions="0.2" prefHeight="160.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                  <SplitPane dividerPositions="0.14" prefHeight="160.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                      <items>
-                        <TreeView prefHeight="503.0" prefWidth="289.0" />
+                        <TreeView fx:id="merchantTree" prefHeight="503.0" prefWidth="289.0" />
                         <BorderPane prefHeight="200.0" prefWidth="200.0">
                            <center>
-                              <TableView prefHeight="503.0" prefWidth="646.0" BorderPane.alignment="CENTER">
+                              <TableView fx:id="userTable" prefHeight="503.0" prefWidth="646.0" BorderPane.alignment="CENTER">
                                 <columns>
                                   <TableColumn prefWidth="75.0" text="C1" />
                                   <TableColumn prefWidth="75.0" text="C2" />
@@ -32,17 +32,17 @@
                            <top>
                               <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                                 <items>
-                                  <Button mnemonicParsing="false" text="新建用户">
+                                    <Button mnemonicParsing="false" text="新建用户" onAction="#createNewUser">
                                        <font>
                                           <Font size="14.0" />
                                        </font>
                                     </Button>
-                                    <Button mnemonicParsing="false" text="更改用户">
+                                    <Button mnemonicParsing="false" text="更改用户" onAction="#updateUser">
                                        <font>
                                           <Font size="14.0" />
                                        </font>
                                     </Button>
-                                    <Button mnemonicParsing="false" text="删除用户">
+                                    <Button mnemonicParsing="false" text="删除用户" onAction="#deleteUser">
                                        <font>
                                           <Font size="14.0" />
                                        </font>
@@ -59,12 +59,12 @@
          <content>
             <BorderPane prefHeight="200.0" prefWidth="200.0">
                <center>
-                  <SplitPane dividerPositions="0.2" prefHeight="160.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                  <SplitPane dividerPositions="0.14" prefHeight="160.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                     <items>
-                        <TreeView prefHeight="200.0" prefWidth="200.0" />
+                        <TreeView fx:id="vfsTree" prefHeight="200.0" prefWidth="200.0" />
                         <BorderPane prefHeight="200.0" prefWidth="200.0">
                            <center>
-                              <TableView prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                              <TableView fx:id="vfsTable" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                                 <columns>
                                   <TableColumn prefWidth="75.0" text="C1" />
                                   <TableColumn prefWidth="75.0" text="C2" />
@@ -74,7 +74,7 @@
                            <top>
                               <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                                 <items>
-                                  <Button mnemonicParsing="false" text="新建VFS">
+                                  <Button mnemonicParsing="false" text="新建VFS" onAction="#createNewVFS">
                                        <font>
                                           <Font size="14.0" />
                                        </font>

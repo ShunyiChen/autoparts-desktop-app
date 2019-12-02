@@ -1,6 +1,5 @@
 package com.shunyi.autoparts.ui.model;
 
-import com.shunyi.autoparts.ui.User;
 
 import java.io.Serializable;
 

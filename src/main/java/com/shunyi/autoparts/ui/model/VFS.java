@@ -18,11 +18,13 @@ public class VFS {
     private String userName;
     /** 连接密码 */
     private String password;
+    /** VFS类目 */
+    private VFSCategory vfsCategory;
 
     public VFS() {
     }
 
-    public VFS(String name, String protocol, String host, Integer port, String home, String userName, String password) {
+    public VFS(String name, String protocol, String host, Integer port, String home, String userName, String password, VFSCategory vfsCategory) {
         this.name = name;
         this.protocol = protocol;
         this.host = host;
@@ -30,6 +32,7 @@ public class VFS {
         this.home = home;
         this.userName = userName;
         this.password = password;
+        this.vfsCategory = vfsCategory;
     }
 
     public Long getId() {
@@ -96,6 +99,14 @@ public class VFS {
         this.password = password;
     }
 
+    public VFSCategory getVfsCategory() {
+        return vfsCategory;
+    }
+
+    public void setVfsCategory(VFSCategory vfsCategory) {
+        this.vfsCategory = vfsCategory;
+    }
+
     @Override
     public String toString() {
         return "VFS{" +
@@ -107,6 +118,7 @@ public class VFS {
                 ", home='" + home + '\'' +
                 ", userName='" + userName + '\'' +
                 ", password='" + password + '\'' +
+                ", vfsCategory=" + vfsCategory +
                 '}';
     }
 }

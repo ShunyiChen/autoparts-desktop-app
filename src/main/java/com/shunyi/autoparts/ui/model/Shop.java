@@ -1,11 +1,7 @@
 package com.shunyi.autoparts.ui.model;
 
 /** 店铺 */
-public class Shop {
-    /** ID */
-    private Long id;
-    /** 名称 */
-    private String name;
+public class Shop extends Merchant {
     /** 公司 */
     private Company company;
 
@@ -38,5 +34,10 @@ public class Shop {
 
     public void setCompany(Company company) {
         this.company = company;
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }
