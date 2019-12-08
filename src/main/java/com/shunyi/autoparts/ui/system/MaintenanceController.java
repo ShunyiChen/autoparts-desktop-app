@@ -4,29 +4,31 @@ import com.shunyi.autoparts.ui.MainApp;
 import com.shunyi.autoparts.ui.common.GoogleJson;
 import com.shunyi.autoparts.ui.http.HttpClient;
 import com.shunyi.autoparts.ui.model.*;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.TextFieldTreeCell;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
-import javafx.util.StringConverter;
 
 import java.io.IOException;
 
 public class MaintenanceController {
-
     private MainApp application;
+    private ContextMenu menu = new ContextMenu();
+    private MenuItem itemNewShop = new MenuItem("新建店铺");
+    private MenuItem itemRMShop = new MenuItem("删除店铺");
+    private MenuItem itemRNShop = new MenuItem("重命名");
+    private MenuItem itemNewCom = new MenuItem("新建公司");
+    private MenuItem itemRMCom = new MenuItem("删除公司");
+    private MenuItem itemRNCom = new MenuItem("重命名");
 
-    @FXML
-    private TabPane tabPane;
+
     @FXML
     private TreeView<Merchant> merchantTree;
     @FXML
@@ -35,16 +37,42 @@ public class MaintenanceController {
     private TreeView<VFSCategory> vfsTree;
     @FXML
     private TableView<VFS> vfsTable;
-
+    @FXML
+    private TableColumn colId;
+    @FXML
+    private TableColumn colUserName;
+    @FXML
+    private TableColumn colEnabled;
+    @FXML
+    private TableColumn colShops;
 
     @FXML
     void createNewUser() {
+        Callback<User, String> callback = (user ->{
 
+            return "";
+        });
+        editUser(callback, null);
     }
 
     @FXML
     void updateUser() {
+        User selectedUser = userTable.getSelectionModel().getSelectedItem();
+        if(selectedUser == null) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
+            alert.setHeaderText("请选择用户。");
+            alert.show();
+            return;
+        }
 
+        Callback callback = new Callback() {
+            @Override
+            public Object call(Object param) {
+
+                return null;
+            }
+        };
+        editUser(callback, selectedUser);
     }
 
     @FXML
@@ -57,121 +85,200 @@ public class MaintenanceController {
 
     }
 
+
+    private void editUser(Callback<User, String> callback, User selectedUser) {
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource(
+                        "/fxml/system/edit_user.fxml"
+                )
+        );
+        VBox root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Scene scene = new Scene(root);
+        Stage dialog = new Stage();
+        dialog.setOnHiding(e -> {
+        });
+        EditUserController controller = loader.getController();
+        controller.prepare(dialog, callback, selectedUser);
+        dialog.setTitle(selectedUser==null?"新建用户":"编辑用户");
+        dialog.initOwner(application.getStage());
+        dialog.setResizable(false);
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.setScene(scene);
+        // center stage on screen
+        dialog.centerOnScreen();
+        dialog.show();
+    }
+
     public void prepare(MainApp application) {
         this.application = application;
-        tabPane.setStyle("-fx-font-size: 14;");
+        initUserTable();
         initMerchantTree();
+        initMenuItems();
+    }
+
+    private void initUserTable() {
+        colId.setCellValueFactory(new PropertyValueFactory<User, String>("id"));
+        colUserName.setCellValueFactory(new PropertyValueFactory<User, String>("username"));
+        colEnabled.setCellValueFactory(new PropertyValueFactory<User, String>("enabled"));
+        colShops.setCellValueFactory(new PropertyValueFactory<User, String>("shop"));
+
+        userTable.setOnMouseClicked((MouseEvent event) -> {
+            if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2){
+//                updateProduct(null);
+            }
+        });
+        ContextMenu menu = new ContextMenu();
+        MenuItem itemDuplicate = new MenuItem("新建");
+        MenuItem itemDefineProperties = new MenuItem("编辑");
+        MenuItem itemProductSKU = new MenuItem("删除");
+        itemDuplicate.setOnAction(e ->{
+//            duplicate();
+        });
+        itemDefineProperties.setOnAction(e ->{
+//            openCustomAttributes(e);
+        });
+        itemProductSKU.setOnAction(e ->{
+//            openProductSKU(e);
+        });
+        menu.getItems().addAll(itemDuplicate, new SeparatorMenuItem() ,itemDefineProperties, itemProductSKU);
+        userTable.addEventHandler(MouseEvent.MOUSE_CLICKED, t -> {
+            if(t.getButton() == MouseButton.SECONDARY) {
+                menu.show(userTable, t.getScreenX(), t.getScreenY());
+            }
+        });
     }
 
     private void initMerchantTree() {
         TreeItem rootItem = new TreeItem<>();
         rootItem.setValue("全部公司");
         merchantTree.setRoot(rootItem);
+
         initCompanyNodes(rootItem);
 
-
-        ContextMenu menu = new ContextMenu();
-        MenuItem itemNew = new MenuItem("新建公司");
-        MenuItem itemRM = new MenuItem("删除公司");
-        MenuItem itemRN = new MenuItem("重命名公司");
-        MenuItem itemNewShop = new MenuItem("新建店铺");
-        MenuItem itemRMShop = new MenuItem("删除店铺");
-        MenuItem itemRNShop = new MenuItem("重命名店铺");
-
-
-        menu.getItems().addAll(itemNew, itemRM, itemRN, new SeparatorMenuItem(), itemNewShop, itemRMShop, itemRNShop);
         merchantTree.setEditable(true);
         merchantTree.setContextMenu(menu);
-
-//        merchantTree.setCellFactory(p -> new TextFieldTreeCell<>(new StringConverter<>(){
-//
-//            @Override
-//            public String toString(Merchant object) {
-//                return object.getName();
-//            }
-//
-//            @Override
-//            public Merchant fromString(String string) {
-//
-//                p.getEditingItem().getValue().setName(string);
-//
-//                return p.getEditingItem().getValue();
-//            }
-//        }));
-        itemNew.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                Callback callback = new Callback() {
-                    @Override
-                    public Object call(Object param) {
-                        String name = param.toString();
-                        Company company = new Company(name);
-                        String json = GoogleJson.GET().toJson(company);
-                        String idStr = null;
-                        try {
-                            idStr = HttpClient.POST("/companies", json);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        company.setId(Long.valueOf(idStr));
-
-                        TreeItem<Company> newItem = new TreeItem<>(company);
-                        rootItem.getChildren().add(newItem);
-
-
-                        return "";
-                    }
-                };
-                editCompany(callback);
-            }
-        });
-        itemRM.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                removeCompany(event);
-            }
-        });
-        itemRN.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                merchantTree.edit(merchantTree.getSelectionModel().getSelectedItem());
-            }
-        });
-        merchantTree.setOnEditCommit(new EventHandler<TreeView.EditEvent<Merchant>>() {
-            @Override
-            public void handle(TreeView.EditEvent<Merchant> event) {
-                if(event.getNewValue() instanceof Company) {
-//                    String path = "/companies/"+event.getNewValue().getId();
-//                    String json = GoogleJson.GET().toJson(event.getNewValue());
-//                    try {
-//                        HttpClient.PUT(path, json);
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
-
-                } else if(event.getNewValue() instanceof Shop) {
-
-
-                }
-            }
-        });
         merchantTree.setOnMouseClicked((MouseEvent event) -> {
             if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 1){
                 TreeItem<Merchant> item = merchantTree.getSelectionModel().getSelectedItem();
                 userTable.getItems().clear();
                 String json = null;
-//                try {
-//                    json = HttpClient.GET("/suppliers/category/"+item.getValue().getId());
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//                Supplier[] suppliers = GoogleJson.GET().fromJson(json, Supplier[].class);
-//                userTable.getItems().addAll(suppliers);
+                try {
+                    json = HttpClient.GET("/users/shop/"+item.getValue().getId());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                User[] users = GoogleJson.GET().fromJson(json, User[].class);
+                userTable.getItems().addAll(users);
+            }
+
+            if(event.getButton().equals(MouseButton.SECONDARY) && event.getClickCount() == 1) {
+                TreeItem<Merchant> item = merchantTree.getSelectionModel().getSelectedItem();
+                menu.getItems().clear();
+                if(item.getValue() instanceof Company) {
+                    menu.getItems().addAll(itemNewShop, new SeparatorMenuItem(), itemRMCom, itemRNCom);
+                } else if(item.getValue() instanceof Shop) {
+                    menu.getItems().addAll(itemRMShop, itemRNShop);
+                } else {
+                    menu.getItems().addAll(itemNewCom);
+                }
             }
         });
-
-
     }
+
+    private void initMenuItems() {
+        itemNewCom.setOnAction(event -> {
+            Callback callback = param -> {
+                String name = param.toString();
+                Company company = new Company(name);
+                String json = GoogleJson.GET().toJson(company);
+                String idStr = null;
+                try {
+                    idStr = HttpClient.POST("/companies", json);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                company.setId(Long.valueOf(idStr));
+                TreeItem<Merchant> newItem = new TreeItem<>(company);
+                merchantTree.getRoot().getChildren().add(newItem);
+                merchantTree.getSelectionModel().select(newItem);
+                return null;
+            };
+            editCompany(callback, null);
+        });
+
+        itemRMCom.setOnAction(event -> {
+            removeCompany();
+        });
+        itemRNCom.setOnAction(event -> {
+            TreeItem<Merchant> selected = merchantTree.getSelectionModel().getSelectedItem();
+            Callback callback = param -> {
+                String name = param.toString();
+                Company updatedCompany = null;
+                try {
+                    String json = HttpClient.GET("/companies/"+selected.getValue().getId());
+                    updatedCompany = GoogleJson.GET().fromJson(json, Company.class);
+                    updatedCompany.setName(name);
+                    json = GoogleJson.GET().toJson(updatedCompany);
+                    HttpClient.PUT("/companies/"+selected.getValue().getId(), json);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                selected.setValue(updatedCompany);
+                return null;
+            };
+
+            editCompany(callback, (Company)selected.getValue());
+        });
+        itemRNShop.setOnAction(event -> {
+            TreeItem<Merchant> selected = merchantTree.getSelectionModel().getSelectedItem();
+            Callback callback = param -> {
+                String name = param.toString();
+                Shop updatedShop = null;
+                try {
+                    String json = HttpClient.GET("/shops/"+selected.getValue().getId());
+                    updatedShop = GoogleJson.GET().fromJson(json, Shop.class);
+                    updatedShop.setName(name);
+                    json = GoogleJson.GET().toJson(updatedShop);
+                    HttpClient.PUT("/shops/"+selected.getValue().getId(), json);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                selected.setValue(updatedShop);
+                return null;
+            };
+
+            editShop(callback, (Shop)selected.getValue());
+        });
+        itemNewShop.setOnAction(event -> {
+            Callback callback = param -> {
+                String name = param.toString();
+                TreeItem<Merchant> parent = merchantTree.getSelectionModel().getSelectedItem();
+                Shop shop = new Shop(name, (Company) parent.getValue());
+                String json = GoogleJson.GET().toJson(shop);
+                String idStr = null;
+                try {
+                    idStr = HttpClient.POST("/shops", json);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                shop.setId(Long.valueOf(idStr));
+                TreeItem<Merchant> newItem = new TreeItem<>(shop);
+                parent.getChildren().add(newItem);
+                merchantTree.getSelectionModel().select(newItem);
+                return null;
+            };
+            editShop(callback, null);
+        });
+        itemRMShop.setOnAction(event -> {
+            removeShop();
+        });
+    }
+
 
     /**
      *
@@ -220,7 +327,7 @@ public class MaintenanceController {
      *
      * @param callback
      */
-    private void editCompany(Callback callback) {
+    private void editCompany(Callback callback, Company company) {
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource(
                         "/fxml/system/edit_company.fxml"
@@ -237,8 +344,8 @@ public class MaintenanceController {
         dialog.setOnHiding(e -> {
         });
         EditCompanyController controller = loader.getController();
-        controller.prepare(dialog, callback);
-        dialog.setTitle("新建单位类目");
+        controller.prepare(dialog, callback, company);
+        dialog.setTitle("新建公司");
         dialog.initOwner(application.getStage());
         dialog.setResizable(false);
         dialog.initModality(Modality.APPLICATION_MODAL);
@@ -248,49 +355,80 @@ public class MaintenanceController {
         dialog.show();
     }
 
-
-    private void removeCompany(ActionEvent event) {
-        TreeItem<Merchant> selected = merchantTree.getSelectionModel().getSelectedItem();
-        if (selected.getValue().getId() == 0) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
-            alert.setHeaderText("根节点不可删除");
-            alert.show();
-            return;
-        }
-
-        if(selected.getValue() instanceof Company) {
-            try {
-                HttpClient.DELETE("/companies/"+selected.getValue().getId());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            selected.getParent().getChildren().remove(selected);
-            selected.getParent().setExpanded(true);
-            merchantTree.getSelectionModel().select(selected.getParent());
-
-        } else if(selected.getValue() instanceof Shop) {
-            try {
-                HttpClient.DELETE("/shops/"+selected.getValue().getId());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            selected.getParent().getChildren().remove(selected);
-            selected.getParent().setExpanded(true);
-            merchantTree.getSelectionModel().select(selected.getParent());
-            //设置节点是否为父节点
-            if(selected.getParent().isLeaf()) {
-                selected.getParent().getValue().setParent(false);
-                String json = GoogleJson.GET().toJson(selected.getParent().getValue());
+    private void removeCompany() {
+        Alert alertConfirm = new Alert(Alert.AlertType.CONFIRMATION, "", ButtonType.NO, ButtonType.YES);
+        alertConfirm.setHeaderText("是否删除该公司？");
+        alertConfirm.showAndWait().filter(response -> response == ButtonType.YES).ifPresent(response -> {
+            TreeItem<Merchant> selected = merchantTree.getSelectionModel().getSelectedItem();
+            if(selected.getValue() instanceof Company) {
                 try {
-                    HttpClient.PUT("/companies/"+selected.getParent().getValue().getId(), json);
+                    HttpClient.DELETE("/companies/"+selected.getValue().getId());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+
+                TreeItem parent = selected.getParent();
+                parent.getChildren().remove(selected);
+                parent.setExpanded(true);
+                merchantTree.getSelectionModel().select(parent);
             }
+        });
+    }
 
+    private void editShop(Callback callback, Shop selectedShop) {
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource(
+                        "/fxml/system/edit_shop.fxml"
+                )
+        );
+        VBox root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+        Scene scene = new Scene(root);
+        Stage dialog = new Stage();
+        dialog.setOnHiding(e -> {
+        });
+        EditShopController controller = loader.getController();
+        controller.prepare(dialog, callback, selectedShop);
+        dialog.setTitle("新建店铺");
+        dialog.initOwner(application.getStage());
+        dialog.setResizable(false);
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.setScene(scene);
+        // center stage on screen
+        dialog.centerOnScreen();
+        dialog.show();
+    }
 
-
+    private void removeShop() {
+        Alert alertConfirm = new Alert(Alert.AlertType.CONFIRMATION, "", ButtonType.NO, ButtonType.YES);
+        alertConfirm.setHeaderText("是否删除该店铺？");
+        alertConfirm.showAndWait().filter(response -> response == ButtonType.YES).ifPresent(response -> {
+            TreeItem<Merchant> selected = merchantTree.getSelectionModel().getSelectedItem();
+            if(selected.getValue() instanceof Shop) {
+                try {
+                    HttpClient.DELETE("/shops/"+selected.getValue().getId());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                TreeItem<Merchant> parent = selected.getParent();
+                parent.getChildren().remove(selected);
+                parent.setExpanded(true);
+                merchantTree.getSelectionModel().select(parent);
+                //设置节点是否为父节点
+                if(parent.isLeaf()) {
+                    parent.getValue().setParent(false);
+                    String json = GoogleJson.GET().toJson(parent.getValue());
+                    try {
+                        HttpClient.PUT("/companies/"+parent.getValue().getId(), json);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
     }
 }

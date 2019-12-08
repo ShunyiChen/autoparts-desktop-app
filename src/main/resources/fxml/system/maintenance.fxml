@@ -21,28 +21,20 @@
                      <items>
                         <TreeView fx:id="merchantTree" prefHeight="503.0" prefWidth="289.0" />
                         <BorderPane prefHeight="200.0" prefWidth="200.0">
-                           <center>
-                              <TableView fx:id="userTable" prefHeight="503.0" prefWidth="646.0" BorderPane.alignment="CENTER">
-                                <columns>
-                                  <TableColumn prefWidth="75.0" text="C1" />
-                                  <TableColumn prefWidth="75.0" text="C2" />
-                                </columns>
-                              </TableView>
-                           </center>
                            <top>
                               <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                                 <items>
-                                    <Button mnemonicParsing="false" text="新建用户" onAction="#createNewUser">
+                                    <Button mnemonicParsing="false" onAction="#createNewUser" text="新建用户">
                                        <font>
                                           <Font size="14.0" />
                                        </font>
                                     </Button>
-                                    <Button mnemonicParsing="false" text="更改用户" onAction="#updateUser">
+                                    <Button mnemonicParsing="false" onAction="#updateUser" text="更改用户">
                                        <font>
                                           <Font size="14.0" />
                                        </font>
                                     </Button>
-                                    <Button mnemonicParsing="false" text="删除用户" onAction="#deleteUser">
+                                    <Button mnemonicParsing="false" onAction="#deleteUser" text="删除用户">
                                        <font>
                                           <Font size="14.0" />
                                        </font>
@@ -50,6 +42,16 @@
                                 </items>
                               </ToolBar>
                            </top>
+                           <center>
+                              <TableView fx:id="userTable" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                                <columns>
+                                    <TableColumn fx:id="colId" prefWidth="75.0" text="ID" visible="false"/>
+                                    <TableColumn fx:id="colUserName" prefWidth="75.0" text="用户名" />
+                                    <TableColumn fx:id="colEnabled" prefWidth="75.0" text="是否已激活" />
+                                    <TableColumn fx:id="colShops" prefWidth="75.0" text="所在店铺" />
+                                </columns>
+                              </TableView>
+                           </center>
                         </BorderPane>
                      </items>
                   </SplitPane>
@@ -74,7 +76,7 @@
                            <top>
                               <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                                 <items>
-                                  <Button mnemonicParsing="false" text="新建VFS" onAction="#createNewVFS">
+                                  <Button mnemonicParsing="false" onAction="#createNewVFS" text="新建VFS">
                                        <font>
                                           <Font size="14.0" />
                                        </font>

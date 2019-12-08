@@ -1,6 +1,6 @@
 package com.shunyi.autoparts.ui.system;
 
-import com.shunyi.autoparts.ui.model.Company;
+import com.shunyi.autoparts.ui.model.Shop;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
@@ -8,8 +8,8 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 
 
-/** 编辑公司Controller */
-public class EditCompanyController {
+/** 编辑店铺Controller */
+public class EditShopController {
 
     private Stage dialog;
     private Callback callback;
@@ -30,12 +30,12 @@ public class EditCompanyController {
         dialog.close();
     }
 
-    public void prepare(Stage dialog, Callback callback, Company selectedCompany) {
+    public void prepare(Stage dialog, Callback callback, Shop selectedShop) {
         this.dialog = dialog;
         this.callback = callback;
         btnOk.setStyle(String.format("-fx-base: %s;", "rgb(63,81,181)"));
-        if(selectedCompany != null) {
-            txtName.setText(selectedCompany.getName());
+        if(selectedShop != null) {
+            txtName.setText(selectedShop.getName());
         }
     }
 }

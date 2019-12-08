@@ -7,6 +7,7 @@ import java.util.Set;
 
 /** 用户 */
 public class User {
+	/** ID */
 	private long id;
 	/** 用户名 */
 	private String username;
@@ -15,12 +16,18 @@ public class User {
 	private String password;
 	/** 是否激活 */
 	private Boolean enabled;
-	/** 店铺 */
-	private Shop shop;
-
+	/** 用户店铺映射 */
+	protected Set<UserShopMapping> userShopRoleSet = new HashSet<>();
+	/** 用户角色映射 */
 	protected Set<UserRoleMapping> userUserRoleSet = new HashSet<>();
 
 	public User() {}
+
+	public User(String username, String password, Boolean enabled) {
+		this.username = username;
+		this.password = password;
+		this.enabled = enabled;
+	}
 
 	public Boolean getEnabled() {
 		return enabled;
@@ -58,14 +65,6 @@ public class User {
 		this.password = password;
 	}
 
-	public Shop getShop() {
-		return shop;
-	}
-
-	public void setShop(Shop shop) {
-		this.shop = shop;
-	}
-
 	public Boolean isEnabled() {
 		return enabled;
 	}
@@ -74,15 +73,11 @@ public class User {
 		this.enabled = enabled;
 	}
 
-	@Override
-	public String toString() {
-		return "User{" +
-				"id=" + id +
-				", username='" + username + '\'' +
-				", password='" + password + '\'' +
-				", enabled=" + enabled +
-				", shop=" + shop +
-				", userUserRoleSet=" + userUserRoleSet +
-				'}';
+	public Set<UserShopMapping> getUserShopRoleSet() {
+		return userShopRoleSet;
+	}
+
+	public void setUserShopRoleSet(Set<UserShopMapping> userShopRoleSet) {
+		this.userShopRoleSet = userShopRoleSet;
 	}
 }

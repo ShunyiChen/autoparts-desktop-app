@@ -1,7 +1,7 @@
 package com.shunyi.autoparts.ui.model;
 
 /** 商家基类 */
-public   class Merchant {
+public abstract class Merchant {
     /** ID */
     protected Long id = 0L;
     /** 商家名称 */
