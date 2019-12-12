@@ -4,6 +4,7 @@ import com.shunyi.autoparts.ui.MainApp;
 import com.shunyi.autoparts.ui.common.GoogleJson;
 import com.shunyi.autoparts.ui.http.HttpClient;
 import com.shunyi.autoparts.ui.model.*;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -42,14 +43,16 @@ public class MaintenanceController {
     @FXML
     private TableColumn colUserName;
     @FXML
-    private TableColumn colEnabled;
+    private TableColumn<User, String> colEnabled;
     @FXML
-    private TableColumn colShops;
+    private TableColumn<User, String> colShops;
+    @FXML
+    private TableColumn<User, String> colRoles;
 
     @FXML
     void createNewUser() {
         Callback<User, String> callback = (user ->{
-
+            userTable.getItems().add(user);
             return "";
         });
         editUser(callback, null);
@@ -64,27 +67,30 @@ public class MaintenanceController {
             alert.show();
             return;
         }
-
-        Callback callback = new Callback() {
-            @Override
-            public Object call(Object param) {
-
-                return null;
-            }
-        };
+        Callback<User, String> callback = (newUser ->{
+            int index = userTable.getSelectionModel().getSelectedIndex();
+            userTable.getItems().remove(index);
+            userTable.getItems().add(index, newUser);
+            return "";
+        });
         editUser(callback, selectedUser);
     }
 
     @FXML
     void deleteUser() {
-
+        User deleteUser = userTable.getSelectionModel().getSelectedItem();
+        try {
+            HttpClient.DELETE("/users/"+deleteUser.getId());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        userTable.getItems().remove(deleteUser);
     }
 
     @FXML
     void createNewVFS() {
 
     }
-
 
     private void editUser(Callback<User, String> callback, User selectedUser) {
         FXMLLoader loader = new FXMLLoader(
@@ -124,28 +130,40 @@ public class MaintenanceController {
     private void initUserTable() {
         colId.setCellValueFactory(new PropertyValueFactory<User, String>("id"));
         colUserName.setCellValueFactory(new PropertyValueFactory<User, String>("username"));
-        colEnabled.setCellValueFactory(new PropertyValueFactory<User, String>("enabled"));
-        colShops.setCellValueFactory(new PropertyValueFactory<User, String>("shop"));
+        colEnabled.setCellValueFactory(param ->
+                new SimpleObjectProperty<>(param.getValue().isEnabled() == null ? "否" : param.getValue().isEnabled()? "是":"否")
+        );
+//        colShops.setCellValueFactory(new PropertyValueFactory<User, String>("userShopMappingSet"));
+
+        colShops.setCellValueFactory(param ->
+                new SimpleObjectProperty<>(param.getValue().getUserRoleMappingSet().toString())
+        );
+
+//        colRoles.setCellValueFactory(new PropertyValueFactory<User, String>("userRoleMappingSet"));
+        colRoles.setCellValueFactory(param ->
+                new SimpleObjectProperty<>(param.getValue().getUserRoleMappingSet().toString())
+        );
+
 
         userTable.setOnMouseClicked((MouseEvent event) -> {
             if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2){
-//                updateProduct(null);
+                updateUser();
             }
         });
         ContextMenu menu = new ContextMenu();
-        MenuItem itemDuplicate = new MenuItem("新建");
-        MenuItem itemDefineProperties = new MenuItem("编辑");
-        MenuItem itemProductSKU = new MenuItem("删除");
-        itemDuplicate.setOnAction(e ->{
-//            duplicate();
+        MenuItem itemNew = new MenuItem("新建");
+        MenuItem itemEdit= new MenuItem("编辑");
+        MenuItem itemDel = new MenuItem("删除");
+        itemNew.setOnAction(e ->{
+            createNewUser();
         });
-        itemDefineProperties.setOnAction(e ->{
-//            openCustomAttributes(e);
+        itemEdit.setOnAction(e ->{
+            updateUser();
         });
-        itemProductSKU.setOnAction(e ->{
-//            openProductSKU(e);
+        itemDel.setOnAction(e ->{
+            deleteUser();
         });
-        menu.getItems().addAll(itemDuplicate, new SeparatorMenuItem() ,itemDefineProperties, itemProductSKU);
+        menu.getItems().addAll(itemNew, new SeparatorMenuItem() ,itemEdit, itemDel);
         userTable.addEventHandler(MouseEvent.MOUSE_CLICKED, t -> {
             if(t.getButton() == MouseButton.SECONDARY) {
                 menu.show(userTable, t.getScreenX(), t.getScreenY());
@@ -157,9 +175,8 @@ public class MaintenanceController {
         TreeItem rootItem = new TreeItem<>();
         rootItem.setValue("全部公司");
         merchantTree.setRoot(rootItem);
-
+        //初始化树节点
         initCompanyNodes(rootItem);
-
         merchantTree.setEditable(true);
         merchantTree.setContextMenu(menu);
         merchantTree.setOnMouseClicked((MouseEvent event) -> {

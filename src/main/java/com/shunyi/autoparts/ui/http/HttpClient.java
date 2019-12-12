@@ -106,21 +106,35 @@ public class HttpClient {
     }
 
     /**
+     * 单个删除
      *
      * @param path
      * @return
      * @throws IOException
      */
     public static String DELETE(String path) throws IOException {
+        return BATCH_DELETE(path, "");
+    }
+
+    /**
+     * 批量删除
+     *
+     * @param path
+     * @param data
+     * @return
+     * @throws IOException
+     */
+    public static String BATCH_DELETE(String path, String data) throws IOException {
         String token = ENV.getInstance().lookup("Authorization").toString();
         RemoteConnection rc = (RemoteConnection) ENV.getInstance().lookup("RemoteConnection");
         String url = rc.getProtocol()+"://"+rc.getHostName()+":"+rc.getPort()+""+path;
         HttpUrl.Builder urlBuilder = HttpUrl.parse(url).newBuilder();
         url = urlBuilder.build().toString();
+        RequestBody body = RequestBody.create(data, JSON);
         Request request = new Request.Builder()
                 .header("Authorization", token)
                 .url(url)
-                .delete()
+                .delete(body)
                 .build();
         try (Response response = client.newCall(request).execute()) {
             return response.body().string();

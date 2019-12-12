@@ -46,9 +46,10 @@
                               <TableView fx:id="userTable" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                                 <columns>
                                     <TableColumn fx:id="colId" prefWidth="75.0" text="ID" visible="false"/>
-                                    <TableColumn fx:id="colUserName" prefWidth="75.0" text="用户名" />
+                                    <TableColumn fx:id="colUserName" prefWidth="175.0" text="用户名" />
                                     <TableColumn fx:id="colEnabled" prefWidth="75.0" text="是否已激活" />
-                                    <TableColumn fx:id="colShops" prefWidth="75.0" text="所在店铺" />
+                                    <TableColumn fx:id="colShops" prefWidth="175.0" text="访问店铺" />
+                                    <TableColumn fx:id="colRoles" prefWidth="175.0" text="拥有角色" />
                                 </columns>
                               </TableView>
                            </center>
@@ -57,6 +58,57 @@
                   </SplitPane>
                </center></BorderPane>
          </content></Tab>
+      <Tab text="角色管理">
+          <content>
+              <BorderPane prefHeight="200.0" prefWidth="200.0">
+                  <center>
+                      <TableView fx:id="roleTable" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                          <columns>
+                              <TableColumn prefWidth="75.0" text="C1" />
+                              <TableColumn prefWidth="75.0" text="C2" />
+                          </columns>
+                      </TableView>
+                  </center>
+                  <top>
+                      <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                          <items>
+                              <Button mnemonicParsing="false" onAction="#createNewVFS" text="新建角色">
+                                  <font>
+                                      <Font size="14.0" />
+                                  </font>
+                              </Button>
+                          </items>
+                      </ToolBar>
+                  </top>
+              </BorderPane>
+          </content>
+      </Tab>
+      <Tab text="权限管理">
+          <content>
+              <BorderPane prefHeight="200.0" prefWidth="200.0">
+                  <center>
+                      <TableView fx:id="permissionTable" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                          <columns>
+                              <TableColumn prefWidth="75.0" text="C1" />
+                              <TableColumn prefWidth="75.0" text="C2" />
+                          </columns>
+                      </TableView>
+                  </center>
+                  <top>
+                      <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                          <items>
+                              <Button mnemonicParsing="false" onAction="#createNewVFS" text="编辑权限">
+                                  <font>
+                                      <Font size="14.0" />
+                                  </font>
+                              </Button>
+                          </items>
+                      </ToolBar>
+                  </top>
+              </BorderPane>
+          </content>
+      </Tab>
+
       <Tab text="VFS管理">
          <content>
             <BorderPane prefHeight="200.0" prefWidth="200.0">

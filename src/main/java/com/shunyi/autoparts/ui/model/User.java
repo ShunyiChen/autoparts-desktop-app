@@ -12,14 +12,13 @@ public class User {
 	/** 用户名 */
 	private String username;
 	/** 加密的密码 */
-	@JsonIgnore
 	private String password;
 	/** 是否激活 */
 	private Boolean enabled;
 	/** 用户店铺映射 */
-	protected Set<UserShopMapping> userShopRoleSet = new HashSet<>();
+	private Set<UserShopMapping> userShopMappingSet = new HashSet<>();
 	/** 用户角色映射 */
-	protected Set<UserRoleMapping> userUserRoleSet = new HashSet<>();
+	private Set<UserRoleMapping> userRoleMappingSet = new HashSet<>();
 
 	public User() {}
 
@@ -27,18 +26,6 @@ public class User {
 		this.username = username;
 		this.password = password;
 		this.enabled = enabled;
-	}
-
-	public Boolean getEnabled() {
-		return enabled;
-	}
-
-	public Set<UserRoleMapping> getUserUserRoleSet() {
-		return userUserRoleSet;
-	}
-
-	public void setUserUserRoleSet(Set<UserRoleMapping> userUserRoleSet) {
-		this.userUserRoleSet = userUserRoleSet;
 	}
 
 	public long getId() {
@@ -73,11 +60,31 @@ public class User {
 		this.enabled = enabled;
 	}
 
-	public Set<UserShopMapping> getUserShopRoleSet() {
-		return userShopRoleSet;
+	public Set<UserShopMapping> getUserShopMappingSet() {
+		return userShopMappingSet;
 	}
 
-	public void setUserShopRoleSet(Set<UserShopMapping> userShopRoleSet) {
-		this.userShopRoleSet = userShopRoleSet;
+	public void setUserShopMappingSet(Set<UserShopMapping> userShopMappingSet) {
+		this.userShopMappingSet = userShopMappingSet;
+	}
+
+	public Set<UserRoleMapping> getUserRoleMappingSet() {
+		return userRoleMappingSet;
+	}
+
+	public void setUserRoleMappingSet(Set<UserRoleMapping> userRoleMappingSet) {
+		this.userRoleMappingSet = userRoleMappingSet;
+	}
+
+	@Override
+	public String toString() {
+		return "User{" +
+				"id=" + id +
+				", username='" + username + '\'' +
+				", password='" + password + '\'' +
+				", enabled=" + enabled +
+				", userShopMappingSet=" + userShopMappingSet +
+				", userRoleMappingSet=" + userRoleMappingSet +
+				'}';
 	}
 }

@@ -6,13 +6,22 @@ import java.util.Set;
 /** 权限 */
 public class Permission {
 
+    /** 权限ID */
     private long id;
-
+    /** 权限名称 */
     private String name;
-
+    /** 描述 */
     private String description;
+    /** 角色与权限映射关系 */
+    protected Set<RolePermissionMapping> rolePermissionMappingSet = new HashSet<>();
 
-    protected Set<RolePermissionMapping> userRoleUserRolePermissionSet = new HashSet<>();
+    public Permission() {}
+
+    public Permission(String name, String description, Set<RolePermissionMapping> rolePermissionMappingSet) {
+        this.name = name;
+        this.description = description;
+        this.rolePermissionMappingSet = rolePermissionMappingSet;
+    }
 
     public long getId() {
         return id;
@@ -38,12 +47,12 @@ public class Permission {
         this.description = description;
     }
 
-    public Set<RolePermissionMapping> getUserRoleUserRolePermissionSet() {
-        return userRoleUserRolePermissionSet;
+    public Set<RolePermissionMapping> getRolePermissionMappingSet() {
+        return rolePermissionMappingSet;
     }
 
-    public void setUserRoleUserRolePermissionSet(Set<RolePermissionMapping> userRoleUserRolePermissionSet) {
-        this.userRoleUserRolePermissionSet = userRoleUserRolePermissionSet;
+    public void setRolePermissionMappingSet(Set<RolePermissionMapping> rolePermissionMappingSet) {
+        this.rolePermissionMappingSet = rolePermissionMappingSet;
     }
 
     @Override
@@ -52,7 +61,7 @@ public class Permission {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
-                ", userRoleUserRolePermissionSet=" + userRoleUserRolePermissionSet +
+                ", rolePermissionMappingSet=" + rolePermissionMappingSet +
                 '}';
     }
 }

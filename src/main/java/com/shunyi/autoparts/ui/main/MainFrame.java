@@ -54,10 +54,18 @@ public class MainFrame extends BorderPane {
     }
 
     private void initEvents() {
-        ClickableItem item1 = new ClickableItem(ICON_1, "进销存统计", new Callback() {
+        ClickableItem item0 = new ClickableItem(ICON_1, "主界面", new Callback() {
             @Override
             public Object call(Object param) {
-                toolbar.setTitle("仪表盘");
+                toolbar.setTitle("主界面");
+                contentPane.getViewport().setCenter(new Pane());
+                return null;
+            }
+        });
+        ClickableItem item1 = new ClickableItem(ICON_2, "数据统计", new Callback() {
+            @Override
+            public Object call(Object param) {
+                toolbar.setTitle("数据统计");
                 contentPane.getViewport().setCenter(dashboard);
                 return null;
             }
@@ -132,7 +140,7 @@ public class MainFrame extends BorderPane {
             }
         });
 
-        navigation.addClickableItem(item1,item2,item3,item4,item5,item6,item7,item8,item11);
+        navigation.addClickableItem(item0, item1,item2,item3,item4,item5,item6,item7,item8,item11);
     }
 
     public BaseContainer getCurrentContainer() {

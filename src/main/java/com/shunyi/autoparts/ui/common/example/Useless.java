@@ -122,11 +122,37 @@ public class Useless {
 
         //2019/11/26
 //        String str = "Green:6-XL:3-Small:8";
-        String str = "Green:6/XL:3/Small:18/";
-        //去掉id
-        str = str.replaceAll(":\\d+/", "-");
-        str = str.substring(0, str.length()-1);
-        System.out.println("str="+str);
+//        String str = "Green:6/XL:3/Small:18/";
+//        //去掉id
+//        str = str.replaceAll(":\\d+/", "-");
+//        str = str.substring(0, str.length()-1);
+//        System.out.println("str="+str);
+
+
+        ///2019/12/12
+        List<Integer> a = new ArrayList<>();
+        a.add(1);
+        a.add(2);
+        a.add(3);
+        a.add(4);
+        a.add(5);
+
+        List<Integer> b = new ArrayList<>();
+        b.add(1);
+        b.add(4);
+
+//        a.addAll(b);
+        //removable items
+//        List<Integer> c = b.stream().filter(e -> !a.contains(e)).collect(Collectors.toList());
+//        for(Integer ss : c) {
+//            System.out.println(ss);
+//        }
+
+        List<Integer> c2 = a.stream().filter(e -> !b.contains(e)).collect(Collectors.toList());
+        for(Integer ss : c2) {
+            System.out.println(ss);
+        }
+
     }
 
     public String multiRound(List<List<String>> dataList, String temp, int index) {
