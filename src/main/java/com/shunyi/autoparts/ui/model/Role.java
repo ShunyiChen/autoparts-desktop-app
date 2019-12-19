@@ -19,11 +19,9 @@ public class Role {
     public Role() {
     }
 
-    public Role(String name, String description, Set<UserRoleMapping> userRoleMappingSet, Set<RolePermissionMapping> rolePermissionMappingSet) {
+    public Role(String name, String description) {
         this.name = name;
         this.description = description;
-        this.userRoleMappingSet = userRoleMappingSet;
-        this.rolePermissionMappingSet = rolePermissionMappingSet;
     }
 
     public long getId() {

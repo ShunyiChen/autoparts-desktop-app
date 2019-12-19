@@ -11,6 +11,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.text.Font?>
 
+<?import javafx.scene.control.Separator?>
 <TabPane fx:id="tabPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="534.0" prefWidth="975.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.shunyi.autoparts.ui.system.MaintenanceController">
   <tabs>
     <Tab text="用户管理">
@@ -24,20 +25,26 @@
                            <top>
                               <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                                 <items>
-                                    <Button mnemonicParsing="false" onAction="#createNewUser" text="新建用户">
+                                    <Button mnemonicParsing="false" onAction="#createNewUser" text="新建">
                                        <font>
                                           <Font size="14.0" />
                                        </font>
                                     </Button>
-                                    <Button mnemonicParsing="false" onAction="#updateUser" text="更改用户">
+                                    <Button mnemonicParsing="false" onAction="#updateUser" text="编辑">
                                        <font>
                                           <Font size="14.0" />
                                        </font>
                                     </Button>
-                                    <Button mnemonicParsing="false" onAction="#deleteUser" text="删除用户">
+                                    <Button mnemonicParsing="false" onAction="#deleteUser" text="删除">
                                        <font>
                                           <Font size="14.0" />
                                        </font>
+                                    </Button>
+                                    <Separator/>
+                                    <Button mnemonicParsing="false" onAction="#refreshUser" text="刷新">
+                                        <font>
+                                            <Font size="14.0" />
+                                        </font>
                                     </Button>
                                 </items>
                               </ToolBar>
@@ -45,7 +52,7 @@
                            <center>
                               <TableView fx:id="userTable" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                                 <columns>
-                                    <TableColumn fx:id="colId" prefWidth="75.0" text="ID" visible="false"/>
+                                    <TableColumn fx:id="colUserId" prefWidth="75.0" text="ID" visible="false"/>
                                     <TableColumn fx:id="colUserName" prefWidth="175.0" text="用户名" />
                                     <TableColumn fx:id="colEnabled" prefWidth="75.0" text="是否已激活" />
                                     <TableColumn fx:id="colShops" prefWidth="175.0" text="访问店铺" />
@@ -64,15 +71,34 @@
                   <center>
                       <TableView fx:id="roleTable" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                           <columns>
-                              <TableColumn prefWidth="75.0" text="C1" />
-                              <TableColumn prefWidth="75.0" text="C2" />
+                              <TableColumn fx:id="colRoleId" prefWidth="75.0" text="ID" visible="false"/>
+                              <TableColumn fx:id="colRoleName" prefWidth="175.0" text="角色名" />
+                              <TableColumn fx:id="colRoleDesc" prefWidth="275.0" text="描述" />
+                              <TableColumn fx:id="colUsers" prefWidth="175.0" text="用户" />
+                              <TableColumn fx:id="colPermissions" prefWidth="175.0" text="权限" />
                           </columns>
                       </TableView>
                   </center>
                   <top>
                       <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                           <items>
-                              <Button mnemonicParsing="false" onAction="#createNewVFS" text="新建角色">
+                              <Button mnemonicParsing="false" onAction="#createNewRole" text="新建">
+                                  <font>
+                                      <Font size="14.0" />
+                                  </font>
+                              </Button>
+                              <Button mnemonicParsing="false" onAction="#updateRole" text="编辑">
+                                  <font>
+                                      <Font size="14.0" />
+                                  </font>
+                              </Button>
+                              <Button mnemonicParsing="false" onAction="#deleteRole" text="删除">
+                                  <font>
+                                      <Font size="14.0" />
+                                  </font>
+                              </Button>
+                              <Separator/>
+                              <Button mnemonicParsing="false" onAction="#refreshRole" text="刷新">
                                   <font>
                                       <Font size="14.0" />
                                   </font>
@@ -89,8 +115,10 @@
                   <center>
                       <TableView fx:id="permissionTable" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                           <columns>
-                              <TableColumn prefWidth="75.0" text="C1" />
-                              <TableColumn prefWidth="75.0" text="C2" />
+                              <TableColumn fx:id="colPermissionId" prefWidth="75.0" text="ID" visible="false"/>
+                              <TableColumn fx:id="colPermissionName" prefWidth="175.0" text="权限名" />
+                              <TableColumn fx:id="colPermissionDesc" prefWidth="275.0" text="描述" />
+                              <TableColumn fx:id="colPermissionRoles" prefWidth="175.0" text="角色" />
                           </columns>
                       </TableView>
                   </center>
@@ -120,18 +148,34 @@
                            <center>
                               <TableView fx:id="vfsTable" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                                 <columns>
-                                  <TableColumn prefWidth="75.0" text="C1" />
-                                  <TableColumn prefWidth="75.0" text="C2" />
+                                    <TableColumn fx:id="colVFSId" prefWidth="75.0" text="ID" visible="false"/>
+                                    <TableColumn fx:id="colVFSName" prefWidth="175.0" text="名称" />
+                                    <TableColumn fx:id="colVFSProtocol" prefWidth="275.0" text="协议" />
+                                    <TableColumn fx:id="colVFSHost" prefWidth="175.0" text="主机地址" />
+                                    <TableColumn fx:id="colVFSPort" prefWidth="175.0" text="端口" />
+                                    <TableColumn fx:id="colVFSHome" prefWidth="175.0" text="主目录" />
+                                    <TableColumn fx:id="colVFSUserName" prefWidth="175.0" text="连接用户名" />
+                                    <TableColumn fx:id="colVFSPassword" prefWidth="175.0" text="连接密码" />
                                 </columns>
                               </TableView>
                            </center>
                            <top>
                               <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                                 <items>
-                                  <Button mnemonicParsing="false" onAction="#createNewVFS" text="新建VFS">
+                                  <Button mnemonicParsing="false" onAction="#createNewVFS" text="新建">
                                        <font>
                                           <Font size="14.0" />
                                        </font>
+                                  </Button>
+                                    <Button mnemonicParsing="false" onAction="#updateVFS" text="编辑">
+                                        <font>
+                                            <Font size="14.0" />
+                                        </font>
+                                    </Button>
+                                    <Button mnemonicParsing="false" onAction="#deleteVFS" text="删除">
+                                        <font>
+                                            <Font size="14.0" />
+                                        </font>
                                     </Button>
                                 </items>
                               </ToolBar>

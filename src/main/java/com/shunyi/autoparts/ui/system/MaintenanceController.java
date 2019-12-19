@@ -29,17 +29,18 @@ public class MaintenanceController {
     private MenuItem itemRMCom = new MenuItem("删除公司");
     private MenuItem itemRNCom = new MenuItem("重命名");
 
+    private ContextMenu vfsMenu = new ContextMenu();
+    private MenuItem itemNew = new MenuItem("新建类目");
+    private MenuItem itemRM = new MenuItem("删除类目");
+    private MenuItem itemRN = new MenuItem("重命名");
+
 
     @FXML
     private TreeView<Merchant> merchantTree;
     @FXML
     private TableView<User> userTable;
     @FXML
-    private TreeView<VFSCategory> vfsTree;
-    @FXML
-    private TableView<VFS> vfsTable;
-    @FXML
-    private TableColumn colId;
+    private TableColumn colUserId;
     @FXML
     private TableColumn colUserName;
     @FXML
@@ -48,6 +49,43 @@ public class MaintenanceController {
     private TableColumn<User, String> colShops;
     @FXML
     private TableColumn<User, String> colRoles;
+
+
+    @FXML
+    private TableView<Role> roleTable;
+    @FXML
+    private TableColumn colRoleId;
+    @FXML
+    private TableColumn colRoleName;
+    @FXML
+    private TableColumn colRoleDesc;
+    @FXML
+    private TableColumn<Role, String> colUsers;
+    @FXML
+    private TableColumn<Role, String> colPermissions;
+
+
+    @FXML
+    private TreeView<VFSCategory> vfsTree;
+    @FXML
+    private TableView<VFS> vfsTable;
+    @FXML
+    private TableColumn colVFSId;
+    @FXML
+    private TableColumn colVFSName;
+    @FXML
+    private TableColumn colVFSProtocol;
+    @FXML
+    private TableColumn colVFSHost;
+    @FXML
+    private TableColumn colVFSPort;
+    @FXML
+    private TableColumn colVFSHome;
+    @FXML
+    private TableColumn colVFSUserName;
+    @FXML
+    private TableColumn colVFSPassword;
+
 
     @FXML
     void createNewUser() {
@@ -79,19 +117,45 @@ public class MaintenanceController {
     @FXML
     void deleteUser() {
         User deleteUser = userTable.getSelectionModel().getSelectedItem();
-        try {
-            HttpClient.DELETE("/users/"+deleteUser.getId());
-        } catch (IOException e) {
-            e.printStackTrace();
+        if(deleteUser == null) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
+            alert.setHeaderText("请选择用户。");
+            alert.show();
+            return;
         }
-        userTable.getItems().remove(deleteUser);
+        Alert alertConfirm = new Alert(Alert.AlertType.CONFIRMATION, "", ButtonType.NO, ButtonType.YES);
+        alertConfirm.setHeaderText("是否删除该用户？");
+        alertConfirm.showAndWait().filter(response -> response == ButtonType.YES).ifPresent(response -> {
+
+            try {
+                HttpClient.DELETE("/users/"+deleteUser.getId());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            userTable.getItems().remove(deleteUser);
+        });
+
     }
 
     @FXML
-    void createNewVFS() {
-
+    void refreshUser() {
+        TreeItem<Merchant> item = merchantTree.getSelectionModel().getSelectedItem();
+        userTable.getItems().clear();
+        String json = null;
+        try {
+            json = HttpClient.GET("/users/shop/"+item.getValue().getId());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        User[] users = GoogleJson.GET().fromJson(json, User[].class);
+        userTable.getItems().addAll(users);
     }
 
+    /**
+     *
+     * @param callback
+     * @param selectedUser
+     */
     private void editUser(Callback<User, String> callback, User selectedUser) {
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource(
@@ -120,15 +184,22 @@ public class MaintenanceController {
         dialog.show();
     }
 
+    /**
+     *
+     * @param application
+     */
     public void prepare(MainApp application) {
         this.application = application;
         initUserTable();
         initMerchantTree();
         initMenuItems();
+        initRoleTable();
+        initVFSTree();
+        initVFSTable();
     }
 
     private void initUserTable() {
-        colId.setCellValueFactory(new PropertyValueFactory<User, String>("id"));
+        colUserId.setCellValueFactory(new PropertyValueFactory<User, String>("id"));
         colUserName.setCellValueFactory(new PropertyValueFactory<User, String>("username"));
         colEnabled.setCellValueFactory(param ->
                 new SimpleObjectProperty<>(param.getValue().isEnabled() == null ? "否" : param.getValue().isEnabled()? "是":"否")
@@ -143,7 +214,6 @@ public class MaintenanceController {
         colRoles.setCellValueFactory(param ->
                 new SimpleObjectProperty<>(param.getValue().getUserRoleMappingSet().toString())
         );
-
 
         userTable.setOnMouseClicked((MouseEvent event) -> {
             if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2){
@@ -192,7 +262,6 @@ public class MaintenanceController {
                 User[] users = GoogleJson.GET().fromJson(json, User[].class);
                 userTable.getItems().addAll(users);
             }
-
             if(event.getButton().equals(MouseButton.SECONDARY) && event.getClickCount() == 1) {
                 TreeItem<Merchant> item = merchantTree.getSelectionModel().getSelectedItem();
                 menu.getItems().clear();
@@ -227,10 +296,7 @@ public class MaintenanceController {
             };
             editCompany(callback, null);
         });
-
-        itemRMCom.setOnAction(event -> {
-            removeCompany();
-        });
+        itemRMCom.setOnAction(event -> removeCompany());
         itemRNCom.setOnAction(event -> {
             TreeItem<Merchant> selected = merchantTree.getSelectionModel().getSelectedItem();
             Callback callback = param -> {
@@ -296,11 +362,6 @@ public class MaintenanceController {
         });
     }
 
-
-    /**
-     *
-     * @param root
-     */
     private void initCompanyNodes(TreeItem<Merchant> root) {
         try {
             String path = "/companies";
@@ -320,11 +381,6 @@ public class MaintenanceController {
         }
     }
 
-    /**
-     *
-     * @param company
-     * @param companyTreeItem
-     */
     private void initShopNodes(Company company, TreeItem<Merchant> companyTreeItem) {
         String path = "/shops/company/"+company.getId();
         String json;
@@ -340,10 +396,6 @@ public class MaintenanceController {
         }
     }
 
-    /**
-     *
-     * @param callback
-     */
     private void editCompany(Callback callback, Company company) {
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource(
@@ -447,5 +499,399 @@ public class MaintenanceController {
                 }
             }
         });
+    }
+
+
+    private void initRoleTable() {
+        colRoleId.setCellValueFactory(new PropertyValueFactory<Role, String>("id"));
+        colRoleName.setCellValueFactory(new PropertyValueFactory<Role, String>("name"));
+        colRoleDesc.setCellValueFactory(new PropertyValueFactory<Role, String>("description"));
+        colUsers.setCellValueFactory(param ->
+                new SimpleObjectProperty<>(param.getValue().getUserRoleMappingSet().toString())
+        );
+        colPermissions.setCellValueFactory(param ->
+                new SimpleObjectProperty<>(param.getValue().getRolePermissionMappingSet().toString())
+        );
+
+        roleTable.setOnMouseClicked((MouseEvent event) -> {
+            if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2){
+                updateRole();
+            }
+        });
+        ContextMenu menu = new ContextMenu();
+        MenuItem itemNew = new MenuItem("新建");
+        MenuItem itemEdit= new MenuItem("编辑");
+        MenuItem itemDel = new MenuItem("删除");
+        itemNew.setOnAction(e ->{
+            createNewRole();
+        });
+        itemEdit.setOnAction(e ->{
+            updateRole();
+        });
+        itemDel.setOnAction(e ->{
+            deleteRole();
+        });
+        menu.getItems().addAll(itemNew, new SeparatorMenuItem() ,itemEdit, itemDel);
+        roleTable.addEventHandler(MouseEvent.MOUSE_CLICKED, t -> {
+            if(t.getButton() == MouseButton.SECONDARY) {
+                menu.show(roleTable, t.getScreenX(), t.getScreenY());
+            }
+        });
+
+        try {
+            String data = HttpClient.GET("/roles");
+            Role[] roles = GoogleJson.GET().fromJson(data, Role[].class);
+            roleTable.getItems().addAll(roles);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void createNewRole() {
+        Callback<Role, String> callback = param -> {
+            String json = GoogleJson.GET().toJson(param);
+            String idStr = null;
+            try {
+                idStr = HttpClient.POST("/roles", json);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            param.setId(Long.valueOf(idStr));
+            roleTable.getItems().add(param);
+            return null;
+        };
+        editRole(callback, null);
+    }
+
+    @FXML
+    private void updateRole() {
+        Role selectedRole = roleTable.getSelectionModel().getSelectedItem();
+        if(selectedRole == null) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
+            alert.setHeaderText("请选择角色。");
+            alert.show();
+            return;
+        }
+        Callback<Role, String> callback = param -> {
+            param.setId(selectedRole.getId());
+            String json = GoogleJson.GET().toJson(param);
+            try {
+                HttpClient.PUT("/roles/"+selectedRole.getId(), json);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            //刷新表格
+            int i = roleTable.getSelectionModel().getSelectedIndex();
+            roleTable.getItems().remove(selectedRole);
+            roleTable.getItems().add(i, param);
+            roleTable.getSelectionModel().select(param);
+            return "";
+        };
+        editRole(callback, selectedRole);
+    }
+
+    private void editRole(Callback<Role, String> callback, Role selectedRole) {
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource(
+                        "/fxml/system/edit_role.fxml"
+                )
+        );
+        VBox root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Scene scene = new Scene(root);
+        Stage dialog = new Stage();
+        dialog.setOnHiding(e -> {
+        });
+        EditRoleController controller = loader.getController();
+        controller.prepare(dialog, selectedRole, callback);
+        dialog.setTitle("新建角色");
+        dialog.initOwner(application.getStage());
+        dialog.setResizable(false);
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.setScene(scene);
+        // center stage on screen
+        dialog.centerOnScreen();
+        dialog.show();
+    }
+
+    @FXML
+    private void refreshRole() {
+        roleTable.getItems().clear();
+        String data = null;
+        try {
+            data = HttpClient.GET("/roles");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Role[] roles = GoogleJson.GET().fromJson(data, Role[].class);
+        roleTable.getItems().addAll(roles);
+    }
+
+    @FXML
+    private void deleteRole() {
+        Role selectedRole = roleTable.getSelectionModel().getSelectedItem();
+        if(selectedRole == null) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
+            alert.setHeaderText("请选择角色。");
+            alert.show();
+            return;
+        }
+        Alert alertConfirm = new Alert(Alert.AlertType.CONFIRMATION, "", ButtonType.NO, ButtonType.YES);
+        alertConfirm.setHeaderText("是否删除该用户？");
+        alertConfirm.showAndWait().filter(response -> response == ButtonType.YES).ifPresent(response -> {
+
+            try {
+                HttpClient.DELETE("/roles/"+selectedRole.getId());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            roleTable.getItems().remove(selectedRole);
+        });
+    }
+
+    private void initVFSTree() {
+        VFSCategory rootCategory = new VFSCategory("全部分类", -1, true);
+        rootCategory.setId(0L);
+        TreeItem<VFSCategory> rootItem = new TreeItem<>(rootCategory);
+        vfsTree.setRoot(rootItem);
+        initVFSCategoryNodes(rootItem);
+        vfsTree.setEditable(true);
+        vfsTree.setContextMenu(vfsMenu);
+        vfsMenu.getItems().addAll(itemNew, itemRM, itemRN);
+        vfsTree.setOnMouseClicked((MouseEvent event) -> {
+            if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 1){
+//                TreeItem<Merchant> item = merchantTree.getSelectionModel().getSelectedItem();
+//                userTable.getItems().clear();
+//                String json = null;
+//                try {
+//                    json = HttpClient.GET("/users/shop/"+item.getValue().getId());
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//                User[] users = GoogleJson.GET().fromJson(json, User[].class);
+//                userTable.getItems().addAll(users);
+            }
+            if(event.getButton().equals(MouseButton.SECONDARY) && event.getClickCount() == 1) {
+//                TreeItem<Merchant> item = merchantTree.getSelectionModel().getSelectedItem();
+//                menu.getItems().clear();
+//                if(item.getValue() instanceof Company) {
+//                    menu.getItems().addAll(itemNewShop, new SeparatorMenuItem(), itemRMCom, itemRNCom);
+//                } else if(item.getValue() instanceof Shop) {
+//                    menu.getItems().addAll(itemRMShop, itemRNShop);
+//                } else {
+//                    menu.getItems().addAll(itemNewCom);
+//                }
+            }
+        });
+
+        itemNew.setOnAction(e -> {
+            Callback<String, String> callback = new Callback<String, String>() {
+                @Override
+                public String call(String newName) {
+                    VFSCategory newCategory = new VFSCategory();
+                    newCategory.setName(newName);
+                    newCategory.setParent(false);
+
+                    TreeItem<VFSCategory> parent = vfsTree.getSelectionModel().getSelectedItem();
+                    if(parent != vfsTree.getRoot()) {
+                        newCategory.setParentId(parent.getValue().getId());
+                    } else {
+                        newCategory.setParentId(0);
+                    }
+                    parent.getValue().setParent(true);
+                    String json = GoogleJson.GET().toJson(newCategory);
+                    try {
+                        String idStr = HttpClient.POST("/vfs/categories", json);
+                        newCategory.setId(Long.valueOf(idStr));
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+
+                    if(parent != vfsTree.getRoot()) {
+                        json = GoogleJson.GET().toJson(parent.getValue());
+                        try {
+                            HttpClient.PUT("/vfs/categories/"+parent.getValue().getId(), json);
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+
+                    TreeItem<VFSCategory> newItem = new TreeItem<>(newCategory);
+                    parent.getChildren().add(newItem);
+                    parent.setExpanded(true);
+                    return null;
+                }
+            };
+            editVFSCategory(callback, null);
+        });
+        itemRM.setOnAction(e -> {
+            TreeItem<VFSCategory> selected = vfsTree.getSelectionModel().getSelectedItem();
+            if(vfsTree.getRoot() == selected) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
+                alert.setHeaderText("根目录无法删除。");
+                alert.show();
+                return;
+            }
+            try {
+                String data = HttpClient.GET("/vfs/vfscategory/"+selected.getValue().getId());
+                VFS[] vfsArray = GoogleJson.GET().fromJson(data, VFS[].class);
+                if(vfsArray.length > 0) {
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
+                    alert.setHeaderText("记录存在无法删除。");
+                    alert.show();
+                    return;
+                } else {
+                    HttpClient.DELETE("/vfs/categories/"+selected.getValue().getId());
+                    selected.getParent().getChildren().remove(selected);
+                }
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        });
+        itemRN.setOnAction(e -> {
+            TreeItem<VFSCategory> selected = vfsTree.getSelectionModel().getSelectedItem();
+            Callback<String, String> callback = new Callback<String, String>() {
+                @Override
+                public String call(String newName) {
+                    return null;
+                }
+            };
+            editVFSCategory(callback, selected.getValue());
+        });
+    }
+
+    /**
+     *
+     * @param pItem
+     */
+    private void initVFSCategoryNodes(TreeItem<VFSCategory> pItem) {
+        try {
+            String path = "/vfs/categories";
+            String data = HttpClient.GET(path);
+            VFSCategory[] allItems = GoogleJson.GET().fromJson(data, VFSCategory[].class);
+            getNodes(pItem, allItems);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     *
+     * @param pItem
+     * @param allItems
+     */
+    private void getNodes(TreeItem<VFSCategory> pItem, VFSCategory[] allItems) {
+        for(VFSCategory category : allItems) {
+            if(category.getParentId() == pItem.getValue().getId()) {
+                TreeItem<VFSCategory> node = new TreeItem<>(category);
+                pItem.getChildren().add(node);
+                pItem.setExpanded(true);
+                getNodes(node, allItems);
+            }
+        }
+    }
+
+    private void initVFSTable() {
+        colVFSId.setCellValueFactory(new PropertyValueFactory<VFS, String>("id"));
+        colVFSName.setCellValueFactory(new PropertyValueFactory<VFS, String>("name"));
+        colVFSProtocol.setCellValueFactory(new PropertyValueFactory<VFS, String>("protocol"));
+        colVFSHost.setCellValueFactory(new PropertyValueFactory<VFS, String>("host"));
+        colVFSPort.setCellValueFactory(new PropertyValueFactory<VFS, String>("port"));
+        colVFSHome.setCellValueFactory(new PropertyValueFactory<VFS, String>("home"));
+        colVFSUserName.setCellValueFactory(new PropertyValueFactory<VFS, String>("userName"));
+        colVFSPassword.setCellValueFactory(new PropertyValueFactory<VFS, String>("password"));
+
+//        colUsers.setCellValueFactory(param ->
+//                new SimpleObjectProperty<>(param.getValue().getUserRoleMappingSet().toString())
+//        );
+//        colPermissions.setCellValueFactory(param ->
+//                new SimpleObjectProperty<>(param.getValue().getRolePermissionMappingSet().toString())
+//        );
+
+        vfsTable.setOnMouseClicked((MouseEvent event) -> {
+            if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2){
+                updateRole();
+            }
+        });
+        ContextMenu menu = new ContextMenu();
+        MenuItem itemNew = new MenuItem("新建");
+        MenuItem itemEdit= new MenuItem("编辑");
+        MenuItem itemDel = new MenuItem("删除");
+        itemNew.setOnAction(e ->{
+            createNewRole();
+        });
+        itemEdit.setOnAction(e ->{
+            updateRole();
+        });
+        itemDel.setOnAction(e ->{
+            deleteRole();
+        });
+        menu.getItems().addAll(itemNew, new SeparatorMenuItem() ,itemEdit, itemDel);
+        vfsTable.addEventHandler(MouseEvent.MOUSE_CLICKED, t -> {
+            if(t.getButton() == MouseButton.SECONDARY) {
+                menu.show(vfsTable, t.getScreenX(), t.getScreenY());
+            }
+        });
+    }
+
+    @FXML
+    private void createNewVFS() {
+
+    }
+
+    @FXML
+    private void updateVFS() {
+//        User selectedUser = userTable.getSelectionModel().getSelectedItem();
+//        if(selectedUser == null) {
+//            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
+//            alert.setHeaderText("请选择用户。");
+//            alert.show();
+//            return;
+//        }
+//        Callback<User, String> callback = (newUser ->{
+//            int index = userTable.getSelectionModel().getSelectedIndex();
+//            userTable.getItems().remove(index);
+//            userTable.getItems().add(index, newUser);
+//            return "";
+//        });
+//        editUser(callback, selectedUser);
+    }
+
+    @FXML
+    private void deleteVFS() {
+
+    }
+
+    private void editVFSCategory(Callback<String, String> callback, VFSCategory selectedVFSCategory) {
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource(
+                        "/fxml/system/edit_vfs_category.fxml"
+                )
+        );
+        VBox root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Scene scene = new Scene(root);
+        Stage dialog = new Stage();
+        dialog.setOnHiding(e -> {
+        });
+        EditVFSCategoryController controller = loader.getController();
+        controller.prepare(dialog, callback, selectedVFSCategory);
+        dialog.setTitle("新建VFS类目");
+        dialog.initOwner(application.getStage());
+        dialog.setResizable(false);
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.setScene(scene);
+        // center stage on screen
+        dialog.centerOnScreen();
+        dialog.show();
     }
 }
