@@ -149,13 +149,15 @@
                               <TableView fx:id="vfsTable" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                                 <columns>
                                     <TableColumn fx:id="colVFSId" prefWidth="75.0" text="ID" visible="false"/>
-                                    <TableColumn fx:id="colVFSName" prefWidth="175.0" text="名称" />
-                                    <TableColumn fx:id="colVFSProtocol" prefWidth="275.0" text="协议" />
-                                    <TableColumn fx:id="colVFSHost" prefWidth="175.0" text="主机地址" />
-                                    <TableColumn fx:id="colVFSPort" prefWidth="175.0" text="端口" />
-                                    <TableColumn fx:id="colVFSHome" prefWidth="175.0" text="主目录" />
-                                    <TableColumn fx:id="colVFSUserName" prefWidth="175.0" text="连接用户名" />
-                                    <TableColumn fx:id="colVFSPassword" prefWidth="175.0" text="连接密码" />
+                                    <TableColumn fx:id="colVFSName" prefWidth="275.0" text="名称" />
+                                    <TableColumn fx:id="colVFSProtocol" prefWidth="75.0" text="协议" />
+                                    <TableColumn fx:id="colVFSHost" prefWidth="275.0" text="主机地址" />
+                                    <TableColumn fx:id="colVFSPort" prefWidth="75.0" text="端口" />
+                                    <TableColumn fx:id="colVFSHome" prefWidth="275.0" text="主目录" />
+                                    <TableColumn fx:id="colVFSUserName" prefWidth="75.0" text="连接用户名" />
+                                    <TableColumn fx:id="colVFSPassword" prefWidth="75.0" text="连接密码" />
+                                    <TableColumn fx:id="colCanRead" prefWidth="75.0" text="可读" />
+                                    <TableColumn fx:id="colCanWrite" prefWidth="75.0" text="可写" />
                                 </columns>
                               </TableView>
                            </center>
@@ -173,6 +175,12 @@
                                         </font>
                                     </Button>
                                     <Button mnemonicParsing="false" onAction="#deleteVFS" text="删除">
+                                        <font>
+                                            <Font size="14.0" />
+                                        </font>
+                                    </Button>
+                                    <Separator />
+                                    <Button mnemonicParsing="false" onAction="#refreshVFS" text="刷新">
                                         <font>
                                             <Font size="14.0" />
                                         </font>

@@ -1,15 +1,28 @@
 package com.shunyi.autoparts.ui.model;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /** 店铺 */
-public class Shop extends Merchant {
-    /** 公司 */
-    private Company company;
+public class Shop {
+    /** ID */
+    private Long id;
+    /** 名称 */
+    private String name;
+    /** 父类目ID */
+    private Long parentId;
+    /** 是否父节点 */
+    private Boolean parent;
+    /** 用户店铺映射关系 */
+    protected Set<UserShopMapping> userShopMappingSet = new HashSet<>();
 
     public Shop() {}
 
-    public Shop(String name, Company company) {
+    public Shop(String name, Long parentId, Boolean parent, Set<UserShopMapping> userShopMappingSet) {
         this.name = name;
-        this.company = company;
+        this.parentId = parentId;
+        this.parent = parent;
+        this.userShopMappingSet = userShopMappingSet;
     }
 
     public Long getId() {
@@ -28,12 +41,28 @@ public class Shop extends Merchant {
         this.name = name;
     }
 
-    public Company getCompany() {
-        return company;
+    public Long getParentId() {
+        return parentId;
     }
 
-    public void setCompany(Company company) {
-        this.company = company;
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
+    }
+
+    public Boolean getParent() {
+        return parent;
+    }
+
+    public void setParent(Boolean parent) {
+        this.parent = parent;
+    }
+
+    public Set<UserShopMapping> getUserShopMappingSet() {
+        return userShopMappingSet;
+    }
+
+    public void setUserShopMappingSet(Set<UserShopMapping> userShopMappingSet) {
+        this.userShopMappingSet = userShopMappingSet;
     }
 
     @Override

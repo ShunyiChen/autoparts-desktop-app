@@ -3,8 +3,6 @@ package com.shunyi.autoparts.ui.system;
 import com.shunyi.autoparts.ui.common.GoogleJson;
 import com.shunyi.autoparts.ui.http.HttpClient;
 import com.shunyi.autoparts.ui.model.*;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
@@ -31,8 +29,6 @@ public class EditUserController {
     private PasswordField txtPassword;
     @FXML
     private PasswordField confirmTxtPassword;
-    @FXML
-    private ComboBox<Company> cBoxCompany;
     @FXML
     private CheckBox boxEnabled;
     @FXML
@@ -212,12 +208,12 @@ public class EditUserController {
             alert.show();
             return false;
         }
-        else if(cBoxCompany.getValue() == null) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
-            alert.setHeaderText("请选择一个公司。");
-            alert.show();
-            return false;
-        }
+//        else if(cBoxCompany.getValue() == null) {
+//            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
+//            alert.setHeaderText("请选择一个公司。");
+//            alert.show();
+//            return false;
+//        }
         return true;
     }
 
@@ -234,79 +230,79 @@ public class EditUserController {
         vBoxShop.getChildren().clear();
         vBoxRole.getChildren().clear();
         btnOk.setStyle(String.format("-fx-base: %s;", "rgb(63,81,181)"));
-        cBoxCompany.setStyle("-fx-font-size: 14px;");
+//        cBoxCompany.setStyle("-fx-font-size: 14px;");
         boxEnabled.setSelected(true);
-        initCompanies();
+//        initShops()
         initRoles();
     }
 
-    private void initCompanies() {
-        String json = null;
-        try {
-            json = HttpClient.GET("/companies");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Company[] companies = GoogleJson.GET().fromJson(json, Company[].class);
-        for(Company com : companies) {
-            cBoxCompany.getItems().add(com);
-        }
-        cBoxCompany.valueProperty().addListener((observable, oldValue, newValue) -> {
-            initShops(newValue);
-        });
+//    private void initCompanies() {
+//        String json = null;
+//        try {
+//            json = HttpClient.GET("/companies");
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        Company[] companies = GoogleJson.GET().fromJson(json, Company[].class);
+//        for(Company com : companies) {
+//            cBoxCompany.getItems().add(com);
+//        }
+//        cBoxCompany.valueProperty().addListener((observable, oldValue, newValue) -> {
+//            initShops(newValue);
+//        });
+//
+//        //选中复选框
+//        if(selectedUser == null) {
+//            //默认选中首个公司
+//            if(companies.length > 0) {
+//                cBoxCompany.setValue(companies[0]);
+//            }
+//        } else {
+//            //选中公司
+//            Optional<UserShopMapping> opt = selectedUser.getUserShopMappingSet().stream().findFirst();
+//            if(opt.isPresent()) {
+//                Long shopId = opt.get().getId().getShopId();
+//                String data = null;
+//                try {
+//                    data = HttpClient.GET("/shops/"+shopId);
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//                Shop shop = GoogleJson.GET().fromJson(data, Shop.class);
+//                cBoxCompany.setValue(shop.getCompany());
+//            }
+//        }
+//    }
 
-        //选中复选框
-        if(selectedUser == null) {
-            //默认选中首个公司
-            if(companies.length > 0) {
-                cBoxCompany.setValue(companies[0]);
-            }
-        } else {
-            //选中公司
-            Optional<UserShopMapping> opt = selectedUser.getUserShopMappingSet().stream().findFirst();
-            if(opt.isPresent()) {
-                Long shopId = opt.get().getId().getShopId();
-                String data = null;
-                try {
-                    data = HttpClient.GET("/shops/"+shopId);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                Shop shop = GoogleJson.GET().fromJson(data, Shop.class);
-                cBoxCompany.setValue(shop.getCompany());
-            }
-        }
-    }
-
-    private void initShops(Company selectedCompany) {
-        vBoxShop.getChildren().clear();
-        String json = null;
-        try {
-            json = HttpClient.GET("/shops/company/"+selectedCompany.getId());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Shop[] shops = GoogleJson.GET().fromJson(json, Shop[].class);
-        for (Shop shop : shops) {
-            CheckBox checkBox = new CheckBox(shop.getName());
-            checkBox.setUserData(shop.getId());
-            vBoxShop.getChildren().add(checkBox);
-        }
-
-        if(selectedUser != null) {
-            vBoxShop.getChildren().forEach(checkbox -> {
-                Long shopId = Long.valueOf(checkbox.getUserData().toString());
-                ((CheckBox)checkbox).setSelected(false);
-                selectedUser.getUserShopMappingSet().forEach(e -> {
-                    if(e.getId().getShopId() == shopId) {
-                        ((CheckBox)checkbox).setSelected(true);
-                    }
-                });
-
-            });
-        }
-
-    }
+//    private void initShops(Company selectedCompany) {
+//        vBoxShop.getChildren().clear();
+//        String json = null;
+//        try {
+//            json = HttpClient.GET("/shops/company/"+selectedCompany.getId());
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        Shop[] shops = GoogleJson.GET().fromJson(json, Shop[].class);
+//        for (Shop shop : shops) {
+//            CheckBox checkBox = new CheckBox(shop.getName());
+//            checkBox.setUserData(shop.getId());
+//            vBoxShop.getChildren().add(checkBox);
+//        }
+//
+//        if(selectedUser != null) {
+//            vBoxShop.getChildren().forEach(checkbox -> {
+//                Long shopId = Long.valueOf(checkbox.getUserData().toString());
+//                ((CheckBox)checkbox).setSelected(false);
+//                selectedUser.getUserShopMappingSet().forEach(e -> {
+//                    if(e.getId().getShopId() == shopId) {
+//                        ((CheckBox)checkbox).setSelected(true);
+//                    }
+//                });
+//
+//            });
+//        }
+//
+//    }
 
     private void initRoles() {
         vBoxRole.getChildren().clear();
