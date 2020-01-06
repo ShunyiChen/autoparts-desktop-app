@@ -20,7 +20,7 @@
                <center>
                   <SplitPane dividerPositions="0.14" prefHeight="160.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                      <items>
-                        <TreeView fx:id="merchantTree" prefHeight="503.0" prefWidth="289.0" />
+                        <TreeView fx:id="shopTree" prefHeight="503.0" prefWidth="289.0" />
                         <BorderPane prefHeight="200.0" prefWidth="200.0">
                            <top>
                               <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">

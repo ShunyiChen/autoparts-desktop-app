@@ -8,11 +8,12 @@ import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -22,6 +23,7 @@ public class EditUserController {
     private Stage dialog;
     private Callback<User, String> callback;
     private User selectedUser;
+    private PasswordEncoder encoder = new BCryptPasswordEncoder(10);
 
     @FXML
     private TextField txtUserName;
@@ -102,15 +104,17 @@ public class EditUserController {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
-                selectedUser.setPassword(txtPassword.getText());
+                String encryptedPassword = encoder.encode(txtPassword.getText());
+                selectedUser.setPassword(encryptedPassword);
                 selectedUser.setEnabled(boxEnabled.isSelected());
                 callback.call(selectedUser);
+
             } else {
                 //新建用户与店铺关系
-                User createdUser = new User(txtUserName.getText(), txtPassword.getText(), boxEnabled.isSelected());
+                String encryptedPassword = encoder.encode(txtPassword.getText());
+                User createdUser = new User(txtUserName.getText(), encryptedPassword, boxEnabled.isSelected());
                 String json = GoogleJson.GET().toJson(createdUser);
-                System.out.println("jsn="+json);
+
                 try {
                     String idStr = HttpClient.POST("/users", json);
                     createdUser.setId(Long.valueOf(idStr));
@@ -139,8 +143,7 @@ public class EditUserController {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
-                createdUser.setPassword(txtPassword.getText());
+                createdUser.setPassword(encryptedPassword);
                 createdUser.setEnabled(boxEnabled.isSelected());
 
                 callback.call(createdUser);
@@ -208,12 +211,6 @@ public class EditUserController {
             alert.show();
             return false;
         }
-//        else if(cBoxCompany.getValue() == null) {
-//            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
-//            alert.setHeaderText("请选择一个公司。");
-//            alert.show();
-//            return false;
-//        }
         return true;
     }
 
@@ -230,79 +227,39 @@ public class EditUserController {
         vBoxShop.getChildren().clear();
         vBoxRole.getChildren().clear();
         btnOk.setStyle(String.format("-fx-base: %s;", "rgb(63,81,181)"));
-//        cBoxCompany.setStyle("-fx-font-size: 14px;");
         boxEnabled.setSelected(true);
-//        initShops()
+        initShops();
         initRoles();
     }
 
-//    private void initCompanies() {
-//        String json = null;
-//        try {
-//            json = HttpClient.GET("/companies");
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        Company[] companies = GoogleJson.GET().fromJson(json, Company[].class);
-//        for(Company com : companies) {
-//            cBoxCompany.getItems().add(com);
-//        }
-//        cBoxCompany.valueProperty().addListener((observable, oldValue, newValue) -> {
-//            initShops(newValue);
-//        });
-//
-//        //选中复选框
-//        if(selectedUser == null) {
-//            //默认选中首个公司
-//            if(companies.length > 0) {
-//                cBoxCompany.setValue(companies[0]);
-//            }
-//        } else {
-//            //选中公司
-//            Optional<UserShopMapping> opt = selectedUser.getUserShopMappingSet().stream().findFirst();
-//            if(opt.isPresent()) {
-//                Long shopId = opt.get().getId().getShopId();
-//                String data = null;
-//                try {
-//                    data = HttpClient.GET("/shops/"+shopId);
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//                Shop shop = GoogleJson.GET().fromJson(data, Shop.class);
-//                cBoxCompany.setValue(shop.getCompany());
-//            }
-//        }
-//    }
+    private void initShops() {
+        vBoxShop.getChildren().clear();
+        String json = null;
+        try {
+            json = HttpClient.GET("/shops");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Shop[] shops = GoogleJson.GET().fromJson(json, Shop[].class);
+        for (Shop shop : shops) {
+            CheckBox checkBox = new CheckBox(shop.getName());
+            checkBox.setUserData(shop.getId());
+            vBoxShop.getChildren().add(checkBox);
+        }
 
-//    private void initShops(Company selectedCompany) {
-//        vBoxShop.getChildren().clear();
-//        String json = null;
-//        try {
-//            json = HttpClient.GET("/shops/company/"+selectedCompany.getId());
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        Shop[] shops = GoogleJson.GET().fromJson(json, Shop[].class);
-//        for (Shop shop : shops) {
-//            CheckBox checkBox = new CheckBox(shop.getName());
-//            checkBox.setUserData(shop.getId());
-//            vBoxShop.getChildren().add(checkBox);
-//        }
-//
-//        if(selectedUser != null) {
-//            vBoxShop.getChildren().forEach(checkbox -> {
-//                Long shopId = Long.valueOf(checkbox.getUserData().toString());
-//                ((CheckBox)checkbox).setSelected(false);
-//                selectedUser.getUserShopMappingSet().forEach(e -> {
-//                    if(e.getId().getShopId() == shopId) {
-//                        ((CheckBox)checkbox).setSelected(true);
-//                    }
-//                });
-//
-//            });
-//        }
-//
-//    }
+        if(selectedUser != null) {
+            vBoxShop.getChildren().forEach(checkbox -> {
+                Long shopId = Long.valueOf(checkbox.getUserData().toString());
+                ((CheckBox)checkbox).setSelected(false);
+                selectedUser.getUserShopMappingSet().forEach(e -> {
+                    if(e.getId().getShopId() == shopId) {
+                        ((CheckBox)checkbox).setSelected(true);
+                    }
+                });
+
+            });
+        }
+    }
 
     private void initRoles() {
         vBoxRole.getChildren().clear();

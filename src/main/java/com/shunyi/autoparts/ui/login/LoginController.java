@@ -139,7 +139,8 @@ public class LoginController {
 
         progressBar.setProgress(0.1);
 
-        txtUsername.setText("shunyichen");
+        //TODO remove below
+        txtUsername.setText("root");
         txtPassword.setText("123456");
 
         cbRemoteConnection.setStyle("-fx-font-size: 14px;");

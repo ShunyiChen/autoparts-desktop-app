@@ -18,6 +18,10 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class MaintenanceController {
     private MainApp application;
@@ -25,9 +29,6 @@ public class MaintenanceController {
     private MenuItem itemNewShop = new MenuItem("新建店铺");
     private MenuItem itemRMShop = new MenuItem("删除店铺");
     private MenuItem itemRNShop = new MenuItem("重命名");
-    private MenuItem itemNewCom = new MenuItem("新建公司");
-    private MenuItem itemRMCom = new MenuItem("删除公司");
-    private MenuItem itemRNCom = new MenuItem("重命名");
 
     private ContextMenu vfsMenu = new ContextMenu();
     private MenuItem itemNew = new MenuItem("新建类目");
@@ -194,7 +195,7 @@ public class MaintenanceController {
     public void prepare(MainApp application) {
         this.application = application;
         initUserTable();
-        initMerchantTree();
+        initShopTree();
         initMenuItems();
         initRoleTable();
         initVFSTree();
@@ -202,18 +203,29 @@ public class MaintenanceController {
     }
 
     private void initUserTable() {
+        Map<Long, String> map = getAllShopsMap();
+        System.out.println("sdsddsddssdds");
         colUserId.setCellValueFactory(new PropertyValueFactory<User, String>("id"));
         colUserName.setCellValueFactory(new PropertyValueFactory<User, String>("username"));
         colEnabled.setCellValueFactory(param ->
                 new SimpleObjectProperty<>(param.getValue().isEnabled() == null ? "否" : param.getValue().isEnabled()? "是":"否")
         );
-//        colShops.setCellValueFactory(new PropertyValueFactory<User, String>("userShopMappingSet"));
-
-        colShops.setCellValueFactory(param ->
-                new SimpleObjectProperty<>(param.getValue().getUserRoleMappingSet().toString())
+        colShops.setCellValueFactory(param -> {
+            System.out.println("---================");
+                List<Long> shopIds = param.getValue().getUserShopMappingSet().stream().map(e -> e.getId().getShopId()).collect(Collectors.toList());
+                StringBuilder names = new StringBuilder();
+                for(Long shopId : shopIds) {
+                    if(map.containsKey(shopId)) {
+                        names.append(map.get(shopId));
+                        names.append(",");
+                    }
+                }
+                if(names.toString().endsWith(",")) {
+                    names.deleteCharAt(names.length()-1);
+                }
+                return new SimpleObjectProperty<>(names.toString());
+            }
         );
-
-//        colRoles.setCellValueFactory(new PropertyValueFactory<User, String>("userRoleMappingSet"));
         colRoles.setCellValueFactory(param ->
                 new SimpleObjectProperty<>(param.getValue().getUserRoleMappingSet().toString())
         );
@@ -244,102 +256,126 @@ public class MaintenanceController {
         });
     }
 
-    private void initMerchantTree() {
-        TreeItem rootItem = new TreeItem<>();
-        rootItem.setValue("全部公司");
+    private Shop[] getAllShops() {
+        String path = "/shops";
+        String json;
+        try {
+            json = HttpClient.GET(path);
+            return GoogleJson.GET().fromJson(json, Shop[].class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return new Shop[]{};
+    }
+
+    private Map<Long, String> getAllShopsMap() {
+        HashMap<Long, String> map = new HashMap<>();
+        Shop[] shops = getAllShops();
+        for(Shop shop : shops) {
+            map.put(shop.getId(), shop.getName());
+        }
+        return map;
+    }
+
+    private void initShopTree() {
+        Shop[] allShops = getAllShops();
+        Shop shop = new Shop("全部店铺",-1L,true);
+        shop.setId(0L);
+        TreeItem<Shop> rootItem = new TreeItem<>(shop);
         shopTree.setRoot(rootItem);
         //初始化树节点
-//        initCompanyNodes(rootItem);
-        shopTree.setEditable(true);
+        initShopNodes(rootItem, allShops);
+        rootItem.setExpanded(true);
         shopTree.setContextMenu(menu);
         shopTree.setOnMouseClicked((MouseEvent event) -> {
             if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 1){
-                TreeItem<Shop> item = shopTree.getSelectionModel().getSelectedItem();
                 userTable.getItems().clear();
-                String json = null;
-                try {
-                    json = HttpClient.GET("/users/shop/"+item.getValue().getId());
-                } catch (IOException e) {
-                    e.printStackTrace();
+                TreeItem<Shop> selectedItem = shopTree.getSelectionModel().getSelectedItem();
+                String data = null;
+                if(selectedItem == rootItem) {
+                    try {
+                        data = HttpClient.GET("/users");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    try {
+                        data = HttpClient.GET("/users/shop/"+selectedItem.getValue().getId());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
-                User[] users = GoogleJson.GET().fromJson(json, User[].class);
+                User[] users = GoogleJson.GET().fromJson(data, User[].class);
                 userTable.getItems().addAll(users);
             }
             if(event.getButton().equals(MouseButton.SECONDARY) && event.getClickCount() == 1) {
                 TreeItem<Shop> item = shopTree.getSelectionModel().getSelectedItem();
                 menu.getItems().clear();
-//                if(item.getValue() instanceof Company) {
-//                    menu.getItems().addAll(itemNewShop, new SeparatorMenuItem(), itemRMCom, itemRNCom);
-//                } else if(item.getValue() instanceof Shop) {
-//                    menu.getItems().addAll(itemRMShop, itemRNShop);
-//                } else {
-//                    menu.getItems().addAll(itemNewCom);
-//                }
+                if(item == rootItem) {
+                    menu.getItems().addAll(itemNewShop);
+                } else {
+                    menu.getItems().addAll(itemRMShop, new SeparatorMenuItem(), itemRNShop);
+                }
             }
         });
+
+    }
+
+    private void initShopNodes(TreeItem<Shop> parentItem, Shop[] allShops) {
+        for(Shop s : allShops) {
+            if(s.getParentId() == parentItem.getValue().getId()) {
+                TreeItem<Shop> item = new TreeItem<>(s);
+                initShopNodes(item, allShops);
+                parentItem.getChildren().add(item);
+            }
+        }
     }
 
     private void initMenuItems() {
-//        itemRNShop.setOnAction(event -> {
-//            TreeItem<Merchant> selected = merchantTree.getSelectionModel().getSelectedItem();
-//            Callback callback = param -> {
-//                String name = param.toString();
-//                Shop updatedShop = null;
-//                try {
-//                    String json = HttpClient.GET("/shops/"+selected.getValue().getId());
-//                    updatedShop = GoogleJson.GET().fromJson(json, Shop.class);
-//                    updatedShop.setName(name);
-//                    json = GoogleJson.GET().toJson(updatedShop);
-//                    HttpClient.PUT("/shops/"+selected.getValue().getId(), json);
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//                selected.setValue(updatedShop);
-//                return null;
-//            };
-//
-//            editShop(callback, (Shop)selected.getValue());
-//        });
-//        itemNewShop.setOnAction(event -> {
-//            Callback callback = param -> {
-//                String name = param.toString();
-//                TreeItem<Merchant> parent = merchantTree.getSelectionModel().getSelectedItem();
-//                Shop shop = new Shop(name, (Company) parent.getValue());
-//                String json = GoogleJson.GET().toJson(shop);
-//                String idStr = null;
-//                try {
-//                    idStr = HttpClient.POST("/shops", json);
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//                shop.setId(Long.valueOf(idStr));
-//                TreeItem<Merchant> newItem = new TreeItem<>(shop);
-//                parent.getChildren().add(newItem);
-//                merchantTree.getSelectionModel().select(newItem);
-//                return null;
-//            };
-//            editShop(callback, null);
-//        });
-//        itemRMShop.setOnAction(event -> {
-//            removeShop();
-//        });
+        itemNewShop.setOnAction(event -> {
+            Callback callback = param -> {
+                String name = param.toString();
+                TreeItem<Shop> parent = shopTree.getSelectionModel().getSelectedItem();
+                Shop shop = new Shop(name, parent.getValue().getId(), false);
+                String json = GoogleJson.GET().toJson(shop);
+                String idStr = null;
+                try {
+                    idStr = HttpClient.POST("/shops", json);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                shop.setId(Long.valueOf(idStr));
+                TreeItem<Shop> newItem = new TreeItem<>(shop);
+                parent.getChildren().add(newItem);
+                shopTree.getSelectionModel().select(newItem);
+                return null;
+            };
+            editShop(callback, null);
+        });
+        itemRNShop.setOnAction(event -> {
+            TreeItem<Shop> selected = shopTree.getSelectionModel().getSelectedItem();
+            Callback callback = param -> {
+                String name = param.toString();
+                Shop updatedShop = null;
+                try {
+                    String json = HttpClient.GET("/shops/"+selected.getValue().getId());
+                    updatedShop = GoogleJson.GET().fromJson(json, Shop.class);
+                    updatedShop.setName(name);
+                    json = GoogleJson.GET().toJson(updatedShop);
+                    HttpClient.PUT("/shops/"+selected.getValue().getId(), json);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                selected.setValue(updatedShop);
+                return null;
+            };
+            editShop(callback, (Shop)selected.getValue());
+        });
+        itemRMShop.setOnAction(event -> {
+            removeShop();
+        });
     }
 
-
-    private void initShopNodes(Shop shop, TreeItem<Shop> shopTreeItem) {
-//        String path = "/shops/company/"+company.getId();
-//        String json;
-//        try {
-//            json = HttpClient.GET(path);
-//            Shop[] shops = GoogleJson.GET().fromJson(json, Shop[].class);
-//            for(Shop shop : shops) {
-//                TreeItem<Merchant> node = new TreeItem<>(shop);
-//                companyTreeItem.getChildren().add(node);
-//            }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-    }
 
     private void editShop(Callback callback, Shop selectedShop) {
         FXMLLoader loader = new FXMLLoader(
@@ -370,32 +406,20 @@ public class MaintenanceController {
     }
 
     private void removeShop() {
-//        Alert alertConfirm = new Alert(Alert.AlertType.CONFIRMATION, "", ButtonType.NO, ButtonType.YES);
-//        alertConfirm.setHeaderText("是否删除该店铺？");
-//        alertConfirm.showAndWait().filter(response -> response == ButtonType.YES).ifPresent(response -> {
-//            TreeItem<Merchant> selected = merchantTree.getSelectionModel().getSelectedItem();
-//            if(selected.getValue() instanceof Shop) {
-//                try {
-//                    HttpClient.DELETE("/shops/"+selected.getValue().getId());
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//                TreeItem<Merchant> parent = selected.getParent();
-//                parent.getChildren().remove(selected);
-//                parent.setExpanded(true);
-//                merchantTree.getSelectionModel().select(parent);
-//                //设置节点是否为父节点
-//                if(parent.isLeaf()) {
-//                    parent.getValue().setParent(false);
-//                    String json = GoogleJson.GET().toJson(parent.getValue());
-//                    try {
-//                        HttpClient.PUT("/companies/"+parent.getValue().getId(), json);
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//            }
-//        });
+        Alert alertConfirm = new Alert(Alert.AlertType.CONFIRMATION, "", ButtonType.NO, ButtonType.YES);
+        alertConfirm.setHeaderText("请确认是否删除当前店铺");
+        alertConfirm.showAndWait().filter(response -> response == ButtonType.YES).ifPresent(response -> {
+            TreeItem<Shop> selected = shopTree.getSelectionModel().getSelectedItem();
+            try {
+                HttpClient.DELETE("/shops/"+selected.getValue().getId());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            TreeItem<Shop> parent = selected.getParent();
+            parent.getChildren().remove(selected);
+            parent.setExpanded(true);
+            shopTree.getSelectionModel().select(parent);
+        });
     }
 
 

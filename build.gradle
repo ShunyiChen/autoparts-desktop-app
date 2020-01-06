@@ -36,6 +36,9 @@ dependencies {
     compile group: 'com.h2database', name: 'h2', version: '1.4.199'
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.10.0'
     compile group: 'com.itextpdf', name: 'itextpdf', version: '5.5.13'
+    compile group: 'org.springframework.security', name: 'spring-security-crypto', version: '5.2.0.RELEASE'
+    compile group: 'commons-logging', name: 'commons-logging', version: '1.2'
+
 
 }
 

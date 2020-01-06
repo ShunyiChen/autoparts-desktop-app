@@ -61,16 +61,6 @@
       </FlowPane>
       <FlowPane alignment="CENTER_LEFT" prefHeight="43.0" prefWidth="500.0">
          <children>
-            <Label alignment="CENTER" prefHeight="19.0" prefWidth="70.0" text="公   司:">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Label>
-            <ComboBox fx:id="cBoxCompany" prefHeight="30.0" prefWidth="189.0" />
-         </children>
-      </FlowPane>
-      <FlowPane alignment="CENTER_LEFT" prefHeight="43.0" prefWidth="500.0">
-         <children>
             <CheckBox fx:id="boxEnabled" mnemonicParsing="false" text="是否已激活">
                <FlowPane.margin>
                   <Insets left="10.0" />

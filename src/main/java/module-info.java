@@ -9,6 +9,7 @@ module desktopapp {
     requires com.h2database;
     requires com.fasterxml.jackson.annotation;
     requires itextpdf;
+    requires spring.security.crypto;
 
     opens com.shunyi.autoparts.ui to javafx.fxml;
     opens com.shunyi.autoparts.ui.stock to javafx.fxml;
@@ -36,4 +37,5 @@ module desktopapp {
     opens com.shunyi.autoparts.ui.login;
 //    opens org.openjfx to javafx.fxml;
 //    exports org.openjfx;
+
 }

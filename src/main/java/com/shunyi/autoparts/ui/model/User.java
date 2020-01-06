@@ -1,7 +1,5 @@
 package com.shunyi.autoparts.ui.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import java.util.HashSet;
 import java.util.Set;
 

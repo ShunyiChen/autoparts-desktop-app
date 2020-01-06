@@ -18,11 +18,10 @@ public class Shop {
 
     public Shop() {}
 
-    public Shop(String name, Long parentId, Boolean parent, Set<UserShopMapping> userShopMappingSet) {
+    public Shop(String name, Long parentId, Boolean parent) {
         this.name = name;
         this.parentId = parentId;
         this.parent = parent;
-        this.userShopMappingSet = userShopMappingSet;
     }
 
     public Long getId() {
