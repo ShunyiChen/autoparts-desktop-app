@@ -46,6 +46,10 @@
     -fx-font-size:14px;           //the font size you asked in the comments below
     /* -fx-text-fill:orange; */
 }
+#my-table .table-column {
+  -fx-alignment: CENTER;
+}
+
 .tree-view .tree-cell{
     -fx-font-size:14px;
 }
@@ -71,3 +75,9 @@
    -fx-text-background-color: white;
 }
 
+//progressbar
+.progress-bar .bar {
+    //-fx-background-color: rgb(63,81,181);
+    -fx-padding: 1px;
+    -fx-background-insets: 0;
+}

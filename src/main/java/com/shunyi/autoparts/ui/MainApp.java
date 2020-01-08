@@ -1,17 +1,23 @@
 package com.shunyi.autoparts.ui;
 
-import com.shunyi.autoparts.ui.common.ENV;
 import com.shunyi.autoparts.ui.login.LoginController;
 import com.shunyi.autoparts.ui.main.MainFrame;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.layout.*;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 
+/**
+ * @Description: 程序入口类
+ * @Author: 陈顺谊
+ * @CreateDate: 2020/1/8 16:24
+ * @Version: 1.0
+ */
 public class MainApp extends Application {
     private Stage stage;
     private Scene scene;
@@ -31,19 +37,26 @@ public class MainApp extends Application {
     }
 
     public void gotoDashboard() {
-        dashboard = new MainFrame(this);
-        scene.setRoot(dashboard);
-        stage.setResizable(true);
-        stage.setMaximized(true);
+        Platform.runLater(() ->  {
+            dashboard = new MainFrame(this);
+            scene.setRoot(dashboard);
+            stage.setResizable(true);
+            stage.setMaximized(true);
+        });
     }
 
-    public void gotoLogin() throws IOException {
+    public void gotoLogin()  {
         FXMLLoader loader = new FXMLLoader(
             getClass().getResource(
                     "/fxml/login/login.fxml"
             )
         );
-        StackPane root = loader.load();
+        StackPane root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         LoginController controller = loader.getController();
         controller.prepare(this);
         scene.setRoot(root);

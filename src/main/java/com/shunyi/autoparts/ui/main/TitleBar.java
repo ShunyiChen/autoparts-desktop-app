@@ -17,7 +17,10 @@ import javafx.scene.layout.HBox;
 import java.io.IOException;
 
 /**
- *
+ * @Description: 主界面标题栏
+ * @Author: 陈顺谊
+ * @CreateDate: 2020/1/8 16:24
+ * @Version: 1.0
  */
 public class TitleBar extends HBox implements EventHandler<MouseEvent> {
     private MainApp application;
@@ -32,6 +35,7 @@ public class TitleBar extends HBox implements EventHandler<MouseEvent> {
 
     private MenuItem itemProfiles = new MenuItem("个人设置");
     private MenuItem itemLogout = new MenuItem("注 销");
+    private MenuItem itemTheme = new MenuItem("主 题");
     private MenuItem itemQuit = new MenuItem("退 出");
 
     /**
@@ -100,7 +104,7 @@ public class TitleBar extends HBox implements EventHandler<MouseEvent> {
 
     private void initRightClickMenu() {
         rightClickMenu.setAutoHide(true);
-        rightClickMenu.getItems().addAll(itemProfiles, new SeparatorMenuItem(), itemLogout, itemQuit);
+        rightClickMenu.getItems().addAll(itemProfiles, itemTheme, new SeparatorMenuItem(), itemLogout, itemQuit);
     }
 
     private void initMenuIcon() {
@@ -124,11 +128,7 @@ public class TitleBar extends HBox implements EventHandler<MouseEvent> {
         itemProfiles.setOnAction(e -> {
         });
         itemLogout.setOnAction(e -> {
-            try {
-                application.gotoLogin();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
+            application.gotoLogin();
         });
         itemQuit.setOnAction(e -> {
             application.quit();

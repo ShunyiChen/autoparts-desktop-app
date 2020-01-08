@@ -1,6 +1,7 @@
 package com.shunyi.autoparts.ui.main;
 
 import com.shunyi.autoparts.ui.MainApp;
+import com.shunyi.autoparts.ui.common.ICONS;
 import com.shunyi.autoparts.ui.dashboard.Dashboard;
 import com.shunyi.autoparts.ui.products.ProductManagement;
 import com.shunyi.autoparts.ui.buy.PurchaseOrder;
@@ -8,12 +9,13 @@ import com.shunyi.autoparts.ui.stock.StockManagement;
 import com.shunyi.autoparts.ui.supplier.SupplierManagement;
 import com.shunyi.autoparts.ui.system.Maintenance;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.util.Callback;
 
-
+/**
+ * 主界面框架
+ */
 public class MainFrame extends BorderPane {
     private MainApp application;
     private TitleBar toolbar;
@@ -21,13 +23,9 @@ public class MainFrame extends BorderPane {
     private ContentPane contentPane;
     private BaseContainer currentContainer;
     private PurchaseOrder purchaseContainer;
-
     private Dashboard dashboard;
-    private Image ICON_1 = new Image(getClass().getResourceAsStream("/img/grid.png"));
-    private Image ICON_2 = new Image(getClass().getResourceAsStream("/img/purchase.png"));
-    private Image ICON_3 = new Image(getClass().getResourceAsStream("/img/return.png"));
-    private Image ICON_4 = new Image(getClass().getResourceAsStream("/img/stats.png"));
-    private Image ICON_5 = new Image(getClass().getResourceAsStream("/img/return.png"));
+    private ICONS icons = ICONS.getInstance();
+
 
     /**
      * Constructor
@@ -54,7 +52,7 @@ public class MainFrame extends BorderPane {
     }
 
     private void initEvents() {
-        ClickableItem item0 = new ClickableItem(ICON_1, "主界面", new Callback() {
+        ClickableItem dashboard = new ClickableItem(icons.view_dashboard(),"主界面", new Callback() {
             @Override
             public Object call(Object param) {
                 toolbar.setTitle("主界面");
@@ -62,31 +60,23 @@ public class MainFrame extends BorderPane {
                 return null;
             }
         });
-        ClickableItem item1 = new ClickableItem(ICON_2, "数据统计", new Callback() {
+        ClickableItem purchase = new ClickableItem(icons.cart(), "购货单", new Callback() {
             @Override
             public Object call(Object param) {
-                toolbar.setTitle("数据统计");
-                contentPane.getViewport().setCenter(dashboard);
-                return null;
-            }
-        });
-        ClickableItem item2 = new ClickableItem(ICON_2, "采购单", new Callback() {
-            @Override
-            public Object call(Object param) {
-                toolbar.setTitle("采购单");
+                toolbar.setTitle("购货单");
                 contentPane.getViewport().setCenter((PurchaseOrder)purchaseContainer);
                 return null;
             }
         });
-        ClickableItem item3 = new ClickableItem(ICON_3, "采购退货单", new Callback() {
+        ClickableItem refund = new ClickableItem(icons.cart_arrow_up(), "购货退货单", new Callback() {
             @Override
             public Object call(Object param) {
-                toolbar.setTitle("采购退货单");
+                toolbar.setTitle("购货退货单");
                 contentPane.getViewport().setCenter(new Pane());
                 return null;
             }
         });
-        ClickableItem item4 = new ClickableItem(ICON_4, "销售单", new Callback() {
+        ClickableItem item4 = new ClickableItem(icons.shopping(), "销售单", new Callback() {
             @Override
             public Object call(Object param) {
                 toolbar.setTitle("销售单");
@@ -94,7 +84,7 @@ public class MainFrame extends BorderPane {
                 return null;
             }
         });
-        ClickableItem item5 = new ClickableItem(ICON_5, "销售退回单", new Callback() {
+        ClickableItem item5 = new ClickableItem(icons.shopping_outline(), "销售退回单", new Callback() {
             @Override
             public Object call(Object param) {
                 toolbar.setTitle("销售退回单");
@@ -102,7 +92,7 @@ public class MainFrame extends BorderPane {
                 return null;
             }
         });
-        ClickableItem item6 = new ClickableItem(ICON_5, "供应商管理", new Callback() {
+        ClickableItem item6 = new ClickableItem(icons.account_multiple(), "供应商管理", new Callback() {
             @Override
             public Object call(Object param) {
                 SupplierManagement supplierManagement = new SupplierManagement(application);
@@ -111,7 +101,7 @@ public class MainFrame extends BorderPane {
                 return null;
             }
         });
-        ClickableItem item7 = new ClickableItem(ICON_5, "库存管理", new Callback() {
+        ClickableItem item7 = new ClickableItem(icons.warehouse(), "库存管理", new Callback() {
             @Override
             public Object call(Object param) {
                 StockManagement stockManagement = new StockManagement(application);
@@ -120,7 +110,7 @@ public class MainFrame extends BorderPane {
                 return null;
             }
         });
-        ClickableItem item8 = new ClickableItem(ICON_5, "配件管理", new Callback() {
+        ClickableItem item8 = new ClickableItem(icons.car_door(), "配件管理", new Callback() {
             @Override
             public Object call(Object param) {
                 ProductManagement ProductManagement = new ProductManagement(application);
@@ -130,7 +120,7 @@ public class MainFrame extends BorderPane {
             }
         });
 
-        ClickableItem item11 = new ClickableItem(ICON_5, "系统维护", new Callback() {
+        ClickableItem settings = new ClickableItem(icons.settings_transfer_outline(), "系统维护", new Callback() {
             @Override
             public Object call(Object param) {
                 Maintenance systemMaintenance = new Maintenance(application);
@@ -140,7 +130,7 @@ public class MainFrame extends BorderPane {
             }
         });
 
-        navigation.addClickableItem(item0, item1,item2,item3,item4,item5,item6,item7,item8,item11);
+        navigation.addClickableItem(dashboard, purchase, refund, item4, item5, item6, item7, item8, settings);
     }
 
     public BaseContainer getCurrentContainer() {

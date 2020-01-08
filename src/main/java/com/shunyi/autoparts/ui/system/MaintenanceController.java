@@ -23,6 +23,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * @Description: 系统维护Controller
+ * @Author: 陈顺谊
+ * @CreateDate: 2020/1/8 16:24
+ * @Version: 1.0
+ */
 public class MaintenanceController {
     private MainApp application;
     private ContextMenu menu = new ContextMenu();
@@ -194,29 +200,38 @@ public class MaintenanceController {
      */
     public void prepare(MainApp application) {
         this.application = application;
+        //初始化用户表格
         initUserTable();
+        //初始化店铺树
         initShopTree();
+        //初始化树右键菜单
         initMenuItems();
+        //初始化角色表格
         initRoleTable();
+        //初始化VFS树
         initVFSTree();
+        //初始化VFS表格
         initVFSTable();
     }
 
     private void initUserTable() {
-        Map<Long, String> map = getAllShopsMap();
-        System.out.println("sdsddsddssdds");
+
+        userTable.setId("my-table");
+
+        Map<Long, String> shopMap = getAllShopsMap();
+        Map<Long, String> roleMap = getAllShopsMap();
+
         colUserId.setCellValueFactory(new PropertyValueFactory<User, String>("id"));
         colUserName.setCellValueFactory(new PropertyValueFactory<User, String>("username"));
         colEnabled.setCellValueFactory(param ->
                 new SimpleObjectProperty<>(param.getValue().isEnabled() == null ? "否" : param.getValue().isEnabled()? "是":"否")
         );
         colShops.setCellValueFactory(param -> {
-            System.out.println("---================");
                 List<Long> shopIds = param.getValue().getUserShopMappingSet().stream().map(e -> e.getId().getShopId()).collect(Collectors.toList());
                 StringBuilder names = new StringBuilder();
                 for(Long shopId : shopIds) {
-                    if(map.containsKey(shopId)) {
-                        names.append(map.get(shopId));
+                    if(shopMap.containsKey(shopId)) {
+                        names.append(shopMap.get(shopId));
                         names.append(",");
                     }
                 }
@@ -226,8 +241,20 @@ public class MaintenanceController {
                 return new SimpleObjectProperty<>(names.toString());
             }
         );
-        colRoles.setCellValueFactory(param ->
-                new SimpleObjectProperty<>(param.getValue().getUserRoleMappingSet().toString())
+        colRoles.setCellValueFactory(param -> {
+                List<Long> roleIds = param.getValue().getUserRoleMappingSet().stream().map(e -> e.getId().getRoleId()).collect(Collectors.toList());
+                StringBuilder names = new StringBuilder();
+                for(Long roleId : roleIds) {
+                    if(roleMap.containsKey(roleId)) {
+                        names.append(roleMap.get(roleId));
+                        names.append(",");
+                    }
+                }
+                if(names.toString().endsWith(",")) {
+                    names.deleteCharAt(names.length()-1);
+                }
+                return new SimpleObjectProperty<>("");
+            }
         );
 
         userTable.setOnMouseClicked((MouseEvent event) -> {
@@ -276,6 +303,7 @@ public class MaintenanceController {
         }
         return map;
     }
+
 
     private void initShopTree() {
         Shop[] allShops = getAllShops();
@@ -459,13 +487,8 @@ public class MaintenanceController {
             }
         });
 
-        try {
-            String data = HttpClient.GET("/roles");
-            Role[] roles = GoogleJson.GET().fromJson(data, Role[].class);
-            roleTable.getItems().addAll(roles);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Role[] roles = getAllRoles();
+        roleTable.getItems().addAll(roles);
     }
 
     @FXML
@@ -543,13 +566,8 @@ public class MaintenanceController {
     @FXML
     private void refreshRole() {
         roleTable.getItems().clear();
-        String data = null;
-        try {
-            data = HttpClient.GET("/roles");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Role[] roles = GoogleJson.GET().fromJson(data, Role[].class);
+
+        Role[] roles = getAllRoles();
         roleTable.getItems().addAll(roles);
     }
 
@@ -574,6 +592,29 @@ public class MaintenanceController {
             roleTable.getItems().remove(selectedRole);
         });
     }
+
+
+    private Role[] getAllRoles() {
+        String path = "/roles";
+        String json;
+        try {
+            json = HttpClient.GET(path);
+            return GoogleJson.GET().fromJson(json, Role[].class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return new Role[]{};
+    }
+
+    private Map<Long, String> getAllRolesMap() {
+        HashMap<Long, String> map = new HashMap<>();
+        Role[] roles = getAllRoles();
+        for(Role role : roles) {
+            map.put(role.getId(), role.getName());
+        }
+        return map;
+    }
+
 
     private void initVFSTree() {
         VFSCategory rootCategory = new VFSCategory("全部分类", -1, true);

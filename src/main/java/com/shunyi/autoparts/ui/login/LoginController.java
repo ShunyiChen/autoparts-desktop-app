@@ -1,13 +1,15 @@
 package com.shunyi.autoparts.ui.login;
 
-import com.google.gson.Gson;
 import com.shunyi.autoparts.ui.MainApp;
 import com.shunyi.autoparts.ui.common.ENV;
 import com.shunyi.autoparts.ui.common.GoogleJson;
+import com.shunyi.autoparts.ui.common.ICONS;
 import com.shunyi.autoparts.ui.h2.H2;
-import com.shunyi.autoparts.ui.http.HttpClient;
 import com.shunyi.autoparts.ui.http.AuthenticationResponse;
+import com.shunyi.autoparts.ui.http.HttpClient;
 import com.shunyi.autoparts.ui.model.RemoteConnection;
+import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -25,11 +27,25 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.IOException;
 import java.sql.SQLException;
 
+/**
+ * @Description: 登录界面
+ * @Author: 陈顺谊
+ * @CreateDate: 2020/1/8 16:24
+ * @Version: 1.0
+ */
 public class LoginController {
+
+    private MainApp application;
+    private ICONS icons = ICONS.getInstance();
+
     @FXML
-    private VBox bgBox;
+    private VBox background;
     @FXML
-    private Hyperlink titleLink;
+    private Label title;
+    @FXML
+    private Label brand;
+    @FXML
+    private ImageView logo;
     @FXML
     private ProgressBar progressBar;
     @FXML
@@ -37,52 +53,84 @@ public class LoginController {
     @FXML
     private PasswordField txtPassword;
     @FXML
-    private ComboBox<RemoteConnection> cbRemoteConnection;
+    private ComboBox<RemoteConnection> comboboxConnections;
     @FXML
-    private CheckBox cBoxRemember;
+    private CheckBox checkboxRemember;
+    @FXML
+    private CheckBox checkboxAutomaticLogin;
     @FXML
     private Button btnSettings;
     @FXML
-    private CheckBox cBoxAutoLogin;
-    @FXML
-    private Button button;
-    private MainApp application;
+    private Button btnLogin;
+
 
     @FXML
-    public void loggingIn(ActionEvent event) {
-        if(StringUtils.isEmpty(txtUsername.getText().trim())
-            || StringUtils.isEmpty(txtPassword.getText().trim())) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("登录失败");
-            alert.setHeaderText("用户名或密码不能为空。");
-            alert.showAndWait();
-        } else {
-            RemoteConnection rc = cbRemoteConnection.getValue();
-            ENV.getInstance().addToEnvironment("RemoteConnection", rc);
-            String path = "/authenticate";
-            String json = "{\"username\":\""+txtUsername.getText().trim()+"\",\"password\":\""+txtPassword.getText().trim()+"\"}";
-            try {
-                String data = HttpClient.POST(path, json, "");
-                AuthenticationResponse res = GoogleJson.GET().fromJson(data, AuthenticationResponse.class);
-                progressBar.setProgress(0.8);
-                if(res.getToken() != null) {
-                    ENV.getInstance().addToEnvironment("Authorization", "Bearer "+res.getToken());
-                    progressBar.setProgress(1);
-                    application.gotoDashboard();
-                    System.out.println("Logged in successfully.");
+    public void signIn(ActionEvent event) {
+
+        Task<Integer> task = new Task<>() {
+
+            @Override
+            protected Integer call() {
+
+                Platform.runLater(() ->  progressBar.setProgress(0.0d));
+
+                if(StringUtils.isEmpty(txtUsername.getText().trim())
+                        || StringUtils.isEmpty(txtPassword.getText().trim())) {
+                    Platform.runLater(() -> {
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                        alert.setTitle("登录失败");
+                        alert.setHeaderText("用户名或密码不能为空。");
+                        alert.show();
+                    });
+                    Platform.runLater(() ->  progressBar.setProgress(1.0d));
+
                 } else {
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("身份验证失败");
-                    alert.setHeaderText("用户名和密码不匹配。");
-                    alert.showAndWait();
+                    Platform.runLater(() ->  progressBar.setProgress(0.1d));
+                    RemoteConnection rc = comboboxConnections.getValue();
+                    ENV.getInstance().addToEnvironment("RemoteConnection", rc);
+                    String path = "/authenticate";
+                    String json = "{\"username\":\""+txtUsername.getText().trim()+"\",\"password\":\""+txtPassword.getText().trim()+"\"}";
+                    Platform.runLater(() ->  progressBar.setProgress(0.2d));
+                    try {
+                        String data = HttpClient.POST(path, json, "");
+                        Platform.runLater(() ->  progressBar.setProgress(0.9d));
+                        AuthenticationResponse res = GoogleJson.GET().fromJson(data, AuthenticationResponse.class);
+                        Platform.runLater(() ->  progressBar.setProgress(0.95d));
+                        if(res.getToken() != null) {
+                            ENV.getInstance().addToEnvironment("Authorization", "Bearer "+res.getToken());
+                            Platform.runLater(() -> progressBar.setProgress(1d));
+                            application.gotoDashboard();
+                            System.out.println("Logged in successfully.");
+
+                        } else {
+                            Platform.runLater(() -> {
+                                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                                alert.setTitle("身份验证失败");
+                                alert.setHeaderText("用户名和密码不匹配。");
+                                alert.show();
+                            });
+                            Platform.runLater(() ->  progressBar.setProgress(1.0d));
+
+                        }
+                    } catch (IOException e) {
+                        Platform.runLater(() -> {
+                            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                            alert.setTitle("身份验证失败");
+                            alert.setHeaderText(e.toString());
+                            alert.show();
+                        });
+                        Platform.runLater(() ->  progressBar.setProgress(1.0d));
+
+                    }
                 }
-            } catch (IOException e) {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("身份验证失败");
-                alert.setHeaderText(e.toString());
-                alert.showAndWait();
+                return 0;
             }
-        }
+        };
+
+
+        Thread th = new Thread(task);
+        th.setDaemon(true);
+        th.start();
     }
 
     @FXML
@@ -117,11 +165,11 @@ public class LoginController {
 
     private void initComboBoxData() {
         try {
-            cbRemoteConnection.getItems().clear();
-            cbRemoteConnection.getItems().addAll(H2.retrieveAll());
-            cbRemoteConnection.getItems().stream().forEach(e -> {
+            comboboxConnections.getItems().clear();
+            comboboxConnections.getItems().addAll(H2.retrieveAll());
+            comboboxConnections.getItems().stream().forEach(e -> {
                 if(e.is_default()) {
-                    cbRemoteConnection.setValue(e);
+                    comboboxConnections.setValue(e);
                 }
             });
         } catch (SQLException e) {
@@ -133,41 +181,40 @@ public class LoginController {
         this.application = application;
         String javaVersion = System.getProperty("java.version");
         String javafxVersion = System.getProperty("javafx.version");
-//        label.setText("Hello, JavaFX " + javafxVersion + "\nRunning on Java " + javaVersion + ".");
-
         System.out.println("javaVersion="+javaVersion+",javafxVersion="+javafxVersion);
-
-        progressBar.setProgress(0.1);
 
         //TODO remove below
         txtUsername.setText("root");
         txtPassword.setText("123456");
 
-        cbRemoteConnection.setStyle("-fx-font-size: 14px;");
+        title.setStyle("-fx-text-fill: rgb(255,255,255);");
+        brand.setStyle("-fx-text-fill: rgb(255,255,255);");
+        logo.setImage(icons.countdown_alex());
+
+        comboboxConnections.setStyle("-fx-font-size: 14px;");
         initComboBoxData();
 
-        Image bg = new Image(getClass().getResourceAsStream("/img/LoginBG.png"), 745,406,false,true);
+        Image bg = new Image(getClass().getResourceAsStream("/img/login/auto-parts.png"), 743, 349, false, true);
         BackgroundImage myBI = new BackgroundImage(bg,
                 BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
                 BackgroundSize.DEFAULT);
-        bgBox.setBackground(new Background(myBI));
-        bgBox.setOpacity(0.2);
+        background.setBackground(new Background(myBI));
+        background.setOpacity(0.2);
 
         application.getScene().getAccelerators().put(
                 new KeyCodeCombination(KeyCode.ENTER),
                 new Runnable() {
                     @FXML public void run() {
-                        button.fire();
+                        btnLogin.fire();
                     }
                 }
         );
 
-
         // 初始化网关按钮
-        Image imgGear = new Image(getClass().getResourceAsStream("/img/Gear16.png"));
+        Image imgGear = new Image(getClass().getResourceAsStream("/img/login/Gear16.png"));
         btnSettings.setGraphic(new ImageView(imgGear));
-
-        progressBar.setProgress(0.2);
+        //获得焦点
+        Platform.runLater(() -> btnLogin.requestFocus());
     }
 
 }

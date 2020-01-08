@@ -66,8 +66,8 @@ public class PurchaseOrder extends BorderPane implements BaseContainer {
     }
 
     private void initComponents() {
-        Image imageSettings = new Image(getClass().getResourceAsStream("/img/Settings_16.107023411371px_1183578_easyicon.net.png"));
-        btnSettings.setGraphic(new ImageView(imageSettings));
+//        Image imageSettings = new Image(getClass().getResourceAsStream("/img/Settings_16.107023411371px_1183578_easyicon.net.png"));
+//        btnSettings.setGraphic(new ImageView(imageSettings));
 
         btnSave.setDisable(true);
         btnNew.setFont(Font.font(14));

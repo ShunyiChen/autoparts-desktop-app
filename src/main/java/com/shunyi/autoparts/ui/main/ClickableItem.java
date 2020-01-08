@@ -12,7 +12,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import javafx.util.Callback;
 
-
+/**
+ * 导航栏可点击的Item
+ */
 public class ClickableItem extends HBox implements EventHandler<MouseEvent>{
     private Image icon;
     private String txt;
@@ -39,7 +41,8 @@ public class ClickableItem extends HBox implements EventHandler<MouseEvent>{
     private void initComponents() {
         ImageView imageView = new ImageView(icon);
         Label icon = new Label("", imageView);
-        icon.setPadding(new Insets(10,15,10,15));
+        icon.setPadding(new Insets(10,0,10,15));
+        icon.setPrefWidth(60);
         rightTxt = new Label(txt);
         rightTxt.setContentDisplay(ContentDisplay.LEFT);
         rightTxt.setPadding(new Insets(10,15,10,15));
