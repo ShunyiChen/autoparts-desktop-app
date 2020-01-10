@@ -63,9 +63,11 @@ public class ICONS {
     }
 
 
-
-
     public Image countdown_alex(){
         return new Image(getClass().getResourceAsStream("/img/login/countdown-alex.png"));
+    }
+
+    public Image account_circle(){
+        return new Image(getClass().getResourceAsStream("/img/login/account-circle.png"));
     }
 }

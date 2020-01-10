@@ -19,7 +19,6 @@ import java.util.stream.Collectors;
 
 /** 编辑用户Controller */
 public class EditUserController {
-
     private Stage dialog;
     private Callback<User, String> callback;
     private User selectedUser;
@@ -39,6 +38,8 @@ public class EditUserController {
     private VBox vBoxRole;
     @FXML
     private Button btnOk;
+    @FXML
+    private Button btnContinueCreating;
 
     @FXML
     void cancel() {
@@ -49,9 +50,14 @@ public class EditUserController {
     void ok() {
         if(validate()) {
             if(selectedUser != null) {
+                User newUser = new User();
+                newUser.setId(selectedUser.getId());
+                newUser.setEnabled(selectedUser.isEnabled());
+                newUser.setPassword(selectedUser.getPassword());
+
                 //更新用户与店铺关系
                 try {
-                    String json = HttpClient.GET("usershopmappings/user/"+selectedUser.getId());
+                    String json = HttpClient.GET("/usershopmappings/user/"+selectedUser.getId());
                     UserShopMapping[] oldUserShopMappings = GoogleJson.GET().fromJson(json, UserShopMapping[].class);
                     List<UserShopMapping.Id> oldUserShopMappingIds = new ArrayList<>();
                     for(UserShopMapping mapping : oldUserShopMappings) {
@@ -59,9 +65,12 @@ public class EditUserController {
                     }
 
                     List<UserShopMapping.Id> newUserShopMappingIds = new ArrayList<>();
-                    vBoxShop.getChildren().forEach(checkbox -> {
-                        String shopId = checkbox.getUserData().toString();
-                        newUserShopMappingIds.add(new UserShopMapping.Id(selectedUser.getId(), Long.valueOf(shopId)));
+                    vBoxShop.getChildren().forEach(item -> {
+                        CheckBox checkBox = (CheckBox) item;
+                        if(checkBox.isSelected()) {
+                            String shopId = checkBox.getUserData().toString();
+                            newUserShopMappingIds.add(new UserShopMapping.Id(selectedUser.getId(), Long.valueOf(shopId)));
+                        }
                     });
 
                     List<UserShopMapping.Id> removableList = oldUserShopMappingIds.stream().filter(e -> !contains(newUserShopMappingIds, e)).collect(Collectors.toList());
@@ -79,7 +88,7 @@ public class EditUserController {
 
                 //更新用户与角色关系
                 try {
-                    String json = HttpClient.GET("userrolemappings/user/"+selectedUser.getId());
+                    String json = HttpClient.GET("/userrolemappings/user/"+selectedUser.getId());
                     UserRoleMapping[] oldUserRoleMappings = GoogleJson.GET().fromJson(json, UserRoleMapping[].class);
                     List<UserRoleMapping.Id> oldUserRoleMappingIds = new ArrayList<>();
                     for(UserRoleMapping mapping : oldUserRoleMappings) {
@@ -87,11 +96,13 @@ public class EditUserController {
                     }
 
                     List<UserRoleMapping.Id> newUserRoleMappingIds = new ArrayList<>();
-                    vBoxRole.getChildren().forEach(checkbox -> {
-                        String roleId = checkbox.getUserData().toString();
-                        newUserRoleMappingIds.add(new UserRoleMapping.Id(selectedUser.getId(), Long.valueOf(roleId)));
+                    vBoxRole.getChildren().forEach(item -> {
+                        CheckBox checkBox = (CheckBox)item;
+                        if(checkBox.isSelected()) {
+                            String roleId = checkBox.getUserData().toString();
+                            newUserRoleMappingIds.add(new UserRoleMapping.Id(selectedUser.getId(), Long.valueOf(roleId)));
+                        }
                     });
-
                     List<UserRoleMapping.Id> removableList = oldUserRoleMappingIds.stream().filter(e -> !contains(newUserRoleMappingIds, e)).collect(Collectors.toList());
                     UserRoleMapping.Id[] removableIds = removableList.toArray(new UserRoleMapping.Id[removableList.size()]);
                     json = GoogleJson.GET().toJson(removableIds);
@@ -101,55 +112,72 @@ public class EditUserController {
                     UserRoleMapping.Id[] addibleIds = addibleList.toArray(new UserRoleMapping.Id[addibleList.size()]);
                     json = GoogleJson.GET().toJson(addibleIds);
                     HttpClient.POST("/userrolemappings", json);
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                String encryptedPassword = encoder.encode(txtPassword.getText());
-                selectedUser.setPassword(encryptedPassword);
-                selectedUser.setEnabled(boxEnabled.isSelected());
-                callback.call(selectedUser);
+                //更改用户信息
+                newUser.setEnabled(boxEnabled.isSelected());
+                //更新
+                String json = GoogleJson.GET().toJson(newUser);
+                try {
+                    HttpClient.PUT("/users/"+newUser.getId(), json);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                callback.call(newUser);
 
             } else {
-                //新建用户与店铺关系
-                String encryptedPassword = encoder.encode(txtPassword.getText());
-                User createdUser = new User(txtUserName.getText(), encryptedPassword, boxEnabled.isSelected());
-                String json = GoogleJson.GET().toJson(createdUser);
-
-                try {
-                    String idStr = HttpClient.POST("/users", json);
-                    createdUser.setId(Long.valueOf(idStr));
-                    UserShopMapping.Id[] ids = new UserShopMapping.Id[vBoxShop.getChildren().size()];
-                    int i = 0;
-                    vBoxShop.getChildren().forEach(checkbox -> {
-                        String shopId = checkbox.getUserData().toString();
-                        ids[i] = new UserShopMapping.Id(Long.valueOf(idStr), Long.valueOf(shopId));
-                    });
-                    json = GoogleJson.GET().toJson(ids);
-                    HttpClient.POST("/usershopmappings", json);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                //新建用户与角色关系
-                try {
-                    UserRoleMapping.Id[] ids = new UserRoleMapping.Id[vBoxRole.getChildren().size()];
-                    int i = 0;
-                    vBoxRole.getChildren().forEach(checkbox -> {
-                        String roleId = checkbox.getUserData().toString();
-                        ids[i] = new UserRoleMapping.Id(createdUser.getId(), Long.valueOf(roleId));
-                    });
-                    json = GoogleJson.GET().toJson(ids);
-                    HttpClient.POST("/userrolemappings", json);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                createdUser.setPassword(encryptedPassword);
-                createdUser.setEnabled(boxEnabled.isSelected());
-
-                callback.call(createdUser);
+                //继续添加
+                continueCreating();
             }
             dialog.close();
         }
+    }
+
+    @FXML
+    private void continueCreating() {
+        //新建用户与店铺关系
+        String encryptedPassword = encoder.encode(txtPassword.getText());
+        User createdUser = new User(txtUserName.getText(), encryptedPassword, boxEnabled.isSelected());
+        String json = GoogleJson.GET().toJson(createdUser);
+
+        try {
+            String idStr = HttpClient.POST("/users", json);
+            createdUser.setId(Long.valueOf(idStr));
+            List<UserShopMapping.Id> listIds = new ArrayList<>();
+            vBoxShop.getChildren().forEach(item -> {
+                CheckBox checkBox = (CheckBox) item;
+                if(checkBox.isSelected()) {
+                    String shopId = checkBox.getUserData().toString();
+                    listIds.add(new UserShopMapping.Id(Long.valueOf(idStr), Long.valueOf(shopId)));
+                }
+            });
+            json = GoogleJson.GET().toJson(listIds.toArray(new UserShopMapping.Id[listIds.size()]));
+            HttpClient.POST("/usershopmappings", json);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        //新建用户与角色关系
+        try {
+            List<UserRoleMapping.Id> listIds = new ArrayList<>();
+            vBoxRole.getChildren().forEach(item -> {
+                CheckBox checkBox = (CheckBox) item;
+                if(checkBox.isSelected()) {
+                    String roleId = checkBox.getUserData().toString();
+                    listIds.add(new UserRoleMapping.Id(createdUser.getId(), Long.valueOf(roleId)));
+                }
+            });
+            json = GoogleJson.GET().toJson(listIds.toArray(new UserRoleMapping.Id[listIds.size()]));
+            HttpClient.POST("/userrolemappings", json);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        createdUser.setPassword(encryptedPassword);
+        createdUser.setEnabled(boxEnabled.isSelected());
+        callback.call(createdUser);
     }
 
     /**
@@ -189,30 +217,56 @@ public class EditUserController {
     private boolean validate() {
         if(txtUserName.getText().trim().equals("")) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
-            alert.setHeaderText("用户名不能为空。");
+            alert.setHeaderText("用户名不能为空");
             alert.show();
             return false;
         }
         else if(txtPassword.getText().trim().equals("")) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
-            alert.setHeaderText("密码不能为空。");
+            alert.setHeaderText("密码不能为空");
             alert.show();
             return false;
         }
         else if(confirmTxtPassword.getText().trim().equals("")) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
-            alert.setHeaderText("确认密码不能为空。");
+            alert.setHeaderText("确认密码不能为空");
             alert.show();
             return false;
         }
         else if(!txtPassword.getText().equals(confirmTxtPassword.getText())) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
-            alert.setHeaderText("确认密码不正确。");
+            alert.setHeaderText("确认密码不正确");
+            alert.show();
+            return false;
+        }
+        else if(!existCheck(txtUserName.getText().trim())) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
+            alert.setHeaderText("用户已存在");
             alert.show();
             return false;
         }
         return true;
     }
+
+    private boolean existCheck(String userName) {
+        try {
+            String data = HttpClient.GET("/users");
+            User[] users = GoogleJson.GET().fromJson(data, User[].class);
+            for(User u : users) {
+                if(selectedUser != null && u.getId() == selectedUser.getId()) {
+                    continue;
+                }
+                if(u.getUsername().equalsIgnoreCase(userName)) {
+                    return false;
+                }
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+
 
     /**
      *
@@ -227,9 +281,24 @@ public class EditUserController {
         vBoxShop.getChildren().clear();
         vBoxRole.getChildren().clear();
         btnOk.setStyle(String.format("-fx-base: %s;", "rgb(63,81,181)"));
-        boxEnabled.setSelected(true);
+        initUser();
         initShops();
         initRoles();
+    }
+
+    private void initUser() {
+        boxEnabled.setSelected(true);
+        btnContinueCreating.setVisible(true);
+        if(selectedUser != null) {
+            boxEnabled.setSelected(selectedUser.isEnabled());
+            txtUserName.setText(selectedUser.getUsername());
+            txtPassword.setText(selectedUser.getPassword());
+            confirmTxtPassword.setText(selectedUser.getPassword());
+            txtPassword.setDisable(true);
+            confirmTxtPassword.setDisable(true);
+            btnContinueCreating.setVisible(false);
+            btnOk.setText("更  改");
+        }
     }
 
     private void initShops() {

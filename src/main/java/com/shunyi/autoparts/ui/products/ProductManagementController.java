@@ -224,7 +224,13 @@ public class ProductManagementController {
     @FXML
     void removeCategory(ActionEvent event) {
         TreeItem<Category> selected = treeView.getSelectionModel().getSelectedItem();
-        if(selected.getValue().getId() == 0) {
+        if(selected == null) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
+            alert.setHeaderText("请选择一个类目节点");
+            alert.show();
+            return;
+        }
+        else if(selected.getValue().getId() == 0) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
             alert.setHeaderText("根节点不可删除");
             alert.show();

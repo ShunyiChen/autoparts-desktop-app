@@ -8,6 +8,7 @@ import com.shunyi.autoparts.ui.h2.H2;
 import com.shunyi.autoparts.ui.http.AuthenticationResponse;
 import com.shunyi.autoparts.ui.http.HttpClient;
 import com.shunyi.autoparts.ui.model.RemoteConnection;
+import com.shunyi.autoparts.ui.model.User;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -79,34 +80,42 @@ public class LoginController {
                     Platform.runLater(() -> {
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
                         alert.setTitle("登录失败");
-                        alert.setHeaderText("用户名或密码不能为空。");
+                        alert.setHeaderText("用户名或密码不能为空");
                         alert.show();
                     });
                     Platform.runLater(() ->  progressBar.setProgress(1.0d));
-
                 } else {
                     Platform.runLater(() ->  progressBar.setProgress(0.1d));
                     RemoteConnection rc = comboboxConnections.getValue();
                     ENV.getInstance().addToEnvironment("RemoteConnection", rc);
-                    String path = "/authenticate";
                     String json = "{\"username\":\""+txtUsername.getText().trim()+"\",\"password\":\""+txtPassword.getText().trim()+"\"}";
                     Platform.runLater(() ->  progressBar.setProgress(0.2d));
                     try {
-                        String data = HttpClient.POST(path, json, "");
+                        String data = HttpClient.POST("/authenticate", json, "");
                         Platform.runLater(() ->  progressBar.setProgress(0.9d));
+
                         AuthenticationResponse res = GoogleJson.GET().fromJson(data, AuthenticationResponse.class);
                         Platform.runLater(() ->  progressBar.setProgress(0.95d));
+
                         if(res.getToken() != null) {
+                            if(!res.isEnabled()) {
+                                Platform.runLater(() -> {
+                                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                                    alert.setTitle("身份验证失败");
+                                    alert.setHeaderText("当前用户没有启用");
+                                    alert.show();
+                                });
+                            }
+
                             ENV.getInstance().addToEnvironment("Authorization", "Bearer "+res.getToken());
                             Platform.runLater(() -> progressBar.setProgress(1d));
                             application.gotoDashboard();
                             System.out.println("Logged in successfully.");
-
                         } else {
                             Platform.runLater(() -> {
                                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                                 alert.setTitle("身份验证失败");
-                                alert.setHeaderText("用户名和密码不匹配。");
+                                alert.setHeaderText("用户名和密码不匹配");
                                 alert.show();
                             });
                             Platform.runLater(() ->  progressBar.setProgress(1.0d));

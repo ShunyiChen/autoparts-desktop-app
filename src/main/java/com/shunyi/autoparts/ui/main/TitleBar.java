@@ -1,6 +1,7 @@
 package com.shunyi.autoparts.ui.main;
 
 import com.shunyi.autoparts.ui.MainApp;
+import com.shunyi.autoparts.ui.common.ICONS;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -32,11 +33,11 @@ public class TitleBar extends HBox implements EventHandler<MouseEvent> {
     private HBox rightSubComponent = new HBox();
     private HBox rightSubComponent2 = new HBox();
     private ContextMenu rightClickMenu = new ContextMenu();
-
     private MenuItem itemProfiles = new MenuItem("个人设置");
     private MenuItem itemLogout = new MenuItem("注 销");
     private MenuItem itemTheme = new MenuItem("主 题");
     private MenuItem itemQuit = new MenuItem("退 出");
+    private ICONS icons = ICONS.getInstance();
 
     /**
      *
@@ -84,10 +85,7 @@ public class TitleBar extends HBox implements EventHandler<MouseEvent> {
         rightSubComponent.getChildren().addAll(title);
         title.setId("title");
         title.setPadding(new Insets(20));
-        Image profile = new Image(getClass().getResourceAsStream("/img/Profile.png"));
-        ImageView profileImage = new ImageView(profile);
-        profileImage.setFitHeight(40);
-        profileImage.setFitWidth(40);
+        ImageView profileImage = new ImageView(icons.account_circle());
         profileImage.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent e) {

@@ -1,13 +1,17 @@
 package com.shunyi.autoparts.ui.http;
 
+import java.util.Date;
+
 /** 用户身份验证的http相应 */
 public class AuthenticationResponse {
     private String token;
-    private String timestamp;
-    private String status;
-    private String error;
-    private String message;
-    private String path;
+    private String password;
+    private String username;
+    private boolean accountNonExpired;
+    private boolean accountNonLocked;
+    private boolean credentialsNonExpired;
+    private boolean enabled;
+    private Date lastLoginDate;
 
     public String getToken() {
         return token;
@@ -17,43 +21,73 @@ public class AuthenticationResponse {
         this.token = token;
     }
 
-    public String getTimestamp() {
-        return timestamp;
+    public String getPassword() {
+        return password;
     }
 
-    public void setTimestamp(String timestamp) {
-        this.timestamp = timestamp;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
-    public String getStatus() {
-        return status;
+    public String getUsername() {
+        return username;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public String getError() {
-        return error;
+    public boolean isAccountNonExpired() {
+        return accountNonExpired;
     }
 
-    public void setError(String error) {
-        this.error = error;
+    public void setAccountNonExpired(boolean accountNonExpired) {
+        this.accountNonExpired = accountNonExpired;
     }
 
-    public String getMessage() {
-        return message;
+    public boolean isAccountNonLocked() {
+        return accountNonLocked;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setAccountNonLocked(boolean accountNonLocked) {
+        this.accountNonLocked = accountNonLocked;
     }
 
-    public String getPath() {
-        return path;
+    public boolean isCredentialsNonExpired() {
+        return credentialsNonExpired;
     }
 
-    public void setPath(String path) {
-        this.path = path;
+    public void setCredentialsNonExpired(boolean credentialsNonExpired) {
+        this.credentialsNonExpired = credentialsNonExpired;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public Date getLastLoginDate() {
+        return lastLoginDate;
+    }
+
+    public void setLastLoginDate(Date lastLoginDate) {
+        this.lastLoginDate = lastLoginDate;
+    }
+
+    @Override
+    public String toString() {
+        return "AuthenticationResponse{" +
+                "token='" + token + '\'' +
+                ", password='" + password + '\'' +
+                ", username='" + username + '\'' +
+                ", accountNonExpired=" + accountNonExpired +
+                ", accountNonLocked=" + accountNonLocked +
+                ", credentialsNonExpired=" + credentialsNonExpired +
+                ", enabled=" + enabled +
+                ", lastLoginDate=" + lastLoginDate +
+                '}';
     }
 }

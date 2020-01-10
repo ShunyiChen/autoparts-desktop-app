@@ -117,8 +117,14 @@ public class MaintenanceController {
         }
         Callback<User, String> callback = (newUser ->{
             int index = userTable.getSelectionModel().getSelectedIndex();
-            userTable.getItems().remove(index);
-            userTable.getItems().add(index, newUser);
+//            userTable.getItems().remove(index);
+//            userTable.getItems().add(index, newUser);
+
+//            int i = roleTable.getSelectionModel().getSelectedIndex();
+//            roleTable.getItems().remove(selectedRole);
+//            roleTable.getItems().add(i, param);
+//            roleTable.getSelectionModel().select(param);
+
             return "";
         });
         editUser(callback, selectedUser);
@@ -129,16 +135,42 @@ public class MaintenanceController {
         User deleteUser = userTable.getSelectionModel().getSelectedItem();
         if(deleteUser == null) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
-            alert.setHeaderText("请选择用户。");
+            alert.setHeaderText("请选择一个用户");
             alert.show();
             return;
         }
         Alert alertConfirm = new Alert(Alert.AlertType.CONFIRMATION, "", ButtonType.NO, ButtonType.YES);
-        alertConfirm.setHeaderText("是否删除该用户？");
+        alertConfirm.setHeaderText("请确认是否删除该用户");
         alertConfirm.showAndWait().filter(response -> response == ButtonType.YES).ifPresent(response -> {
 
             try {
+                //删除店铺与用户关系
+                String data = HttpClient.GET("/usershopmappings/user/"+deleteUser.getId());
+                UserShopMapping[] userShopMappings = GoogleJson.GET().fromJson(data, UserShopMapping[].class);
+                if(userShopMappings.length > 0) {
+                    UserShopMapping.Id[] ids = new UserShopMapping.Id[userShopMappings.length];
+                    for(int i = 0; i < userShopMappings.length; i++) {
+                        ids[i] = userShopMappings[i].getId();
+                    }
+                    String json = GoogleJson.GET().toJson(ids);
+                    HttpClient.BATCH_DELETE("/usershopmappings", json);
+                }
+
+                //删除角色与用户关系
+                data = HttpClient.GET("/userrolemappings/user/"+deleteUser.getId());
+                UserRoleMapping[] userRoleMappings = GoogleJson.GET().fromJson(data, UserRoleMapping[].class);
+                if(userRoleMappings.length > 0) {
+                    UserRoleMapping.Id[] ids = new UserRoleMapping.Id[userRoleMappings.length];
+                    for(int i = 0; i < userRoleMappings.length; i++) {
+                        ids[i] = userRoleMappings[i].getId();
+                    }
+                    String json = GoogleJson.GET().toJson(ids);
+                    HttpClient.BATCH_DELETE("/userrolemappings", json);
+                }
+
+                //删除用户
                 HttpClient.DELETE("/users/"+deleteUser.getId());
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -160,6 +192,43 @@ public class MaintenanceController {
         User[] users = GoogleJson.GET().fromJson(json, User[].class);
         userTable.getItems().addAll(users);
     }
+
+    @FXML
+    private void resetPassword() {
+        User selectedUser = userTable.getSelectionModel().getSelectedItem();
+        if(selectedUser == null) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
+            alert.setHeaderText("请选择一个用户");
+            alert.show();
+            return;
+        }
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource(
+                        "/fxml/system/reset_password.fxml"
+                )
+        );
+        VBox root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Scene scene = new Scene(root);
+        Stage dialog = new Stage();
+        dialog.setOnHiding(e -> {
+        });
+        ResetPasswordController controller = loader.getController();
+        controller.prepare(dialog, selectedUser.getId());
+        dialog.setTitle("重置密码");
+        dialog.initOwner(application.getStage());
+        dialog.setResizable(false);
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.setScene(scene);
+        // center stage on screen
+        dialog.centerOnScreen();
+        dialog.show();
+    }
+
 
     /**
      *
@@ -219,7 +288,7 @@ public class MaintenanceController {
         userTable.setId("my-table");
 
         Map<Long, String> shopMap = getAllShopsMap();
-        Map<Long, String> roleMap = getAllShopsMap();
+        Map<Long, String> roleMap = getAllRolesMap();
 
         colUserId.setCellValueFactory(new PropertyValueFactory<User, String>("id"));
         colUserName.setCellValueFactory(new PropertyValueFactory<User, String>("username"));
@@ -253,7 +322,7 @@ public class MaintenanceController {
                 if(names.toString().endsWith(",")) {
                     names.deleteCharAt(names.length()-1);
                 }
-                return new SimpleObjectProperty<>("");
+                return new SimpleObjectProperty<>(names.toString());
             }
         );
 
