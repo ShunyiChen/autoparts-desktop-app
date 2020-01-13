@@ -98,29 +98,21 @@ public class LoginController {
                         Platform.runLater(() ->  progressBar.setProgress(0.95d));
 
                         if(res.getToken() != null) {
-                            if(!res.isEnabled()) {
-                                Platform.runLater(() -> {
-                                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                                    alert.setTitle("身份验证失败");
-                                    alert.setHeaderText("当前用户没有启用");
-                                    alert.show();
-                                });
-                            }
-
                             ENV.getInstance().addToEnvironment("Authorization", "Bearer "+res.getToken());
                             Platform.runLater(() -> progressBar.setProgress(1d));
                             application.gotoDashboard();
                             System.out.println("Logged in successfully.");
+
                         } else {
                             Platform.runLater(() -> {
                                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                                 alert.setTitle("身份验证失败");
-                                alert.setHeaderText("用户名和密码不匹配");
+                                alert.setHeaderText(res.getError());
                                 alert.show();
                             });
                             Platform.runLater(() ->  progressBar.setProgress(1.0d));
-
                         }
+
                     } catch (IOException e) {
                         Platform.runLater(() -> {
                             Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -129,13 +121,11 @@ public class LoginController {
                             alert.show();
                         });
                         Platform.runLater(() ->  progressBar.setProgress(1.0d));
-
                     }
                 }
                 return 0;
             }
         };
-
 
         Thread th = new Thread(task);
         th.setDaemon(true);

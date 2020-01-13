@@ -1,7 +1,5 @@
 package com.shunyi.autoparts.ui.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 import java.util.Date;
 
 /** 品牌系列DTO */

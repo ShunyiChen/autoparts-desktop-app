@@ -46,6 +46,7 @@
                                             <Font size="14.0" />
                                         </font>
                                     </Button>
+                                    <Separator/>
                                     <Button mnemonicParsing="false" onAction="#resetPassword" text="重置密码">
                                         <font>
                                             <Font size="14.0" />

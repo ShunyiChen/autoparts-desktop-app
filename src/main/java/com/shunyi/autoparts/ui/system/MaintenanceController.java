@@ -115,16 +115,11 @@ public class MaintenanceController {
             alert.show();
             return;
         }
-        Callback<User, String> callback = (newUser ->{
-            int index = userTable.getSelectionModel().getSelectedIndex();
-//            userTable.getItems().remove(index);
-//            userTable.getItems().add(index, newUser);
-
-//            int i = roleTable.getSelectionModel().getSelectedIndex();
-//            roleTable.getItems().remove(selectedRole);
-//            roleTable.getItems().add(i, param);
-//            roleTable.getSelectionModel().select(param);
-
+        Callback<User, String> callback = (updatedUser ->{
+            int i = userTable.getSelectionModel().getSelectedIndex();
+            userTable.getItems().remove(selectedUser);
+            userTable.getItems().add(i, updatedUser);
+            userTable.getSelectionModel().select(updatedUser);
             return "";
         });
         editUser(callback, selectedUser);
@@ -503,20 +498,37 @@ public class MaintenanceController {
     }
 
     private void removeShop() {
-        Alert alertConfirm = new Alert(Alert.AlertType.CONFIRMATION, "", ButtonType.NO, ButtonType.YES);
-        alertConfirm.setHeaderText("请确认是否删除当前店铺");
-        alertConfirm.showAndWait().filter(response -> response == ButtonType.YES).ifPresent(response -> {
-            TreeItem<Shop> selected = shopTree.getSelectionModel().getSelectedItem();
-            try {
-                HttpClient.DELETE("/shops/"+selected.getValue().getId());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            TreeItem<Shop> parent = selected.getParent();
-            parent.getChildren().remove(selected);
-            parent.setExpanded(true);
-            shopTree.getSelectionModel().select(parent);
-        });
+        TreeItem<Shop> selected = shopTree.getSelectionModel().getSelectedItem();
+        String data = null;
+        try {
+            data = HttpClient.GET("/usershopmappings/shop/"+selected.getValue().getId());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        UserShopMapping[] mappings = GoogleJson.GET().fromJson(data, UserShopMapping[].class);
+        if(mappings.length > 0) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("无法删除的店铺");
+            alert.setHeaderText("该店铺下已存在用户，无法删除它");
+            alert.show();
+
+        } else {
+            Alert alertConfirm = new Alert(Alert.AlertType.CONFIRMATION, "", ButtonType.NO, ButtonType.YES);
+            alertConfirm.setHeaderText("请确认是否删除当前店铺");
+            alertConfirm.showAndWait().filter(response -> response == ButtonType.YES).ifPresent(response -> {
+                try {
+                    HttpClient.DELETE("/shops/"+selected.getValue().getId());
+                    TreeItem<Shop> parent = selected.getParent();
+                    parent.getChildren().remove(selected);
+                    parent.setExpanded(true);
+                    shopTree.getSelectionModel().select(parent);
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+
+        }
     }
 
 
