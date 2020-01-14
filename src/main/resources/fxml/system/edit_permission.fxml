@@ -9,11 +9,11 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="626.0" prefWidth="272.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.shunyi.autoparts.ui.system.EditRoleController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="373.0" prefWidth="272.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.shunyi.autoparts.ui.system.EditRoleController">
    <children>
       <FlowPane alignment="CENTER_LEFT" prefHeight="39.0" prefWidth="318.0">
          <children>
-            <Label alignment="CENTER" prefHeight="19.0" prefWidth="70.0" text="角色名:">
+            <Label alignment="CENTER" prefHeight="19.0" prefWidth="70.0" text="权限名:">
                <font>
                   <Font size="14.0" />
                </font>
@@ -39,7 +39,7 @@
             </TextField>
          </children>
       </FlowPane>
-      <Label text="用户:">
+      <Label text="角色:">
          <font>
             <Font size="14.0" />
          </font>
@@ -48,19 +48,6 @@
          </VBox.margin>
       </Label>
       <ScrollPane prefHeight="233.0" prefWidth="272.0">
-         <content>
-            <VBox prefHeight="230.0" prefWidth="257.0" />
-         </content>
-      </ScrollPane>
-      <Label layoutX="20.0" layoutY="92.0" text="权限:">
-         <font>
-            <Font size="14.0" />
-         </font>
-         <VBox.margin>
-            <Insets left="10.0" />
-         </VBox.margin>
-      </Label>
-      <ScrollPane layoutX="10.0" layoutY="111.0" prefHeight="233.0" prefWidth="272.0">
          <content>
             <VBox prefHeight="230.0" prefWidth="257.0" />
          </content>

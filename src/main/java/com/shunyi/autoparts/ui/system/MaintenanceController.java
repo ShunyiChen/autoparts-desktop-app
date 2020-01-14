@@ -533,15 +533,41 @@ public class MaintenanceController {
 
 
     private void initRoleTable() {
+        Map<Long, String> userMap = getAllUsersMap();
+        Map<Long, String> permissionMap = getAllPermissionsMap();
+
         colRoleId.setCellValueFactory(new PropertyValueFactory<Role, String>("id"));
         colRoleName.setCellValueFactory(new PropertyValueFactory<Role, String>("name"));
         colRoleDesc.setCellValueFactory(new PropertyValueFactory<Role, String>("description"));
-        colUsers.setCellValueFactory(param ->
-                new SimpleObjectProperty<>(param.getValue().getUserRoleMappingSet().toString())
-        );
-        colPermissions.setCellValueFactory(param ->
-                new SimpleObjectProperty<>(param.getValue().getRolePermissionMappingSet().toString())
-        );
+        colUsers.setCellValueFactory(param -> {
+            List<Long> userIds = param.getValue().getUserRoleMappingSet().stream().map(e -> e.getId().getUserId()).collect(Collectors.toList());
+            StringBuilder names = new StringBuilder();
+            for(Long userId : userIds) {
+                if(userMap.containsKey(userId)) {
+                    names.append(userMap.get(userId));
+                    names.append(",");
+                }
+            }
+            if(names.toString().endsWith(",")) {
+                names.deleteCharAt(names.length()-1);
+            }
+            return new SimpleObjectProperty<>(names.toString());
+        });
+
+        colPermissions.setCellValueFactory(param -> {
+            List<Long> permissionIds = param.getValue().getRolePermissionMappingSet().stream().map(e -> e.getId().getPermissionId()).collect(Collectors.toList());
+            StringBuilder names = new StringBuilder();
+            for(Long permissionId : permissionIds) {
+                if(permissionMap.containsKey(permissionId)) {
+                    names.append(permissionMap.get(permissionId));
+                    names.append(",");
+                }
+            }
+            if(names.toString().endsWith(",")) {
+                names.deleteCharAt(names.length()-1);
+            }
+            return new SimpleObjectProperty<>(names.toString());
+        });
 
         roleTable.setOnMouseClicked((MouseEvent event) -> {
             if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2){
@@ -570,6 +596,48 @@ public class MaintenanceController {
 
         Role[] roles = getAllRoles();
         roleTable.getItems().addAll(roles);
+    }
+
+    private Map<Long, String> getAllUsersMap() {
+        HashMap<Long, String> map = new HashMap<>();
+        User[] users = getAllUsers();
+        for(User user : users) {
+            map.put(user.getId(), user.getUsername());
+        }
+        return map;
+    }
+
+    private User[] getAllUsers() {
+        String path = "/users";
+        String json;
+        try {
+            json = HttpClient.GET(path);
+            return GoogleJson.GET().fromJson(json, User[].class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return new User[]{};
+    }
+
+    private Map<Long, String> getAllPermissionsMap() {
+        HashMap<Long, String> map = new HashMap<>();
+        Permission[] permissions = getAllPermissions();
+        for(Permission permission : permissions) {
+            map.put(permission.getId(), permission.getName());
+        }
+        return map;
+    }
+
+    private Permission[] getAllPermissions() {
+        String path = "/permissions";
+        String json;
+        try {
+            json = HttpClient.GET(path);
+            return GoogleJson.GET().fromJson(json, Permission[].class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return new Permission[]{};
     }
 
     @FXML
