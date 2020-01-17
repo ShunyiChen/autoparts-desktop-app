@@ -49,7 +49,11 @@
       </Label>
       <ScrollPane prefHeight="233.0" prefWidth="272.0">
          <content>
-            <VBox prefHeight="230.0" prefWidth="257.0" />
+            <VBox fx:id="userCheckBoxPane" prefHeight="230.0" prefWidth="257.0" spacing="5.0">
+               <padding>
+                  <Insets left="5.0" top="5.0" />
+               </padding>
+            </VBox>
          </content>
       </ScrollPane>
       <Label layoutX="20.0" layoutY="92.0" text="权限:">
@@ -62,7 +66,11 @@
       </Label>
       <ScrollPane layoutX="10.0" layoutY="111.0" prefHeight="233.0" prefWidth="272.0">
          <content>
-            <VBox prefHeight="230.0" prefWidth="257.0" />
+            <VBox fx:id="permissionCheckBoxPane" prefHeight="230.0" prefWidth="257.0" spacing="5.0">
+               <padding>
+                  <Insets left="5.0" top="5.0" />
+               </padding>
+            </VBox>
          </content>
       </ScrollPane>
       <FlowPane alignment="CENTER" hgap="10.0" layoutX="10.0" layoutY="54.0" prefHeight="36.0" prefWidth="287.0">
@@ -80,7 +88,7 @@
                   <Insets />
                </FlowPane.margin>
             </Button>
-            <Button fx:id="btnOk1" layoutX="174.0" layoutY="18.0" mnemonicParsing="false" onAction="#ok" text="继续创建">
+            <Button fx:id="btnOk1" layoutX="174.0" layoutY="18.0" mnemonicParsing="false" onAction="#continueCreating" text="继续创建">
                <font>
                   <Font size="14.0" />
                </font>

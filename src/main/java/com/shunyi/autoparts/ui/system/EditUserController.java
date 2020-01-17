@@ -139,7 +139,6 @@ public class EditUserController {
                 callback.call(updatedUser);
 
             } else {
-                //继续添加
                 creatingUser();
             }
             dialog.close();

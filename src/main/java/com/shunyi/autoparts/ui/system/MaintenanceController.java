@@ -111,7 +111,7 @@ public class MaintenanceController {
         User selectedUser = userTable.getSelectionModel().getSelectedItem();
         if(selectedUser == null) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
-            alert.setHeaderText("请选择用户。");
+            alert.setHeaderText("请选择用户");
             alert.show();
             return;
         }
@@ -468,7 +468,6 @@ public class MaintenanceController {
         });
     }
 
-
     private void editShop(Callback callback, Shop selectedShop) {
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource(
@@ -530,7 +529,6 @@ public class MaintenanceController {
 
         }
     }
-
 
     private void initRoleTable() {
         Map<Long, String> userMap = getAllUsersMap();
@@ -642,16 +640,8 @@ public class MaintenanceController {
 
     @FXML
     private void createNewRole() {
-        Callback<Role, String> callback = param -> {
-            String json = GoogleJson.GET().toJson(param);
-            String idStr = null;
-            try {
-                idStr = HttpClient.POST("/roles", json);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            param.setId(Long.valueOf(idStr));
-            roleTable.getItems().add(param);
+        Callback<Role, String> callback = newRole -> {
+            roleTable.getItems().add(newRole);
             return null;
         };
         editRole(callback, null);
@@ -662,23 +652,16 @@ public class MaintenanceController {
         Role selectedRole = roleTable.getSelectionModel().getSelectedItem();
         if(selectedRole == null) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
-            alert.setHeaderText("请选择角色。");
+            alert.setHeaderText("请选择角色");
             alert.show();
             return;
         }
-        Callback<Role, String> callback = param -> {
-            param.setId(selectedRole.getId());
-            String json = GoogleJson.GET().toJson(param);
-            try {
-                HttpClient.PUT("/roles/"+selectedRole.getId(), json);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        Callback<Role, String> callback = updatedRole -> {
             //刷新表格
             int i = roleTable.getSelectionModel().getSelectedIndex();
             roleTable.getItems().remove(selectedRole);
-            roleTable.getItems().add(i, param);
-            roleTable.getSelectionModel().select(param);
+            roleTable.getItems().add(i, updatedRole);
+            roleTable.getSelectionModel().select(updatedRole);
             return "";
         };
         editRole(callback, selectedRole);
@@ -702,7 +685,7 @@ public class MaintenanceController {
         });
         EditRoleController controller = loader.getController();
         controller.prepare(dialog, selectedRole, callback);
-        dialog.setTitle("新建角色");
+        dialog.setTitle(selectedRole==null?"新建角色":"更改角色");
         dialog.initOwner(application.getStage());
         dialog.setResizable(false);
         dialog.initModality(Modality.APPLICATION_MODAL);
@@ -725,19 +708,45 @@ public class MaintenanceController {
         Role selectedRole = roleTable.getSelectionModel().getSelectedItem();
         if(selectedRole == null) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
-            alert.setHeaderText("请选择角色。");
+            alert.setHeaderText("请选择角色");
             alert.show();
             return;
         }
         Alert alertConfirm = new Alert(Alert.AlertType.CONFIRMATION, "", ButtonType.NO, ButtonType.YES);
-        alertConfirm.setHeaderText("是否删除该用户？");
+        alertConfirm.setHeaderText("请确定是否删除该角色");
         alertConfirm.showAndWait().filter(response -> response == ButtonType.YES).ifPresent(response -> {
-
             try {
+                //删除角色与用户关系
+                String data = HttpClient.GET("/userrolemappings/role/"+selectedRole.getId());
+                UserRoleMapping[] userRoleMappings = GoogleJson.GET().fromJson(data, UserRoleMapping[].class);
+                if(userRoleMappings.length > 0) {
+                    UserRoleMapping.Id[] ids = new UserRoleMapping.Id[userRoleMappings.length];
+                    for(int i = 0; i < userRoleMappings.length; i++) {
+                        ids[i] = userRoleMappings[i].getId();
+                    }
+                    String json = GoogleJson.GET().toJson(ids);
+                    HttpClient.BATCH_DELETE("/userrolemappings", json);
+                }
+
+                //删除角色与权限关系
+                data = HttpClient.GET("/rolepermissionmappings/role/"+selectedRole.getId());
+                RolePermissionMapping[] rolePermissionMappings = GoogleJson.GET().fromJson(data, RolePermissionMapping[].class);
+                if(rolePermissionMappings.length > 0) {
+                    RolePermissionMapping.Id[] ids = new RolePermissionMapping.Id[userRoleMappings.length];
+                    for(int i = 0; i < rolePermissionMappings.length; i++) {
+                        ids[i] = rolePermissionMappings[i].getId();
+                    }
+                    String json = GoogleJson.GET().toJson(ids);
+                    HttpClient.BATCH_DELETE("/rolepermissionmappings", json);
+                }
+
+                //删除角色
                 HttpClient.DELETE("/roles/"+selectedRole.getId());
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
             roleTable.getItems().remove(selectedRole);
         });
     }
@@ -928,7 +937,6 @@ public class MaintenanceController {
         colVFSPort.setCellValueFactory(new PropertyValueFactory<VFS, String>("port"));
         colVFSHome.setCellValueFactory(new PropertyValueFactory<VFS, String>("home"));
         colVFSUserName.setCellValueFactory(new PropertyValueFactory<VFS, String>("userName"));
-//        colVFSPassword.setCellValueFactory(new PropertyValueFactory<VFS, String>("password"));
         colVFSPassword.setCellValueFactory(param ->
                 new SimpleObjectProperty<>("******")
         );

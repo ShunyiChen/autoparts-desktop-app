@@ -14,13 +14,15 @@ public class Permission {
     private String description;
     /** 角色与权限映射关系 */
     protected Set<RolePermissionMapping> rolePermissionMappingSet = new HashSet<>();
+    /** 权限编码 */
+    private String code;
 
     public Permission() {}
 
-    public Permission(String name, String description, Set<RolePermissionMapping> rolePermissionMappingSet) {
+    public Permission(String name, String description, String code) {
         this.name = name;
         this.description = description;
-        this.rolePermissionMappingSet = rolePermissionMappingSet;
+        this.code = code;
     }
 
     public long getId() {
@@ -55,6 +57,14 @@ public class Permission {
         this.rolePermissionMappingSet = rolePermissionMappingSet;
     }
 
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
     @Override
     public String toString() {
         return "Permission{" +
@@ -62,6 +72,7 @@ public class Permission {
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", rolePermissionMappingSet=" + rolePermissionMappingSet +
+                ", code='" + code + '\'' +
                 '}';
     }
 }

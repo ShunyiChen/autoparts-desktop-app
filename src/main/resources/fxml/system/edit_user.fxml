@@ -95,7 +95,7 @@
                   </CheckBox>
                </children>
                <padding>
-                  <Insets left="10.0" />
+                  <Insets left="5.0" top="5.0" />
                </padding>
             </VBox>
          </content>
@@ -123,7 +123,7 @@
                         </CheckBox>
                      </children>
                      <padding>
-                        <Insets left="10.0" />
+                        <Insets left="5.0" top="5.0" />
                      </padding>
                   </VBox>
                </content>
