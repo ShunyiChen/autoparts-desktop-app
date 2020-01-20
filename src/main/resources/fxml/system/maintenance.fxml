@@ -131,7 +131,13 @@
                   <top>
                       <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                           <items>
-                              <Button mnemonicParsing="false" onAction="#createNewVFS" text="编辑权限">
+                              <Button mnemonicParsing="false" onAction="#editPermission" text="编辑">
+                                  <font>
+                                      <Font size="14.0" />
+                                  </font>
+                              </Button>
+                              <Separator/>
+                              <Button mnemonicParsing="false" onAction="#refreshPermission" text="刷新">
                                   <font>
                                       <Font size="14.0" />
                                   </font>

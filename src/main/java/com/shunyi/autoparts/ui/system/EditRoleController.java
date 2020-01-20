@@ -31,6 +31,8 @@ public class EditRoleController {
     private TextField txtDesc;
     @FXML
     private Button btnOk;
+    @FXML
+    private Button btnContinue;
 
     @FXML
     private void ok() {
@@ -255,6 +257,7 @@ public class EditRoleController {
         this.dialog = dialog;
         this.selectedRole = selectedRole;
         this.callback = callback;
+        btnContinue.setVisible(true);
         btnOk.setStyle(String.format("-fx-base: %s;", "rgb(63,81,181)"));
 
         initUserCheckBox();
@@ -265,6 +268,8 @@ public class EditRoleController {
             txtName.setText(selectedRole.getName());
             txtDesc.setText(selectedRole.getDescription());
             txtName.selectAll();
+            btnOk.setText("更  改");
+            btnContinue.setVisible(false);
         }
     }
 
@@ -282,8 +287,19 @@ public class EditRoleController {
             e.printStackTrace();
         }
 
-        //TODO
         //加载选中的
+        if(selectedRole != null) {
+            userCheckBoxPane.getChildren().forEach(checkbox -> {
+                Long userId = Long.valueOf(checkbox.getUserData().toString());
+                ((CheckBox)checkbox).setSelected(false);
+                selectedRole.getUserRoleMappingSet().forEach(id -> {
+                    if(id.getId().getUserId() == userId) {
+                        ((CheckBox)checkbox).setSelected(true);
+                    }
+                });
+
+            });
+        }
     }
 
     private void initPermissionCheckBox() {
@@ -299,7 +315,18 @@ public class EditRoleController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        //TODO
         //加载选中的
+        if(selectedRole != null) {
+            permissionCheckBoxPane.getChildren().forEach(checkbox -> {
+                Long permissionId = Long.valueOf(checkbox.getUserData().toString());
+                ((CheckBox)checkbox).setSelected(false);
+                selectedRole.getRolePermissionMappingSet().forEach(id -> {
+                    if(id.getId().getPermissionId() == permissionId) {
+                        ((CheckBox)checkbox).setSelected(true);
+                    }
+                });
+
+            });
+        }
     }
 }

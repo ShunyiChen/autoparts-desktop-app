@@ -732,7 +732,7 @@ public class MaintenanceController {
                 data = HttpClient.GET("/rolepermissionmappings/role/"+selectedRole.getId());
                 RolePermissionMapping[] rolePermissionMappings = GoogleJson.GET().fromJson(data, RolePermissionMapping[].class);
                 if(rolePermissionMappings.length > 0) {
-                    RolePermissionMapping.Id[] ids = new RolePermissionMapping.Id[userRoleMappings.length];
+                    RolePermissionMapping.Id[] ids = new RolePermissionMapping.Id[rolePermissionMappings.length];
                     for(int i = 0; i < rolePermissionMappings.length; i++) {
                         ids[i] = rolePermissionMappings[i].getId();
                     }
@@ -773,6 +773,39 @@ public class MaintenanceController {
         return map;
     }
 
+    @FXML
+    private void editPermission() {
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource(
+                        "/fxml/system/edit_permission.fxml"
+                )
+        );
+        VBox root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Scene scene = new Scene(root);
+        Stage dialog = new Stage();
+        dialog.setOnHiding(e -> {
+        });
+        EditPermissionController controller = loader.getController();
+//        controller.prepare(dialog, selectedRole, callback);
+        dialog.setTitle("更改权限");
+        dialog.initOwner(application.getStage());
+        dialog.setResizable(false);
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.setScene(scene);
+        // center stage on screen
+        dialog.centerOnScreen();
+        dialog.show();
+    }
+
+    @FXML
+    private void refreshPermission() {
+
+    }
 
     private void initVFSTree() {
         VFSCategory rootCategory = new VFSCategory("全部分类", -1, true);

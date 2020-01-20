@@ -88,7 +88,7 @@
                   <Insets />
                </FlowPane.margin>
             </Button>
-            <Button fx:id="btnOk1" layoutX="174.0" layoutY="18.0" mnemonicParsing="false" onAction="#continueCreating" text="继续创建">
+            <Button fx:id="btnContinue" layoutX="174.0" layoutY="18.0" mnemonicParsing="false" onAction="#continueCreating" text="继续创建">
                <font>
                   <Font size="14.0" />
                </font>
