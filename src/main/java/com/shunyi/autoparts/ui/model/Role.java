@@ -6,7 +6,7 @@ import java.util.Set;
 /** 角色 */
 public class Role {
     /** 角色ID */
-    private long id;
+    private Long id;
     /** 角色名称 */
     private String name;
     /** 描述*/
@@ -24,11 +24,11 @@ public class Role {
         this.description = description;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="373.0" prefWidth="272.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.shunyi.autoparts.ui.system.EditPermissionController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="410.0" prefWidth="272.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.shunyi.autoparts.ui.system.EditPermissionController">
    <children>
       <FlowPane alignment="CENTER_LEFT" prefHeight="39.0" prefWidth="318.0">
          <children>
@@ -39,6 +39,20 @@
             </TextField>
          </children>
       </FlowPane>
+      <FlowPane alignment="CENTER_LEFT" prefHeight="43.0" prefWidth="318.0">
+         <children>
+            <Label alignment="CENTER" prefHeight="19.0" prefWidth="70.0" text="编  码:">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <TextField fx:id="txtCode" disable="true">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </TextField>
+         </children>
+      </FlowPane>
       <Label text="角色:">
          <font>
             <Font size="14.0" />
@@ -49,7 +63,11 @@
       </Label>
       <ScrollPane prefHeight="233.0" prefWidth="272.0">
          <content>
-            <VBox prefHeight="230.0" prefWidth="257.0" />
+            <VBox fx:id="roleCheckBoxPane" prefHeight="230.0" prefWidth="257.0" spacing="5.0">
+               <padding>
+                  <Insets left="5.0" top="5.0" />
+               </padding>
+            </VBox>
          </content>
       </ScrollPane>
       <FlowPane alignment="CENTER" hgap="10.0" layoutX="10.0" layoutY="54.0" prefHeight="36.0" prefWidth="287.0">
@@ -59,18 +77,13 @@
                   <Font size="14.0" />
                </font>
             </Button>
-            <Button fx:id="btnOk" mnemonicParsing="false" onAction="#ok" text="创  建">
+            <Button fx:id="btnOk" mnemonicParsing="false" onAction="#ok" text="更  改">
                <font>
                   <Font size="14.0" />
                </font>
                <FlowPane.margin>
                   <Insets />
                </FlowPane.margin>
-            </Button>
-            <Button fx:id="btnContinue" layoutX="174.0" layoutY="18.0" mnemonicParsing="false" onAction="#ok" text="继续创建">
-               <font>
-                  <Font size="14.0" />
-               </font>
             </Button>
          </children>
       </FlowPane>

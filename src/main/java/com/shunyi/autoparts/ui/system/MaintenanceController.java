@@ -71,6 +71,19 @@ public class MaintenanceController {
     @FXML
     private TableColumn<Role, String> colPermissions;
 
+    @FXML
+    private TableView<Permission> permissionTable;
+    @FXML
+    private TableColumn colPermissionId;
+    @FXML
+    private TableColumn colPermissionName;
+    @FXML
+    private TableColumn colPermissionDesc;
+    @FXML
+    private TableColumn colPermissionCode;
+    @FXML
+    private TableColumn<Permission, String> colPermissionRoles;
+
 
     @FXML
     private TreeView<VFSCategory> vfsTree;
@@ -264,16 +277,25 @@ public class MaintenanceController {
      */
     public void prepare(MainApp application) {
         this.application = application;
+
         //初始化用户表格
         initUserTable();
+
         //初始化店铺树
         initShopTree();
+
         //初始化树右键菜单
         initMenuItems();
+
         //初始化角色表格
         initRoleTable();
+
+        //初始化权限表格
+        initPermissionTable();
+
         //初始化VFS树
         initVFSTree();
+
         //初始化VFS表格
         initVFSTable();
     }
@@ -775,6 +797,22 @@ public class MaintenanceController {
 
     @FXML
     private void editPermission() {
+        Permission selectedPermission = permissionTable.getSelectionModel().getSelectedItem();
+        if(selectedPermission == null) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
+            alert.setHeaderText("请选择一个权限");
+            alert.show();
+            return;
+        }
+        Callback<Permission, String> callback = updatedPermission -> {
+            //刷新表格
+            int i = permissionTable.getSelectionModel().getSelectedIndex();
+            permissionTable.getItems().remove(selectedPermission);
+            permissionTable.getItems().add(i, updatedPermission);
+            permissionTable.getSelectionModel().select(updatedPermission);
+            return "";
+        };
+
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource(
                         "/fxml/system/edit_permission.fxml"
@@ -791,7 +829,7 @@ public class MaintenanceController {
         dialog.setOnHiding(e -> {
         });
         EditPermissionController controller = loader.getController();
-//        controller.prepare(dialog, selectedRole, callback);
+        controller.prepare(dialog, selectedPermission, callback);
         dialog.setTitle("更改权限");
         dialog.initOwner(application.getStage());
         dialog.setResizable(false);
@@ -804,7 +842,61 @@ public class MaintenanceController {
 
     @FXML
     private void refreshPermission() {
+        permissionTable.getItems().clear();
 
+        Permission[] permissions = getAllPermissions();
+        permissionTable.getItems().addAll(permissions);
+    }
+
+
+    private void initPermissionTable() {
+
+        permissionTable.setId("my-table");
+
+        Map<Long, String> roleMap = getAllRolesMap();
+
+        colPermissionId.setCellValueFactory(new PropertyValueFactory<Permission, String>("id"));
+        colPermissionName.setCellValueFactory(new PropertyValueFactory<Permission, String>("name"));
+        colPermissionDesc.setCellValueFactory(new PropertyValueFactory<Permission, String>("description"));
+        colPermissionCode.setCellValueFactory(new PropertyValueFactory<Permission, String>("code"));
+        colPermissionRoles.setCellValueFactory(param -> {
+                    List<Long> roleIds = param.getValue().getRolePermissionMappingSet().stream().map(e -> e.getId().getRoleId()).collect(Collectors.toList());
+                    StringBuilder names = new StringBuilder();
+                    for(Long roleId : roleIds) {
+                        if(roleMap.containsKey(roleId)) {
+                            names.append(roleMap.get(roleId));
+                            names.append(",");
+                        }
+                    }
+                    if(names.toString().endsWith(",")) {
+                        names.deleteCharAt(names.length()-1);
+                    }
+                    return new SimpleObjectProperty<>(names.toString());
+                }
+        );
+        permissionTable.setOnMouseClicked((MouseEvent event) -> {
+            if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2){
+                editPermission();
+            }
+        });
+        ContextMenu menu = new ContextMenu();
+        MenuItem itemEdit= new MenuItem("编辑");
+        MenuItem itemRefresh= new MenuItem("刷新");
+        itemEdit.setOnAction(e ->{
+            editPermission();
+        });
+        itemRefresh.setOnAction(e ->{
+            refreshPermission();
+        });
+        menu.getItems().addAll(itemEdit, itemRefresh);
+        permissionTable.addEventHandler(MouseEvent.MOUSE_CLICKED, t -> {
+            if(t.getButton() == MouseButton.SECONDARY) {
+                menu.show(permissionTable, t.getScreenX(), t.getScreenY());
+            }
+        });
+
+        Permission[] permissions = getAllPermissions();
+        permissionTable.getItems().addAll(permissions);
     }
 
     private void initVFSTree() {

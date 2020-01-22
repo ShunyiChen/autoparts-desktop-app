@@ -2,7 +2,6 @@ package com.shunyi.autoparts.ui.buy;
 
 import com.shunyi.autoparts.ui.MainApp;
 import com.shunyi.autoparts.ui.common.EditingCell;
-import com.shunyi.autoparts.ui.common.MD5;
 import com.shunyi.autoparts.ui.main.BaseContainer;
 import com.shunyi.autoparts.ui.model.AutoPart;
 import javafx.collections.ListChangeListener;
@@ -283,11 +282,11 @@ public class PurchaseOrder extends BorderPane implements BaseContainer {
             this.getChildren().remove(formPane);
     }
 
-    private String generateMD5Str() {
-        String tableContentStr = getTableContentStr();
-        String hashText = MD5.getMD5(tableContentStr);
-        return hashText;
-    }
+//    private String generateMD5Str() {
+//        String tableContentStr = getTableContentStr();
+//        String hashText = MD5.getMD5(tableContentStr);
+//        return hashText;
+//    }
 
     private String getTableContentStr() {
         return "";

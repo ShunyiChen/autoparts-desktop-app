@@ -124,7 +124,8 @@
                               <TableColumn fx:id="colPermissionId" prefWidth="75.0" text="ID" visible="false"/>
                               <TableColumn fx:id="colPermissionName" prefWidth="175.0" text="权限名" />
                               <TableColumn fx:id="colPermissionDesc" prefWidth="275.0" text="描述" />
-                              <TableColumn fx:id="colPermissionRoles" prefWidth="175.0" text="角色" />
+                              <TableColumn fx:id="colPermissionCode" prefWidth="75.0" text="编码" />
+                              <TableColumn fx:id="colPermissionRoles" prefWidth="275.0" text="角色" />
                           </columns>
                       </TableView>
                   </center>
