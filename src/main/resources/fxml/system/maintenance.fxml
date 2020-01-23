@@ -171,6 +171,7 @@
                                     <TableColumn fx:id="colVFSPassword" prefWidth="75.0" text="连接密码" />
                                     <TableColumn fx:id="colCanRead" prefWidth="75.0" text="可读" />
                                     <TableColumn fx:id="colCanWrite" prefWidth="75.0" text="可写" />
+                                    <TableColumn fx:id="colAcquiescent" prefWidth="55.0" text="默认的" />
                                 </columns>
                               </TableView>
                            </center>
@@ -194,6 +195,12 @@
                                     </Button>
                                     <Separator />
                                     <Button mnemonicParsing="false" onAction="#refreshVFS" text="刷新">
+                                        <font>
+                                            <Font size="14.0" />
+                                        </font>
+                                    </Button>
+                                    <Separator />
+                                    <Button mnemonicParsing="false" onAction="#updateAcquiescent" text="设置默认">
                                         <font>
                                             <Font size="14.0" />
                                         </font>

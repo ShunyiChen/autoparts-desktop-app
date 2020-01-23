@@ -5,17 +5,17 @@
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<?import javafx.scene.control.PasswordField?>
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="402.0" prefWidth="353.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.shunyi.autoparts.ui.system.EditVFSController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="372.0" prefWidth="302.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.shunyi.autoparts.ui.system.EditVFSController">
    <children>
       <FlowPane alignment="CENTER_LEFT" prefHeight="40.0" prefWidth="600.0">
          <children>
-            <Label alignment="CENTER" prefHeight="19.0" prefWidth="89.0" text="*名称:">
+            <Label alignment="CENTER" prefHeight="19.0" prefWidth="89.0" text="*名   称:">
                <font>
                   <Font size="14.0" />
                </font>
@@ -29,7 +29,7 @@
       </FlowPane>
       <FlowPane alignment="CENTER_LEFT" layoutX="10.0" layoutY="10.0" prefHeight="40.0" prefWidth="600.0">
          <children>
-            <Label alignment="CENTER" prefHeight="19.0" prefWidth="89.0" text="*协议:">
+            <Label alignment="CENTER" prefHeight="19.0" prefWidth="89.0" text="*协   议:">
                <font>
                   <Font size="14.0" />
                </font>
@@ -39,7 +39,7 @@
       </FlowPane>
       <FlowPane alignment="CENTER_LEFT" layoutX="10.0" layoutY="10.0" prefHeight="40.0" prefWidth="600.0">
          <children>
-            <Label alignment="CENTER" prefHeight="19.0" prefWidth="89.0" text="*主机地址:">
+            <Label alignment="CENTER" prefHeight="19.0" prefWidth="89.0" text="*主   机:">
                <font>
                   <Font size="14.0" />
                </font>
@@ -53,7 +53,7 @@
       </FlowPane>
       <FlowPane alignment="CENTER_LEFT" layoutX="10.0" layoutY="10.0" prefHeight="40.0" prefWidth="600.0">
          <children>
-            <Label alignment="CENTER" prefHeight="19.0" prefWidth="88.0" text="*端口:">
+            <Label alignment="CENTER" prefHeight="19.0" prefWidth="88.0" text="*端   口:">
                <font>
                   <Font size="14.0" />
                </font>
@@ -67,7 +67,7 @@
       </FlowPane>
       <FlowPane alignment="CENTER_LEFT" layoutX="10.0" layoutY="10.0" prefHeight="40.0" prefWidth="600.0">
          <children>
-            <Label alignment="CENTER" prefHeight="19.0" prefWidth="88.0" text="*用户主目录:">
+            <Label alignment="CENTER" prefHeight="19.0" prefWidth="88.0" text="*主目录:">
                <font>
                   <Font size="14.0" />
                </font>
@@ -81,7 +81,7 @@
       </FlowPane>
       <FlowPane alignment="CENTER_LEFT" layoutX="10.0" layoutY="170.0" prefHeight="40.0" prefWidth="600.0">
          <children>
-            <Label alignment="CENTER" prefHeight="19.0" prefWidth="88.0" text="连接用户名:">
+            <Label alignment="CENTER" prefHeight="19.0" prefWidth="88.0" text="用户名:">
                <font>
                   <Font size="14.0" />
                </font>
@@ -95,7 +95,7 @@
       </FlowPane>
       <FlowPane alignment="CENTER_LEFT" layoutX="10.0" layoutY="210.0" prefHeight="40.0" prefWidth="600.0">
          <children>
-            <Label alignment="CENTER" prefHeight="19.0" prefWidth="88.0" text="连接密码:">
+            <Label alignment="CENTER" prefHeight="19.0" prefWidth="88.0" text="密   码:">
                <font>
                   <Font size="14.0" />
                </font>
@@ -107,14 +107,14 @@
             </PasswordField>
          </children>
       </FlowPane>
-      <FlowPane alignment="CENTER" layoutX="10.0" layoutY="260.0" prefHeight="64.0" prefWidth="353.0">
+      <FlowPane alignment="CENTER" layoutX="10.0" layoutY="260.0" prefHeight="33.0" prefWidth="353.0">
          <children>
-            <CheckBox mnemonicParsing="false" text="可读" fx:id="checkboxCanRead">
+            <CheckBox fx:id="checkboxCanRead" mnemonicParsing="false" text="可读">
                <font>
                   <Font size="14.0" />
                </font>
             </CheckBox>
-            <CheckBox mnemonicParsing="false" text="可写" fx:id="checkboxCanWrite">
+            <CheckBox fx:id="checkboxCanWrite" mnemonicParsing="false" text="可写">
                <font>
                   <Font size="14.0" />
                </font>
@@ -124,7 +124,7 @@
             </CheckBox>
          </children>
       </FlowPane>
-      <FlowPane alignment="CENTER" hgap="10.0" layoutX="10.0" layoutY="250.0" prefHeight="43.0" prefWidth="353.0">
+      <FlowPane alignment="CENTER" hgap="10.0" layoutX="10.0" layoutY="250.0" prefHeight="50.0" prefWidth="302.0">
          <children>
             <Button mnemonicParsing="false" onAction="#cancel" text="取  消">
                <font>

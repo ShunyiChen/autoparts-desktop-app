@@ -84,7 +84,6 @@ public class MaintenanceController {
     @FXML
     private TableColumn<Permission, String> colPermissionRoles;
 
-
     @FXML
     private TreeView<VFSCategory> vfsTree;
     @FXML
@@ -109,11 +108,14 @@ public class MaintenanceController {
     private TableColumn<VFS, String> colCanRead;
     @FXML
     private TableColumn<VFS, String> colCanWrite;
+    @FXML
+    private TableColumn<VFS, String> colAcquiescent;
 
     @FXML
     void createNewUser() {
         Callback<User, String> callback = (user ->{
             userTable.getItems().add(user);
+            userTable.refresh();
             return "";
         });
         editUser(callback, null);
@@ -553,6 +555,8 @@ public class MaintenanceController {
     }
 
     private void initRoleTable() {
+
+        roleTable.setId("my-table");
         Map<Long, String> userMap = getAllUsersMap();
         Map<Long, String> permissionMap = getAllPermissionsMap();
 
@@ -664,6 +668,7 @@ public class MaintenanceController {
     private void createNewRole() {
         Callback<Role, String> callback = newRole -> {
             roleTable.getItems().add(newRole);
+            roleTable.refresh();
             return null;
         };
         editRole(callback, null);
@@ -1055,6 +1060,8 @@ public class MaintenanceController {
     }
 
     private void initVFSTable() {
+        vfsTable.setId("my-table");
+
         colVFSId.setCellValueFactory(new PropertyValueFactory<VFS, String>("id"));
         colVFSName.setCellValueFactory(new PropertyValueFactory<VFS, String>("name"));
         colVFSProtocol.setCellValueFactory(new PropertyValueFactory<VFS, String>("protocol"));
@@ -1070,6 +1077,9 @@ public class MaintenanceController {
         );
         colCanWrite.setCellValueFactory(param ->
                 new SimpleObjectProperty<>(param.getValue().getCanWrite()?"是": "否")
+        );
+        colAcquiescent.setCellValueFactory(param ->
+                new SimpleObjectProperty<>(param.getValue().getAcquiescent()?"◉": "")
         );
 
         vfsTable.setOnMouseClicked((MouseEvent event) -> {
@@ -1113,6 +1123,7 @@ public class MaintenanceController {
                     e.printStackTrace();
                 }
                 vfsTable.getItems().add(param);
+                vfsTable.refresh();
                 return null;
             }
         };
@@ -1248,5 +1259,23 @@ public class MaintenanceController {
         // center stage on screen
         dialog.centerOnScreen();
         dialog.show();
+    }
+
+    @FXML
+    private void updateAcquiescent() {
+        VFS selectedVFS = vfsTable.getSelectionModel().getSelectedItem();
+        if(selectedVFS == null) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
+            alert.setHeaderText("请选择一个VFS");
+            alert.show();
+            return;
+        }
+        try {
+            HttpClient.PUT("/vfs/acquiescent/"+selectedVFS.getId(), "");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        refreshVFS();
     }
 }

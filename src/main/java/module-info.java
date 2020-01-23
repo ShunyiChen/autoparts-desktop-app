@@ -19,7 +19,6 @@ module desktopapp {
     opens com.shunyi.autoparts.ui.http to com.google.gson;
     opens com.shunyi.autoparts.ui.model to com.google.gson;
 
-
     exports com.shunyi.autoparts.ui;
     exports com.shunyi.autoparts.ui.buy;
     exports com.shunyi.autoparts.ui.system;

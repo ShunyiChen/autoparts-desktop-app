@@ -89,7 +89,7 @@
                               <Font name="Microsoft YaHei" size="18.0" />
                            </font>
                         </Label>
-                        <Label fx:id="brand" alignment="CENTER_RIGHT" prefHeight="150.0" prefWidth="315.0" text="绿龙365">
+                        <Label fx:id="brand" alignment="CENTER_RIGHT" prefHeight="150.0" prefWidth="315.0" text="龙哥365">
                            <font>
                               <Font name="Microsoft YaHei" size="36.0" />
                            </font>
