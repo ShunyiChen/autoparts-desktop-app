@@ -37,8 +37,10 @@ dependencies {
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.10.0'
     compile group: 'com.itextpdf', name: 'itextpdf', version: '5.5.13'
     compile group: 'org.springframework.security', name: 'spring-security-crypto', version: '5.2.0.RELEASE'
+    //Required for VFS
     compile group: 'commons-logging', name: 'commons-logging', version: '1.2'
-
+    compile group: 'org.apache.commons', name: 'commons-vfs2', version: '2.6.0'
+    compile group: 'commons-net', name: 'commons-net', version: '3.6'
 
 }
 

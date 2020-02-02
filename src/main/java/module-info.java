@@ -10,6 +10,8 @@ module desktopapp {
     requires com.fasterxml.jackson.annotation;
     requires itextpdf;
     requires spring.security.crypto;
+    requires commons.vfs2;
+    requires commons.logging;
 
     opens com.shunyi.autoparts.ui to javafx.fxml;
     opens com.shunyi.autoparts.ui.stock to javafx.fxml;
