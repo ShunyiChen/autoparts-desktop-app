@@ -137,7 +137,16 @@ public class MaintenanceController {
             userTable.getSelectionModel().select(updatedUser);
             return "";
         });
-        editUser(callback, selectedUser);
+
+        User user = null;
+        try {
+            String data = HttpClient.GET("/users/"+selectedUser.getId());
+            user = GoogleJson.GET().fromJson(data, User.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        editUser(callback, user);
     }
 
     @FXML
@@ -683,6 +692,7 @@ public class MaintenanceController {
             alert.show();
             return;
         }
+
         Callback<Role, String> callback = updatedRole -> {
             //刷新表格
             int i = roleTable.getSelectionModel().getSelectedIndex();
@@ -691,7 +701,14 @@ public class MaintenanceController {
             roleTable.getSelectionModel().select(updatedRole);
             return "";
         };
-        editRole(callback, selectedRole);
+        Role role = null;
+        try {
+            String data = HttpClient.GET("/roles/"+selectedRole.getId());
+            role = GoogleJson.GET().fromJson(data, Role.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        editRole(callback, role);
     }
 
     private void editRole(Callback<Role, String> callback, Role selectedRole) {
@@ -834,7 +851,15 @@ public class MaintenanceController {
         dialog.setOnHiding(e -> {
         });
         EditPermissionController controller = loader.getController();
-        controller.prepare(dialog, selectedPermission, callback);
+
+        Permission permission = null;
+        try {
+            String data = HttpClient.GET("/permissions/"+selectedPermission.getId());
+            permission = GoogleJson.GET().fromJson(data, Permission.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        controller.prepare(dialog, permission, callback);
         dialog.setTitle("更改权限");
         dialog.initOwner(application.getStage());
         dialog.setResizable(false);
@@ -1079,7 +1104,7 @@ public class MaintenanceController {
                 new SimpleObjectProperty<>(param.getValue().getCanWrite()?"是": "否")
         );
         colAcquiescent.setCellValueFactory(param ->
-                new SimpleObjectProperty<>(param.getValue().getAcquiescent()?"◉": "")
+                new SimpleObjectProperty<>(param.getValue().getAcquiescent()?"✓": "")
         );
 
         vfsTable.setOnMouseClicked((MouseEvent event) -> {

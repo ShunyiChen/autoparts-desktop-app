@@ -25,7 +25,7 @@ public class VFS {
     /** VFS类目ID */
     private Long categoryId;
     /** 默认的 */
-    private Boolean acquiescent;
+    private Boolean acquiescent = false;
 
     public VFS() {
     }

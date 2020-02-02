@@ -62,13 +62,13 @@ public class EditVFSController {
         || txtPort.getText().equals("")
         || txtHome.getText().equals("")) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
-            alert.setHeaderText("请输入必填项。");
+            alert.setHeaderText("请输入必填项");
             alert.show();
             return false;
         }
         else if(!NumberValidationUtils.isPositiveInteger(txtPort.getText())) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
-            alert.setHeaderText("端口号输入数字。");
+            alert.setHeaderText("请在端口号输入数字(非0)");
             alert.show();
             return false;
         }
