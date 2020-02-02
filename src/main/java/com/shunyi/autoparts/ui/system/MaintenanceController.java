@@ -1303,4 +1303,9 @@ public class MaintenanceController {
 
         refreshVFS();
     }
+
+    @FXML
+    private void testConnection() {
+
+    }
 }

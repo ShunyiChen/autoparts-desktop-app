@@ -1,9 +1,10 @@
 package com.shunyi.autoparts.ui.products;
 
-import com.google.gson.Gson;
 import com.shunyi.autoparts.ui.common.GoogleJson;
 import com.shunyi.autoparts.ui.http.HttpClient;
-import com.shunyi.autoparts.ui.model.*;
+import com.shunyi.autoparts.ui.model.BrandSeries;
+import com.shunyi.autoparts.ui.model.Category;
+import com.shunyi.autoparts.ui.model.Logo;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,7 +18,6 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import java.io.IOException;
-import java.util.Date;
 
 public class BrandSeriesEditorController {
     Stage dialog;
@@ -44,14 +44,19 @@ public class BrandSeriesEditorController {
     Button btnContinueAdd;
 
     @FXML
-    void upload(ActionEvent event) {
+    private void upload(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("打开文件");
         fileChooser.showOpenDialog(dialog);
     }
 
     @FXML
-    void choose(ActionEvent event) {
+    private void chooseLogo() {
+
+    }
+
+    @FXML
+    private void choose(ActionEvent event) {
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource(
                         "/fxml/products/category_chooser.fxml"
@@ -87,12 +92,12 @@ public class BrandSeriesEditorController {
     }
 
     @FXML
-    void cancel(ActionEvent event) {
+    private void cancel(ActionEvent event) {
         dialog.close();
     }
 
     @FXML
-    void saveAndClose(ActionEvent event) {
+    private void saveAndClose(ActionEvent event) {
         if(validation()) {
             dialog.close();
 
@@ -109,7 +114,7 @@ public class BrandSeriesEditorController {
     }
 
     @FXML
-    void continueAdd(ActionEvent event) {
+    private void continueAdd(ActionEvent event) {
         if(validation()) {
             String json = null;
             try {
@@ -123,7 +128,7 @@ public class BrandSeriesEditorController {
         }
     }
 
-    boolean validation() {
+    private boolean validation() {
         if(selectedCategory == null) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
             alert.setHeaderText("产品类目不能为空");
@@ -155,17 +160,17 @@ public class BrandSeriesEditorController {
         populate();
     }
 
-    void initComboBox() {
+    private void initComboBox() {
         boxStatus.getItems().addAll("可用","禁用");
         boxStatus.getSelectionModel().select(0);
         boxStatus.setStyle("-fx-font-size: 14px;");
     }
 
-    void initButton() {
+    private void initButton() {
         btnSave.setStyle(String.format("-fx-base: %s;", "rgb(63,81,181)"));
     }
 
-    void populate() {
+    private void populate() {
         txtCategory.setDisable(true);
         if(selectedCategory != null) {
             txtCategory.setText(selectedCategory.getName());

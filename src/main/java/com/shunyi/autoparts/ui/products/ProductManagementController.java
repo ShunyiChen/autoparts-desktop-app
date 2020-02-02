@@ -80,7 +80,7 @@ public class ProductManagementController {
     TableView<Product> tableView;
 
     @FXML
-    void search(ActionEvent event) {
+    private void search(ActionEvent event) {
         Product condition = new Product();
         condition.setCode(txtCode.getText());
         condition.setName(txtName.getText());
@@ -110,7 +110,7 @@ public class ProductManagementController {
     }
 
     @FXML
-    void clear(ActionEvent event) {
+    private void clear(ActionEvent event) {
         txtCode.setText("");
         txtName.setText("");
         txtBrand.setText("");
@@ -122,7 +122,7 @@ public class ProductManagementController {
     }
 
     @FXML
-    void newCategory(ActionEvent event) {
+    private void newCategory(ActionEvent event) {
         TreeItem<Category> parent = treeView.getSelectionModel().getSelectedItem();
         if(parent == null) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
@@ -162,7 +162,7 @@ public class ProductManagementController {
     }
 
     @FXML
-    void updateCategory(ActionEvent event) {
+    private void updateCategory(ActionEvent event) {
         TreeItem<Category> selected = treeView.getSelectionModel().getSelectedItem();
         if(selected.getValue().getId() == 0) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
@@ -195,7 +195,7 @@ public class ProductManagementController {
         }
     }
 
-    void openCategoryEditor(Callback<Category, Object> callback, Category updatedCategory) {
+    private void openCategoryEditor(Callback<Category, Object> callback, Category updatedCategory) {
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource(
                         "/fxml/products/category_editor.fxml"
@@ -222,7 +222,7 @@ public class ProductManagementController {
     }
 
     @FXML
-    void removeCategory(ActionEvent event) {
+    private void removeCategory(ActionEvent event) {
         TreeItem<Category> selected = treeView.getSelectionModel().getSelectedItem();
         if(selected == null) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
@@ -272,7 +272,7 @@ public class ProductManagementController {
     }
 
     @FXML
-    void newBrand(ActionEvent event) {
+    private void newBrand(ActionEvent event) {
         TreeItem<Category> selectedCategory = treeView.getSelectionModel().getSelectedItem();
         if(selectedCategory == null) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
@@ -300,7 +300,7 @@ public class ProductManagementController {
     }
 
     @FXML
-    void updateBrand(ActionEvent event) {
+    private void updateBrand(ActionEvent event) {
         BrandSeries selected = listView.getSelectionModel().getSelectedItem();
         if(selected == null) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
@@ -336,7 +336,7 @@ public class ProductManagementController {
     }
 
     @FXML
-    void removeBrand(ActionEvent event) {
+    private void removeBrand(ActionEvent event) {
         BrandSeries selected = listView.getSelectionModel().getSelectedItem();
         if(selected == null) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
@@ -354,6 +354,11 @@ public class ProductManagementController {
             }
             listView.getItems().remove(selected);
         });
+    }
+
+    @FXML
+    private void logoManagement() {
+
     }
 
     void openBrandSeriesEditor(Callback<BrandSeries, Object> callback, BrandSeries updatedBrandSeries, Category selectedCategory) {
@@ -577,11 +582,11 @@ public class ProductManagementController {
         this.application = application;
         initTableView();
         initTreeView();
-        initTreeContextMenu();
+//        initTreeContextMenu();
         initListView();
     }
 
-    void initTableView() {
+    private void initTableView() {
         colCode.setCellValueFactory(new PropertyValueFactory<Product, String>("code"));
         colName.setCellValueFactory(new PropertyValueFactory<Product, String>("name"));
         colBrand.setCellValueFactory(new PropertyValueFactory<Product, String>("brandSeries"));
@@ -638,7 +643,7 @@ public class ProductManagementController {
         });
     }
 
-    void duplicate() {
+    private void duplicate() {
         Product selected = tableView.getSelectionModel().getSelectedItem();
         String json = null;
         try {
@@ -659,7 +664,7 @@ public class ProductManagementController {
         }
     }
 
-    void initTreeView() {
+    private void initTreeView() {
         TreeItem<Category> root = new TreeItem<>(new Category("全部类目",0L, true));
         initTreeNodes(root);
         treeView.setRoot(root);
@@ -693,51 +698,12 @@ public class ProductManagementController {
                 }
             }
         });
-        treeView.setOnMouseClicked((MouseEvent event) -> {
-            if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 1){
-                TreeItem<Category> item = treeView.getSelectionModel().getSelectedItem();
-                listView.getItems().clear();
-                String json = null;
-                try {
-                    json = HttpClient.GET("/brandSeries/category/"+item.getValue().getId());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                BrandSeries[] brands = GoogleJson.GET().fromJson(json, BrandSeries[].class);
-                listView.getItems().addAll(brands);
-            }
-        });
 
-    }
 
-    void initTreeNodes(TreeItem<Category> root) {
-        try {
-            String path = "/categories/sorted";
-            String data = HttpClient.GET(path);
-            Category[] res = GoogleJson.GET().fromJson(data, Category[].class);
-            getNodes(root, res);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    void getNodes(TreeItem<Category> parent, Category[] all) {
-        for(Category sc : all) {
-            if(sc.getParentId() == parent.getValue().getId()) {
-                TreeItem<Category> node = new TreeItem<>(sc);
-                parent.getChildren().add(node);
-                parent.setExpanded(true);
-                getNodes(node, all);
-            }
-        }
-    }
-
-    void initTreeContextMenu() {
         ContextMenu menu = new ContextMenu();
         MenuItem itemNew = new MenuItem("新建类目");
         MenuItem itemRM = new MenuItem("删除类目");
         MenuItem itemRN = new MenuItem("重命名");
-        menu.getItems().addAll(itemNew, itemRM, itemRN);
         treeView.setEditable(true);
         treeView.setContextMenu(menu);
         itemNew.setOnAction(new EventHandler<ActionEvent>() {
@@ -758,9 +724,84 @@ public class ProductManagementController {
                 treeView.edit(treeView.getSelectionModel().getSelectedItem());
             }
         });
+
+        treeView.setOnMouseClicked((MouseEvent event) -> {
+            if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 1){
+                TreeItem<Category> item = treeView.getSelectionModel().getSelectedItem();
+                listView.getItems().clear();
+                String json = null;
+                try {
+                    json = HttpClient.GET("/brandSeries/category/"+item.getValue().getId());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                BrandSeries[] brands = GoogleJson.GET().fromJson(json, BrandSeries[].class);
+                listView.getItems().addAll(brands);
+
+            } else if (event.getButton().equals(MouseButton.SECONDARY) && event.getClickCount() == 1) {
+                Category selectedCategory = treeView.getSelectionModel().getSelectedItem().getValue();
+                if(selectedCategory.getId() == 0L) {
+                    menu.getItems().clear();
+                    menu.getItems().addAll(itemNew);
+                } else {
+                    menu.getItems().clear();
+                    menu.getItems().addAll(itemNew, itemRM, itemRN);
+                }
+            }
+        });
     }
 
-    void initListView() {
+    private void initTreeNodes(TreeItem<Category> root) {
+        try {
+            String path = "/categories/sorted";
+            String data = HttpClient.GET(path);
+            Category[] res = GoogleJson.GET().fromJson(data, Category[].class);
+            getNodes(root, res);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void getNodes(TreeItem<Category> parent, Category[] all) {
+        for(Category sc : all) {
+            if(sc.getParentId() == parent.getValue().getId()) {
+                TreeItem<Category> node = new TreeItem<>(sc);
+                parent.getChildren().add(node);
+                parent.setExpanded(true);
+                getNodes(node, all);
+            }
+        }
+    }
+
+//    void initTreeContextMenu() {
+//        ContextMenu menu = new ContextMenu();
+//        MenuItem itemNew = new MenuItem("新建类目");
+//        MenuItem itemRM = new MenuItem("删除类目");
+//        MenuItem itemRN = new MenuItem("重命名");
+//        menu.getItems().addAll(itemNew, itemRM, itemRN);
+//        treeView.setEditable(true);
+//        treeView.setContextMenu(menu);
+//        itemNew.setOnAction(new EventHandler<ActionEvent>() {
+//            @Override
+//            public void handle(ActionEvent event) {
+//                newCategory(event);
+//            }
+//        });
+//        itemRM.setOnAction(new EventHandler<ActionEvent>() {
+//            @Override
+//            public void handle(ActionEvent event) {
+//                removeCategory(event);
+//            }
+//        });
+//        itemRN.setOnAction(new EventHandler<ActionEvent>() {
+//            @Override
+//            public void handle(ActionEvent event) {
+//                treeView.edit(treeView.getSelectionModel().getSelectedItem());
+//            }
+//        });
+//    }
+
+    private void initListView() {
         listView.setStyle("-fx-font-size: 14px;");
         try {
             String path = "/brandSeries";

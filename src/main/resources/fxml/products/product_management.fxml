@@ -25,12 +25,12 @@
                   <Font size="14.0" />
                </font>
             </Button>
-            <Button mnemonicParsing="false" onAction="#updateCategory" text="更改类目">
+            <Button mnemonicParsing="false" onAction="#updateCategory" text="更改">
                <font>
                   <Font size="14.0" />
                </font>
             </Button>
-            <Button mnemonicParsing="false" onAction="#removeCategory" text="删除类目">
+            <Button mnemonicParsing="false" onAction="#removeCategory" text="删除">
                <font>
                   <Font size="14.0" />
                </font>
@@ -41,12 +41,17 @@
                   <Font size="14.0" />
                </font>
             </Button>
-            <Button mnemonicParsing="false" onAction="#updateBrand" text="更改品牌">
+            <Button mnemonicParsing="false" onAction="#updateBrand" text="更改">
                 <font>
                     <Font size="14.0" />
                 </font>
             </Button>
-            <Button mnemonicParsing="false" onAction="#removeBrand" text="删除品牌">
+            <Button mnemonicParsing="false" onAction="#removeBrand" text="删除">
+                <font>
+                    <Font size="14.0" />
+                </font>
+            </Button>
+            <Button mnemonicParsing="false" onAction="#logoManagement" text="管理Logo">
                 <font>
                     <Font size="14.0" />
                 </font>
@@ -57,12 +62,12 @@
                   <Font size="14.0" />
                </font>
             </Button>
-            <Button mnemonicParsing="false" onAction="#updateProduct" text="更改配件">
+            <Button mnemonicParsing="false" onAction="#updateProduct" text="更改">
                <font>
                   <Font size="14.0" />
                </font>
             </Button>
-            <Button mnemonicParsing="false" onAction="#removeProduct" text="删除配件">
+            <Button mnemonicParsing="false" onAction="#removeProduct" text="删除">
                <font>
                   <Font size="14.0" />
                </font>

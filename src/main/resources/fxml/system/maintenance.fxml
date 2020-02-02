@@ -205,6 +205,11 @@
                                             <Font size="14.0" />
                                         </font>
                                     </Button>
+                                    <Button mnemonicParsing="false" onAction="#testConnection" text="测试连接">
+                                        <font>
+                                            <Font size="14.0" />
+                                        </font>
+                                    </Button>
                                 </items>
                               </ToolBar>
                            </top>

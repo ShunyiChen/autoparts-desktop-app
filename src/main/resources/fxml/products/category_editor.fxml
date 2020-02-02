@@ -7,8 +7,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="115.0" prefWidth="424.0" fx:controller="com.shunyi.autoparts.ui.products.CategoryEditorController" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="98.0" prefWidth="284.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.shunyi.autoparts.ui.products.CategoryEditorController">
    <children>
       <FlowPane alignment="CENTER" hgap="5.0" prefHeight="57.0" prefWidth="424.0">
          <children>
@@ -17,21 +16,21 @@
                   <Font size="14.0" />
                </font>
             </Label>
-            <TextField prefHeight="29.0" prefWidth="329.0" fx:id="txtName">
+            <TextField fx:id="txtName" prefHeight="29.0" prefWidth="198.0">
                <font>
                   <Font size="14.0" />
                </font>
             </TextField>
          </children>
       </FlowPane>
-      <FlowPane alignment="CENTER" hgap="10.0" prefHeight="54.0" prefWidth="424.0">
+      <FlowPane alignment="CENTER" hgap="10.0" prefHeight="43.0" prefWidth="424.0">
          <children>
-            <Button mnemonicParsing="false" prefHeight="29.0" prefWidth="74.0" text="取   消" onAction="#cancel">
+            <Button mnemonicParsing="false" onAction="#cancel" prefHeight="29.0" prefWidth="74.0" text="取   消">
                <font>
                   <Font size="14.0" />
                </font>
             </Button>
-            <Button fx:id="btnOk" mnemonicParsing="false" prefHeight="29.0" prefWidth="75.0" text="确   定" onAction="#ok">
+            <Button fx:id="btnOk" mnemonicParsing="false" onAction="#ok" prefHeight="29.0" prefWidth="75.0" text="确   定">
                <font>
                   <Font size="14.0" />
                </font>
