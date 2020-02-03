@@ -14,7 +14,7 @@ import org.h2.tools.DeleteDbFiles;
 /** 远程连接H2存储 */
 public class H2 {
     private static final String DB_DRIVER = "org.h2.Driver";
-    private static final String DB_CONNECTION = "jdbc:h2:~/test";
+    private static final String DB_CONNECTION = "jdbc:h2:~/.autoparts/test";
     private static final String DB_USER = "";
     private static final String DB_PASSWORD = "";
 

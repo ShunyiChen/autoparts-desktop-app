@@ -1,6 +1,5 @@
 package com.shunyi.autoparts.ui.login;
 
-import com.google.gson.Gson;
 import com.shunyi.autoparts.ui.common.H2;
 import com.shunyi.autoparts.ui.model.RemoteConnection;
 import javafx.collections.FXCollections;
@@ -19,6 +18,8 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class RemoteConnectionEditorController {
+    private Stage dialog;
+
     @FXML
     private TableView<RemoteConnection> tableView;
     @FXML
@@ -36,18 +37,9 @@ public class RemoteConnectionEditorController {
     @FXML
     private Button btnDefault;
     @FXML
-    private Button btnAdd;
-    @FXML
     private Button btnRemove;
     @FXML
-    private Button btnReset;
-    @FXML
     private Button btnOk;
-    @FXML
-    private Button btnCancel;
-    private Stage dialog;
-    private Gson gson = new Gson();
-
     @FXML
     public void up(ActionEvent event) {
         RemoteConnection first = tableView.getSelectionModel().getSelectedItem();
@@ -154,12 +146,6 @@ public class RemoteConnectionEditorController {
                 changeButtons(tableView.getSelectionModel().getSelectedItem());
             }
         });
-//        tableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-//            if (newSelection != null) {
-//                changeButtons(newSelection);
-//                System.out.println("选择");
-//            }
-//        });
 
         TableColumn colName= new TableColumn("名称");
         colName.setPrefWidth(300);
@@ -180,10 +166,7 @@ public class RemoteConnectionEditorController {
         StringConverter<Boolean> sc = new StringConverter<Boolean>() {
             @Override
             public String toString(Boolean t) {
-                if(t) {
-                    return "☆";
-                }
-                return "";
+                return t? "✓" : "";
             }
 
             @Override
