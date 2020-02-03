@@ -1,10 +1,12 @@
 package com.shunyi.autoparts.ui.common;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
 import org.apache.commons.vfs2.FileSystemManager;
 import org.apache.commons.vfs2.VFS;
 
+import java.io.File;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 
@@ -37,13 +39,14 @@ public class VFSClient {
      * @return
      * @throws FileSystemException
      */
-	public static OutputStream uploadSingleFile(com.shunyi.autoparts.ui.model.VFS vfs, String targetPath) throws FileSystemException, UnsupportedEncodingException {
+	public static void uploadSingleFile(File soruceFile, com.shunyi.autoparts.ui.model.VFS vfs, String targetPath) throws FileSystemException, UnsupportedEncodingException {
         FileObject file = resolveFile(vfs, targetPath);
         if (!file.exists()) {
             file.createFile();
         }
-        // Return the output stream to write to
-        return file.getContent().getOutputStream();
+
+        //TODO
+//        IOUtils.write(soruceFile.getBytes(), file.getContent().getOutputStream());
 	}
 
     /**

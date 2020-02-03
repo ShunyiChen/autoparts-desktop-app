@@ -12,6 +12,7 @@ module desktopapp {
     requires spring.security.crypto;
     requires commons.vfs2;
     requires commons.logging;
+    requires org.apache.commons.io;
 
     opens com.shunyi.autoparts.ui to javafx.fxml;
     opens com.shunyi.autoparts.ui.stock to javafx.fxml;
