@@ -2,9 +2,9 @@ package com.shunyi.autoparts.ui.system;
 
 import com.shunyi.autoparts.ui.MainApp;
 import com.shunyi.autoparts.ui.common.GoogleJson;
-import com.shunyi.autoparts.ui.http.HttpClient;
+import com.shunyi.autoparts.ui.common.HttpClient;
 import com.shunyi.autoparts.ui.model.*;
-import com.shunyi.autoparts.ui.vfs.VFSClient;
+import com.shunyi.autoparts.ui.common.VFSClient;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;

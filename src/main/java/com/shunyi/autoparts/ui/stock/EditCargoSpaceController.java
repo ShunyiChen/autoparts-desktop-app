@@ -1,10 +1,8 @@
 package com.shunyi.autoparts.ui.stock;
 
-import com.google.gson.Gson;
 import com.shunyi.autoparts.ui.common.GoogleJson;
-import com.shunyi.autoparts.ui.http.HttpClient;
+import com.shunyi.autoparts.ui.common.HttpClient;
 import com.shunyi.autoparts.ui.model.CargoSpace;
-import com.shunyi.autoparts.ui.model.SupplierCategory;
 import com.shunyi.autoparts.ui.model.Warehouse;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

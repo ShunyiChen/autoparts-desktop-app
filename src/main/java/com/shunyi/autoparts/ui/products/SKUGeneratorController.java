@@ -2,7 +2,7 @@ package com.shunyi.autoparts.ui.products;
 
 import com.shunyi.autoparts.ui.common.EditingCell;
 import com.shunyi.autoparts.ui.common.GoogleJson;
-import com.shunyi.autoparts.ui.http.HttpClient;
+import com.shunyi.autoparts.ui.common.HttpClient;
 import com.shunyi.autoparts.ui.model.*;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;

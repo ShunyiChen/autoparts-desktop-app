@@ -1,7 +1,7 @@
 package com.shunyi.autoparts.ui.login;
 
 import com.google.gson.Gson;
-import com.shunyi.autoparts.ui.h2.H2;
+import com.shunyi.autoparts.ui.common.H2;
 import com.shunyi.autoparts.ui.model.RemoteConnection;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

@@ -2,7 +2,7 @@ package com.shunyi.autoparts.ui.system;
 
 import com.shunyi.autoparts.ui.common.NumberValidationUtils;
 import com.shunyi.autoparts.ui.model.VFS;
-import com.shunyi.autoparts.ui.vfs.VFSClient;
+import com.shunyi.autoparts.ui.common.VFSClient;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;

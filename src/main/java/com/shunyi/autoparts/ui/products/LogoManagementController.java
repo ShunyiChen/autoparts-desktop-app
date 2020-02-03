@@ -1,5 +1,6 @@
 package com.shunyi.autoparts.ui.products;
 
+import com.shunyi.autoparts.ui.common.VFSClient;
 import javafx.fxml.FXML;
 import javafx.scene.layout.FlowPane;
 import javafx.stage.FileChooser;
@@ -25,9 +26,19 @@ public class LogoManagementController {
     private void upload() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("打开文件");
-        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter(".png","jpg"));
+        fileChooser.setInitialDirectory(
+                new File(System.getProperty("user.home"))
+        );
+        fileChooser.setInitialFileName("Log Entry Graphs.png");
+        FileChooser.ExtensionFilter pngExtensionFilter =
+                new FileChooser.ExtensionFilter(
+                        "PNG - 图像格式文件 (.png.jpg)", "*.png", "*jpg");
+        fileChooser.getExtensionFilters().add(pngExtensionFilter);
+        fileChooser.setSelectedExtensionFilter(pngExtensionFilter);
         File selectedFile = fileChooser.showOpenDialog(dialog);
         if(selectedFile != null) {
+            System.out.println(selectedFile);
+
 
         }
     }

@@ -18,7 +18,6 @@ module desktopapp {
     opens com.shunyi.autoparts.ui.products to javafx.fxml;
     opens com.shunyi.autoparts.ui.system to javafx.fxml;
     opens com.shunyi.autoparts.ui.common to com.google.gson;
-    opens com.shunyi.autoparts.ui.http to com.google.gson;
     opens com.shunyi.autoparts.ui.model to com.google.gson;
 
     exports com.shunyi.autoparts.ui;

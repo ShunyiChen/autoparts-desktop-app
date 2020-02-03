@@ -1,9 +1,8 @@
 package com.shunyi.autoparts.ui.supplier;
 
-import com.google.gson.Gson;
 import com.shunyi.autoparts.ui.MainApp;
 import com.shunyi.autoparts.ui.common.GoogleJson;
-import com.shunyi.autoparts.ui.http.HttpClient;
+import com.shunyi.autoparts.ui.common.HttpClient;
 import com.shunyi.autoparts.ui.model.Supplier;
 import com.shunyi.autoparts.ui.model.SupplierCategory;
 import javafx.event.ActionEvent;

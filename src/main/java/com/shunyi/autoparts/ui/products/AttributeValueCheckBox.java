@@ -1,6 +1,6 @@
 package com.shunyi.autoparts.ui.products;
 
-import com.shunyi.autoparts.ui.http.HttpClient;
+import com.shunyi.autoparts.ui.common.HttpClient;
 import com.shunyi.autoparts.ui.model.AttributeValue;
 import com.shunyi.autoparts.ui.model.Product;
 import javafx.beans.property.SimpleObjectProperty;

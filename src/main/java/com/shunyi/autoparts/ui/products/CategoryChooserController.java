@@ -1,8 +1,7 @@
 package com.shunyi.autoparts.ui.products;
 
-import com.google.gson.Gson;
 import com.shunyi.autoparts.ui.common.GoogleJson;
-import com.shunyi.autoparts.ui.http.HttpClient;
+import com.shunyi.autoparts.ui.common.HttpClient;
 import com.shunyi.autoparts.ui.model.Category;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
