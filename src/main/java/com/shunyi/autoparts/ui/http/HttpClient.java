@@ -1,6 +1,7 @@
 package com.shunyi.autoparts.ui.http;
 
 import com.shunyi.autoparts.ui.common.ENV;
+import com.shunyi.autoparts.ui.common.GoogleJson;
 import com.shunyi.autoparts.ui.model.RemoteConnection;
 import okhttp3.*;
 
@@ -23,6 +24,20 @@ public class HttpClient {
      */
     public static String GET(String path) throws IOException {
         return GET(path, ENV.getInstance().lookup("Authorization").toString());
+    }
+
+    /**
+     * Http GET method
+     *
+     * @param path
+     * @param classOfT
+     * @param <T>
+     * @return
+     * @throws IOException
+     */
+    public static <T>T GET(String path, Class<T> classOfT) throws IOException {
+        String data = GET(path, ENV.getInstance().lookup("Authorization").toString());
+        return GoogleJson.GET().fromJson(data, classOfT);
     }
 
     /**

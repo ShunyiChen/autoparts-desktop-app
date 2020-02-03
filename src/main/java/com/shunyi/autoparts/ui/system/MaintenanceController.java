@@ -4,6 +4,7 @@ import com.shunyi.autoparts.ui.MainApp;
 import com.shunyi.autoparts.ui.common.GoogleJson;
 import com.shunyi.autoparts.ui.http.HttpClient;
 import com.shunyi.autoparts.ui.model.*;
+import com.shunyi.autoparts.ui.vfs.VFSClient;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -1306,6 +1307,34 @@ public class MaintenanceController {
 
     @FXML
     private void testConnection() {
-
+        try {
+            VFS selectedVFS = vfsTable.getSelectionModel().getSelectedItem();
+            if(selectedVFS == null) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
+                alert.setHeaderText("请选择一个VFS");
+                alert.show();
+                return;
+            }
+            VFS vfs = HttpClient.GET("/vfs/"+selectedVFS.getId(), VFS.class);
+            boolean testResult = VFSClient.testConnection(vfs);
+            if(testResult) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
+                alert.setHeaderText("连接成功");
+                alert.show();
+                return;
+            } else {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
+                alert.setHeaderText("连接失败");
+                alert.setContentText("可能出错原因：主机地址错误，端口错误，主目录不存在或用户名密码错误");
+                alert.show();
+                return;
+            }
+        } catch (IOException e) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
+            alert.setHeaderText("连接失败");
+            alert.setContentText(e.toString());
+            alert.show();
+            return;
+        }
     }
 }

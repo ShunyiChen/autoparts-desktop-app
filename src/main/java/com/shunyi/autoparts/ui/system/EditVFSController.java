@@ -2,10 +2,13 @@ package com.shunyi.autoparts.ui.system;
 
 import com.shunyi.autoparts.ui.common.NumberValidationUtils;
 import com.shunyi.autoparts.ui.model.VFS;
+import com.shunyi.autoparts.ui.vfs.VFSClient;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+
+import java.io.IOException;
 
 public class EditVFSController {
 
@@ -50,8 +53,27 @@ public class EditVFSController {
     @FXML
     private void testConnection() {
         if(validate()) {
-            VFS vfs = new VFS(txtName.getText(), comboxProtocol.getValue(), txtHost.getText(), Integer.parseInt(txtPort.getText()), txtHome.getText(), txtUserName.getText(), txtPassword.getText(), checkboxCanRead.isSelected(), checkboxCanWrite.isSelected(), 0L);
-
+            try {
+                VFS vfs = new VFS(txtName.getText(), comboxProtocol.getValue(), txtHost.getText(), Integer.parseInt(txtPort.getText()), txtHome.getText(), txtUserName.getText(), txtPassword.getText(), checkboxCanRead.isSelected(), checkboxCanWrite.isSelected(), 0L);
+                boolean testResult = VFSClient.testConnection(vfs);
+                if(testResult) {
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
+                    alert.setHeaderText("连接成功");
+                    alert.show();
+                    return;
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
+                    alert.setHeaderText("连接失败");
+                    alert.show();
+                    return;
+                }
+            } catch (IOException e) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
+                alert.setHeaderText("连接失败");
+                alert.setContentText(e.toString());
+                alert.show();
+                return;
+            }
         }
     }
 

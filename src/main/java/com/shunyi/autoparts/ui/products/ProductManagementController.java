@@ -358,7 +358,30 @@ public class ProductManagementController {
 
     @FXML
     private void logoManagement() {
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource(
+                        "/fxml/products/logo_management.fxml"
+                )
+        );
+        VBox root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Scene scene = new Scene(root);
+        Stage dialog = new Stage();
+        LogoManagementController controller = loader.getController();
+        controller.prepare(dialog);
 
+        dialog.setTitle("Logo管理");
+        dialog.initOwner(application.getStage());
+        dialog.setResizable(false);
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.setScene(scene);
+        // center stage on screen
+        dialog.centerOnScreen();
+        dialog.show();
     }
 
     void openBrandSeriesEditor(Callback<BrandSeries, Object> callback, BrandSeries updatedBrandSeries, Category selectedCategory) {
@@ -817,15 +840,17 @@ public class ProductManagementController {
                     updateBrand(null);
                 } else if(event.getClickCount() == 1) {
                     BrandSeries selectedBrand = listView.getSelectionModel().getSelectedItem();
-                    String data = null;
-                    try {
-                        data = HttpClient.GET("/products/brandSeries/"+selectedBrand.getId());
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    if(selectedBrand != null) {
+                        String data = null;
+                        try {
+                            data = HttpClient.GET("/products/brandSeries/"+selectedBrand.getId());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        Product[] products = GoogleJson.GET().fromJson(data, Product[].class);
+                        tableView.getItems().clear();
+                        tableView.getItems().addAll(products);
                     }
-                    Product[] products = GoogleJson.GET().fromJson(data, Product[].class);
-                    tableView.getItems().clear();
-                    tableView.getItems().addAll(products);
                 }
             }
         });

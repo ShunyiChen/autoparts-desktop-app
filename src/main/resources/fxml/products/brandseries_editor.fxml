@@ -13,16 +13,23 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="528.0" fx:controller="com.shunyi.autoparts.ui.products.BrandSeriesEditorController" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="528.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.shunyi.autoparts.ui.products.BrandSeriesEditorController">
    <children>
       <BorderPane prefHeight="377.0" prefWidth="600.0">
          <left>
             <VBox prefHeight="351.0" prefWidth="153.0" BorderPane.alignment="CENTER">
                <children>
-                  <ImageView fx:id="imgLogo" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
-                  <FlowPane alignment="TOP_CENTER" prefHeight="200.0" prefWidth="200.0">
+                  <FlowPane alignment="CENTER" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: lightgrey;">
                      <children>
-                        <Button mnemonicParsing="false" text="上传Logo" onAction="#upload">
+                        <ImageView fx:id="imgLogo" fitHeight="191.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </FlowPane>
+                  <FlowPane alignment="TOP_CENTER" hgap="5.0" prefHeight="200.0" prefWidth="200.0">
+                     <children>
+                        <Button mnemonicParsing="false" onAction="#upload" text="上传Logo">
                            <FlowPane.margin>
                               <Insets top="10.0" />
                            </FlowPane.margin>
@@ -30,7 +37,7 @@
                               <Font size="14.0" />
                            </font>
                         </Button>
-                        <Button mnemonicParsing="false" text="选择Logo" onAction="#chooseLogo">
+                        <Button mnemonicParsing="false" onAction="#chooseLogo" text="选择Logo">
                            <FlowPane.margin>
                               <Insets top="10.0" />
                            </FlowPane.margin>
@@ -41,6 +48,9 @@
                      </children>
                   </FlowPane>
                </children>
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </padding>
             </VBox>
          </left>
          <center>
@@ -63,7 +73,7 @@
                                     <Font size="14.0" />
                                  </font>
                               </TextField>
-                              <Button mnemonicParsing="false" text="选择" onAction="#choose">
+                              <Button mnemonicParsing="false" onAction="#choose" text="选择">
                                  <font>
                                     <Font size="14.0" />
                                  </font>
@@ -153,17 +163,17 @@
                <bottom>
                   <FlowPane alignment="CENTER" hgap="10.0" prefHeight="41.0" prefWidth="400.0" style="-fx-background-color: white;" BorderPane.alignment="CENTER">
                      <children>
-                        <Button mnemonicParsing="false" prefHeight="29.0" prefWidth="74.0" text="取   消" onAction="#cancel">
+                        <Button mnemonicParsing="false" onAction="#cancel" prefHeight="29.0" prefWidth="74.0" text="取   消">
                            <font>
                               <Font size="14.0" />
                            </font>
                         </Button>
-                        <Button fx:id="btnSave" mnemonicParsing="false" prefHeight="29.0" text="保存并关闭" onAction="#saveAndClose">
+                        <Button fx:id="btnSave" mnemonicParsing="false" onAction="#saveAndClose" prefHeight="29.0" text="保存并关闭">
                            <font>
                               <Font size="14.0" />
                            </font>
                         </Button>
-                        <Button fx:id="btnContinueAdd" mnemonicParsing="false" prefHeight="29.0"  text="继续添加" onAction="#continueAdd">
+                        <Button fx:id="btnContinueAdd" mnemonicParsing="false" onAction="#continueAdd" prefHeight="29.0" text="继续添加">
                            <font>
                               <Font size="14.0" />
                            </font>

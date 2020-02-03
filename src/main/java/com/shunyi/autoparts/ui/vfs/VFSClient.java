@@ -5,6 +5,9 @@ import org.apache.commons.vfs2.FileSystemException;
 import org.apache.commons.vfs2.FileSystemManager;
 import org.apache.commons.vfs2.VFS;
 
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+
 /**
  * @Description: VFS客户端
  *
@@ -19,164 +22,83 @@ public class VFSClient {
      *
      * @param vfs
      * @return
+     * @throws FileSystemException
      */
-	public boolean testConnection(com.shunyi.autoparts.ui.model.VFS vfs) {
-        FileSystemManager fileSystemManager;
-        try {
-            fileSystemManager = VFS.getManager();
-            String protocol;
-            String fileName = null;
-            if (vfs.getProtocol().equals("FTP") || vfs.getProtocol().equals("FTPS")) {
-                protocol = vfs.getProtocol().toLowerCase();
-                fileName = protocol + "://" + vfs.getUserName() + ":" + vfs.getPassword() + "@" + vfs.getHost() + ":" + vfs.getPort() + vfs.getHome();
-            } else if (vfs.getProtocol().equals("File")) {
-                protocol = vfs.getProtocol().toLowerCase();
-                fileName = protocol + ":///" + vfs.getHost();
-            }
-
-            FileObject rootFile = fileSystemManager.resolveFile(fileName);
-            fileSystemManager.closeFileSystem(rootFile.getFileSystem());
-            return rootFile.exists();
-        } catch (FileSystemException e) {
-            e.printStackTrace();
-        }
-	    return false;
+	public static boolean testConnection(com.shunyi.autoparts.ui.model.VFS vfs) throws FileSystemException, UnsupportedEncodingException {
+        FileObject file = resolveFile(vfs, "");
+        return file.exists();
 	}
 
-//	/**
-//	 * 上传
-//	 *
-//	 * @param site
-//	 * @param targetPath
-//	 * @return
-//	 * @throws FileException
-//	 */
-//	public OutputStream receiveUpload(Site site, String targetPath) throws FileException {
-//		FileSystemManager fsManager = null;
-//		FileObject file = null;
-//		try {
-//			fsManager = VFS.getManager();
-//			String protocol = null;
-//			String name = null;
-//			if (site.getSiteType().equals("FTP") || site.getSiteType().equals("FTPS")) {
-//				protocol = site.getSiteType().toLowerCase();
-//				name = protocol + "://" + site.getUserName() + ":" + site.getPassword() + "@" + site.getHostAddr() + ":"
-//						+ site.getPort() + site.getDefaultRemoteDirectory();
-//			} else if (site.getSiteType().equals("File")) {
-//				protocol = site.getSiteType().toLowerCase();
-//				name = protocol + ":///" + site.getHostAddr();
-//			}
-//			targetPath = new String(targetPath.getBytes("UTF-8"),"ISO-8859-1");
-//			file = fsManager.resolveFile(name + "/"+ targetPath);
-//
-//			if (!file.exists()) {
-//				file.createFile();
-//			}
-//			return file.getContent().getOutputStream(); // Return the output stream to write to
-//		} catch (FileSystemException e) {
-//			log.info(e.getMessage());
-//			throw new FileException(e.getMessage());
-//		} catch (UnsupportedEncodingException e) {
-//			log.info(e.getMessage());
-//			throw new FileException(e.getMessage());
-//		} finally {
-//			try {
-//				fsManager.closeFileSystem(file.getFileSystem());
-//			} catch (java.lang.NullPointerException e) {
-//				String msg = "Cannot connect to the site, please contact the administrator in TB4 team.";
-//				log.info(msg);
-//				throw new FileException(msg);
-//			}
-//		}
-//	}
-//
-//	/**
-//	 * 下载
-//	 * @param site
-//	 * @param targetPath
-//	 * @return
-//	 * @throws FileException
-//	 */
-//	public FileObject resolveFile(Site site, String targetPath) throws FileException {
-//		FileSystemManager fsManager = null;
-//		FileObject file = null;
-//		try {
-//			fsManager = VFS.getManager();
-//			String protocol = null;
-//			String name = null;
-//			if (site.getSiteType().equals("FTP") || site.getSiteType().equals("FTPS")) {
-//				protocol = site.getSiteType().toLowerCase();
-//				name = protocol + "://" + site.getUserName() + ":" + site.getPassword() + "@" + site.getHostAddr() + ":"
-//						+ site.getPort() + site.getDefaultRemoteDirectory();
-//			} else if (site.getSiteType().equals("File")) {
-//				protocol = site.getSiteType().toLowerCase();
-//				name = protocol + ":///" + site.getHostAddr();
-//			}
-//			targetPath = new String(targetPath.getBytes("UTF-8"),"ISO-8859-1");
-//			file = fsManager.resolveFile(name + "/"+ targetPath);
-//
-//			return file; // Return the output stream to write to
-//		} catch (FileSystemException e) {
-//			log.info(e.getMessage());
-//			throw new FileException(e.getMessage());
-//		} catch (UnsupportedEncodingException e) {
-//			log.info(e.getMessage());
-//			throw new FileException(e.getMessage());
-//		} finally {
-//			try {
-//				fsManager.closeFileSystem(file.getFileSystem());
-//			} catch (java.lang.NullPointerException e) {
-//				String msg = "Cannot connect to the site, please contact the administrator in TB4 team.";
-//				log.info(msg);
-//				throw new FileException(msg);
-//			}
-//		}
-//	}
-//
-//	/**
-//	 * 删除文件
-//	 *
-//	 * @param site
-//	 * @param targetPath
-//	 * @throws FileException
-//	 */
-//	public void deleteFile(Site site, String targetPath) throws FileException {
-//		FileSystemManager fsManager = null;
-//		FileObject file = null;
-//		try {
-//			fsManager = VFS.getManager();
-//			String protocol = null;
-//			String name = null;
-//			if (site.getSiteType().equals("FTP") || site.getSiteType().equals("FTPS")) {
-//				protocol = site.getSiteType().toLowerCase();
-//				name = protocol + "://" + site.getUserName() + ":" + site.getPassword() + "@" + site.getHostAddr() + ":"
-//						+ site.getPort() + site.getDefaultRemoteDirectory();
-//			} else if (site.getSiteType().equals("File")) {
-//				protocol = site.getSiteType().toLowerCase();
-//				name = protocol + ":///" + site.getHostAddr();
-//			}
-//			targetPath = new String(targetPath.getBytes("UTF-8"),"UTF-8");
-//			file = fsManager.resolveFile(name + "/"+ targetPath);
-//
-//			file.delete();
-//
-//		} catch (FileSystemException e) {
-//			log.info(e.getMessage());
-//			throw new FileException(e.getMessage());
-//		} catch (UnsupportedEncodingException e) {
-//			log.info(e.getMessage());
-//			throw new FileException(e.getMessage());
-//		} finally {
-//			try {
-//				fsManager.closeFileSystem(file.getFileSystem());
-//			} catch (java.lang.NullPointerException e) {
-//				String msg = "Cannot connect to the site, please contact the administrator in TB4 team.";
-//				log.info(msg);
-//				throw new FileException(msg);
-//			}
-//		}
-//	}
-//
+    /**
+     * 上传单个文件
+     *
+     * @param vfs
+     * @param targetPath
+     * @return
+     * @throws FileSystemException
+     */
+	public static OutputStream uploadSingleFile(com.shunyi.autoparts.ui.model.VFS vfs, String targetPath) throws FileSystemException, UnsupportedEncodingException {
+        FileObject file = resolveFile(vfs, targetPath);
+        if (!file.exists()) {
+            file.createFile();
+        }
+        // Return the output stream to write to
+        return file.getContent().getOutputStream();
+	}
+
+    /**
+     * 下载单个文件
+     *
+     * @param vfs
+     * @param targetPath
+     * @return
+     * @throws FileSystemException
+     * @throws UnsupportedEncodingException
+     */
+	public static FileObject downloadSingleFile(com.shunyi.autoparts.ui.model.VFS vfs, String targetPath) throws FileSystemException, UnsupportedEncodingException {
+        return resolveFile(vfs, targetPath);
+	}
+
+    /**
+     * 删除单个文件
+     *
+     * @param vfs
+     * @param targetPath
+     * @throws FileSystemException
+     * @throws UnsupportedEncodingException
+     */
+	public static void deleteSingleFile(com.shunyi.autoparts.ui.model.VFS vfs, String targetPath) throws FileSystemException, UnsupportedEncodingException {
+        FileObject file = resolveFile(vfs, targetPath);
+	    file.delete();
+	}
+
+    /**
+     * 查找一个文件
+     *
+     * @param vfs
+     * @param targetPath
+     * @return
+     * @throws FileSystemException
+     * @throws UnsupportedEncodingException
+     */
+	private static FileObject resolveFile(com.shunyi.autoparts.ui.model.VFS vfs, String targetPath) throws FileSystemException, UnsupportedEncodingException {
+        FileSystemManager fileSystemManager = VFS.getManager();
+        String protocol;
+        String fileName = null;
+        if (vfs.getProtocol().equals("FTP") || vfs.getProtocol().equals("FTPS")) {
+            protocol = vfs.getProtocol().toLowerCase();
+            fileName = protocol + "://" + vfs.getUserName() + ":" + vfs.getPassword() + "@" + vfs.getHost() + ":" + vfs.getPort() + vfs.getHome();
+        } else if (vfs.getProtocol().equals("File")) {
+            protocol = vfs.getProtocol().toLowerCase();
+            fileName = protocol + ":///" + vfs.getHost();
+        }
+        targetPath = new String(targetPath.getBytes("UTF-8"),"ISO-8859-1");
+        return fileSystemManager.resolveFile(fileName + targetPath);
+    }
+
+
+
+
 //	/**
 //	 * 更新存储已用大小
 //	 *
