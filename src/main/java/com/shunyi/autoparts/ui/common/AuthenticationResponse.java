@@ -1,4 +1,4 @@
-package com.shunyi.autoparts.ui.http;
+package com.shunyi.autoparts.ui.common;
 
 import java.util.Date;
 

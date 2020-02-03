@@ -1,4 +1,4 @@
-package com.shunyi.autoparts.ui.h2;
+package com.shunyi.autoparts.ui.common;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

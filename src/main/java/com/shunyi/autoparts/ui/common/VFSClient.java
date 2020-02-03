@@ -1,4 +1,4 @@
-package com.shunyi.autoparts.ui.vfs;
+package com.shunyi.autoparts.ui.common;
 
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
