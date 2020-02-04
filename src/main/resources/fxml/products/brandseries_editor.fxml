@@ -29,14 +29,6 @@
                   </FlowPane>
                   <FlowPane alignment="TOP_CENTER" hgap="5.0" prefHeight="200.0" prefWidth="200.0">
                      <children>
-                        <Button mnemonicParsing="false" onAction="#upload" text="上传Logo">
-                           <FlowPane.margin>
-                              <Insets top="10.0" />
-                           </FlowPane.margin>
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                        </Button>
                         <Button mnemonicParsing="false" onAction="#chooseLogo" text="选择Logo">
                            <FlowPane.margin>
                               <Insets top="10.0" />

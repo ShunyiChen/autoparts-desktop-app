@@ -2,28 +2,35 @@ package com.shunyi.autoparts.ui.products;
 
 import com.shunyi.autoparts.ui.common.GoogleJson;
 import com.shunyi.autoparts.ui.common.HttpClient;
+import com.shunyi.autoparts.ui.common.VFSClient;
 import com.shunyi.autoparts.ui.model.BrandSeries;
 import com.shunyi.autoparts.ui.model.Category;
 import com.shunyi.autoparts.ui.model.Logo;
-import javafx.event.ActionEvent;
+import com.shunyi.autoparts.ui.model.VFS;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs2.FileSystemException;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 
 public class BrandSeriesEditorController {
-    Stage dialog;
-    BrandSeries brandSeries;
-    Callback<BrandSeries, Object> callback;
-    Category  selectedCategory;
+    private Stage dialog;
+    private BrandSeries brandSeries;
+    private Callback<BrandSeries, Object> callback;
+    private Category  selectedCategory;
+    private Logo choosedLogo;
     @FXML
     ImageView imgLogo;
     @FXML
@@ -44,19 +51,40 @@ public class BrandSeriesEditorController {
     Button btnContinueAdd;
 
     @FXML
-    private void upload(ActionEvent event) {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("打开文件");
-        fileChooser.showOpenDialog(dialog);
-    }
-
-    @FXML
     private void chooseLogo() {
+        Callback<FlowPane, String> callback = selectedFlowPane -> {
+            CheckBox checkBox = (CheckBox) selectedFlowPane.getChildren().get(0);
+            ImageView imageView = (ImageView) selectedFlowPane.getChildren().get(1);
+            imgLogo.setImage(imageView.getImage());
+            choosedLogo = (Logo)checkBox.getUserData();
+            return "";
+        };
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource(
+                        "/fxml/products/logo_management.fxml"
+                )
+        );
+        VBox root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Scene scene = new Scene(root);
+        Stage dialog = new Stage();
+        LogoManagementController controller = loader.getController();
+        controller.prepare(dialog, true, callback);
 
+        dialog.setTitle("Logo管理");
+        dialog.initOwner(this.dialog);
+        dialog.setScene(scene);
+        // center stage on screen
+        dialog.centerOnScreen();
+        dialog.show();
     }
 
     @FXML
-    private void choose(ActionEvent event) {
+    private void choose() {
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource(
                         "/fxml/products/category_chooser.fxml"
@@ -92,38 +120,22 @@ public class BrandSeriesEditorController {
     }
 
     @FXML
-    private void cancel(ActionEvent event) {
+    private void cancel() {
         dialog.close();
     }
 
     @FXML
-    private void saveAndClose(ActionEvent event) {
+    private void saveAndClose() {
         if(validation()) {
+            continueAdd();
             dialog.close();
-
-            String json = null;
-            try {
-                json = HttpClient.GET("/logos/"+1);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            Logo logo = GoogleJson.GET().fromJson(json, Logo.class);
-            BrandSeries newBrandSeries = new BrandSeries(selectedCategory, txtChineseName.getText(), txtEnglishName.getText(), txtDesc.getText(), logo, boxStatus.getValue(), txtOfficialWebSite.getText());
-            callback.call(newBrandSeries);
         }
     }
 
     @FXML
-    private void continueAdd(ActionEvent event) {
+    private void continueAdd() {
         if(validation()) {
-            String json = null;
-            try {
-                json = HttpClient.GET("/logos/"+1);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            Logo logo = GoogleJson.GET().fromJson(json, Logo.class);
-            BrandSeries newBrandSeries = new BrandSeries(selectedCategory, txtChineseName.getText(), txtEnglishName.getText(), txtDesc.getText(), logo, boxStatus.getValue(), txtOfficialWebSite.getText());
+            BrandSeries newBrandSeries = new BrandSeries(selectedCategory, txtChineseName.getText(), txtEnglishName.getText(), txtDesc.getText(), choosedLogo, boxStatus.getValue(), txtOfficialWebSite.getText());
             callback.call(newBrandSeries);
         }
     }
@@ -144,6 +156,12 @@ public class BrandSeriesEditorController {
         else if(txtChineseName.getText().trim().equals("")) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
             alert.setHeaderText("中文名不能为空");
+            alert.show();
+            return false;
+        }
+        else if(choosedLogo == null) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
+            alert.setHeaderText("请选择Logo");
             alert.show();
             return false;
         }
@@ -184,6 +202,34 @@ public class BrandSeriesEditorController {
             txtOfficialWebSite.setText(brandSeries.getOfficialSite());
             txtDesc.setText(brandSeries.getDescription());
             btnContinueAdd.setVisible(false);
+
+            //初始化选中Logo
+            choosedLogo = brandSeries.getLogo();
+            VFS defaultVFS = null;
+            try {
+                defaultVFS = HttpClient.GET("/vfs/default", VFS.class);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if(defaultVFS == null) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
+                alert.setHeaderText("找不到默认VFS");
+                alert.show();
+                return;
+            }
+            try {
+                FileObject fileObject = VFSClient.resolveFile(defaultVFS, choosedLogo.getPath());
+                InputStream is = fileObject.getContent().getInputStream();
+                Image image = new Image(is);
+                imgLogo.setImage(image);
+                is.close();
+            } catch (FileSystemException e) {
+                e.printStackTrace();
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

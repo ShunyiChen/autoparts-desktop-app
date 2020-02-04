@@ -415,24 +415,26 @@ public class MaintenanceController {
         shopTree.setContextMenu(menu);
         shopTree.setOnMouseClicked((MouseEvent event) -> {
             if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 1){
-                userTable.getItems().clear();
                 TreeItem<Shop> selectedItem = shopTree.getSelectionModel().getSelectedItem();
-                String data = null;
-                if(selectedItem == rootItem) {
-                    try {
-                        data = HttpClient.GET("/users");
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                if(selectedItem != null) {
+                    userTable.getItems().clear();
+                    String data = null;
+                    if(selectedItem == rootItem) {
+                        try {
+                            data = HttpClient.GET("/users");
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        try {
+                            data = HttpClient.GET("/users/shop/"+selectedItem.getValue().getId());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
-                } else {
-                    try {
-                        data = HttpClient.GET("/users/shop/"+selectedItem.getValue().getId());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    User[] users = GoogleJson.GET().fromJson(data, User[].class);
+                    userTable.getItems().addAll(users);
                 }
-                User[] users = GoogleJson.GET().fromJson(data, User[].class);
-                userTable.getItems().addAll(users);
             }
             if(event.getButton().equals(MouseButton.SECONDARY) && event.getClickCount() == 1) {
                 TreeItem<Shop> item = shopTree.getSelectionModel().getSelectedItem();

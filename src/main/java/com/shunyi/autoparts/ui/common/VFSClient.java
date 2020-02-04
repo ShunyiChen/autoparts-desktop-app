@@ -6,9 +6,7 @@ import org.apache.commons.vfs2.FileSystemException;
 import org.apache.commons.vfs2.FileSystemManager;
 import org.apache.commons.vfs2.VFS;
 
-import java.io.File;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 
 /**
  * @Description: VFS客户端
@@ -28,25 +26,38 @@ public class VFSClient {
      */
 	public static boolean testConnection(com.shunyi.autoparts.ui.model.VFS vfs) throws FileSystemException, UnsupportedEncodingException {
         FileObject file = resolveFile(vfs, "");
+        file.close();
         return file.exists();
 	}
 
     /**
      * 上传单个文件
      *
-     * @param vfs
-     * @param targetPath
-     * @return
-     * @throws FileSystemException
+     * @param sourceFile 源文件
+     * @param vfs 虚拟文件系统连接信息
+     * @param targetPath 目标路径
+     * @throws IOException
      */
-	public static void uploadSingleFile(File soruceFile, com.shunyi.autoparts.ui.model.VFS vfs, String targetPath) throws FileSystemException, UnsupportedEncodingException {
+	public static void uploadSingleFile(File sourceFile, com.shunyi.autoparts.ui.model.VFS vfs, String targetPath) throws IOException {
         FileObject file = resolveFile(vfs, targetPath);
         if (!file.exists()) {
             file.createFile();
         }
-
-        //TODO
-//        IOUtils.write(soruceFile.getBytes(), file.getContent().getOutputStream());
+        //File转换bytes
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        FileInputStream fis = new FileInputStream(sourceFile);
+        byte[] b = new byte[1024];
+        int n;
+        while((n = fis.read(b)) != -1) {
+            bos.write(b, 0, n);
+        }
+        fis.close();
+        bos.close();
+        byte[] buffer = bos.toByteArray();
+        //文件拷贝
+        IOUtils.write(buffer, file.getContent().getOutputStream());
+        //关闭FileObject
+        file.close();
 	}
 
     /**
@@ -73,6 +84,7 @@ public class VFSClient {
 	public static void deleteSingleFile(com.shunyi.autoparts.ui.model.VFS vfs, String targetPath) throws FileSystemException, UnsupportedEncodingException {
         FileObject file = resolveFile(vfs, targetPath);
 	    file.delete();
+        file.close();
 	}
 
     /**
@@ -84,7 +96,7 @@ public class VFSClient {
      * @throws FileSystemException
      * @throws UnsupportedEncodingException
      */
-	private static FileObject resolveFile(com.shunyi.autoparts.ui.model.VFS vfs, String targetPath) throws FileSystemException, UnsupportedEncodingException {
+	public static FileObject resolveFile(com.shunyi.autoparts.ui.model.VFS vfs, String targetPath) throws FileSystemException, UnsupportedEncodingException {
         FileSystemManager fileSystemManager = VFS.getManager();
         String protocol;
         String fileName = null;

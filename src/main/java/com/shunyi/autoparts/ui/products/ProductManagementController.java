@@ -9,7 +9,6 @@ import com.shunyi.autoparts.ui.model.Car;
 import com.shunyi.autoparts.ui.model.Category;
 import com.shunyi.autoparts.ui.model.Product;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -33,8 +32,10 @@ import java.util.Date;
 
 /** 配件管理Controller */
 public class ProductManagementController {
-    MainApp application;
-    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+    private MainApp application;
+
+    private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @FXML
     TextField txtCode;
@@ -80,7 +81,7 @@ public class ProductManagementController {
     TableView<Product> tableView;
 
     @FXML
-    private void search(ActionEvent event) {
+    private void search() {
         Product condition = new Product();
         condition.setCode(txtCode.getText());
         condition.setName(txtName.getText());
@@ -110,7 +111,7 @@ public class ProductManagementController {
     }
 
     @FXML
-    private void clear(ActionEvent event) {
+    private void clear() {
         txtCode.setText("");
         txtName.setText("");
         txtBrand.setText("");
@@ -122,7 +123,7 @@ public class ProductManagementController {
     }
 
     @FXML
-    private void newCategory(ActionEvent event) {
+    private void newCategory() {
         TreeItem<Category> parent = treeView.getSelectionModel().getSelectedItem();
         if(parent == null) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
@@ -162,7 +163,7 @@ public class ProductManagementController {
     }
 
     @FXML
-    private void updateCategory(ActionEvent event) {
+    private void updateCategory() {
         TreeItem<Category> selected = treeView.getSelectionModel().getSelectedItem();
         if(selected.getValue().getId() == 0) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
@@ -222,7 +223,7 @@ public class ProductManagementController {
     }
 
     @FXML
-    private void removeCategory(ActionEvent event) {
+    private void removeCategory() {
         TreeItem<Category> selected = treeView.getSelectionModel().getSelectedItem();
         if(selected == null) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
@@ -272,7 +273,7 @@ public class ProductManagementController {
     }
 
     @FXML
-    private void newBrand(ActionEvent event) {
+    private void newBrand() {
         TreeItem<Category> selectedCategory = treeView.getSelectionModel().getSelectedItem();
         if(selectedCategory == null) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
@@ -300,7 +301,7 @@ public class ProductManagementController {
     }
 
     @FXML
-    private void updateBrand(ActionEvent event) {
+    private void updateBrand() {
         BrandSeries selected = listView.getSelectionModel().getSelectedItem();
         if(selected == null) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
@@ -308,20 +309,17 @@ public class ProductManagementController {
             alert.show();
             return;
         }
-
-        String data = null;
+        BrandSeries selectedBrandSeries = null;
         try {
-            data = HttpClient.GET("/brandSeries/"+selected.getId());
+            selectedBrandSeries = HttpClient.GET("/brandSeries/"+selected.getId(), BrandSeries.class);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        BrandSeries selectedBrandSeries = GoogleJson.GET().fromJson(data, BrandSeries.class);
         Callback<BrandSeries, Object> callback = e -> {
-            e.setId(selectedBrandSeries.getId());
-            e.setDateCreated(selectedBrandSeries.getDateCreated());
-            String json = GoogleJson.GET().toJson(e);
+            e.setId(selected.getId());
+            String data = GoogleJson.GET().toJson(e);
             try {
-                HttpClient.PUT("/brandSeries/"+selectedBrandSeries.getId(), json);
+                HttpClient.PUT("/brandSeries/"+e.getId(), data);
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
@@ -332,11 +330,11 @@ public class ProductManagementController {
             return null;
         };
         //因为不需要重复赋值，所有最后参数设置null
-        openBrandSeriesEditor(callback, selected, null);
+        openBrandSeriesEditor(callback, selectedBrandSeries, null);
     }
 
     @FXML
-    private void removeBrand(ActionEvent event) {
+    private void removeBrand() {
         BrandSeries selected = listView.getSelectionModel().getSelectedItem();
         if(selected == null) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
@@ -372,19 +370,19 @@ public class ProductManagementController {
         Scene scene = new Scene(root);
         Stage dialog = new Stage();
         LogoManagementController controller = loader.getController();
-        controller.prepare(dialog);
+        controller.prepare(dialog, false, null);
 
         dialog.setTitle("Logo管理");
         dialog.initOwner(application.getStage());
-        dialog.setResizable(false);
-        dialog.initModality(Modality.APPLICATION_MODAL);
+//        dialog.setResizable(false);
+//        dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.setScene(scene);
         // center stage on screen
         dialog.centerOnScreen();
         dialog.show();
     }
 
-    void openBrandSeriesEditor(Callback<BrandSeries, Object> callback, BrandSeries updatedBrandSeries, Category selectedCategory) {
+    private void openBrandSeriesEditor(Callback<BrandSeries, Object> callback, BrandSeries updatedBrandSeries, Category selectedCategory) {
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource(
                         "/fxml/products/brandseries_editor.fxml"
@@ -411,7 +409,7 @@ public class ProductManagementController {
     }
 
     @FXML
-    void newProduct(ActionEvent event) {
+    private void newProduct() {
         TreeItem<Category> selectedCategory = treeView.getSelectionModel().getSelectedItem();
         if(selectedCategory == null) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
@@ -443,21 +441,7 @@ public class ProductManagementController {
     }
 
     @FXML
-    void updateProduct(ActionEvent event) {
-//        TreeItem<Category> selectedCategory = treeView.getSelectionModel().getSelectedItem();
-//        if(selectedCategory == null) {
-//            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
-//            alert.setHeaderText("请选择产品分类");
-//            alert.show();
-//            return;
-//        }
-//        BrandSeries selectedBrand = listView.getSelectionModel().getSelectedItem();
-//        if(selectedBrand == null) {
-//            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
-//            alert.setHeaderText("请选择品牌");
-//            alert.show();
-//            return;
-//        }
+    private void updateProduct() {
         Product selected = tableView.getSelectionModel().getSelectedItem();
         if(selected == null) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
@@ -493,7 +477,7 @@ public class ProductManagementController {
         openProductEditor(callback, selected, selectedCategory, selectedBrand);
     }
 
-    void openProductEditor(Callback<Product, Object> callback, Product updatedProduct, Category selectedCategory, BrandSeries selectedBrand) {
+    private void openProductEditor(Callback<Product, Object> callback, Product updatedProduct, Category selectedCategory, BrandSeries selectedBrand) {
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource(
                         "/fxml/products/product_editor.fxml"
@@ -520,7 +504,7 @@ public class ProductManagementController {
     }
 
     @FXML
-    void removeProduct(ActionEvent event) {
+    private void removeProduct() {
         Product selectedProduct = tableView.getSelectionModel().getSelectedItem();
         if(selectedProduct == null) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
@@ -541,7 +525,7 @@ public class ProductManagementController {
     }
 
     @FXML
-    void openCustomAttributes(ActionEvent event) {
+    private void openCustomAttributes() {
         TreeItem<Category> selectedItem = treeView.getSelectionModel().getSelectedItem();
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource(
@@ -569,7 +553,7 @@ public class ProductManagementController {
     }
 
     @FXML
-    void openProductSKU(ActionEvent event) {
+    private void openProductSKU() {
         Product selectedProduct = tableView.getSelectionModel().getSelectedItem();
         if(selectedProduct == null) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
@@ -604,8 +588,9 @@ public class ProductManagementController {
     public void prepare(MainApp application) {
         this.application = application;
         initTableView();
+
         initTreeView();
-//        initTreeContextMenu();
+
         initListView();
     }
 
@@ -639,7 +624,7 @@ public class ProductManagementController {
         colOther.setCellValueFactory(new PropertyValueFactory<Product, String>("notes"));
         tableView.setOnMouseClicked((MouseEvent event) -> {
             if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2){
-                 updateProduct(null);
+                 updateProduct();
             }
         });
         ContextMenu menu = new ContextMenu();
@@ -650,18 +635,15 @@ public class ProductManagementController {
             duplicate();
         });
         itemDefineProperties.setOnAction(e ->{
-            openCustomAttributes(e);
+            openCustomAttributes();
         });
         itemProductSKU.setOnAction(e ->{
-            openProductSKU(e);
+            openProductSKU();
         });
         menu.getItems().addAll(itemDuplicate, new SeparatorMenuItem() ,itemDefineProperties, itemProductSKU);
-        tableView.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent t) {
-                if(t.getButton() == MouseButton.SECONDARY) {
-                    menu.show(tableView, t.getScreenX(), t.getScreenY());
-                }
+        tableView.addEventHandler(MouseEvent.MOUSE_CLICKED, t -> {
+            if(t.getButton() == MouseButton.SECONDARY) {
+                menu.show(tableView, t.getScreenX(), t.getScreenY());
             }
         });
     }
@@ -691,34 +673,26 @@ public class ProductManagementController {
         TreeItem<Category> root = new TreeItem<>(new Category("全部类目",0L, true));
         initTreeNodes(root);
         treeView.setRoot(root);
-        treeView.setCellFactory(new Callback<TreeView<Category>, TreeCell<Category>>() {
+        treeView.setCellFactory(p -> new TextFieldTreeCell<>(new StringConverter<>(){
+
             @Override
-            public TreeCell<Category> call(TreeView<Category> p) {
-                return new TextFieldTreeCell<Category>(new StringConverter<Category>(){
-
-                    @Override
-                    public String toString(Category object) {
-                        return object.getName();
-                    }
-
-                    @Override
-                    public Category fromString(String string) {
-                        p.getEditingItem().getValue().setName(string);
-                        return p.getEditingItem().getValue();
-                    }
-                });
+            public String toString(Category object) {
+                return object.getName();
             }
-        });
-        treeView.setOnEditCommit(new EventHandler<TreeView.EditEvent<Category>>() {
+
             @Override
-            public void handle(TreeView.EditEvent<Category> event) {
-                String path = "/categories/"+event.getNewValue().getId();
-                String json = GoogleJson.GET().toJson(event.getNewValue());
-                try {
-                    HttpClient.PUT(path, json);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            public Category fromString(String string) {
+                p.getEditingItem().getValue().setName(string);
+                return p.getEditingItem().getValue();
+            }
+        }));
+        treeView.setOnEditCommit(event -> {
+            String path = "/categories/"+event.getNewValue().getId();
+            String json = GoogleJson.GET().toJson(event.getNewValue());
+            try {
+                HttpClient.PUT(path, json);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         });
 
@@ -729,24 +703,9 @@ public class ProductManagementController {
         MenuItem itemRN = new MenuItem("重命名");
         treeView.setEditable(true);
         treeView.setContextMenu(menu);
-        itemNew.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                newCategory(event);
-            }
-        });
-        itemRM.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                removeCategory(event);
-            }
-        });
-        itemRN.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                treeView.edit(treeView.getSelectionModel().getSelectedItem());
-            }
-        });
+        itemNew.setOnAction(event -> newCategory());
+        itemRM.setOnAction(event -> removeCategory());
+        itemRN.setOnAction(event -> treeView.edit(treeView.getSelectionModel().getSelectedItem()));
 
         treeView.setOnMouseClicked((MouseEvent event) -> {
             if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 1){
@@ -796,34 +755,6 @@ public class ProductManagementController {
         }
     }
 
-//    void initTreeContextMenu() {
-//        ContextMenu menu = new ContextMenu();
-//        MenuItem itemNew = new MenuItem("新建类目");
-//        MenuItem itemRM = new MenuItem("删除类目");
-//        MenuItem itemRN = new MenuItem("重命名");
-//        menu.getItems().addAll(itemNew, itemRM, itemRN);
-//        treeView.setEditable(true);
-//        treeView.setContextMenu(menu);
-//        itemNew.setOnAction(new EventHandler<ActionEvent>() {
-//            @Override
-//            public void handle(ActionEvent event) {
-//                newCategory(event);
-//            }
-//        });
-//        itemRM.setOnAction(new EventHandler<ActionEvent>() {
-//            @Override
-//            public void handle(ActionEvent event) {
-//                removeCategory(event);
-//            }
-//        });
-//        itemRN.setOnAction(new EventHandler<ActionEvent>() {
-//            @Override
-//            public void handle(ActionEvent event) {
-//                treeView.edit(treeView.getSelectionModel().getSelectedItem());
-//            }
-//        });
-//    }
-
     private void initListView() {
         listView.setStyle("-fx-font-size: 14px;");
         try {
@@ -837,7 +768,7 @@ public class ProductManagementController {
         listView.setOnMouseClicked((MouseEvent event) -> {
             if (event.getButton().equals(MouseButton.PRIMARY)){
                 if(event.getClickCount() == 2) {
-                    updateBrand(null);
+                    updateBrand();
                 } else if(event.getClickCount() == 1) {
                     BrandSeries selectedBrand = listView.getSelectionModel().getSelectedItem();
                     if(selectedBrand != null) {
