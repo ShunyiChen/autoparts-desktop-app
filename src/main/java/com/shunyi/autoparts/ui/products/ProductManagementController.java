@@ -542,7 +542,7 @@ public class ProductManagementController {
         Stage dialog = new Stage();
         AttributeManagementController controller = loader.getController();
         controller.prepare(dialog, selectedItem == null?null:selectedItem.getValue());
-        dialog.setTitle("自定义属性");
+        dialog.setTitle("配件属性");
         dialog.initOwner(application.getStage());
         dialog.setResizable(false);
         dialog.initModality(Modality.APPLICATION_MODAL);

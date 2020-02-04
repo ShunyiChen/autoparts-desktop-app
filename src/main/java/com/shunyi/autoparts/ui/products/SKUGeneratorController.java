@@ -54,7 +54,7 @@ public class SKUGeneratorController {
     void saveOrUpdate() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION,"", ButtonType.YES, ButtonType.NO);
         alert.setTitle("请确认是否保存SKU");
-        alert.setHeaderText("当保存新生成的SKU时，原有SKU将被删除，请确认是否要继续保存？");
+        alert.setHeaderText("原有SKU将被覆盖，请确认是否要继续保存");
         alert.showAndWait();
         if (alert.getResult() != ButtonType.YES) {
             return;
