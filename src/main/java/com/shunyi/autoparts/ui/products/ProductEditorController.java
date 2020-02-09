@@ -199,11 +199,12 @@ public class ProductEditorController {
         BrandSeries[] brands = GoogleJson.GET().fromJson(json, BrandSeries[].class);
         boxBrand.getItems().addAll(brands);
         //默认选中品牌
-        Arrays.stream(brands).forEach(e -> {
-            if(e.getId() == selectedBrand.getId()) {
-                boxBrand.getSelectionModel().select(e);
-            }
-        });
+        if(selectedBrand != null)
+            Arrays.stream(brands).forEach(e -> {
+                if(e.getId() == selectedBrand.getId()) {
+                    boxBrand.getSelectionModel().select(e);
+                }
+            });
     }
 
 }

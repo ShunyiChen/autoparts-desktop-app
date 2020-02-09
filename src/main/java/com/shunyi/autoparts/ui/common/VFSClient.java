@@ -174,7 +174,6 @@ public class VFSClient {
 //		try {
 //			sys.receiveUpload(site, targetPath);
 //		} catch (FileException e) {
-//			// TODO Auto-generated catch block
 //			e.printStackTrace();
 //		}
 //	}

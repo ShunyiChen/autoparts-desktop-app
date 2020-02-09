@@ -35,6 +35,7 @@ import java.sql.SQLException;
  */
 public class LoginController {
 
+    private KeyCodeCombination keyCodeCombination = new KeyCodeCombination(KeyCode.ENTER);
     private MainApp application;
     private ICONS icons = ICONS.getInstance();
 
@@ -97,7 +98,13 @@ public class LoginController {
                         Platform.runLater(() ->  progressBar.setProgress(0.95d));
 
                         if(res.getToken() != null) {
+
+                            //删除Enter监听
+                            application.getScene().getAccelerators().remove(keyCodeCombination);
+
                             ENV.getInstance().addToEnvironment("Authorization", "Bearer "+res.getToken());
+                            ENV.getInstance().addToEnvironment("loginUser", res.getUsername());
+
                             Platform.runLater(() -> progressBar.setProgress(1d));
                             application.gotoDashboard();
                             System.out.println("Logged in successfully.");
@@ -181,7 +188,7 @@ public class LoginController {
         String javafxVersion = System.getProperty("javafx.version");
         System.out.println("javaVersion="+javaVersion+",javafxVersion="+javafxVersion);
 
-        //TODO remove below
+        //TODO remove username and password
         txtUsername.setText("root");
         txtPassword.setText("123456");
 
@@ -200,7 +207,7 @@ public class LoginController {
         background.setOpacity(0.2);
 
         application.getScene().getAccelerators().put(
-                new KeyCodeCombination(KeyCode.ENTER),
+                keyCodeCombination,
                 new Runnable() {
                     @FXML public void run() {
                         btnLogin.fire();

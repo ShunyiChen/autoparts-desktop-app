@@ -51,6 +51,35 @@ public class BrandSeriesEditorController {
     Button btnContinueAdd;
 
     @FXML
+    private void logoManagement() {
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource(
+                        "/fxml/products/logo_management.fxml"
+                )
+        );
+        VBox root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Scene scene = new Scene(root);
+        Stage dialog = new Stage();
+        LogoManagementController controller = loader.getController();
+        controller.prepare(dialog, false, null);
+
+        dialog.setTitle("Logo管理");
+        dialog.initOwner(this.dialog);
+        dialog.setResizable(false);
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.setScene(scene);
+        // center stage on screen
+        dialog.centerOnScreen();
+        dialog.show();
+    }
+
+
+    @FXML
     private void chooseLogo() {
         Callback<FlowPane, String> callback = selectedFlowPane -> {
             CheckBox checkBox = (CheckBox) selectedFlowPane.getChildren().get(0);

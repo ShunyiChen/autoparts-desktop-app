@@ -3,6 +3,7 @@ package com.shunyi.autoparts.ui.products;
 import com.shunyi.autoparts.ui.common.GoogleJson;
 import com.shunyi.autoparts.ui.common.HttpClient;
 import com.shunyi.autoparts.ui.common.VFSClient;
+import com.shunyi.autoparts.ui.model.BrandSeries;
 import com.shunyi.autoparts.ui.model.Logo;
 import com.shunyi.autoparts.ui.model.VFS;
 import javafx.fxml.FXML;
@@ -21,10 +22,8 @@ import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @Description: Logo管理controller
@@ -92,6 +91,7 @@ public class LogoManagementController {
         flowPane.setAlignment(Pos.CENTER_LEFT);
         flowPane.setPrefWidth(130);
         flowPane.setHgap(3);
+        flowPane.setUserData(false);
 
         CheckBox checkBox = new CheckBox();
         checkBox.setUserData(logo);
@@ -140,6 +140,18 @@ public class LogoManagementController {
         Alert alertConfirm = new Alert(Alert.AlertType.CONFIRMATION, "", ButtonType.NO, ButtonType.YES);
         alertConfirm.setHeaderText("请确认是否删除选中的Logo");
         alertConfirm.showAndWait().filter(response -> response == ButtonType.YES).ifPresent(response -> {
+
+            //获取全部品牌
+            BrandSeries[] brandSeries = null;
+            try {
+               brandSeries = HttpClient.GET("/brandSeries", BrandSeries[].class);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            List<BrandSeries> brandSeriesList = Arrays.asList(brandSeries);
+            List<Long> logoIdList = brandSeriesList.stream().map(e -> e.getLogo().getId()).collect(Collectors.toList());
+
+
             List<FlowPane> removableList = new ArrayList<>();
             pane.getChildren().forEach(e -> {
                 FlowPane subFlowPane = (FlowPane) e;
@@ -155,25 +167,32 @@ public class LogoManagementController {
 
                 CheckBox checkBox = (CheckBox) flowPane.getChildren().get(0);
                 Logo logo = (Logo) checkBox.getUserData();
+                if(logoIdList.contains(logo.getId())) {
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
+                    alert.setHeaderText("该品牌正在使用中无法删除");
+                    alert.show();
 
-                try {
-                    VFSClient.deleteSingleFile(defaultVFS, logo.getPath());
-                } catch (FileSystemException e) {
-                    e.printStackTrace();
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
                 }
-
-                try {
-                    HttpClient.DELETE("/logos/"+logo.getId());
-                } catch (IOException e) {
-                    e.printStackTrace();
+                else {
+                    try {
+                        VFSClient.deleteSingleFile(defaultVFS, logo.getPath());
+                    } catch (FileSystemException e) {
+                        e.printStackTrace();
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        HttpClient.DELETE("/logos/"+logo.getId());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    pane.getChildren().remove(flowPane);
                 }
-
-                pane.getChildren().remove(flowPane);
             }
         });
     }
+
+
 
     public void prepare(Stage dialog, boolean isChooser, Callback<FlowPane, String> callback) {
         this.dialog = dialog;

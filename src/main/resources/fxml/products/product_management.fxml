@@ -35,6 +35,11 @@
                   <Font size="14.0" />
                </font>
             </Button>
+            <Button mnemonicParsing="false" onAction="#refreshCategory" text="刷新">
+                <font>
+                    <Font size="14.0" />
+                </font>
+            </Button>
             <Separator />
             <Button mnemonicParsing="false" onAction="#newBrand" text="新建品牌">
                <font>
@@ -47,11 +52,6 @@
                 </font>
             </Button>
             <Button mnemonicParsing="false" onAction="#removeBrand" text="删除">
-                <font>
-                    <Font size="14.0" />
-                </font>
-            </Button>
-            <Button mnemonicParsing="false" onAction="#logoManagement" text="管理Logo">
                 <font>
                     <Font size="14.0" />
                 </font>
@@ -73,11 +73,6 @@
                </font>
             </Button>
             <Separator />
-            <Button mnemonicParsing="false" onAction="#openCustomAttributes" text="配件属性">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Button>
             <Button mnemonicParsing="false" onAction="#openProductSKU" text="配件SKU">
                 <font>
                     <Font size="14.0" />

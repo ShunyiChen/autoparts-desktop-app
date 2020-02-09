@@ -64,4 +64,5 @@ public abstract class AttributeBase {
     public void setDateCreated(Date dateCreated) {
         this.dateCreated = dateCreated;
     }
+
 }

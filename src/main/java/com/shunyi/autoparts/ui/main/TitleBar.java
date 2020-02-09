@@ -3,6 +3,7 @@ package com.shunyi.autoparts.ui.main;
 import com.shunyi.autoparts.ui.MainApp;
 import com.shunyi.autoparts.ui.common.ICONS;
 import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -78,6 +79,21 @@ public class TitleBar extends HBox implements EventHandler<MouseEvent> {
      *
      */
     private void initRightComponent() {
+        //获取店铺列表
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource(
+                        "/fxml/main/shop_droplist.fxml"
+                )
+        );
+        FlowPane droplist = null;
+        try {
+            droplist = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        ShopDropListController controller = loader.getController();
+        controller.prepare();
+
         rightComponent.setId("bg");
         rightComponent.setEffect(new DropShadow());
         rightComponent.prefWidthProperty().bind(application.getScene().widthProperty().subtract(240));
@@ -95,9 +111,10 @@ public class TitleBar extends HBox implements EventHandler<MouseEvent> {
             }
         });
         rightSubComponent2.setPadding(new Insets(10));
-        rightSubComponent2.getChildren().add(profileImage);
+        rightSubComponent2.getChildren().addAll(droplist, profileImage);
         rightSubComponent2.setAlignment(Pos.CENTER_RIGHT);
         rightComponent.setRight(rightSubComponent2);
+
     }
 
     private void initRightClickMenu() {

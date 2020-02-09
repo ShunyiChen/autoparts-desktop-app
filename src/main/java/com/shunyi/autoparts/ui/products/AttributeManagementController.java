@@ -2,14 +2,12 @@ package com.shunyi.autoparts.ui.products;
 
 import com.shunyi.autoparts.ui.common.GoogleJson;
 import com.shunyi.autoparts.ui.common.HttpClient;
-import com.shunyi.autoparts.ui.model.AttributeBase;
-import com.shunyi.autoparts.ui.model.AttributeName;
-import com.shunyi.autoparts.ui.model.AttributeValue;
-import com.shunyi.autoparts.ui.model.Category;
+import com.shunyi.autoparts.ui.model.*;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTreeCell;
 import javafx.scene.input.MouseButton;
@@ -17,15 +15,20 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
 
 import java.io.IOException;
 
+/**
+ * 配件属性UI
+ */
 public class AttributeManagementController {
-    Stage dialog;
-    Category selectedCategory;
+    private Stage dialog;
+    private Category selectedCategory;
 
     @FXML
     BorderPane pnlCenter;
@@ -41,23 +44,186 @@ public class AttributeManagementController {
         categoryTree.getStylesheets().add(css);
         attributeTree.getStylesheets().add(css);
         initCategoryTree();
-
-
     }
 
     private void initCategoryTree() {
         TreeItem<Category> root = new TreeItem<>(new Category("全部类目",0L, true));
         initTreeNodes(root);
         categoryTree.setRoot(root);
+
+
+        categoryTree.setCellFactory(p -> new TextFieldTreeCell<>(new StringConverter<>(){
+
+            @Override
+            public String toString(Category object) {
+                return object.getName();
+            }
+
+            @Override
+            public Category fromString(String string) {
+                p.getEditingItem().getValue().setName(string);
+                return p.getEditingItem().getValue();
+            }
+        }));
+        categoryTree.setOnEditCommit(event -> {
+            String path = "/categories/"+event.getNewValue().getId();
+            String json = GoogleJson.GET().toJson(event.getNewValue());
+            try {
+                HttpClient.PUT(path, json);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+
+        ContextMenu menu = new ContextMenu();
+        MenuItem itemNew = new MenuItem("新建类目");
+        MenuItem itemRM = new MenuItem("删除类目");
+        MenuItem itemRN = new MenuItem("重命名");
+
+        itemNew.setStyle("-fx-font-size: 14px;");
+        itemRM.setStyle("-fx-font-size: 14px;");
+        itemRN.setStyle("-fx-font-size: 14px;");
+
+        categoryTree.setEditable(true);
+        categoryTree.setContextMenu(menu);
+        itemNew.setOnAction(event -> newCategory());
+        itemRM.setOnAction(event -> removeCategory());
+        itemRN.setOnAction(event -> categoryTree.edit(categoryTree.getSelectionModel().getSelectedItem()));
+
         categoryTree.setOnMouseClicked(event -> {
             if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 1){
                 selectedCategory = categoryTree.getSelectionModel().getSelectedItem().getValue();
                 initAttributesTree();
             }
+            else if (event.getButton().equals(MouseButton.SECONDARY) && event.getClickCount() == 1) {
+                Category selectedCategory = categoryTree.getSelectionModel().getSelectedItem().getValue();
+                if(selectedCategory.getId() == 0L) {
+                    menu.getItems().clear();
+                    menu.getItems().addAll(itemNew);
+                } else {
+                    menu.getItems().clear();
+                    menu.getItems().addAll(itemNew, itemRM, itemRN);
+                }
+            }
         });
     }
 
-    void initTreeNodes(TreeItem<Category> root) {
+    private void newCategory() {
+        TreeItem<Category> parent = categoryTree.getSelectionModel().getSelectedItem();
+        if(parent == null) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
+            alert.setHeaderText("请选择一个节点");
+            alert.show();
+            return;
+        }
+        Callback<Category, Object> callback = new Callback<>() {
+            @Override
+            public Object call(Category category) {
+                if(category != null) {
+                    parent.getValue().setParent(true);
+                    String json = GoogleJson.GET().toJson(parent.getValue());
+                    try {
+                        HttpClient.PUT("/categories/"+parent.getValue().getId(),json);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    category.setParentId(parent.getValue().getId());
+                    category.setParent(false);
+                    try {
+                        json = GoogleJson.GET().toJson(category, Category.class);
+                        String idStr = HttpClient.POST("/categories",json);
+                        category.setId(Long.valueOf(idStr));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    TreeItem<Category> node = new TreeItem<>(category);
+                    parent.getChildren().add(node);
+                    // 选中新建的节点
+                    categoryTree.getSelectionModel().select(node);
+                }
+                return null;
+            }
+        };
+        openCategoryEditor(callback, null);
+    }
+
+    private void openCategoryEditor(Callback<Category, Object> callback, Category updatedCategory) {
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource(
+                        "/fxml/products/category_editor.fxml"
+                )
+        );
+        VBox root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Scene scene = new Scene(root);
+        Stage dialog = new Stage();
+        CategoryEditorController controller = loader.getController();
+        controller.prepare(dialog, updatedCategory, callback);
+        dialog.setTitle(updatedCategory != null?"更改类目":"新建类目");
+        dialog.initOwner(this.dialog);
+        dialog.setResizable(false);
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.setScene(scene);
+        // center stage on screen
+        dialog.centerOnScreen();
+        dialog.show();
+    }
+
+    @FXML
+    private void removeCategory() {
+        TreeItem<Category> selected = categoryTree.getSelectionModel().getSelectedItem();
+        if(selected == null) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
+            alert.setHeaderText("请选择一个类目节点");
+            alert.show();
+            return;
+        }
+        else if(selected.getValue().getId() == 0) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
+            alert.setHeaderText("根节点不可删除");
+            alert.show();
+            return;
+        }
+        else if(selected.getValue().isParent()){
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
+            alert.setHeaderText("无法删除父节点");
+            alert.show();
+            return;
+        }
+        else {
+            Alert alertConfirm = new Alert(Alert.AlertType.CONFIRMATION, "", ButtonType.NO, ButtonType.YES);
+            alertConfirm.setHeaderText("是否删除该类目？");
+            alertConfirm.showAndWait().filter(response -> response == ButtonType.YES).ifPresent(response -> {
+                try {
+                    HttpClient.DELETE("/categories/"+selected.getValue().getId());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                TreeItem<Category> parent = selected.getParent();
+                if(parent != null) {
+                    parent.getChildren().remove(selected);
+                    parent.setExpanded(true);
+                    categoryTree.getSelectionModel().select(parent);
+                }
+                //设置节点是否为父节点
+                if(parent.isLeaf()) {
+                    parent.getValue().setParent(false);
+                    String json = GoogleJson.GET().toJson(parent.getValue());
+                    try {
+                        HttpClient.PUT("/categories/"+parent.getValue().getId(), json);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
+    }
+
+    private void initTreeNodes(TreeItem<Category> root) {
         try {
             String path = "/categories/sorted";
             String data = HttpClient.GET(path);
@@ -68,7 +234,7 @@ public class AttributeManagementController {
         }
     }
 
-    void getNodes(TreeItem<Category> parent, Category[] all) {
+    private void getNodes(TreeItem<Category> parent, Category[] all) {
         for(Category category : all) {
             if(category.getParentId() == parent.getValue().getId()) {
                 TreeItem<Category> node = new TreeItem<>(category);
@@ -109,17 +275,25 @@ public class AttributeManagementController {
                         nameItem.getChildren().add(valItem);
                     }
                 }
+                nameItem.setExpanded(true);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
         attributeTree.setRoot(root);
         root.setExpanded(true);
+
         ContextMenu menu = new ContextMenu();
         MenuItem itemNewName = new MenuItem("新建属性名");
         MenuItem itemNewValue = new MenuItem("新建属性值");
-        MenuItem itemRM = new MenuItem("删除");
+        MenuItem itemRM = new MenuItem("删  除");
         MenuItem itemRN = new MenuItem("重命名");
+
+        itemNewName.setStyle("-fx-font-size: 14px;");
+        itemNewValue.setStyle("-fx-font-size: 14px;");
+        itemRM.setStyle("-fx-font-size: 14px;");
+        itemRN.setStyle("-fx-font-size: 14px;");
+
         itemNewName.setOnAction(e -> {
             if(selectedCategory.getId() == 0) {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
@@ -202,7 +376,6 @@ public class AttributeManagementController {
         itemRN.setOnAction(e -> {
             attributeTree.edit(attributeTree.getSelectionModel().getSelectedItem());
         });
-        menu.getItems().addAll(itemNewName, itemNewValue, itemRM, new SeparatorMenuItem(), itemRN);
         attributeTree.setEditable(true);
         attributeTree.setContextMenu(menu);
         attributeTree.setCellFactory(new Callback<TreeView<AttributeBase>, TreeCell<AttributeBase>>() {
@@ -265,10 +438,23 @@ public class AttributeManagementController {
                     }
                 }
             }
+            else if (event.getButton().equals(MouseButton.SECONDARY) && event.getClickCount() == 1) {
+                TreeItem<AttributeBase> selected = attributeTree.getSelectionModel().getSelectedItem();
+                if(selected.getValue().getId() == 0L) {
+                    menu.getItems().clear();
+                    menu.getItems().addAll(itemNewName);
+                } else if (selected.getValue() instanceof AttributeValue){
+                    menu.getItems().clear();
+                    menu.getItems().addAll(itemRM, itemRN);
+                } else {
+                    menu.getItems().clear();
+                    menu.getItems().addAll(itemNewValue, new SeparatorMenuItem(), itemRM, itemRN);
+                }
+            }
         });
     }
 
-    void showAttributeNameEditor(AttributeName selectedAttributeName) {
+    private void showAttributeNameEditor(AttributeName selectedAttributeName) {
         FXMLLoader loader = new FXMLLoader(
             getClass().getResource(
                     "/fxml/products/attributes_name_editor.fxml"
@@ -285,7 +471,7 @@ public class AttributeManagementController {
         pnlCenter.setCenter(root);
     }
 
-    void showAttributeValueEditor(AttributeValue selectedAttributeValue) {
+    private void showAttributeValueEditor(AttributeValue selectedAttributeValue) {
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource(
                         "/fxml/products/attributes_value_editor.fxml"

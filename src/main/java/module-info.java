@@ -15,6 +15,7 @@ module desktopapp {
     requires org.apache.commons.io;
 
     opens com.shunyi.autoparts.ui to javafx.fxml;
+    opens com.shunyi.autoparts.ui.main to javafx.fxml;
     opens com.shunyi.autoparts.ui.stock to javafx.fxml;
     opens com.shunyi.autoparts.ui.products to javafx.fxml;
     opens com.shunyi.autoparts.ui.system to javafx.fxml;

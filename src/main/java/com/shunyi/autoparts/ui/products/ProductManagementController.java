@@ -8,7 +8,6 @@ import com.shunyi.autoparts.ui.model.BrandSeries;
 import com.shunyi.autoparts.ui.model.Car;
 import com.shunyi.autoparts.ui.model.Category;
 import com.shunyi.autoparts.ui.model.Product;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -38,47 +37,47 @@ public class ProductManagementController {
     private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @FXML
-    TextField txtCode;
+    private TextField txtCode;
     @FXML
-    TextField txtName;
+    private TextField txtName;
     @FXML
-    TextField txtBrand;
+    private TextField txtBrand;
     @FXML
-    TextField txtPrice;
+    private TextField txtPrice;
     @FXML
-    TextField txtUnit;
+    private TextField txtUnit;
     @FXML
-    TextField txtImported;
+    private TextField txtImported;
     @FXML
-    TextField txtPlace;
+    private TextField txtPlace;
     @FXML
-    TextField txtCar;
+    private TextField txtCar;
     @FXML
-    TableColumn colCode;
+    private TableColumn colCode;
     @FXML
-    TableColumn colName;
+    private TableColumn colName;
     @FXML
-    TableColumn colBrand;
+    private TableColumn colBrand;
     @FXML
-    TableColumn colPrice;
+    private TableColumn colPrice;
     @FXML
-    TableColumn colUnit;
+    private TableColumn colUnit;
     @FXML
-    TableColumn colImported;
+    private TableColumn colImported;
     @FXML
-    TableColumn colCar;
+    private TableColumn colCar;
     @FXML
-    TableColumn colPlace;
+    private TableColumn colPlace;
     @FXML
-    TableColumn colDateCreated;
+    private TableColumn colDateCreated;
     @FXML
-    TableColumn colOther;
+    private TableColumn colOther;
     @FXML
-    TreeView<Category> treeView;
+    private TreeView<Category> treeView;
     @FXML
-    ListView<BrandSeries> listView;
+    private ListView<BrandSeries> listView;
     @FXML
-    TableView<Product> tableView;
+    private TableView<Product> tableView;
 
     @FXML
     private void search() {
@@ -223,6 +222,12 @@ public class ProductManagementController {
     }
 
     @FXML
+    private void refreshCategory() {
+        initTreeView();
+        listView.getItems().clear();
+    }
+
+    @FXML
     private void removeCategory() {
         TreeItem<Category> selected = treeView.getSelectionModel().getSelectedItem();
         if(selected == null) {
@@ -354,34 +359,6 @@ public class ProductManagementController {
         });
     }
 
-    @FXML
-    private void logoManagement() {
-        FXMLLoader loader = new FXMLLoader(
-                getClass().getResource(
-                        "/fxml/products/logo_management.fxml"
-                )
-        );
-        VBox root = null;
-        try {
-            root = loader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Scene scene = new Scene(root);
-        Stage dialog = new Stage();
-        LogoManagementController controller = loader.getController();
-        controller.prepare(dialog, false, null);
-
-        dialog.setTitle("Logo管理");
-        dialog.initOwner(application.getStage());
-//        dialog.setResizable(false);
-//        dialog.initModality(Modality.APPLICATION_MODAL);
-        dialog.setScene(scene);
-        // center stage on screen
-        dialog.centerOnScreen();
-        dialog.show();
-    }
-
     private void openBrandSeriesEditor(Callback<BrandSeries, Object> callback, BrandSeries updatedBrandSeries, Category selectedCategory) {
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource(
@@ -417,13 +394,7 @@ public class ProductManagementController {
             alert.show();
             return;
         }
-        BrandSeries selectedBrand = listView.getSelectionModel().getSelectedItem();
-        if(selectedBrand == null) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
-            alert.setHeaderText("请选择品牌");
-            alert.show();
-            return;
-        }
+
         Callback<Product, Object> callback = e -> {
             String json = GoogleJson.GET().toJson(e);
             try {
@@ -437,6 +408,8 @@ public class ProductManagementController {
             tableView.getSelectionModel().select(e);
             return null;
         };
+        //初始品牌
+        BrandSeries selectedBrand = listView.getSelectionModel().getSelectedItem();
         openProductEditor(callback, null, selectedCategory.getValue(), selectedBrand);
     }
 
@@ -524,7 +497,6 @@ public class ProductManagementController {
         });
     }
 
-    @FXML
     private void openCustomAttributes() {
         TreeItem<Category> selectedItem = treeView.getSelectionModel().getSelectedItem();
         FXMLLoader loader = new FXMLLoader(
@@ -544,8 +516,8 @@ public class ProductManagementController {
         controller.prepare(dialog, selectedItem == null?null:selectedItem.getValue());
         dialog.setTitle("配件属性");
         dialog.initOwner(application.getStage());
-        dialog.setResizable(false);
-        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.setResizable(true);
+        dialog.initModality(Modality.WINDOW_MODAL);
         dialog.setScene(scene);
         // center stage on screen
         dialog.centerOnScreen();
@@ -628,9 +600,9 @@ public class ProductManagementController {
             }
         });
         ContextMenu menu = new ContextMenu();
-        MenuItem itemDuplicate = new MenuItem("复制");
-        MenuItem itemDefineProperties = new MenuItem("定义属性");
-        MenuItem itemProductSKU = new MenuItem("配件SKU");
+        MenuItem itemDuplicate = new MenuItem("复  制");
+        MenuItem itemProductSKU = new MenuItem("生成SKU");
+        MenuItem itemDefineProperties = new MenuItem("自定义属性");
         itemDuplicate.setOnAction(e ->{
             duplicate();
         });
@@ -640,7 +612,7 @@ public class ProductManagementController {
         itemProductSKU.setOnAction(e ->{
             openProductSKU();
         });
-        menu.getItems().addAll(itemDuplicate, new SeparatorMenuItem() ,itemDefineProperties, itemProductSKU);
+        menu.getItems().addAll(itemDuplicate, itemProductSKU, new SeparatorMenuItem(), itemDefineProperties);
         tableView.addEventHandler(MouseEvent.MOUSE_CLICKED, t -> {
             if(t.getButton() == MouseButton.SECONDARY) {
                 menu.show(tableView, t.getScreenX(), t.getScreenY());
@@ -696,16 +668,17 @@ public class ProductManagementController {
             }
         });
 
-
         ContextMenu menu = new ContextMenu();
         MenuItem itemNew = new MenuItem("新建类目");
         MenuItem itemRM = new MenuItem("删除类目");
         MenuItem itemRN = new MenuItem("重命名");
+        MenuItem itemProperties = new MenuItem("自定义属性");
         treeView.setEditable(true);
         treeView.setContextMenu(menu);
         itemNew.setOnAction(event -> newCategory());
         itemRM.setOnAction(event -> removeCategory());
         itemRN.setOnAction(event -> treeView.edit(treeView.getSelectionModel().getSelectedItem()));
+        itemProperties.setOnAction(event -> openCustomAttributes());
 
         treeView.setOnMouseClicked((MouseEvent event) -> {
             if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 1){
@@ -724,10 +697,10 @@ public class ProductManagementController {
                 Category selectedCategory = treeView.getSelectionModel().getSelectedItem().getValue();
                 if(selectedCategory.getId() == 0L) {
                     menu.getItems().clear();
-                    menu.getItems().addAll(itemNew);
+                    menu.getItems().addAll(itemNew, new SeparatorMenuItem(), itemProperties);
                 } else {
                     menu.getItems().clear();
-                    menu.getItems().addAll(itemNew, itemRM, itemRN);
+                    menu.getItems().addAll(itemNew, new SeparatorMenuItem(), itemRM, itemRN, new SeparatorMenuItem(), itemProperties);
                 }
             }
         });
@@ -757,14 +730,6 @@ public class ProductManagementController {
 
     private void initListView() {
         listView.setStyle("-fx-font-size: 14px;");
-        try {
-            String path = "/brandSeries";
-            String data = HttpClient.GET(path);
-            BrandSeries[] res = GoogleJson.GET().fromJson(data, BrandSeries[].class);
-            listView.getItems().addAll(res);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         listView.setOnMouseClicked((MouseEvent event) -> {
             if (event.getButton().equals(MouseButton.PRIMARY)){
                 if(event.getClickCount() == 2) {
