@@ -10,7 +10,7 @@
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="435.0" fx:controller="com.shunyi.autoparts.ui.products.AttributeValueEditorController" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <ColorPicker fx:id="colorPicker" layoutX="105.0" layoutY="22.0" prefHeight="30.0" prefWidth="99.0" />
-      <Label layoutX="27.0" layoutY="27.0" text="选择颜色:">
+      <Label fx:id="colorLabel" layoutX="27.0" layoutY="27.0" text="选择颜色:">
          <font>
             <Font size="14.0" />
          </font>

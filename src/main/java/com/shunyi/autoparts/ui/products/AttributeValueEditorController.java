@@ -2,10 +2,12 @@ package com.shunyi.autoparts.ui.products;
 
 import com.shunyi.autoparts.ui.common.GoogleJson;
 import com.shunyi.autoparts.ui.common.HttpClient;
+import com.shunyi.autoparts.ui.model.AttributeName;
 import com.shunyi.autoparts.ui.model.AttributeValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 
 import java.io.IOException;
@@ -14,13 +16,15 @@ public class AttributeValueEditorController {
     AttributeValue updated;
 
     @FXML
-    ColorPicker colorPicker;
+    private ColorPicker colorPicker;
     @FXML
-    ComboBox<String> boxStatus;
+    private Label colorLabel;
     @FXML
-    ComboBox<String> boxSort;
+    private ComboBox<String> boxStatus;
+    @FXML
+    private ComboBox<String> boxSort;
 
-    public void prepare(AttributeValue selectedAttributeValue) {
+    public void prepare(AttributeName selectedAttributeName, AttributeValue selectedAttributeValue) {
         this.updated = selectedAttributeValue;
         initComboBox();
         boxStatus.setValue(selectedAttributeValue.getStatus());
@@ -28,6 +32,12 @@ public class AttributeValueEditorController {
         String[] str = selectedAttributeValue.getRgb().split(",");
         colorPicker.setValue(new Color(Double.valueOf(str[0]), Double.valueOf(str[1]), Double.valueOf(str[2]), 1));
         initEvents();
+        // 如果不是颜色属性，则隐藏颜色选择项
+
+        if(!selectedAttributeName.isColorProperty()) {
+            colorLabel.setVisible(false);
+            colorPicker.setVisible(false);
+        }
     }
 
     void initComboBox() {

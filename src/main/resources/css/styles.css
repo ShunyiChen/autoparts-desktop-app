@@ -65,10 +65,10 @@
     //-fx-text-background-color: white;
 }
 
-// ListView
+// ComboBoxView
 .combo-box .list-view :hover {
-   -fx-background-color: rgb(63,81,181);
-   -fx-text-background-color: white;
+   //-fx-background-color: rgb(63,81,181);
+   //-fx-text-background-color: white;
 }
 .list-view :selected {
    -fx-background-color: rgb(63,81,181);
@@ -80,4 +80,11 @@
     //-fx-background-color: rgb(63,81,181);
     -fx-padding: 1px;
     -fx-background-insets: 0;
+}
+// ListView
+.list-cell{
+    //-fx-text-fill: #292e34;
+    //-fx-font-family: Arial;
+    //-fx-pref-height: 30px;
+    -fx-font-size:14px;
 }

@@ -434,7 +434,7 @@ public class AttributeManagementController {
                         }
                     }
                     else if(selected.getValue() instanceof AttributeValue) {
-                        showAttributeValueEditor((AttributeValue)selected.getValue());
+                        showAttributeValueEditor((AttributeName) selected.getParent().getValue(), (AttributeValue)selected.getValue());
                     }
                 }
             }
@@ -471,7 +471,7 @@ public class AttributeManagementController {
         pnlCenter.setCenter(root);
     }
 
-    private void showAttributeValueEditor(AttributeValue selectedAttributeValue) {
+    private void showAttributeValueEditor(AttributeName selectedAttributeName, AttributeValue selectedAttributeValue) {
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource(
                         "/fxml/products/attributes_value_editor.fxml"
@@ -484,7 +484,7 @@ public class AttributeManagementController {
             e.printStackTrace();
         }
         AttributeValueEditorController controller = loader.getController();
-        controller.prepare(selectedAttributeValue);
+        controller.prepare(selectedAttributeName, selectedAttributeValue);
         pnlCenter.setCenter(root);
     }
 }

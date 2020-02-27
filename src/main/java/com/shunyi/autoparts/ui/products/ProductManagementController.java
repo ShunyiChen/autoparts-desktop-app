@@ -524,6 +524,39 @@ public class ProductManagementController {
         dialog.show();
     }
 
+    private void openBasicAttributes() {
+        TreeItem<Category> selectedItem = treeView.getSelectionModel().getSelectedItem();
+        if(selectedItem == null) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
+            alert.setHeaderText("请选择一个配件类目");
+            alert.show();
+            return;
+        }
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource(
+                        "/fxml/products/basic_attributes.fxml"
+                )
+        );
+        VBox root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Scene scene = new Scene(root);
+        Stage dialog = new Stage();
+        BasicAttributesController controller = loader.getController();
+        controller.prepare(dialog, selectedItem.getValue());
+        dialog.setTitle("配件基本属性");
+        dialog.initOwner(application.getStage());
+        dialog.setResizable(true);
+        dialog.initModality(Modality.WINDOW_MODAL);
+        dialog.setScene(scene);
+        // center stage on screen
+        dialog.centerOnScreen();
+        dialog.show();
+    }
+
     @FXML
     private void openProductSKU() {
         Product selectedProduct = tableView.getSelectionModel().getSelectedItem();
@@ -600,14 +633,14 @@ public class ProductManagementController {
             }
         });
         ContextMenu menu = new ContextMenu();
-        MenuItem itemDuplicate = new MenuItem("复  制");
-        MenuItem itemProductSKU = new MenuItem("生成SKU");
-        MenuItem itemDefineProperties = new MenuItem("自定义属性");
+        MenuItem itemDuplicate = new MenuItem("克隆");
+        MenuItem itemProductSKU = new MenuItem("创建SKU");
+        MenuItem itemDefineProperties = new MenuItem("配件基本属性");
         itemDuplicate.setOnAction(e ->{
             duplicate();
         });
         itemDefineProperties.setOnAction(e ->{
-            openCustomAttributes();
+            openBasicAttributes();
         });
         itemProductSKU.setOnAction(e ->{
             openProductSKU();
@@ -616,6 +649,8 @@ public class ProductManagementController {
         tableView.addEventHandler(MouseEvent.MOUSE_CLICKED, t -> {
             if(t.getButton() == MouseButton.SECONDARY) {
                 menu.show(tableView, t.getScreenX(), t.getScreenY());
+            } else {
+                menu.hide();
             }
         });
     }
@@ -672,7 +707,7 @@ public class ProductManagementController {
         MenuItem itemNew = new MenuItem("新建类目");
         MenuItem itemRM = new MenuItem("删除类目");
         MenuItem itemRN = new MenuItem("重命名");
-        MenuItem itemProperties = new MenuItem("自定义属性");
+        MenuItem itemProperties = new MenuItem("类目属性");
         treeView.setEditable(true);
         treeView.setContextMenu(menu);
         itemNew.setOnAction(event -> newCategory());
