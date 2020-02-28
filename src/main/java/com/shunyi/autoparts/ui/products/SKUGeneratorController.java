@@ -36,7 +36,7 @@ public class SKUGeneratorController {
     private TableColumn<ObservableList<TableCellMetadata>, String> colBarCode = new TableColumn<>("*条形码");
     private TableColumn<ObservableList<TableCellMetadata>, String> colProductCode = new TableColumn<>("产品编码");
     private List<TableColumn<ObservableList<TableCellMetadata>, String>> otherColumns = new ArrayList<>();
-    private Attribute[] attributes;
+//    private Attribute[] attributes;
 
     @FXML
     ScrollPane scrollPane;
@@ -63,27 +63,27 @@ public class SKUGeneratorController {
         pnlRows.getChildren().forEach(e -> {
             List<AttributeValueCheckBox> buttonGroup = (List<AttributeValueCheckBox>) e.getUserData();
             buttonGroup.forEach(c -> {
-                if(c.isSelected()) {
-                    Attribute attribute = new Attribute();
-                    attribute.setAttributeNameId(c.getAttributeValue().getAttributeName().getId());
-                    attribute.setAttributeValueId(c.getAttributeValue().getId());
-                    attribute.setProduct(selectedProduct);
-                    attribute.setSku(true);
-                    attribute.setSkuId(0L);
-                    String json = GoogleJson.GET().toJson(attribute);
-                    try {
-                        String idStr = HttpClient.POST("/attributes", json);
-                        attribute.setId(Long.valueOf(idStr));
-                    } catch (IOException e3) {
-                        e3.printStackTrace();
-                    }
-                } else {
-                    try {
-                        HttpClient.DELETE("/attributes/"+selectedProduct.getId()+"/"+c.getAttributeValue().getId());
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                    }
-                }
+//                if(c.isSelected()) {
+//                    Attribute attribute = new Attribute();
+//                    attribute.setAttributeNameId(c.getAttributeValue().getAttributeName().getId());
+//                    attribute.setAttributeValueId(c.getAttributeValue().getId());
+//                    attribute.setProduct(selectedProduct);
+//                    attribute.setSku(true);
+//                    attribute.setSkuId(0L);
+//                    String json = GoogleJson.GET().toJson(attribute);
+//                    try {
+//                        String idStr = HttpClient.POST("/attributes", json);
+//                        attribute.setId(Long.valueOf(idStr));
+//                    } catch (IOException e3) {
+//                        e3.printStackTrace();
+//                    }
+//                } else {
+//                    try {
+//                        HttpClient.DELETE("/attributes/"+selectedProduct.getId()+"/"+c.getAttributeValue().getId());
+//                    } catch (IOException ex) {
+//                        ex.printStackTrace();
+//                    }
+//                }
             });
         });
 
@@ -149,7 +149,7 @@ public class SKUGeneratorController {
         pnlRows.prefWidthProperty().bind(subStage.widthProperty().subtract(20));
         try {
             String json = HttpClient.GET("/attributes/products/"+selectedProduct.getId());
-            attributes = GoogleJson.GET().fromJson(json, Attribute[].class);
+//            attributes = GoogleJson.GET().fromJson(json, Attribute[].class);
             initTable();
         } catch (IOException e) {
             e.printStackTrace();
@@ -314,7 +314,7 @@ public class SKUGeneratorController {
             e.printStackTrace();
         }
         SKUGeneratorRowController controller = loader.getController();
-        controller.prepare(selectedProduct, attributeName, checkboxGroup, tableColumn, tableView, attributes);
+//        controller.prepare(selectedProduct, attributeName, checkboxGroup, tableColumn, tableView, attributes);
         return root;
     }
 

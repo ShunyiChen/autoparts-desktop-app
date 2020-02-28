@@ -2,31 +2,38 @@ package com.shunyi.autoparts.ui.model;
 
 import java.util.Date;
 
-/** 产品属性DTO */
-public class Attribute {
-    /** ID */
+/** 产品基本属性 */
+public class BasicAttributes {
+    /** 自增ID */
     private Long id;
-    /** 产品 */
+
+    /** 产品ID */
     private Product product;
+
     /** 属性名ID */
     private Long attributeNameId;
-    /** 属性值ID */
-    private Long attributeValueId;
+
+    /** 基本属性值ID */
+    private AttributeValue attributeValue;
+
     /** 是否SKU */
-    private Boolean sku;
+    private Boolean isSKU;
+
     /** SKU ID */
     private Long skuId;
+
     /** 创建时间 */
     private Date dateCreated;
 
-    public Attribute() {}
+    public BasicAttributes() {}
 
-    public Attribute(Product product, Long attributeNameId, Long attributeValueId, Boolean sku, Long skuId) {
+    public BasicAttributes(Product product, Long attributeNameId, AttributeValue attributeValue, Boolean isSKU, Long skuId, Date dateCreated) {
         this.product = product;
         this.attributeNameId = attributeNameId;
-        this.attributeValueId = attributeValueId;
-        this.sku = sku;
+        this.attributeValue = attributeValue;
+        this.isSKU = isSKU;
         this.skuId = skuId;
+        this.dateCreated = dateCreated;
     }
 
     public Long getId() {
@@ -53,20 +60,20 @@ public class Attribute {
         this.attributeNameId = attributeNameId;
     }
 
-    public Long getAttributeValueId() {
-        return attributeValueId;
+    public AttributeValue getAttributeValue() {
+        return attributeValue;
     }
 
-    public void setAttributeValueId(Long attributeValueId) {
-        this.attributeValueId = attributeValueId;
+    public void setAttributeValue(AttributeValue attributeValue) {
+        this.attributeValue = attributeValue;
     }
 
-    public Boolean getSku() {
-        return sku;
+    public Boolean getIsSKU() {
+        return isSKU;
     }
 
-    public void setSku(Boolean sku) {
-        this.sku = sku;
+    public void setIsSKU(Boolean SKU) {
+        isSKU = SKU;
     }
 
     public Long getSkuId() {
@@ -83,18 +90,5 @@ public class Attribute {
 
     public void setDateCreated(Date dateCreated) {
         this.dateCreated = dateCreated;
-    }
-
-    @Override
-    public String toString() {
-        return "Attribute{" +
-                "id=" + id +
-                ", product=" + product +
-                ", attributeNameId=" + attributeNameId +
-                ", attributeValueId=" + attributeValueId +
-                ", sku=" + sku +
-                ", skuId=" + skuId +
-                ", dateCreated=" + dateCreated +
-                '}';
     }
 }

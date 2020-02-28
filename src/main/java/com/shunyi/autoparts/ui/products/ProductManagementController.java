@@ -4,10 +4,7 @@ import com.shunyi.autoparts.ui.MainApp;
 import com.shunyi.autoparts.ui.common.GoogleJson;
 import com.shunyi.autoparts.ui.common.NumberValidationUtils;
 import com.shunyi.autoparts.ui.common.HttpClient;
-import com.shunyi.autoparts.ui.model.BrandSeries;
-import com.shunyi.autoparts.ui.model.Car;
-import com.shunyi.autoparts.ui.model.Category;
-import com.shunyi.autoparts.ui.model.Product;
+import com.shunyi.autoparts.ui.model.*;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -27,7 +24,8 @@ import javafx.util.StringConverter;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /** 配件管理Controller */
 public class ProductManagementController {
@@ -532,6 +530,9 @@ public class ProductManagementController {
             alert.show();
             return;
         }
+
+        Product selectedRow = tableView.getSelectionModel().getSelectedItem();
+
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource(
                         "/fxml/products/basic_attributes.fxml"
@@ -546,7 +547,7 @@ public class ProductManagementController {
         Scene scene = new Scene(root);
         Stage dialog = new Stage();
         BasicAttributesController controller = loader.getController();
-        controller.prepare(dialog, selectedItem.getValue());
+        controller.prepare(dialog, selectedItem.getValue(), selectedRow);
         dialog.setTitle("配件基本属性");
         dialog.initOwner(application.getStage());
         dialog.setResizable(true);
@@ -633,19 +634,21 @@ public class ProductManagementController {
             }
         });
         ContextMenu menu = new ContextMenu();
-        MenuItem itemDuplicate = new MenuItem("克隆");
-        MenuItem itemProductSKU = new MenuItem("创建SKU");
         MenuItem itemDefineProperties = new MenuItem("配件基本属性");
-        itemDuplicate.setOnAction(e ->{
-            duplicate();
-        });
+        MenuItem itemProductSKU = new MenuItem("创建SKU");
+        MenuItem itemDuplicate = new MenuItem("克隆行数据");
+
         itemDefineProperties.setOnAction(e ->{
             openBasicAttributes();
+        });
+        itemDuplicate.setOnAction(e ->{
+            duplicate();
         });
         itemProductSKU.setOnAction(e ->{
             openProductSKU();
         });
-        menu.getItems().addAll(itemDuplicate, itemProductSKU, new SeparatorMenuItem(), itemDefineProperties);
+
+        menu.getItems().addAll(itemDefineProperties, itemProductSKU, new SeparatorMenuItem(), itemDuplicate);
         tableView.addEventHandler(MouseEvent.MOUSE_CLICKED, t -> {
             if(t.getButton() == MouseButton.SECONDARY) {
                 menu.show(tableView, t.getScreenX(), t.getScreenY());
@@ -653,6 +656,22 @@ public class ProductManagementController {
                 menu.hide();
             }
         });
+    }
+
+    private List<AttributeValue> getProductBasicAttributeValues(Product product) {
+        String data;
+        BasicAttributes[] basicAttributes = {};
+        try {
+            data = HttpClient.GET("/basic/attributes/products/"+product.getId());
+            basicAttributes = GoogleJson.GET().fromJson(data, BasicAttributes[].class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        List<AttributeValue> attributeValues = new ArrayList<>();
+        for(BasicAttributes ba : basicAttributes) {
+            attributeValues.add(ba.getAttributeValue());
+        }
+        return attributeValues;
     }
 
     private void duplicate() {
@@ -669,8 +688,18 @@ public class ProductManagementController {
         try {
             String idStr = HttpClient.POST("/products",json);
             duplicated.setId(Long.valueOf(idStr));
+
+            List<AttributeValue> attributeValues = getProductBasicAttributeValues(selected);
+            for(AttributeValue v : attributeValues) {
+                BasicAttributes newBasicAttributes = new BasicAttributes(duplicated, v.getAttributeName().getId(), v, false, 0L, null);
+                json = GoogleJson.GET().toJson(newBasicAttributes);
+                idStr = HttpClient.POST("/basic/attributes", json);
+                newBasicAttributes.setId(Long.valueOf(idStr));
+            }
+
             tableView.getItems().add(duplicated);
             tableView.getSelectionModel().select(duplicated);
+
         } catch (IOException ex) {
             ex.printStackTrace();
         }

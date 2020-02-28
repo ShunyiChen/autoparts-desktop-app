@@ -72,8 +72,17 @@
                   <Font size="14.0" />
                </font>
             </Button>
-            <Separator />
-            <Button mnemonicParsing="false" onAction="#openProductSKU" text="配件SKU">
+            <Button mnemonicParsing="false" text="配件基本属性">
+                <font>
+                    <Font size="14.0" />
+                </font>
+            </Button>
+            <Button mnemonicParsing="false" text="创建SKU">
+                <font>
+                    <Font size="14.0" />
+                </font>
+            </Button>
+            <Button mnemonicParsing="false" text="克隆行数据">
                 <font>
                     <Font size="14.0" />
                 </font>
