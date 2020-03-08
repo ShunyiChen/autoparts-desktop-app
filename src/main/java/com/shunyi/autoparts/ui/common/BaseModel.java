@@ -1,7 +1,7 @@
 package com.shunyi.autoparts.ui.common;
 
 /**
- *
+ * @author Shunyi
  */
 public class BaseModel {
 

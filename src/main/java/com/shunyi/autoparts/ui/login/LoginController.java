@@ -26,6 +26,8 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * @Description: 登录界面
@@ -34,7 +36,7 @@ import java.sql.SQLException;
  * @Version: 1.0
  */
 public class LoginController {
-
+    private ExecutorService executor = Executors.newFixedThreadPool(1);
     private KeyCodeCombination keyCodeCombination = new KeyCodeCombination(KeyCode.ENTER);
     private MainApp application;
     private ICONS icons = ICONS.getInstance();
@@ -133,9 +135,8 @@ public class LoginController {
             }
         };
 
-        Thread th = new Thread(task);
-        th.setDaemon(true);
-        th.start();
+        executor.execute(task);
+        executor.shutdown();
     }
 
     @FXML
@@ -200,16 +201,17 @@ public class LoginController {
         initComboBoxData();
 
         Image bg = new Image(getClass().getResourceAsStream("/img/login/auto-parts.png"), 743, 349, false, true);
-        BackgroundImage myBI = new BackgroundImage(bg,
+        BackgroundImage backgroundImage = new BackgroundImage(bg,
                 BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
                 BackgroundSize.DEFAULT);
-        background.setBackground(new Background(myBI));
+        background.setBackground(new Background(backgroundImage));
         background.setOpacity(0.2);
 
         application.getScene().getAccelerators().put(
                 keyCodeCombination,
                 new Runnable() {
-                    @FXML public void run() {
+                    @Override
+                    public void run() {
                         btnLogin.fire();
                     }
                 }

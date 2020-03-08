@@ -17,6 +17,10 @@ import javafx.util.StringConverter;
 import java.sql.SQLException;
 import java.util.List;
 
+/**
+ * @author Shunyi
+ * 2020/03/08
+ */
 public class RemoteConnectionEditorController {
     private Stage dialog;
 
@@ -27,7 +31,7 @@ public class RemoteConnectionEditorController {
     @FXML
     private ComboBox<String> cBoxProtocol;
     @FXML
-    private TextField txtIPAddr;
+    private TextField txtIpAddress;
     @FXML
     private TextField txtPort;
     @FXML
@@ -79,8 +83,8 @@ public class RemoteConnectionEditorController {
 
     @FXML
     public void add(ActionEvent event) {
-        String name = txtName.getText()+"("+cBoxProtocol.getValue()+"://"+txtIPAddr.getText()+":"+txtPort.getText()+")";
-        RemoteConnection rc = new RemoteConnection(0L, name, cBoxProtocol.getValue(), txtIPAddr.getText(), txtPort.getText(), false, tableView.getItems().size());
+        String name = txtName.getText()+"("+cBoxProtocol.getValue()+"://"+txtIpAddress.getText()+":"+txtPort.getText()+")";
+        RemoteConnection rc = new RemoteConnection(0L, name, cBoxProtocol.getValue(), txtIpAddress.getText(), txtPort.getText(), false, tableView.getItems().size());
         tableView.getItems().add(rc);
         RemoteConnection selected = tableView.getSelectionModel().getSelectedItem();
         tableView.getSelectionModel().select(selected);
@@ -170,8 +174,8 @@ public class RemoteConnectionEditorController {
             }
 
             @Override
-            public Boolean fromString(String string) {
-                return Boolean.valueOf(string.equals("☆"));
+            public Boolean fromString(String str) {
+                return "☆".equals(str);
             }
         };
 

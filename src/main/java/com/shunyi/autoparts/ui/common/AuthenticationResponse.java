@@ -2,7 +2,12 @@ package com.shunyi.autoparts.ui.common;
 
 import java.util.Date;
 
-/** 用户身份验证的http相应 */
+/**
+ * @author Shunyi
+ *
+ * @Description 用户身份验证响应
+ * @CreateDate: 2020/03/09
+ */
 public class AuthenticationResponse {
     private String token;
     private String username;
