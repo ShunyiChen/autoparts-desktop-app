@@ -1,6 +1,6 @@
 package com.shunyi.autoparts.ui.main;
 
-import com.shunyi.autoparts.ui.common.ENV;
+import com.shunyi.autoparts.ui.common.Env;
 import com.shunyi.autoparts.ui.common.HttpClient;
 import com.shunyi.autoparts.ui.common.vo.Store;
 import com.shunyi.autoparts.ui.common.vo.User;
@@ -27,7 +27,7 @@ public class StoreDropListController {
         shopLabel.setStyle("-fx-font-size: 14;-fx-text-fill: rgb(255,255,255);");
         shopComboBox.setStyle("-fx-font-size: 14;");
 
-        String userName = (String) ENV.getInstance().lookup("loginUser");
+        String userName = (String) Env.getInstance().lookup("loginUser");
         try {
             User user = HttpClient.GET("/users/username/"+userName, User.class);
             if("root".equals(user.getUsername())) {

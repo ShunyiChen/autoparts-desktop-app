@@ -1,7 +1,7 @@
 package com.shunyi.autoparts.ui.login;
 
 import com.shunyi.autoparts.ui.MainApp;
-import com.shunyi.autoparts.ui.common.ENV;
+import com.shunyi.autoparts.ui.common.Env;
 import com.shunyi.autoparts.ui.common.GoogleJson;
 import com.shunyi.autoparts.ui.common.ICONS;
 import com.shunyi.autoparts.ui.common.H2;
@@ -89,7 +89,7 @@ public class LoginController {
                 } else {
                     Platform.runLater(() ->  progressBar.setProgress(0.1d));
                     RemoteConnection rc = comboboxConnections.getValue();
-                    ENV.getInstance().addToEnvironment("RemoteConnection", rc);
+                    Env.getInstance().addToEnvironment("RemoteConnection", rc);
                     String json = "{\"username\":\""+txtUsername.getText().trim()+"\",\"password\":\""+txtPassword.getText().trim()+"\"}";
                     Platform.runLater(() ->  progressBar.setProgress(0.2d));
                     try {
@@ -104,8 +104,8 @@ public class LoginController {
                             //删除Enter监听
                             application.getScene().getAccelerators().remove(keyCodeCombination);
 
-                            ENV.getInstance().addToEnvironment("Authorization", "Bearer "+res.getToken());
-                            ENV.getInstance().addToEnvironment("loginUser", res.getUsername());
+                            Env.getInstance().addToEnvironment("Authorization", "Bearer "+res.getToken());
+                            Env.getInstance().addToEnvironment("loginUser", res.getUsername());
 
                             Platform.runLater(() -> progressBar.setProgress(1d));
                             application.gotoDashboard();

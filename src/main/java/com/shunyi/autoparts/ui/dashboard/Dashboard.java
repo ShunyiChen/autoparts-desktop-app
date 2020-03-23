@@ -1,14 +1,13 @@
 package com.shunyi.autoparts.ui.dashboard;
 
 import com.shunyi.autoparts.ui.MainApp;
-import com.shunyi.autoparts.ui.main.BaseContainer;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.chart.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-public class Dashboard extends VBox implements BaseContainer {
+public class Dashboard extends VBox  {
 
     private MainApp application;
 
@@ -128,12 +127,4 @@ public class Dashboard extends VBox implements BaseContainer {
         this.getChildren().add(hLayout);
     }
 
-    @Override
-    public void willOpen() {
-    }
-
-    @Override
-    public void willClose() {
-
-    }
 }

@@ -1,29 +1,8 @@
 package com.shunyi.autoparts.ui.buy;
 
-import com.shunyi.autoparts.ui.MainApp;
-import com.shunyi.autoparts.ui.common.EditingCell;
-import com.shunyi.autoparts.ui.main.BaseContainer;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.*;
-import javafx.scene.text.Font;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.util.Callback;
+import javafx.scene.layout.BorderPane;
 
-import java.io.IOException;
-import java.util.*;
-
-public class PurchaseOrder extends BorderPane implements BaseContainer {
+public class PurchaseOrder extends BorderPane {
 //    private MainApp application;
 //    private Button btnNew = new Button("新建");
 //    private Button btnSave = new Button("保存");
@@ -361,15 +340,6 @@ public class PurchaseOrder extends BorderPane implements BaseContainer {
 //        return root;
 //    }
 //
-    @Override
-    public void willOpen() {
-
-    }
-
-    @Override
-    public void willClose() {
-
-    }
 
 
 }

@@ -1,7 +1,6 @@
 package com.shunyi.autoparts.ui.supplier;
 
 import com.shunyi.autoparts.ui.MainApp;
-import com.shunyi.autoparts.ui.main.BaseContainer;
 import javafx.beans.binding.DoubleBinding;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.BorderPane;
@@ -9,7 +8,7 @@ import javafx.scene.layout.BorderPane;
 import java.io.IOException;
 
 /** 供应商管理 */
-public class SupplierManagement extends BorderPane implements BaseContainer {
+public class SupplierManagement extends BorderPane {
 
     private MainApp application;
 
@@ -46,13 +45,4 @@ public class SupplierManagement extends BorderPane implements BaseContainer {
         this.setLeft(root);
     }
 
-    @Override
-    public void willOpen() {
-
-    }
-
-    @Override
-    public void willClose() {
-
-    }
 }

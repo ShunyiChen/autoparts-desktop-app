@@ -4,15 +4,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 /** 系统全局环境变量 */
-public class ENV {
+public class Env {
 
-    private ENV() {}
+    private Env() {}
 
     private static class SingletonHolder {
-        private static final ENV INSTANCE = new ENV();
+        private static final Env INSTANCE = new Env();
     }
 
-    public static ENV getInstance() {
+    public static Env getInstance() {
         return SingletonHolder.INSTANCE;
     }
 

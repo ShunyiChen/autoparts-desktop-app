@@ -1,9 +1,13 @@
 package com.shunyi.autoparts.ui.main;
 
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @Description: 主界面内容面板
@@ -11,11 +15,13 @@ import javafx.scene.layout.*;
  * @CreateDate: 2020/1/8 16:24
  * @Version: 1.0
  */
-public class NewTabPane extends BorderPane {
+public class ContentPane extends BorderPane {
 
     private BorderPane viewport = new BorderPane();
     private TabPane tabPane;
-    public NewTabPane(TabPane tabPane) {
+//    private List<String> tabTextList = new ArrayList<>();
+
+    public ContentPane(TabPane tabPane) {
         this.tabPane = tabPane;
         initComponents();
     }
@@ -34,7 +40,19 @@ public class NewTabPane extends BorderPane {
         this.tabPane = tabPane;
     }
 
-    public void addNewTab(NewTab tab) {
-        tabPane.getTabs().add(tab);
+    public void addNewTab(NewTab newTab) {
+        Tab existedTab = null;
+        ObservableList<Tab> list = tabPane.getTabs();
+        for(Tab tab : list) {
+            if(tab.getText().equals(newTab.getText())) {
+                existedTab = tab;
+            }
+        }
+        if(existedTab == null) {
+            tabPane.getTabs().add(newTab);
+            tabPane.getSelectionModel().select(newTab);
+        } else {
+            tabPane.getSelectionModel().select(existedTab);
+        }
     }
 }

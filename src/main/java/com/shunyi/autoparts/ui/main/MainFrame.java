@@ -1,14 +1,22 @@
 package com.shunyi.autoparts.ui.main;
 
 import com.shunyi.autoparts.ui.MainApp;
+import com.shunyi.autoparts.ui.common.Constants;
 import com.shunyi.autoparts.ui.common.ICONS;
 import com.shunyi.autoparts.ui.dashboard.Dashboard;
-import com.shunyi.autoparts.ui.products.ProductManagement;
 import com.shunyi.autoparts.ui.buy.PurchaseOrder;
+import com.shunyi.autoparts.ui.inventory.InventoryDetails;
+import com.shunyi.autoparts.ui.products.ProductDetails;
+import com.shunyi.autoparts.ui.purchase.PurchaseDetails;
+import com.shunyi.autoparts.ui.purchase.PurchaseReturnDetails;
+import com.shunyi.autoparts.ui.sale.SalesDetails;
+import com.shunyi.autoparts.ui.sale.SalesReturnDetails;
+import com.shunyi.autoparts.ui.sale.SalesView;
 import com.shunyi.autoparts.ui.stock.StockManagement;
+import com.shunyi.autoparts.ui.supplier.SupplierDetails;
 import com.shunyi.autoparts.ui.supplier.SupplierManagement;
-import com.shunyi.autoparts.ui.system.Maintenance;
-import javafx.scene.control.Label;
+import com.shunyi.autoparts.ui.system.SystemSettings;
+import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.util.Callback;
@@ -21,10 +29,18 @@ public class MainFrame extends BorderPane {
     private TitleBar toolbar;
     private Navigation navigation;
     private ContentPane contentPane;
-    private BaseContainer currentContainer;
-    private PurchaseOrder purchaseContainer;
-    private Dashboard dashboard;
+//    private Dashboard dashboard;
     private ICONS icons = ICONS.getInstance();
+    private TabPane tabPane = new TabPane();
+    private NewTab salesViewTab;
+    private NewTab purchaseDetailsTab;
+    private NewTab purchaseReturnDetailsTab;
+    private NewTab salesDetailsTab;
+    private NewTab salesReturnDetailsTab;
+    private NewTab supplierDetailsTab;
+    private NewTab inventoryDetailsTab;
+    private NewTab productDetailsTab;
+    private NewTab systemSettingsTab;
 
 
     /**
@@ -40,102 +56,123 @@ public class MainFrame extends BorderPane {
     private void initComponents() {
         toolbar = new TitleBar(application);
         navigation = new Navigation(application);
-        contentPane = new ContentPane();
-        contentPane.getViewport().setCenter(new Label("无显示内容"));
-        dashboard = new Dashboard(application);
-//        purchaseContainer = new PurchaseOrder(application);
+        contentPane = new ContentPane(tabPane);
+//        dashboard = new Dashboard(application);
 
         this.setTop(toolbar);
         this.setLeft(navigation);
         this.setCenter(contentPane);
         initEvents();
+
     }
 
     private void initEvents() {
-        ClickableItem dashboard = new ClickableItem(icons.view_dashboard(),"主界面", new Callback() {
+        ClickableItem salesView = new ClickableItem(icons.view_dashboard(), Constants.SALES_VIEW, new Callback() {
             @Override
             public Object call(Object param) {
-                toolbar.setTitle("主界面");
-                contentPane.getViewport().setCenter(new Pane());
+                toolbar.setTitle(Constants.SALES_VIEW);
+                if(salesViewTab == null) {
+                    salesViewTab = new NewTab(Constants.SALES_VIEW, new SalesView());
+                }
+                contentPane.addNewTab(salesViewTab);
                 return null;
             }
         });
-        ClickableItem purchase = new ClickableItem(icons.cart(), "购货单", new Callback() {
+        ClickableItem purchaseDetails = new ClickableItem(icons.cart(), Constants.PURCHASE_DETAILS, new Callback() {
             @Override
             public Object call(Object param) {
-                toolbar.setTitle("购货单");
-//                contentPane.getViewport().setCenter((PurchaseOrder)purchaseContainer);
+                toolbar.setTitle(Constants.PURCHASE_DETAILS);
+                if(purchaseDetailsTab == null) {
+                    purchaseDetailsTab = new NewTab(Constants.PURCHASE_DETAILS, new PurchaseDetails());
+                }
+                contentPane.addNewTab(purchaseDetailsTab);
                 return null;
             }
         });
-        ClickableItem refund = new ClickableItem(icons.cart_arrow_up(), "购货退货单", new Callback() {
+        ClickableItem purchaseReturnDetails = new ClickableItem(icons.cart_arrow_up(), Constants.PURCHASE_RETURN_DETAILS, new Callback() {
             @Override
             public Object call(Object param) {
-                toolbar.setTitle("购货退货单");
-//                contentPane.getViewport().setCenter(new Pane());
+                toolbar.setTitle(Constants.PURCHASE_RETURN_DETAILS);
+                if(purchaseReturnDetailsTab == null) {
+                    purchaseReturnDetailsTab = new NewTab(Constants.PURCHASE_RETURN_DETAILS, new PurchaseReturnDetails());
+                }
+                contentPane.addNewTab(purchaseReturnDetailsTab);
                 return null;
             }
         });
-        ClickableItem item4 = new ClickableItem(icons.shopping(), "销售单", new Callback() {
+        ClickableItem salesDetails = new ClickableItem(icons.shopping(), Constants.SALES_DETAILS, new Callback() {
             @Override
             public Object call(Object param) {
-                toolbar.setTitle("销售单");
-                contentPane.getViewport().setCenter(new Pane());
+                toolbar.setTitle(Constants.SALES_DETAILS);
+                if(salesDetailsTab == null) {
+                    salesDetailsTab = new NewTab(Constants.SALES_DETAILS, new SalesDetails());
+                }
+                contentPane.addNewTab(salesDetailsTab);
                 return null;
             }
         });
-        ClickableItem item5 = new ClickableItem(icons.shopping_outline(), "销售退回单", new Callback() {
+        ClickableItem salesReturnDetails = new ClickableItem(icons.shopping_outline(), Constants.SALES_RETURN_DETAILS, new Callback() {
             @Override
             public Object call(Object param) {
-                toolbar.setTitle("销售退回单");
-                contentPane.getViewport().setCenter(new Pane());
+                toolbar.setTitle(Constants.SALES_RETURN_DETAILS);
+                if(salesReturnDetailsTab == null) {
+                    salesReturnDetailsTab = new NewTab(Constants.SALES_RETURN_DETAILS, new SalesReturnDetails());
+                }
+                contentPane.addNewTab(salesReturnDetailsTab);
                 return null;
             }
         });
-        ClickableItem item6 = new ClickableItem(icons.account_multiple(), "供应商管理", new Callback() {
+        ClickableItem supplierDetails = new ClickableItem(icons.account_multiple(), Constants.SUPPLIER_DETAILS, new Callback() {
             @Override
             public Object call(Object param) {
-                SupplierManagement supplierManagement = new SupplierManagement(application);
-                toolbar.setTitle("供应商管理");
-                contentPane.getViewport().setCenter(new Pane());
-//                contentPane.getViewport().setCenter(supplierManagement);
+//                SupplierManagement supplierManagement = new SupplierManagement(application);
+                toolbar.setTitle(Constants.SUPPLIER_DETAILS);
+                if(supplierDetailsTab == null) {
+                    supplierDetailsTab = new NewTab(Constants.SUPPLIER_DETAILS, new SupplierDetails());
+                }
+                contentPane.addNewTab(supplierDetailsTab);
                 return null;
             }
         });
-        ClickableItem item7 = new ClickableItem(icons.warehouse(), "库存管理", new Callback() {
+        ClickableItem inventoryDetails = new ClickableItem(icons.warehouse(), Constants.INVENTORY_DETAILS, new Callback() {
             @Override
             public Object call(Object param) {
-                StockManagement stockManagement = new StockManagement(application);
-                toolbar.setTitle("库存管理");
-//                contentPane.getViewport().setCenter(stockManagement);
+//                StockManagement stockManagement = new StockManagement(application);
+                toolbar.setTitle(Constants.INVENTORY_DETAILS);
+                if(inventoryDetailsTab == null) {
+                    inventoryDetailsTab = new NewTab(Constants.INVENTORY_DETAILS, new InventoryDetails());
+                }
+                contentPane.addNewTab(inventoryDetailsTab);
                 return null;
             }
         });
-        ClickableItem item8 = new ClickableItem(icons.car_door(), "配件管理", new Callback() {
+        ClickableItem productDetails = new ClickableItem(icons.car_door(), Constants.PRODUCT_DETAILS, new Callback() {
             @Override
             public Object call(Object param) {
 //                ProductManagement ProductManagement = new ProductManagement(application);
-                toolbar.setTitle("配件管理");
-                contentPane.getViewport().setCenter(new Pane());
+                toolbar.setTitle(Constants.PRODUCT_DETAILS);
+                if(productDetailsTab == null) {
+                    productDetailsTab = new NewTab(Constants.PRODUCT_DETAILS, new ProductDetails());
+                }
+                contentPane.addNewTab(productDetailsTab);
                 return null;
             }
         });
 
-        ClickableItem settings = new ClickableItem(icons.settings_transfer_outline(), "系统维护", new Callback() {
+        ClickableItem systemSettings = new ClickableItem(icons.settings_transfer_outline(), Constants.SYSTEM_SETTINGS, new Callback() {
             @Override
             public Object call(Object param) {
 //                Maintenance systemMaintenance = new Maintenance(application);
-                toolbar.setTitle("系统维护");
-                contentPane.getViewport().setCenter(new Pane());
+                toolbar.setTitle(Constants.SYSTEM_SETTINGS);
+                if(systemSettingsTab == null) {
+                    systemSettingsTab = new NewTab(Constants.SYSTEM_SETTINGS, new SystemSettings());
+                }
+                contentPane.addNewTab(systemSettingsTab);
                 return null;
             }
         });
 
-        navigation.addClickableItem(dashboard, purchase, refund, item4, item5, item6, item7, item8, settings);
-    }
-
-    public BaseContainer getCurrentContainer() {
-        return currentContainer;
+        navigation.addClickableItem(salesView, purchaseDetails, purchaseReturnDetails, salesDetails, salesReturnDetails, supplierDetails, inventoryDetails, productDetails, systemSettings);
     }
 
     public Navigation getNavigation() {

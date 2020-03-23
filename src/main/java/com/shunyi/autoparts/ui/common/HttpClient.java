@@ -21,7 +21,7 @@ public class HttpClient {
      * @throws IOException
      */
     public static String GET(String path) throws IOException {
-        return GET(path, ENV.getInstance().lookup("Authorization").toString());
+        return GET(path, Env.getInstance().lookup("Authorization").toString());
     }
 
     /**
@@ -34,7 +34,7 @@ public class HttpClient {
      * @throws IOException
      */
     public static <T>T GET(String path, Class<T> classOfT) throws IOException {
-        String data = GET(path, ENV.getInstance().lookup("Authorization").toString());
+        String data = GET(path, Env.getInstance().lookup("Authorization").toString());
         return GoogleJson.GET().fromJson(data, classOfT);
     }
 
@@ -47,7 +47,7 @@ public class HttpClient {
      * @throws IOException
      */
     public static String GET(String path, String token) throws IOException {
-        RemoteConnection rc = (RemoteConnection) ENV.getInstance().lookup("RemoteConnection");
+        RemoteConnection rc = (RemoteConnection) Env.getInstance().lookup("RemoteConnection");
         String url = rc.getProtocol()+"://"+rc.getHostName()+":"+rc.getPort()+""+path;
         HttpUrl.Builder urlBuilder = HttpUrl.parse(url).newBuilder();
 //        urlBuilder.addQueryParameter("v", "1.0");
@@ -70,7 +70,7 @@ public class HttpClient {
      * @throws IOException
      */
     public static String POST(String path, String json) throws IOException {
-        return POST(path, json, ENV.getInstance().lookup("Authorization").toString());
+        return POST(path, json, Env.getInstance().lookup("Authorization").toString());
     }
 
     /**
@@ -83,7 +83,7 @@ public class HttpClient {
      * @throws IOException
      */
     public static String POST(String path, String json, String token) throws IOException {
-        RemoteConnection rc = (RemoteConnection) ENV.getInstance().lookup("RemoteConnection");
+        RemoteConnection rc = (RemoteConnection) Env.getInstance().lookup("RemoteConnection");
         String url = rc.getProtocol()+"://"+rc.getHostName()+":"+rc.getPort()+""+path;
         RequestBody body = RequestBody.create(json, JSON);
         Request request = new Request.Builder()
@@ -104,8 +104,8 @@ public class HttpClient {
      * @throws IOException
      */
     public static String PUT(String path, String json) throws IOException {
-        String token = ENV.getInstance().lookup("Authorization").toString();
-        RemoteConnection rc = (RemoteConnection) ENV.getInstance().lookup("RemoteConnection");
+        String token = Env.getInstance().lookup("Authorization").toString();
+        RemoteConnection rc = (RemoteConnection) Env.getInstance().lookup("RemoteConnection");
         String url = rc.getProtocol()+"://"+rc.getHostName()+":"+rc.getPort()+""+path;
         RequestBody body = RequestBody.create(json, JSON);
         Request request = new Request.Builder()
@@ -138,8 +138,8 @@ public class HttpClient {
      * @throws IOException
      */
     public static String BATCH_DELETE(String path, String data) throws IOException {
-        String token = ENV.getInstance().lookup("Authorization").toString();
-        RemoteConnection rc = (RemoteConnection) ENV.getInstance().lookup("RemoteConnection");
+        String token = Env.getInstance().lookup("Authorization").toString();
+        RemoteConnection rc = (RemoteConnection) Env.getInstance().lookup("RemoteConnection");
         String url = rc.getProtocol()+"://"+rc.getHostName()+":"+rc.getPort()+""+path;
         HttpUrl.Builder urlBuilder = HttpUrl.parse(url).newBuilder();
         url = urlBuilder.build().toString();

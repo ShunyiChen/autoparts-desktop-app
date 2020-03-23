@@ -88,3 +88,7 @@
     //-fx-pref-height: 30px;
     -fx-font-size:14px;
 }
+//TabPane
+.tab-label {
+     -fx-font-size:14px;
+}

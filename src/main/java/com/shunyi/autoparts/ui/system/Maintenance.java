@@ -1,7 +1,6 @@
 package com.shunyi.autoparts.ui.system;
 
 import com.shunyi.autoparts.ui.MainApp;
-import com.shunyi.autoparts.ui.main.BaseContainer;
 import javafx.beans.binding.DoubleBinding;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TabPane;
@@ -10,7 +9,7 @@ import javafx.scene.layout.BorderPane;
 import java.io.IOException;
 
 /** 系统维护Controller */
-public class Maintenance extends BorderPane implements BaseContainer {
+public class Maintenance extends BorderPane {
 
     private MainApp application;
 
@@ -52,13 +51,4 @@ public class Maintenance extends BorderPane implements BaseContainer {
 
     }
 
-    @Override
-    public void willOpen() {
-
-    }
-
-    @Override
-    public void willClose() {
-
-    }
 }
