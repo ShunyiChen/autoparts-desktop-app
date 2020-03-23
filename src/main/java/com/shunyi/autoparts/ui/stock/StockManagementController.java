@@ -3,9 +3,9 @@ package com.shunyi.autoparts.ui.stock;
 import com.shunyi.autoparts.ui.MainApp;
 import com.shunyi.autoparts.ui.common.GoogleJson;
 import com.shunyi.autoparts.ui.common.HttpClient;
-import com.shunyi.autoparts.ui.model.CargoSpace;
-import com.shunyi.autoparts.ui.model.SKU;
-import com.shunyi.autoparts.ui.model.Warehouse;
+import com.shunyi.autoparts.ui.common.vo.SKU;
+import com.shunyi.autoparts.ui.common.vo.Slot;
+import com.shunyi.autoparts.ui.common.vo.Warehouse;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -55,11 +55,11 @@ public class StockManagementController {
     @FXML
     TextField txtLevel_5;
     @FXML
-    TableView<CargoSpace> topTable;
+    TableView<Slot> topTable;
     @FXML
     TableColumn colWarehouse;
     @FXML
-    TableColumn colCargoSpaceName;
+    TableColumn colSlotName;
     @FXML
     TableColumn colLevel_1;
     @FXML
@@ -71,7 +71,7 @@ public class StockManagementController {
     @FXML
     TableColumn colLevel_5;
     @FXML
-    TableColumn colCargoSpaceBarCode;
+    TableColumn colSlotBarCode;
 
     @FXML
     TableView<SKU> bottomTable;
@@ -102,24 +102,24 @@ public class StockManagementController {
 
     @FXML
     private void search(ActionEvent event) {
-        //定义货位
-        CargoSpace cargoSpace = new CargoSpace();
-        cargoSpace.setBarCode("");
-        cargoSpace.setName(txtName.getText());
-        cargoSpace.setLevel_1(txtLevel_1.getText());
-        cargoSpace.setLevel_2(txtLevel_2.getText());
-        cargoSpace.setLevel_3(txtLevel_3.getText());
-        cargoSpace.setLevel_4(txtLevel_4.getText());
-        cargoSpace.setLevel_5(txtLevel_5.getText());
-        String json = GoogleJson.GET().toJson(cargoSpace);
-        try {
-            String data = HttpClient.POST("/cargoSpaces/search", json);
-            CargoSpace[] cargoSpaces = GoogleJson.GET().fromJson(data, CargoSpace[].class);
-            topTable.getItems().clear();
-            topTable.getItems().addAll(cargoSpaces);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        //定义货位
+//        Slot cargoSpace = new Slot();
+//        cargoSpace.setBarCode("");
+//        cargoSpace.setName(txtName.getText());
+//        cargoSpace.setLevel_1(txtLevel_1.getText());
+//        cargoSpace.setLevel_2(txtLevel_2.getText());
+//        cargoSpace.setLevel_3(txtLevel_3.getText());
+//        cargoSpace.setLevel_4(txtLevel_4.getText());
+//        cargoSpace.setLevel_5(txtLevel_5.getText());
+//        String json = GoogleJson.GET().toJson(cargoSpace);
+//        try {
+//            String data = HttpClient.POST("/cargoSpaces/search", json);
+//            Slot[] cargoSpaces = GoogleJson.GET().fromJson(data, Slot[].class);
+//            topTable.getItems().clear();
+//            topTable.getItems().addAll(cargoSpaces);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 
     @FXML
@@ -226,7 +226,7 @@ public class StockManagementController {
                 @Override
                 public Object call(Warehouse param) {
                     param.setId(selected.getValue().getId());
-                    param.setParent(selected.getValue().isParent());
+                    param.setParent(selected.getValue().getParent());
                     param.setParentId(selected.getValue().getParentId());
                     String json = GoogleJson.GET().toJson(param);
                     try {
@@ -263,7 +263,7 @@ public class StockManagementController {
             alert.show();
             return;
         }
-        else if(selected.getValue().isParent()){
+        else if(selected.getValue().getParent()){
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
             alert.setHeaderText("无法删除父节点");
             alert.show();
@@ -299,7 +299,7 @@ public class StockManagementController {
     }
 
     @FXML
-    private void newCargoSpace(ActionEvent event) {
+    private void newSlot(ActionEvent event) {
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource(
                         "/fxml/stock/edit_cargospace.fxml"
@@ -313,13 +313,13 @@ public class StockManagementController {
         }
         Scene scene = new Scene(root);
         Stage dialog = new Stage();
-        EditCargoSpaceController controller = loader.getController();
-        Callback<CargoSpace, Object> cb = new Callback<CargoSpace, Object>() {
+        EditSlotController controller = loader.getController();
+        Callback<Slot, Object> cb = new Callback<Slot, Object>() {
             @Override
-            public Object call(CargoSpace param) {
+            public Object call(Slot param) {
                 String json = GoogleJson.GET().toJson(param);
                 try {
-                    HttpClient.POST("/cargoSpaces", json);
+                    HttpClient.POST("/slot", json);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -339,9 +339,9 @@ public class StockManagementController {
     }
 
     @FXML
-    private void updateCargoSpace() {
-        CargoSpace cargoSpace = topTable.getSelectionModel().getSelectedItem();
-        if(cargoSpace == null) {
+    private void updateSlot() {
+        Slot slot = topTable.getSelectionModel().getSelectedItem();
+        if(slot == null) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
             alert.setHeaderText("请在表格上选择一行记录");
             alert.show();
@@ -360,17 +360,17 @@ public class StockManagementController {
         }
         Scene scene = new Scene(root);
         Stage dialog = new Stage();
-        EditCargoSpaceController controller = loader.getController();
-        Callback<CargoSpace, Object> cb = new Callback<CargoSpace, Object>() {
+        EditSlotController controller = loader.getController();
+        Callback<Slot, Object> cb = new Callback<Slot, Object>() {
             @Override
-            public Object call(CargoSpace param) {
+            public Object call(Slot param) {
                 String json = GoogleJson.GET().toJson(param);
                 try {
                     HttpClient.PUT("/cargoSpaces/"+param.getId(),json);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                CargoSpace cargoSpace1 = topTable.getSelectionModel().getSelectedItem();
+                Slot cargoSpace1 = topTable.getSelectionModel().getSelectedItem();
                 int index = topTable.getItems().indexOf(cargoSpace1);
                 topTable.getItems().remove(index);
                 topTable.getItems().add(param);
@@ -378,7 +378,7 @@ public class StockManagementController {
                 return null;
             }
         };
-        controller.prepare(dialog, cargoSpace, cb);
+        controller.prepare(dialog, slot, cb);
         dialog.setTitle("更改库位");
         dialog.initOwner(application.getStage());
         dialog.setResizable(false);
@@ -390,9 +390,9 @@ public class StockManagementController {
     }
 
     @FXML
-    private void removeCargoSpace(ActionEvent event) {
-        CargoSpace cargoSpace = topTable.getSelectionModel().getSelectedItem();
-        if(cargoSpace == null) {
+    private void removeSlot(ActionEvent event) {
+        Slot slot = topTable.getSelectionModel().getSelectedItem();
+        if(slot == null) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
             alert.setHeaderText("请在表格上选择一行记录");
             alert.show();
@@ -404,18 +404,18 @@ public class StockManagementController {
                 .filter(response -> response == ButtonType.YES)
                 .ifPresent(response -> {
                     try {
-                        HttpClient.DELETE("/cargoSpaces/"+cargoSpace.getId());
+                        HttpClient.DELETE("/slot/"+slot.getId());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    topTable.getItems().remove(cargoSpace);
+                    topTable.getItems().remove(slot);
                 });
     }
 
     public void prepare(MainApp application) {
         this.application = application;
         //初始化树
-        Warehouse warehouse = new Warehouse("ALL","全部仓库",0L, true);
+        Warehouse warehouse = new Warehouse(0L, "ALL","全部仓库",0L, true, null, null, null, null, null, null, false, null);
         warehouse.setId(0L);
         TreeItem<Warehouse> root = new TreeItem<>(warehouse);
         initTreeNodes(root);
@@ -462,7 +462,7 @@ public class StockManagementController {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                CargoSpace[] suppliers = GoogleJson.GET().fromJson(json, CargoSpace[].class);
+                Slot[] suppliers = GoogleJson.GET().fromJson(json, Slot[].class);
                 topTable.getItems().addAll(suppliers);
             }
         });
@@ -499,40 +499,40 @@ public class StockManagementController {
         topTable.setEditable(false);
         topTable.setOnMouseClicked((MouseEvent event) -> {
             if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2){
-                updateCargoSpace();
+                updateSlot();
             }
         });
         try {
-            String json = HttpClient.GET("/cargoSpaces");
-            CargoSpace[] cargoSpaces = GoogleJson.GET().fromJson(json, CargoSpace[].class);
+            String json = HttpClient.GET("/slot");
+            Slot[] cargoSpaces = GoogleJson.GET().fromJson(json, Slot[].class);
             topTable.getItems().addAll(cargoSpaces);
         } catch (IOException e) {
             e.printStackTrace();
         }
         // 编码列设置
         colWarehouse.setCellValueFactory(
-                new PropertyValueFactory<CargoSpace, String>("warehouse")
+                new PropertyValueFactory<Slot, String>("warehouse")
         );
-        colCargoSpaceName.setCellValueFactory(
-                new PropertyValueFactory<CargoSpace, String>("name")
+        colSlotName.setCellValueFactory(
+                new PropertyValueFactory<Slot, String>("name")
         );
         colLevel_1.setCellValueFactory(
-                new PropertyValueFactory<CargoSpace, String>("level_1")
+                new PropertyValueFactory<Slot, String>("level_1")
         );
         colLevel_2.setCellValueFactory(
-                new PropertyValueFactory<CargoSpace, String>("level_2")
+                new PropertyValueFactory<Slot, String>("level_2")
         );
         colLevel_3.setCellValueFactory(
-                new PropertyValueFactory<CargoSpace, String>("level_3")
+                new PropertyValueFactory<Slot, String>("level_3")
         );
         colLevel_4.setCellValueFactory(
-                new PropertyValueFactory<CargoSpace, String>("level_4")
+                new PropertyValueFactory<Slot, String>("level_4")
         );
         colLevel_5.setCellValueFactory(
-                new PropertyValueFactory<CargoSpace, String>("level_5")
+                new PropertyValueFactory<Slot, String>("level_5")
         );
-        colCargoSpaceBarCode.setCellValueFactory(
-                new PropertyValueFactory<CargoSpace, String>("barCode")
+        colSlotBarCode.setCellValueFactory(
+                new PropertyValueFactory<Slot, String>("barCode")
         );
     }
 

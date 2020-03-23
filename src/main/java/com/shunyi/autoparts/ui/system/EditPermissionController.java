@@ -2,7 +2,9 @@ package com.shunyi.autoparts.ui.system;
 
 import com.shunyi.autoparts.ui.common.GoogleJson;
 import com.shunyi.autoparts.ui.common.HttpClient;
-import com.shunyi.autoparts.ui.model.*;
+import com.shunyi.autoparts.ui.common.vo.Permission;
+import com.shunyi.autoparts.ui.common.vo.Role;
+import com.shunyi.autoparts.ui.common.vo.RolePermissionMapping;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
@@ -78,7 +80,7 @@ public class EditPermissionController {
 
             //更改权限
             updatedPermission.setName(txtName.getText());
-            updatedPermission.setCode(txtCode.getText());
+            updatedPermission.setCode(Integer.parseInt(txtCode.getText()));
             updatedPermission.setDescription(txtDesc.getText());
             String json = GoogleJson.GET().toJson(updatedPermission);
             try {
@@ -144,7 +146,7 @@ public class EditPermissionController {
 
         txtName.setText(selectedPermission.getName());
         txtDesc.setText(selectedPermission.getDescription());
-        txtCode.setText(selectedPermission.getCode());
+        txtCode.setText(selectedPermission.getCode()+"");
     }
 
     /**

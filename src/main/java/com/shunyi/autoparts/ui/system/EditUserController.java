@@ -2,7 +2,7 @@ package com.shunyi.autoparts.ui.system;
 
 import com.shunyi.autoparts.ui.common.GoogleJson;
 import com.shunyi.autoparts.ui.common.HttpClient;
-import com.shunyi.autoparts.ui.model.*;
+import com.shunyi.autoparts.ui.common.vo.*;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
@@ -33,7 +33,7 @@ public class EditUserController {
     @FXML
     private CheckBox boxEnabled;
     @FXML
-    private VBox vBoxShop;
+    private VBox vBoxStore;
     @FXML
     private VBox vBoxRole;
     @FXML
@@ -53,38 +53,38 @@ public class EditUserController {
                 User updatedUser = new User();
                 updatedUser.setId(selectedUser.getId());
                 updatedUser.setUsername(selectedUser.getUsername());
-                updatedUser.setEnabled(selectedUser.isEnabled());
+                updatedUser.setEnabled(selectedUser.getEnabled());
                 updatedUser.setPassword(selectedUser.getPassword());
 
                 //更新用户与店铺关系
                 try {
                     String json = HttpClient.GET("/usershopmappings/user/"+selectedUser.getId());
-                    UserShopMapping[] oldUserShopMappings = GoogleJson.GET().fromJson(json, UserShopMapping[].class);
-                    List<UserShopMapping.Id> oldUserShopMappingIds = new ArrayList<>();
-                    for(UserShopMapping mapping : oldUserShopMappings) {
-                        oldUserShopMappingIds.add(mapping.getId());
+                    UserStoreMapping[] oldUserStoreMappings = GoogleJson.GET().fromJson(json, UserStoreMapping[].class);
+                    List<UserStoreMapping.Id> oldUserStoreMappingIds = new ArrayList<>();
+                    for(UserStoreMapping mapping : oldUserStoreMappings) {
+                        oldUserStoreMappingIds.add(mapping.getId());
                     }
-                    List<UserShopMapping.Id> newUserShopMappingIds = new ArrayList<>();
-                    vBoxShop.getChildren().forEach(item -> {
+                    List<UserStoreMapping.Id> newUserStoreMappingIds = new ArrayList<>();
+                    vBoxStore.getChildren().forEach(item -> {
                         CheckBox checkBox = (CheckBox) item;
                         if(checkBox.isSelected()) {
                             String shopId = checkBox.getUserData().toString();
-                            UserShopMapping.Id id = new UserShopMapping.Id(selectedUser.getId(), Long.valueOf(shopId));
-                            UserShopMapping mapping = new UserShopMapping();
+                            UserStoreMapping.Id id = new UserStoreMapping.Id(selectedUser.getId(), Long.valueOf(shopId));
+                            UserStoreMapping mapping = new UserStoreMapping();
                             mapping.setId(id);
-                            updatedUser.getUserShopMappingSet().add(mapping);
+                            updatedUser.getUserStoreMappingSet().add(mapping);
 
-                            newUserShopMappingIds.add(id);
+                            newUserStoreMappingIds.add(id);
                         }
                     });
 
-                    List<UserShopMapping.Id> removableList = oldUserShopMappingIds.stream().filter(e -> !contains(newUserShopMappingIds, e)).collect(Collectors.toList());
-                    UserShopMapping.Id[] removableIds = removableList.toArray(new UserShopMapping.Id[removableList.size()]);
+                    List<UserStoreMapping.Id> removableList = oldUserStoreMappingIds.stream().filter(e -> !contains(newUserStoreMappingIds, e)).collect(Collectors.toList());
+                    UserStoreMapping.Id[] removableIds = removableList.toArray(new UserStoreMapping.Id[removableList.size()]);
                     json = GoogleJson.GET().toJson(removableIds);
                     HttpClient.BATCH_DELETE("/usershopmappings", json);
 
-                    List<UserShopMapping.Id> addibleList = newUserShopMappingIds.stream().filter(e -> !contains(oldUserShopMappingIds, e)).collect(Collectors.toList());
-                    UserShopMapping.Id[] addibleIds = addibleList.toArray(new UserShopMapping.Id[addibleList.size()]);
+                    List<UserStoreMapping.Id> addibleList = newUserStoreMappingIds.stream().filter(e -> !contains(oldUserStoreMappingIds, e)).collect(Collectors.toList());
+                    UserStoreMapping.Id[] addibleIds = addibleList.toArray(new UserStoreMapping.Id[addibleList.size()]);
                     json = GoogleJson.GET().toJson(addibleIds);
                     HttpClient.POST("/usershopmappings", json);
                 } catch (IOException e) {
@@ -155,27 +155,28 @@ public class EditUserController {
     private void creatingUser() {
         //新建用户与店铺关系
         String encryptedPassword = encoder.encode(txtPassword.getText());
-        User createdUser = new User(txtUserName.getText(), encryptedPassword, boxEnabled.isSelected());
+//        User createdUser = new User(txtUserName.getText(), encryptedPassword, boxEnabled.isSelected());
+        User createdUser = new User();
         String json = GoogleJson.GET().toJson(createdUser);
 
         try {
             String idStr = HttpClient.POST("/users", json);
             createdUser.setId(Long.valueOf(idStr));
-            List<UserShopMapping.Id> listIds = new ArrayList<>();
-            vBoxShop.getChildren().forEach(item -> {
+            List<UserStoreMapping.Id> listIds = new ArrayList<>();
+            vBoxStore.getChildren().forEach(item -> {
                 CheckBox checkBox = (CheckBox) item;
                 if(checkBox.isSelected()) {
                     String shopId = checkBox.getUserData().toString();
 
-                    UserShopMapping.Id id = new UserShopMapping.Id(Long.valueOf(idStr), Long.valueOf(shopId));
-                    UserShopMapping mapping = new UserShopMapping();
+                    UserStoreMapping.Id id = new UserStoreMapping.Id(Long.valueOf(idStr), Long.valueOf(shopId));
+                    UserStoreMapping mapping = new UserStoreMapping();
                     mapping.setId(id);
-                    createdUser.getUserShopMappingSet().add(mapping);
+                    createdUser.getUserStoreMappingSet().add(mapping);
 
                     listIds.add(id);
                 }
             });
-            json = GoogleJson.GET().toJson(listIds.toArray(new UserShopMapping.Id[listIds.size()]));
+            json = GoogleJson.GET().toJson(listIds.toArray(new UserStoreMapping.Id[listIds.size()]));
             HttpClient.POST("/usershopmappings", json);
 
         } catch (IOException e) {
@@ -213,10 +214,10 @@ public class EditUserController {
      * @param findId
      * @return
      */
-    private boolean contains(List<UserShopMapping.Id> list, UserShopMapping.Id findId) {
-        for(UserShopMapping.Id id : list) {
-            if(id.getShopId() == findId.getShopId()
-                    && id.getUserId() == findId.getUserId()) {
+    private boolean contains(List<UserStoreMapping.Id> list, UserStoreMapping.Id findId) {
+        for(UserStoreMapping.Id id : list) {
+            if(id.getStoreId().equals(findId.getStoreId())
+                    && id.getUserId().equals(findId.getUserId())) {
                 return true;
             }
         }
@@ -232,8 +233,8 @@ public class EditUserController {
      */
     private boolean contains(List<UserRoleMapping.Id> list, UserRoleMapping.Id findId) {
         for(UserRoleMapping.Id id : list) {
-            if(id.getRoleId() == findId.getRoleId()
-                    && id.getUserId() == findId.getUserId()) {
+            if(id.getRoleId().equals(findId.getRoleId())
+                    && id.getUserId().equals(findId.getUserId())) {
                 return true;
             }
         }
@@ -304,11 +305,11 @@ public class EditUserController {
         this.dialog = dialog;
         this.callback = callback;
         this.selectedUser = selectedUser;
-        vBoxShop.getChildren().clear();
+        vBoxStore.getChildren().clear();
         vBoxRole.getChildren().clear();
         btnOk.setStyle(String.format("-fx-base: %s;", "rgb(63,81,181)"));
         initUser();
-        initShops();
+        initStores();
         initRoles();
     }
 
@@ -316,7 +317,7 @@ public class EditUserController {
         boxEnabled.setSelected(true);
         btnContinueCreating.setVisible(true);
         if(selectedUser != null) {
-            boxEnabled.setSelected(selectedUser.isEnabled());
+            boxEnabled.setSelected(selectedUser.getEnabled());
             txtUserName.setText(selectedUser.getUsername());
             txtPassword.setText(selectedUser.getPassword());
             confirmTxtPassword.setText(selectedUser.getPassword());
@@ -327,27 +328,27 @@ public class EditUserController {
         }
     }
 
-    private void initShops() {
-        vBoxShop.getChildren().clear();
+    private void initStores() {
+        vBoxStore.getChildren().clear();
         String json = null;
         try {
             json = HttpClient.GET("/shops");
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Shop[] shops = GoogleJson.GET().fromJson(json, Shop[].class);
-        for (Shop shop : shops) {
+        Store[] shops = GoogleJson.GET().fromJson(json, Store[].class);
+        for (Store shop : shops) {
             CheckBox checkBox = new CheckBox(shop.getName());
             checkBox.setUserData(shop.getId());
-            vBoxShop.getChildren().add(checkBox);
+            vBoxStore.getChildren().add(checkBox);
         }
 
         if(selectedUser != null) {
-            vBoxShop.getChildren().forEach(checkbox -> {
+            vBoxStore.getChildren().forEach(checkbox -> {
                 Long shopId = Long.valueOf(checkbox.getUserData().toString());
                 ((CheckBox)checkbox).setSelected(false);
-                selectedUser.getUserShopMappingSet().forEach(e -> {
-                    if(e.getId().getShopId() == shopId) {
+                selectedUser.getUserStoreMappingSet().forEach(e -> {
+                    if(e.getId().getStoreId() == shopId) {
                         ((CheckBox)checkbox).setSelected(true);
                     }
                 });
@@ -376,7 +377,7 @@ public class EditUserController {
                 Long roleId = Long.valueOf(checkbox.getUserData().toString());
                 ((CheckBox)checkbox).setSelected(false);
                 selectedUser.getUserRoleMappingSet().forEach(id -> {
-                    if(id.getId().getRoleId() == roleId) {
+                    if(id.getId().getRoleId().equals(roleId)) {
                         ((CheckBox)checkbox).setSelected(true);
                     }
                 });

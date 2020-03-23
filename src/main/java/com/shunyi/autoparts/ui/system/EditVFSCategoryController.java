@@ -1,6 +1,6 @@
 package com.shunyi.autoparts.ui.system;
 
-import com.shunyi.autoparts.ui.model.VFSCategory;
+import com.shunyi.autoparts.ui.common.vo.VFSCategory;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;

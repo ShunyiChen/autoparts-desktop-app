@@ -1,12 +1,11 @@
 package com.shunyi.autoparts.ui.products;
 
-import com.shunyi.autoparts.ui.common.GoogleJson;
 import com.shunyi.autoparts.ui.common.HttpClient;
 import com.shunyi.autoparts.ui.common.VFSClient;
-import com.shunyi.autoparts.ui.model.BrandSeries;
-import com.shunyi.autoparts.ui.model.Category;
-import com.shunyi.autoparts.ui.model.Logo;
-import com.shunyi.autoparts.ui.model.VFS;
+import com.shunyi.autoparts.ui.common.vo.BrandSeries;
+import com.shunyi.autoparts.ui.common.vo.Category;
+import com.shunyi.autoparts.ui.common.vo.Logo;
+import com.shunyi.autoparts.ui.common.vo.VFS;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -164,7 +163,9 @@ public class BrandSeriesEditorController {
     @FXML
     private void continueAdd() {
         if(validation()) {
-            BrandSeries newBrandSeries = new BrandSeries(selectedCategory, txtChineseName.getText(), txtEnglishName.getText(), txtDesc.getText(), choosedLogo, boxStatus.getValue(), txtOfficialWebSite.getText());
+//            BrandSeries newBrandSeries = new BrandSeries(selectedCategory, txtChineseName.getText(), txtEnglishName.getText(), txtDesc.getText(), choosedLogo, boxStatus.getValue(), txtOfficialWebSite.getText());
+
+            BrandSeries newBrandSeries = new BrandSeries();
             callback.call(newBrandSeries);
         }
     }

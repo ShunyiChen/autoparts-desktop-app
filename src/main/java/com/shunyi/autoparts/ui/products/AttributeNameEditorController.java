@@ -2,7 +2,8 @@ package com.shunyi.autoparts.ui.products;
 
 import com.shunyi.autoparts.ui.common.GoogleJson;
 import com.shunyi.autoparts.ui.common.HttpClient;
-import com.shunyi.autoparts.ui.model.AttributeName;
+import com.shunyi.autoparts.ui.common.Sort;
+import com.shunyi.autoparts.ui.common.vo.AttributeName;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
@@ -40,17 +41,17 @@ public class AttributeNameEditorController {
         this.updated = selectedAttributeName;
         initComboBox();
 
-        boxAllowAlias.setSelected(selectedAttributeName.isAliasAllowed());
-        boxIsColor.setSelected(selectedAttributeName.isColorProperty());
-        boxIsEnum.setSelected(selectedAttributeName.isEnumProperty());
-        boxIsInput.setSelected(selectedAttributeName.isInputProperty());
-        boxIsKey.setSelected(selectedAttributeName.isKeyProperty());
-        boxIsSales.setSelected(selectedAttributeName.isSaleProperty());
-        boxIsSearch.setSelected(selectedAttributeName.isSearchField());
-        boxIsRequired.setSelected(selectedAttributeName.isRequired());
-        boxIsMultiSelected.setSelected(selectedAttributeName.isMultiple());
+        boxAllowAlias.setSelected(selectedAttributeName.getAliasAllowed());
+        boxIsColor.setSelected(selectedAttributeName.getColorProperty());
+        boxIsEnum.setSelected(selectedAttributeName.getEnumProperty());
+        boxIsInput.setSelected(selectedAttributeName.getInputProperty());
+        boxIsKey.setSelected(selectedAttributeName.getKeyProperty());
+        boxIsSales.setSelected(selectedAttributeName.getSaleProperty());
+        boxIsSearch.setSelected(selectedAttributeName.getSearchField());
+        boxIsRequired.setSelected(selectedAttributeName.getRequired());
+        boxIsMultiSelected.setSelected(selectedAttributeName.getMultiple());
         boxStatus.setValue(selectedAttributeName.getStatus());
-        boxSort.setValue(selectedAttributeName.getSort() == 1?Sort.ASC.getName():Sort.DESC.getName());
+        boxSort.setValue(selectedAttributeName.getSort() == 1? Sort.ASC.getName():Sort.DESC.getName());
 
         initEvents();
     }

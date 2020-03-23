@@ -1,7 +1,7 @@
 package com.shunyi.autoparts.ui.system;
 
 import com.shunyi.autoparts.ui.common.NumberValidationUtils;
-import com.shunyi.autoparts.ui.model.VFS;
+import com.shunyi.autoparts.ui.common.vo.VFS;
 import com.shunyi.autoparts.ui.common.VFSClient;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -44,7 +44,8 @@ public class EditVFSController {
     @FXML
     private void ok() {
         if(validate()) {
-            VFS vfs = new VFS(txtName.getText(), comboxProtocol.getValue(), txtHost.getText(), Integer.parseInt(txtPort.getText()), txtHome.getText(), txtUserName.getText(), txtPassword.getText(), checkboxCanRead.isSelected(), checkboxCanWrite.isSelected(), 0L);
+            VFS vfs = new VFS();
+//            VFS vfs = new VFS(txtName.getText(), comboxProtocol.getValue(), txtHost.getText(), Integer.parseInt(txtPort.getText()), txtHome.getText(), txtUserName.getText(), txtPassword.getText(), checkboxCanRead.isSelected(), checkboxCanWrite.isSelected(), 0L);
             callback.call(vfs);
             dialog.close();
         }
@@ -54,7 +55,8 @@ public class EditVFSController {
     private void testConnection() {
         if(validate()) {
             try {
-                VFS vfs = new VFS(txtName.getText(), comboxProtocol.getValue(), txtHost.getText(), Integer.parseInt(txtPort.getText()), txtHome.getText(), txtUserName.getText(), txtPassword.getText(), checkboxCanRead.isSelected(), checkboxCanWrite.isSelected(), 0L);
+//                VFS vfs = new VFS(0L,txtName.getText(), comboxProtocol.getValue(), txtHost.getText(), Integer.parseInt(txtPort.getText()), txtHome.getText(), txtUserName.getText(), txtPassword.getText(), checkboxCanRead.isSelected(), checkboxCanWrite.isSelected(), 0L);
+                VFS vfs = new VFS();
                 boolean testResult = VFSClient.testConnection(vfs);
                 if(testResult) {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);

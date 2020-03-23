@@ -2,8 +2,8 @@ package com.shunyi.autoparts.ui.supplier;
 
 import com.shunyi.autoparts.ui.common.GoogleJson;
 import com.shunyi.autoparts.ui.common.HttpClient;
-import com.shunyi.autoparts.ui.model.Supplier;
-import com.shunyi.autoparts.ui.model.SupplierCategory;
+import com.shunyi.autoparts.ui.common.vo.Supplier;
+import com.shunyi.autoparts.ui.common.vo.SupplierCategory;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -122,20 +122,24 @@ public class EditSupplierController {
 
     void update(boolean closeStage) {
         if(checkInputs()) {
-            if(closeStage)
+            if(closeStage) {
                 dialog.close();
-            Supplier supplier = new Supplier(txtCode.getText(), txtName.getText(), txtContacts.getText(),txtPhone.getText(),txtOthers.getText(),selectedCategory);
-            supplier.setId(updatedSupplier.getId());
-            callback.call(supplier);
+            }
+
+//            Supplier supplier = new Supplier(txtCode.getText(), txtName.getText(), txtContacts.getText(),txtPhone.getText(),txtOthers.getText(),selectedCategory);
+//            supplier.setId(updatedSupplier.getId());
+//            callback.call(supplier);
         }
     }
 
     void add(boolean closeStage) {
         if(checkInputs()) {
-            if(closeStage)
+            if(closeStage) {
                 dialog.close();
-            Supplier supplier = new Supplier(txtCode.getText(), txtName.getText(), txtContacts.getText(),txtPhone.getText(),txtOthers.getText(),selectedCategory);
-            callback.call(supplier);
+            }
+
+//            Supplier supplier = new Supplier(txtCode.getText(), txtName.getText(), txtContacts.getText(),txtPhone.getText(),txtOthers.getText(),selectedCategory);
+//            callback.call(supplier);
         }
     }
 
@@ -157,8 +161,8 @@ public class EditSupplierController {
                 txtCode.setText(updatedSupplier.getCode());
                 txtName.setText(updatedSupplier.getName());
                 txtContacts.setText(updatedSupplier.getContact());
-                txtPhone.setText(updatedSupplier.getPhone());
-                txtOthers.setText(updatedSupplier.getOther());
+                txtPhone.setText(updatedSupplier.getPhone1());
+                txtOthers.setText(updatedSupplier.getNotes());
                 btnContinueAdding.setVisible(false);
             } catch (IOException e) {
                 e.printStackTrace();

@@ -3,9 +3,9 @@ package com.shunyi.autoparts.ui.products;
 import com.shunyi.autoparts.ui.common.GoogleJson;
 import com.shunyi.autoparts.ui.common.HttpClient;
 import com.shunyi.autoparts.ui.common.VFSClient;
-import com.shunyi.autoparts.ui.model.BrandSeries;
-import com.shunyi.autoparts.ui.model.Logo;
-import com.shunyi.autoparts.ui.model.VFS;
+import com.shunyi.autoparts.ui.common.vo.BrandSeries;
+import com.shunyi.autoparts.ui.common.vo.Logo;
+import com.shunyi.autoparts.ui.common.vo.VFS;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
@@ -56,34 +56,36 @@ public class LogoManagementController {
         fileChooser.getExtensionFilters().add(pngExtensionFilter);
         fileChooser.setSelectedExtensionFilter(pngExtensionFilter);
         List<File> selectedFileList = fileChooser.showOpenMultipleDialog(dialog);
-        if(selectedFileList != null)
-        selectedFileList.forEach(selectedFile -> {
-            String ext = getFileExtension(selectedFile);
-            String newFileName = UUID.randomUUID().toString()+"."+ext;
-            try {
-                if(defaultVFS == null) {
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
-                    alert.setHeaderText("找不到默认VFS");
-                    alert.show();
-                } else {
-                    String path = "/logo/"+newFileName;
-                    //上传文件到vfs
-                    VFSClient.uploadSingleFile(selectedFile, defaultVFS, path);
+        if(selectedFileList != null) {
+            selectedFileList.forEach(selectedFile -> {
+                String ext = getFileExtension(selectedFile);
+                String newFileName = UUID.randomUUID().toString()+"."+ext;
+                try {
+                    if(defaultVFS == null) {
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
+                        alert.setHeaderText("找不到默认VFS");
+                        alert.show();
+                    } else {
+                        String path = "/logo/"+newFileName;
+                        //上传文件到vfs
+                        VFSClient.uploadSingleFile(selectedFile, defaultVFS, path);
 
-                    Logo newLogo = new Logo(path, defaultVFS);
-                    String data = GoogleJson.GET().toJson(newLogo);
-                    String logoId = HttpClient.POST("/logos", data);
-                    newLogo.setId(Long.valueOf(logoId));
+//                    Logo newLogo = new Logo(path, defaultVFS);
+                        Logo newLogo = new Logo();
+                        String data = GoogleJson.GET().toJson(newLogo);
+                        String logoId = HttpClient.POST("/logos", data);
+                        newLogo.setId(Long.valueOf(logoId));
 
-                    FileInputStream fis = new FileInputStream(selectedFile);
-                    //展现缩略图
-                    pane.getChildren().add(createImageView(fis, newLogo));
+                        FileInputStream fis = new FileInputStream(selectedFile);
+                        //展现缩略图
+                        pane.getChildren().add(createImageView(fis, newLogo));
 
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
+            });
+        }
     }
 
     private FlowPane createImageView(InputStream fis, Logo logo) throws IOException {
@@ -120,9 +122,12 @@ public class LogoManagementController {
 
     private String getFileExtension(File file) {
         String fileName = file.getName();
-        if(fileName.lastIndexOf(".") != -1 && fileName.lastIndexOf(".") != 0)
+        if(fileName.lastIndexOf(".") != -1 && fileName.lastIndexOf(".") != 0) {
             return fileName.substring(fileName.lastIndexOf(".")+1);
-        else return "";
+        }
+        else {
+            return "";
+        }
     }
 
     @FXML

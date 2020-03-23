@@ -1,6 +1,6 @@
 package com.shunyi.autoparts.ui.stock;
 
-import com.shunyi.autoparts.ui.model.Warehouse;
+import com.shunyi.autoparts.ui.common.vo.Warehouse;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;

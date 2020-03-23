@@ -24,7 +24,7 @@ public class VFSClient {
      * @return
      * @throws FileSystemException
      */
-	public static boolean testConnection(com.shunyi.autoparts.ui.model.VFS vfs) throws FileSystemException, UnsupportedEncodingException {
+	public static boolean testConnection(com.shunyi.autoparts.ui.common.vo.VFS vfs) throws FileSystemException, UnsupportedEncodingException {
         FileObject file = resolveFile(vfs, "");
         file.close();
         return file.exists();
@@ -38,7 +38,7 @@ public class VFSClient {
      * @param targetPath 目标路径
      * @throws IOException
      */
-	public static void uploadSingleFile(File sourceFile, com.shunyi.autoparts.ui.model.VFS vfs, String targetPath) throws IOException {
+	public static void uploadSingleFile(File sourceFile, com.shunyi.autoparts.ui.common.vo.VFS vfs, String targetPath) throws IOException {
         FileObject file = resolveFile(vfs, targetPath);
         if (!file.exists()) {
             file.createFile();
@@ -69,7 +69,7 @@ public class VFSClient {
      * @throws FileSystemException
      * @throws UnsupportedEncodingException
      */
-	public static FileObject downloadSingleFile(com.shunyi.autoparts.ui.model.VFS vfs, String targetPath) throws FileSystemException, UnsupportedEncodingException {
+	public static FileObject downloadSingleFile(com.shunyi.autoparts.ui.common.vo.VFS vfs, String targetPath) throws FileSystemException, UnsupportedEncodingException {
         return resolveFile(vfs, targetPath);
 	}
 
@@ -81,7 +81,7 @@ public class VFSClient {
      * @throws FileSystemException
      * @throws UnsupportedEncodingException
      */
-	public static void deleteSingleFile(com.shunyi.autoparts.ui.model.VFS vfs, String targetPath) throws FileSystemException, UnsupportedEncodingException {
+	public static void deleteSingleFile(com.shunyi.autoparts.ui.common.vo.VFS vfs, String targetPath) throws FileSystemException, UnsupportedEncodingException {
         FileObject file = resolveFile(vfs, targetPath);
 	    file.delete();
         file.close();
@@ -96,7 +96,7 @@ public class VFSClient {
      * @throws FileSystemException
      * @throws UnsupportedEncodingException
      */
-	public static FileObject resolveFile(com.shunyi.autoparts.ui.model.VFS vfs, String targetPath) throws FileSystemException, UnsupportedEncodingException {
+	public static FileObject resolveFile(com.shunyi.autoparts.ui.common.vo.VFS vfs, String targetPath) throws FileSystemException, UnsupportedEncodingException {
         FileSystemManager fileSystemManager = VFS.getManager();
         String protocol;
         String fileName = null;

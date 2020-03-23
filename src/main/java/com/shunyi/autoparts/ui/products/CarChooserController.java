@@ -3,7 +3,7 @@ package com.shunyi.autoparts.ui.products;
 import com.google.gson.Gson;
 import com.shunyi.autoparts.ui.common.GoogleJson;
 import com.shunyi.autoparts.ui.common.HttpClient;
-import com.shunyi.autoparts.ui.model.Car;
+import com.shunyi.autoparts.ui.common.vo.Car;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -240,7 +240,10 @@ public class CarChooserController {
 //        });
         
         btnChooser.setStyle(String.format("-fx-base: %s;", "rgb(63,81,181)"));
-        TreeItem<Car> root = new TreeItem<Car>(new Car("","全部车型类目",0L, true));
+
+//        Car car = new Car("","全部车型类目",0L, true);
+        Car car = new Car();
+        TreeItem<Car> root = new TreeItem<Car>(car);
         treeView.setRoot(root);
         initTreeNodes(root);
         //默认选中root

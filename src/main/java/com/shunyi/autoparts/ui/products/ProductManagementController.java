@@ -4,7 +4,7 @@ import com.shunyi.autoparts.ui.MainApp;
 import com.shunyi.autoparts.ui.common.GoogleJson;
 import com.shunyi.autoparts.ui.common.NumberValidationUtils;
 import com.shunyi.autoparts.ui.common.HttpClient;
-import com.shunyi.autoparts.ui.model.*;
+import com.shunyi.autoparts.ui.common.vo.*;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -25,7 +25,6 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /** 配件管理Controller */
 public class ProductManagementController {
@@ -89,11 +88,11 @@ public class ProductManagementController {
         car.setModel(txtCar.getText());
         condition.setCar(car);
         if(!txtPrice.getText().equals("") && (NumberValidationUtils.isPositiveInteger(txtPrice.getText()) || NumberValidationUtils.isDecimal(txtPrice.getText()))) {
-            condition.setPriceExcludingTax(BigDecimal.valueOf(Double.valueOf(txtPrice.getText())));
+            condition.setListPrice(BigDecimal.valueOf(Double.valueOf(txtPrice.getText())));
         }
         condition.setUnit(txtUnit.getText());
         condition.setImported(txtImported.getText());
-        condition.setPlaceOfOrigin(txtPlace.getText());
+        condition.setOrigin(txtPlace.getText());
 
         String json = GoogleJson.GET().toJson(condition);
         String data = null;
@@ -172,7 +171,7 @@ public class ProductManagementController {
                 @Override
                 public Object call(Category param) {
                     param.setId(selected.getValue().getId());
-                    param.setParent(selected.getValue().isParent());
+                    param.setParent(selected.getValue().getParent());
                     param.setParentId(selected.getValue().getParentId());
                     String json = GoogleJson.GET().toJson(param);
                     try {
@@ -240,7 +239,7 @@ public class ProductManagementController {
             alert.show();
             return;
         }
-        else if(selected.getValue().isParent()){
+        else if(selected.getValue().getParent()){
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
             alert.setHeaderText("无法删除父节点");
             alert.show();
@@ -619,8 +618,9 @@ public class ProductManagementController {
                         setText(null);
                     }
                     else {
-                        if(item == null)
+                        if(item == null) {
                             item = new Date();
+                        }
                         setText(format.format(item));
                     }
                 }
@@ -634,9 +634,10 @@ public class ProductManagementController {
             }
         });
         ContextMenu menu = new ContextMenu();
-        MenuItem itemDefineProperties = new MenuItem("配件基本属性");
+
+        MenuItem itemDuplicate = new MenuItem("复制行数据");
         MenuItem itemProductSKU = new MenuItem("创建SKU");
-        MenuItem itemDuplicate = new MenuItem("克隆行数据");
+        MenuItem itemDefineProperties = new MenuItem("基本属性");
 
         itemDefineProperties.setOnAction(e ->{
             openBasicAttributes();
@@ -648,7 +649,7 @@ public class ProductManagementController {
             openProductSKU();
         });
 
-        menu.getItems().addAll(itemDefineProperties, itemProductSKU, new SeparatorMenuItem(), itemDuplicate);
+        menu.getItems().addAll(itemDuplicate, new SeparatorMenuItem(), itemProductSKU, itemDefineProperties);
         tableView.addEventHandler(MouseEvent.MOUSE_CLICKED, t -> {
             if(t.getButton() == MouseButton.SECONDARY) {
                 menu.show(tableView, t.getScreenX(), t.getScreenY());
@@ -691,7 +692,7 @@ public class ProductManagementController {
 
             List<AttributeValue> attributeValues = getProductBasicAttributeValues(selected);
             for(AttributeValue v : attributeValues) {
-                BasicAttributes newBasicAttributes = new BasicAttributes(duplicated, v.getAttributeName().getId(), v, false, 0L, null);
+                BasicAttributes newBasicAttributes = new BasicAttributes(0L, duplicated, v.getAttributeName().getId(), v, false, 0L, null, null, null, null, null, null, false, null);
                 json = GoogleJson.GET().toJson(newBasicAttributes);
                 idStr = HttpClient.POST("/basic/attributes", json);
                 newBasicAttributes.setId(Long.valueOf(idStr));
@@ -706,7 +707,7 @@ public class ProductManagementController {
     }
 
     private void initTreeView() {
-        TreeItem<Category> root = new TreeItem<>(new Category("全部类目",0L, true));
+        TreeItem<Category> root = new TreeItem<>(new Category(0L, "全部类目",0L, true, null, null, null, null, null, null, false, null));
         initTreeNodes(root);
         treeView.setRoot(root);
         treeView.setCellFactory(p -> new TextFieldTreeCell<>(new StringConverter<>(){

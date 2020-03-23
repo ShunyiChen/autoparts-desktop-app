@@ -82,7 +82,7 @@ public class TitleBar extends HBox implements EventHandler<MouseEvent> {
         //获取店铺列表
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource(
-                        "/fxml/main/shop_droplist.fxml"
+                        "/fxml/main/store_droplist.fxml"
                 )
         );
         FlowPane droplist = null;
@@ -91,7 +91,7 @@ public class TitleBar extends HBox implements EventHandler<MouseEvent> {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        ShopDropListController controller = loader.getController();
+        StoreDropListController controller = loader.getController();
         controller.prepare();
 
         rightComponent.setId("bg");

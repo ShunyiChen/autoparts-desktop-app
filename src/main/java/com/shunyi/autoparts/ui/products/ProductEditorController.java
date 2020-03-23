@@ -3,7 +3,10 @@ package com.shunyi.autoparts.ui.products;
 import com.shunyi.autoparts.ui.common.GoogleJson;
 import com.shunyi.autoparts.ui.common.NumberValidationUtils;
 import com.shunyi.autoparts.ui.common.HttpClient;
-import com.shunyi.autoparts.ui.model.*;
+import com.shunyi.autoparts.ui.common.vo.BrandSeries;
+import com.shunyi.autoparts.ui.common.vo.Car;
+import com.shunyi.autoparts.ui.common.vo.Category;
+import com.shunyi.autoparts.ui.common.vo.Product;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -93,22 +96,56 @@ public class ProductEditorController {
         if(validate()) {
             dialog.close();
             BigDecimal price = new BigDecimal(Double.valueOf(txtPrice.getText())).setScale(2, RoundingMode.HALF_UP);
-            Product newProduct = new Product(txtCode.getText(),
-                    txtName.getText(),
-                    boxBrand.getValue(),
-                    selectedCar, txtUnit.getText(), boxImported.getValue(), txtPlace.getText(), price, txtOthers.getText());
+            Product newProduct = new Product();
+            newProduct.setCode(txtCode.getText());
+
+//                    0L,
+//                    txtCode.getText(),
+//                    txtName.getText(),
+//                    boxBrand.getValue(),
+//                    selectedCar,
+//                    txtUnit.getText(),
+//                    boxImported.getValue(),
+//                    txtPlace.getText(),
+//                    price,
+//                    txtOthers.getText(),
+//                    null, null, null, null,null, null, false, null);
             callback.call(newProduct);
         }
     }
+
+
+    /**
+     *  this.id = id;
+     *         this.code = code;
+     *         this.name = name;
+     *         this.brandSeries = brandSeries;
+     *         this.car = car;
+     *         this.unit = unit;
+     *         this.listPrice = listPrice;
+     *         this.imported = imported;
+     *         this.origin = origin;
+     *         this.notes = notes;
+     *         this.dateCreated = dateCreated;
+     *         this.creator = creator;
+     *         this.dateUpdated = dateUpdated;
+     *         this.updater = updater;
+     *         this.updatedCount = updatedCount;
+     *         this.dateDeleted = dateDeleted;
+     *         this.deleteFlag = deleteFlag;
+     *         this.deleter = deleter;
+     */
+
 
     @FXML
     void continueAdd(ActionEvent actionEvent) {
         if(validate()) {
             BigDecimal price = new BigDecimal(Double.valueOf(txtPrice.getText())).setScale(2, RoundingMode.HALF_UP);
-            Product newProduct = new Product(txtCode.getText(),
-                    txtName.getText(),
-                    boxBrand.getValue(),
-                    selectedCar, txtUnit.getText(), boxImported.getValue(), txtPlace.getText(), price, txtOthers.getText());
+            Product newProduct = new Product();
+//                    txtCode.getText(),
+//                    txtName.getText(),
+//                    boxBrand.getValue(),
+//                    selectedCar, txtUnit.getText(), boxImported.getValue(), txtPlace.getText(), price, txtOthers.getText());
             callback.call(newProduct);
         }
     }
@@ -168,12 +205,12 @@ public class ProductEditorController {
             txtCode.setText(updatedProduct.getCode());
             txtName.setText(updatedProduct.getName());
             boxBrand.setValue(selectedBrand);
-            txtPrice.setText(updatedProduct.getPriceExcludingTax().doubleValue()+"");
+            txtPrice.setText(updatedProduct.getListPrice().doubleValue()+"");
             txtUnit.setText(updatedProduct.getUnit());
             boxImported.setValue(updatedProduct.getImported());
             txtCar.setText(updatedProduct.getCar().getModel());
             selectedCar = updatedProduct.getCar();
-            txtPlace.setText(updatedProduct.getPlaceOfOrigin());
+            txtPlace.setText(updatedProduct.getOrigin());
             txtOthers.setText(updatedProduct.getNotes());
 
             btnContinueAdd.setVisible(false);
@@ -199,12 +236,13 @@ public class ProductEditorController {
         BrandSeries[] brands = GoogleJson.GET().fromJson(json, BrandSeries[].class);
         boxBrand.getItems().addAll(brands);
         //默认选中品牌
-        if(selectedBrand != null)
+        if(selectedBrand != null) {
             Arrays.stream(brands).forEach(e -> {
-                if(e.getId() == selectedBrand.getId()) {
+                if(e.getId().equals(selectedBrand.getId())) {
                     boxBrand.getSelectionModel().select(e);
                 }
             });
+        }
     }
 
 }

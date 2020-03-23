@@ -31,11 +31,11 @@ public class TableViewSample extends Application {
     private TableView<Person> table = new TableView<Person>();
     private final ObservableList<Person> data =
             FXCollections.observableArrayList(
-                    new Person("Jacob", "Smith", "jacob.smith@example.com"),
-                    new Person("Isabella", "Johnson", "isabella.johnson@example.com"),
-                    new Person("Ethan", "Williams", "ethan.williams@example.com"),
-                    new Person("Emma", "Jones", "emma.jones@example.com"),
-                    new Person("Michael", "Brown", "michael.brown@example.com"));
+                    new Person("Jacob", "Smith", "jacob.smith@deleteme.com"),
+                    new Person("Isabella", "Johnson", "isabella.johnson@deleteme.com"),
+                    new Person("Ethan", "Williams", "ethan.williams@deleteme.com"),
+                    new Person("Emma", "Jones", "emma.jones@deleteme.com"),
+                    new Person("Michael", "Brown", "michael.brown@deleteme.com"));
     final HBox hb = new HBox();
 
     public static void main(String[] args) {

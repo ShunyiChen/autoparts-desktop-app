@@ -2,7 +2,7 @@ package com.shunyi.autoparts.ui.supplier;
 
 import com.shunyi.autoparts.ui.common.GoogleJson;
 import com.shunyi.autoparts.ui.common.HttpClient;
-import com.shunyi.autoparts.ui.model.SupplierCategory;
+import com.shunyi.autoparts.ui.common.vo.SupplierCategory;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
@@ -91,7 +91,9 @@ public class ChooserCategoryController {
         });
         btnChooser.setStyle(String.format("-fx-base: %s;", "rgb(63,81,181)"));
 
-        TreeItem<SupplierCategory> root = new TreeItem<SupplierCategory>(new SupplierCategory("全部供应商",0, true));
+//        SupplierCategory sc = new SupplierCategory("全部供应商",0, true);
+        SupplierCategory sc = new SupplierCategory();
+        TreeItem<SupplierCategory> root = new TreeItem<SupplierCategory>(sc);
         treeView.setRoot(root);
         initTreeNodes(root);
         //默认选中root

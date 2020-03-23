@@ -7,7 +7,7 @@ import com.shunyi.autoparts.ui.common.ICONS;
 import com.shunyi.autoparts.ui.common.H2;
 import com.shunyi.autoparts.ui.common.AuthenticationResponse;
 import com.shunyi.autoparts.ui.common.HttpClient;
-import com.shunyi.autoparts.ui.model.RemoteConnection;
+import com.shunyi.autoparts.ui.common.entities.RemoteConnection;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -36,7 +36,7 @@ import java.util.concurrent.Executors;
  * @Version: 1.0
  */
 public class LoginController {
-    private ExecutorService executor = Executors.newFixedThreadPool(1);
+    private ExecutorService executor = Executors.newSingleThreadExecutor();
     private KeyCodeCombination keyCodeCombination = new KeyCodeCombination(KeyCode.ENTER);
     private MainApp application;
     private ICONS icons = ICONS.getInstance();

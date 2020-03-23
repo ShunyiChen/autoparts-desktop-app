@@ -9,7 +9,7 @@ import javafx.util.Callback;
 
 
 /** 编辑店铺Controller */
-public class EditShopController {
+public class EditStoreController {
 
     private Stage dialog;
     private Callback callback;

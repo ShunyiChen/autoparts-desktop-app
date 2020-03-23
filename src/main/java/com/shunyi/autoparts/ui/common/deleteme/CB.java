@@ -1,4 +1,4 @@
-package com.shunyi.autoparts.ui.common.example;
+package com.shunyi.autoparts.ui.common.deleteme;
 
 public class CB {
 

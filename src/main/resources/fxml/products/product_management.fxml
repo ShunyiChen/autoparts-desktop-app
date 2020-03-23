@@ -72,7 +72,7 @@
                   <Font size="14.0" />
                </font>
             </Button>
-            <Button mnemonicParsing="false" text="配件基本属性">
+            <Button mnemonicParsing="false" text="复制行数据">
                 <font>
                     <Font size="14.0" />
                 </font>
@@ -82,7 +82,7 @@
                     <Font size="14.0" />
                 </font>
             </Button>
-            <Button mnemonicParsing="false" text="克隆行数据">
+            <Button mnemonicParsing="false" text="基本属性">
                 <font>
                     <Font size="14.0" />
                 </font>

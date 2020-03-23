@@ -1,8 +1,9 @@
 package com.shunyi.autoparts.ui.products;
 
 import com.shunyi.autoparts.ui.common.HttpClient;
-import com.shunyi.autoparts.ui.model.AttributeValue;
-import com.shunyi.autoparts.ui.model.Product;
+import com.shunyi.autoparts.ui.common.Status;
+import com.shunyi.autoparts.ui.common.vo.AttributeValue;
+import com.shunyi.autoparts.ui.common.vo.Product;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -53,7 +54,7 @@ public class AttributeValueCheckBox extends HBox {
         this.tableColumn = tableColumn;
         this.tableView = tableView;
 
-        if (attributeValue.getAttributeName().isColorProperty()) {
+        if (attributeValue.getAttributeName().getColorProperty()) {
             coloredBox.setPrefSize(20, 15);
             String[] str = attributeValue.getRgb().split(",");
             int red = (int) (Double.parseDouble(str[0]) * 255);
@@ -146,7 +147,7 @@ public class AttributeValueCheckBox extends HBox {
                 //单价
                 rowData.add(new TableCellMetadata("0.00"));
                 //状态
-                rowData.add(new TableCellMetadata(SKUStatus.AVAILABLE.getName()));
+                rowData.add(new TableCellMetadata(Status.AVAILABLE.getName()));
                 //SKU名称
                 if(str.endsWith("/")) {
                     str = str.replaceAll(":\\d+/", "-") + selectedProduct.getName();

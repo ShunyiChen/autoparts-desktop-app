@@ -1,7 +1,7 @@
 package com.shunyi.autoparts.ui.login;
 
 import com.shunyi.autoparts.ui.common.H2;
-import com.shunyi.autoparts.ui.model.RemoteConnection;
+import com.shunyi.autoparts.ui.common.entities.RemoteConnection;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;

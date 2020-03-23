@@ -19,7 +19,7 @@ import javafx.util.Callback;
 
 import java.io.IOException;
 
-public class EditCargoSpaceController {
+public class EditSlotController {
 
     @FXML
     Button btnSaveAndClose;

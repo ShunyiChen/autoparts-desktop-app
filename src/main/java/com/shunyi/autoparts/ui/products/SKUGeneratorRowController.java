@@ -1,20 +1,9 @@
 package com.shunyi.autoparts.ui.products;
 
-import com.shunyi.autoparts.ui.common.GoogleJson;
-import com.shunyi.autoparts.ui.common.HttpClient;
-//import com.shunyi.autoparts.ui.model.Attribute;
-import com.shunyi.autoparts.ui.model.AttributeName;
-import com.shunyi.autoparts.ui.model.AttributeValue;
-import com.shunyi.autoparts.ui.model.Product;
-import javafx.collections.ObservableList;
+//import com.shunyi.autoparts.ui.common.vo.Attribute;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.FlowPane;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
 
 /** SKU */
 public class SKUGeneratorRowController {

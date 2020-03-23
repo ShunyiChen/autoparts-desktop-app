@@ -1,8 +1,6 @@
 package com.shunyi.autoparts.ui.common;
 
-import com.shunyi.autoparts.ui.common.ENV;
-import com.shunyi.autoparts.ui.common.GoogleJson;
-import com.shunyi.autoparts.ui.model.RemoteConnection;
+import com.shunyi.autoparts.ui.common.entities.RemoteConnection;
 import okhttp3.*;
 
 import java.io.IOException;

@@ -43,7 +43,7 @@ public class MainFrame extends BorderPane {
         contentPane = new ContentPane();
         contentPane.getViewport().setCenter(new Label("无显示内容"));
         dashboard = new Dashboard(application);
-        purchaseContainer = new PurchaseOrder(application);
+//        purchaseContainer = new PurchaseOrder(application);
 
         this.setTop(toolbar);
         this.setLeft(navigation);
@@ -64,7 +64,7 @@ public class MainFrame extends BorderPane {
             @Override
             public Object call(Object param) {
                 toolbar.setTitle("购货单");
-                contentPane.getViewport().setCenter((PurchaseOrder)purchaseContainer);
+//                contentPane.getViewport().setCenter((PurchaseOrder)purchaseContainer);
                 return null;
             }
         });
@@ -72,7 +72,7 @@ public class MainFrame extends BorderPane {
             @Override
             public Object call(Object param) {
                 toolbar.setTitle("购货退货单");
-                contentPane.getViewport().setCenter(new Pane());
+//                contentPane.getViewport().setCenter(new Pane());
                 return null;
             }
         });
@@ -97,7 +97,8 @@ public class MainFrame extends BorderPane {
             public Object call(Object param) {
                 SupplierManagement supplierManagement = new SupplierManagement(application);
                 toolbar.setTitle("供应商管理");
-                contentPane.getViewport().setCenter(supplierManagement);
+                contentPane.getViewport().setCenter(new Pane());
+//                contentPane.getViewport().setCenter(supplierManagement);
                 return null;
             }
         });
@@ -106,16 +107,16 @@ public class MainFrame extends BorderPane {
             public Object call(Object param) {
                 StockManagement stockManagement = new StockManagement(application);
                 toolbar.setTitle("库存管理");
-                contentPane.getViewport().setCenter(stockManagement);
+//                contentPane.getViewport().setCenter(stockManagement);
                 return null;
             }
         });
         ClickableItem item8 = new ClickableItem(icons.car_door(), "配件管理", new Callback() {
             @Override
             public Object call(Object param) {
-                ProductManagement ProductManagement = new ProductManagement(application);
+//                ProductManagement ProductManagement = new ProductManagement(application);
                 toolbar.setTitle("配件管理");
-                contentPane.getViewport().setCenter(ProductManagement);
+                contentPane.getViewport().setCenter(new Pane());
                 return null;
             }
         });
@@ -123,9 +124,9 @@ public class MainFrame extends BorderPane {
         ClickableItem settings = new ClickableItem(icons.settings_transfer_outline(), "系统维护", new Callback() {
             @Override
             public Object call(Object param) {
-                Maintenance systemMaintenance = new Maintenance(application);
+//                Maintenance systemMaintenance = new Maintenance(application);
                 toolbar.setTitle("系统维护");
-                contentPane.getViewport().setCenter(systemMaintenance);
+                contentPane.getViewport().setCenter(new Pane());
                 return null;
             }
         });

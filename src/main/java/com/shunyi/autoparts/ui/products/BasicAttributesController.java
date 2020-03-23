@@ -2,7 +2,7 @@ package com.shunyi.autoparts.ui.products;
 
 import com.shunyi.autoparts.ui.common.GoogleJson;
 import com.shunyi.autoparts.ui.common.HttpClient;
-import com.shunyi.autoparts.ui.model.*;
+import com.shunyi.autoparts.ui.common.vo.*;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -55,7 +55,7 @@ public class BasicAttributesController {
                 try {
                     AttributeValue[] attributeValues = HttpClient.GET("/attributes/value/name/"+an.getId(), AttributeValue[].class);
                     for(AttributeValue attributeValue : attributeValues) {
-                        BasicAttributes newBasicAttributes = new BasicAttributes(selectedProject, an.getId(), attributeValue, false, 0L, null);
+                        BasicAttributes newBasicAttributes = new BasicAttributes(0L, selectedProject, an.getId(), attributeValue, false, 0L, null, null, null, null, null, null, false, null);
                         String json = GoogleJson.GET().toJson(newBasicAttributes);;
                         String idStr = HttpClient.POST("/basic/attributes", json);
                         newBasicAttributes.setId(Long.valueOf(idStr));
@@ -80,10 +80,10 @@ public class BasicAttributesController {
         dialog.close();
     }
 
-    public void prepare(Stage dialog, Category selectedCategory, Product selectedProject) {
+    public void prepare(Stage dialog, Category selectedCategory, Product selectedProduct) {
         this.dialog = dialog;
         this.selectedCategory = selectedCategory;
-        this.selectedProject = selectedProject;
+        this.selectedProject = selectedProduct;
         final String css = getClass().getResource("/css/styles.css").toExternalForm();
         leftListView.getStylesheets().add(css);
         rightListView.getStylesheets().add(css);

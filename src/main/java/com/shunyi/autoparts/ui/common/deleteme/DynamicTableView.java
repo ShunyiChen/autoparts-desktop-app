@@ -1,6 +1,5 @@
-package com.shunyi.autoparts.ui.common.example;
+package com.shunyi.autoparts.ui.common.deleteme;
 
-import com.shunyi.autoparts.ui.common.EditingCell;
 import javafx.application.Application;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.*;
@@ -8,7 +7,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 
 import java.util.*;
 
@@ -16,6 +14,7 @@ public class DynamicTableView extends Application {
     private static final int N_COLS = 5;
     private static final int N_ROWS = 1_000;
 
+    @Override
     public void start(Stage stage) throws Exception {
         TestDataGenerator dataGenerator = new TestDataGenerator();
 
@@ -38,7 +37,6 @@ public class DynamicTableView extends Application {
 
             //simeon
             column.setCellFactory(TextFieldTableCell.<ObservableList<String>>forTableColumn());
-
 
 
             tableView.getColumns().add(column);

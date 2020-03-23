@@ -12,7 +12,7 @@ import javafx.scene.input.KeyCode;
  * Editing cell for TableView
  *
  * @param <S> item type
- * @param <T> model type
+ * @param <T> vo type
  */
 public class EditingCell<S, T> extends TableCell<S, T> {
 

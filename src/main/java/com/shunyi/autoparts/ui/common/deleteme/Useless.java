@@ -1,24 +1,16 @@
-package com.shunyi.autoparts.ui.common.example;
+package com.shunyi.autoparts.ui.common.deleteme;
 
-import javafx.util.Callback;
-
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 public class Useless {
 
-    public static void main(String[] args) throws InterruptedException {
 
+    public static void main(String[] args) throws InterruptedException {
 //        ReentrantLock lock = new ReentrantLock();
 //        lock.lock();
 //        System.out.println("锁定");
@@ -34,8 +26,6 @@ public class Useless {
 //            lock.unlock();
 //            System.out.println("解锁");
 //        }
-
-
 //        new Useless().stepOver5();
 //
 //        Thread.holdsLock(new Useless());
@@ -71,11 +61,10 @@ public class Useless {
         list3.add("Middle");
         list3.add("Big");
 
-        Map<Long, List<String>> map = new HashMap<>();
-        map.put(1l, list1);
-        map.put(2l, list2);
-        map.put(3l, list3);
-
+//        Map<Long, List<String>> map = new HashMap<>();
+//        map.put(1l, list1);
+//        map.put(2l, list2);
+//        map.put(3l, list3);
 //        for(int i = 0;i < list1.size(); i++) {
 //            for(int j = 0;j < list2.size();j++) {
 //                for(int z = 0;z < list3.size();z++) {
@@ -272,8 +261,9 @@ public class Useless {
     }
 
 
-    ExecutorService executorService = Executors.newSingleThreadExecutor();
+
     void stepOver4() {
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
         final Thread thread1 = new Thread(new Runnable() {
             @Override
             public void run() {

@@ -2,7 +2,7 @@ package com.shunyi.autoparts.ui.main;
 
 import com.shunyi.autoparts.ui.common.ENV;
 import com.shunyi.autoparts.ui.common.HttpClient;
-import com.shunyi.autoparts.ui.common.vo.Shop;
+import com.shunyi.autoparts.ui.common.vo.Store;
 import com.shunyi.autoparts.ui.common.vo.User;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
@@ -17,14 +17,11 @@ import java.io.IOException;
  * @CreateDate: 2020/2/6 10:29
  * @Version: 1.0
  */
-public class ShopDropListController {
-
+public class StoreDropListController {
     @FXML
     private Label shopLabel;
-
     @FXML
-    private ComboBox<Shop> shopComboBox;
-
+    private ComboBox<Store> shopComboBox;
 
     public void prepare() {
         shopLabel.setStyle("-fx-font-size: 14;-fx-text-fill: rgb(255,255,255);");
@@ -34,14 +31,14 @@ public class ShopDropListController {
         try {
             User user = HttpClient.GET("/users/username/"+userName, User.class);
             if("root".equals(user.getUsername())) {
-                Shop[] userShops = HttpClient.GET("/shops", Shop[].class);
-                shopComboBox.getItems().addAll(userShops);
+                Store[] userStores = HttpClient.GET("/stores", Store[].class);
+                shopComboBox.getItems().addAll(userStores);
                 shopComboBox.getSelectionModel().select(0);
 
             } else {
-                Shop[] userShops = HttpClient.GET("/shops/user/"+user.getId(), Shop[].class);
-                if(userShops.length > 0) {
-                    shopComboBox.getItems().addAll(userShops);
+                Store[] userStores = HttpClient.GET("/stores/user/"+user.getId(), Store[].class);
+                if(userStores.length > 0) {
+                    shopComboBox.getItems().addAll(userStores);
                     shopComboBox.getSelectionModel().select(0);
                 }
             }

@@ -2,7 +2,7 @@ package com.shunyi.autoparts.ui.stock;
 
 import com.google.gson.Gson;
 import com.shunyi.autoparts.ui.common.HttpClient;
-import com.shunyi.autoparts.ui.model.Warehouse;
+import com.shunyi.autoparts.ui.common.vo.Warehouse;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
@@ -97,7 +97,9 @@ public class WarehouseChooserController {
         });
         btnChooser.setStyle(String.format("-fx-base: %s;", "rgb(63,81,181)"));
 
-        TreeItem<Warehouse> root = new TreeItem<>(new Warehouse("", "全部仓库",0L, true));
+//        Warehouse warehouse = new Warehouse("", "全部仓库",0L, true);
+        Warehouse warehouse = new Warehouse();
+        TreeItem<Warehouse> root = new TreeItem<>(warehouse);
         treeView.setRoot(root);
         initTreeNodes(root);
         //默认选中root

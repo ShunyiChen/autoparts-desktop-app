@@ -3,8 +3,8 @@ package com.shunyi.autoparts.ui.supplier;
 import com.shunyi.autoparts.ui.MainApp;
 import com.shunyi.autoparts.ui.common.GoogleJson;
 import com.shunyi.autoparts.ui.common.HttpClient;
-import com.shunyi.autoparts.ui.model.Supplier;
-import com.shunyi.autoparts.ui.model.SupplierCategory;
+import com.shunyi.autoparts.ui.common.vo.Supplier;
+import com.shunyi.autoparts.ui.common.vo.SupplierCategory;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -93,7 +93,8 @@ public class SupplierManagementController {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    SupplierCategory sc = new SupplierCategory(param.toString(), parent.getValue().getId(),false);
+//                    SupplierCategory sc = new SupplierCategory(param.toString(), parent.getValue().getId(),false);
+                    SupplierCategory sc = new SupplierCategory();
                     try {
                         json = GoogleJson.GET().toJson(sc, SupplierCategory.class);
                         String idStr = HttpClient.POST("/supplier/categories",json);
@@ -121,7 +122,7 @@ public class SupplierManagementController {
             alert.show();
             return;
         }
-        else if(selected.getValue().isParent()){
+        else if(selected.getValue().getParent()){
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
             alert.setHeaderText("无法删除父节点");
             alert.show();
@@ -278,8 +279,8 @@ public class SupplierManagementController {
         supplier.setCode(txtCode.getText());
         supplier.setName(txtName.getText());
         supplier.setContact(txtContact.getText());
-        supplier.setPhone(txtPhone.getText());
-        supplier.setOther(txtOthers.getText());
+        supplier.setPhone1(txtPhone.getText());
+        supplier.setNotes(txtOthers.getText());
         String json = GoogleJson.GET().toJson(supplier);
         try {
             String data = HttpClient.POST("/suppliers/search", json);
@@ -372,7 +373,9 @@ public class SupplierManagementController {
         spiTopValue.setValueFactory(valueFactory);
         spiTopValue.setEditable(true);
 
-        TreeItem<SupplierCategory> root = new TreeItem<SupplierCategory>(new SupplierCategory("全部供应商",0, true));
+//        SupplierCategory sc = new SupplierCategory("全部供应商",0, true)
+        SupplierCategory sc = new SupplierCategory();
+        TreeItem<SupplierCategory> root = new TreeItem<SupplierCategory>(sc);
         initTreeNodes(root);
         supplierCategoryTree.setRoot(root);
         ContextMenu menu = new ContextMenu();

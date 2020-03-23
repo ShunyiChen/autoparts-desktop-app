@@ -2,7 +2,11 @@ package com.shunyi.autoparts.ui.products;
 
 import com.shunyi.autoparts.ui.common.GoogleJson;
 import com.shunyi.autoparts.ui.common.HttpClient;
-import com.shunyi.autoparts.ui.model.*;
+import com.shunyi.autoparts.ui.common.Sort;
+import com.shunyi.autoparts.ui.common.vo.AttributeIF;
+import com.shunyi.autoparts.ui.common.vo.AttributeName;
+import com.shunyi.autoparts.ui.common.vo.AttributeValue;
+import com.shunyi.autoparts.ui.common.vo.Category;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -35,7 +39,7 @@ public class AttributeManagementController {
     @FXML
     TreeView<Category> categoryTree;
     @FXML
-    TreeView<AttributeBase> attributeTree;
+    TreeView<AttributeIF> attributeTree;
 
     public void prepare(Stage dialog, Category selectedCategory) {
         this.dialog = dialog;
@@ -47,10 +51,9 @@ public class AttributeManagementController {
     }
 
     private void initCategoryTree() {
-        TreeItem<Category> root = new TreeItem<>(new Category("全部类目",0L, true));
+        TreeItem<Category> root = new TreeItem<>(new Category(0L, "全部类目",0L, true, null, null, null, null, null, null, false, null));
         initTreeNodes(root);
         categoryTree.setRoot(root);
-
 
         categoryTree.setCellFactory(p -> new TextFieldTreeCell<>(new StringConverter<>(){
 
@@ -188,7 +191,7 @@ public class AttributeManagementController {
             alert.show();
             return;
         }
-        else if(selected.getValue().isParent()){
+        else if(selected.getValue().getParent()){
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
             alert.setHeaderText("无法删除父节点");
             alert.show();
@@ -259,19 +262,19 @@ public class AttributeManagementController {
     private void initAttributesTree() {
         AttributeName rootName = new AttributeName();
         rootName.setName("全部属性");
-        TreeItem<AttributeBase> root = new TreeItem<>(rootName);
+        TreeItem<AttributeIF> root = new TreeItem<>(rootName);
         try {
             String data = HttpClient.GET("/attributes/name/category/"+selectedCategory.getId());
             AttributeName[] attributeNames = GoogleJson.GET().fromJson(data, AttributeName[].class);
 
             String data2 = HttpClient.GET("/attributes/value/category/"+selectedCategory.getId());
             AttributeValue[] attributeValues = GoogleJson.GET().fromJson(data2, AttributeValue[].class);
-            for(AttributeBase name : attributeNames) {
-                TreeItem<AttributeBase> nameItem = new TreeItem<>(name);
+            for(AttributeIF name : attributeNames) {
+                TreeItem<AttributeIF> nameItem = new TreeItem<>(name);
                 root.getChildren().add(nameItem);
                 for(AttributeValue value : attributeValues) {
-                    if(value.getAttributeName().getId() == name.getId()) {
-                        TreeItem<AttributeBase> valItem = new TreeItem<>(value);
+                    if(value.getAttributeName().getId().equals(name.getId())) {
+                        TreeItem<AttributeIF> valItem = new TreeItem<>(value);
                         nameItem.getChildren().add(valItem);
                     }
                 }
@@ -301,14 +304,14 @@ public class AttributeManagementController {
                 alert.show();
                 return;
             }
-            AttributeName newName = new AttributeName("新建属性", selectedCategory, false, false, false, false, false, false, false, false, false, "可用", 1 );
+            AttributeName newName = new AttributeName(0L, "新建属性", selectedCategory, false, false, false, false, false, false, false, false, false, "可用", Sort.ASC.getSort(), null, null, null, null, null, null, false, null);
             String json = GoogleJson.GET().toJson(newName);
             try {
                 String idStr = HttpClient.POST("/attributes/name", json);
                 //重新取值包括创建日期
                 json = HttpClient.GET("/attributes/name/"+Long.valueOf(idStr));
                 newName = GoogleJson.GET().fromJson(json, AttributeName.class);
-                TreeItem<AttributeBase> item = new TreeItem<>(newName);
+                TreeItem<AttributeIF> item = new TreeItem<>(newName);
                 root.getChildren().add(item);
                 root.setExpanded(true);
                 Platform.runLater(() -> {
@@ -321,10 +324,10 @@ public class AttributeManagementController {
             }
         });
         itemNewValue.setOnAction(e -> {
-            TreeItem<AttributeBase> parent =  attributeTree.getSelectionModel().getSelectedItem();
+            TreeItem<AttributeIF> parent =  attributeTree.getSelectionModel().getSelectedItem();
             if(parent.getValue().getId() != 0L) {
                 if(parent.getValue() instanceof AttributeName) {
-                    AttributeBase newValue = new AttributeValue("新建属性值", "0,0,0", selectedCategory, (AttributeName)parent.getValue(),AttributeStatus.AVAILABLE.getName(), 1);
+                    AttributeValue newValue = new AttributeValue(0L, "新建属性值", "0,0,0", selectedCategory, (AttributeName)parent.getValue(),AttributeStatus.AVAILABLE.getName(), 1, null, null, null, null, null, null, false, null);
                     String json = GoogleJson.GET().toJson(newValue);
                     try {
                         String idStr = HttpClient.POST("/attributes/value", json);
@@ -332,7 +335,7 @@ public class AttributeManagementController {
                         //重新取值包括创建日期
                         json = HttpClient.GET("/attributes/value/"+Long.valueOf(idStr));
                         newValue = GoogleJson.GET().fromJson(json, AttributeValue.class);
-                        TreeItem<AttributeBase> item = new TreeItem<>(newValue);
+                        TreeItem<AttributeIF> item = new TreeItem<>(newValue);
                         parent.getChildren().add(item);
                         parent.setExpanded(true);
                         Platform.runLater(() -> {
@@ -346,7 +349,7 @@ public class AttributeManagementController {
             }
         });
         itemRM.setOnAction(e -> {
-            TreeItem<AttributeBase> selected =  attributeTree.getSelectionModel().getSelectedItem();
+            TreeItem<AttributeIF> selected =  attributeTree.getSelectionModel().getSelectedItem();
             if(selected.getValue().getId() != 0L) {
                 if(selected.getValue() instanceof  AttributeName) {
                     Alert alertConfirm = new Alert(Alert.AlertType.CONFIRMATION, "", ButtonType.NO, ButtonType.YES);
@@ -378,27 +381,27 @@ public class AttributeManagementController {
         });
         attributeTree.setEditable(true);
         attributeTree.setContextMenu(menu);
-        attributeTree.setCellFactory(new Callback<TreeView<AttributeBase>, TreeCell<AttributeBase>>() {
+        attributeTree.setCellFactory(new Callback<TreeView<AttributeIF>, TreeCell<AttributeIF>>() {
             @Override
-            public TreeCell<AttributeBase> call(TreeView<AttributeBase> p) {
-                return new TextFieldTreeCell<AttributeBase>(new StringConverter<AttributeBase>(){
+            public TreeCell<AttributeIF> call(TreeView<AttributeIF> p) {
+                return new TextFieldTreeCell<AttributeIF>(new StringConverter<AttributeIF>(){
 
                     @Override
-                    public String toString(AttributeBase object) {
+                    public String toString(AttributeIF object) {
                         return object.getName();
                     }
 
                     @Override
-                    public AttributeBase fromString(String string) {
+                    public AttributeIF fromString(String string) {
                         p.getEditingItem().getValue().setName(string);
                         return p.getEditingItem().getValue();
                     }
                 });
             }
         });
-        attributeTree.setOnEditCommit(new EventHandler<TreeView.EditEvent<AttributeBase>>() {
+        attributeTree.setOnEditCommit(new EventHandler<TreeView.EditEvent<AttributeIF>>() {
             @Override
-            public void handle(TreeView.EditEvent<AttributeBase> event) {
+            public void handle(TreeView.EditEvent<AttributeIF> event) {
                 if(event.getNewValue().getId() != 0L) {
                     if(event.getNewValue() instanceof AttributeName) {
                         String path = "/attributes/name/"+event.getNewValue().getId();
@@ -423,7 +426,7 @@ public class AttributeManagementController {
         });
         attributeTree.setOnMouseClicked((MouseEvent event) -> {
             if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 1){
-                TreeItem<AttributeBase> selected = attributeTree.getSelectionModel().getSelectedItem();
+                TreeItem<AttributeIF> selected = attributeTree.getSelectionModel().getSelectedItem();
                 if(selected != null) {
                     if(selected.getValue() instanceof AttributeName) {
                         if(selected == root) {
@@ -439,7 +442,7 @@ public class AttributeManagementController {
                 }
             }
             else if (event.getButton().equals(MouseButton.SECONDARY) && event.getClickCount() == 1) {
-                TreeItem<AttributeBase> selected = attributeTree.getSelectionModel().getSelectedItem();
+                TreeItem<AttributeIF> selected = attributeTree.getSelectionModel().getSelectedItem();
                 if(selected.getValue().getId() == 0L) {
                     menu.getItems().clear();
                     menu.getItems().addAll(itemNewName);

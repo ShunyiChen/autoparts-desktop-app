@@ -27,13 +27,13 @@
                         <TableView fx:id="topTable" prefHeight="200.0" prefWidth="200.0">
                           <columns>
                               <TableColumn fx:id="colWarehouse" prefWidth="120.0" text="仓库" />
-                              <TableColumn fx:id="colCargoSpaceName" prefWidth="120.0" text="货位名称" />
+                              <TableColumn fx:id="colSlotName" prefWidth="120.0" text="货位名称" />
                               <TableColumn fx:id="colLevel_1" prefWidth="120.0" text="库区编号" />
                               <TableColumn fx:id="colLevel_2" prefWidth="120.0" text="通道编号" />
                               <TableColumn fx:id="colLevel_3" prefWidth="120.0" text="货架组编号" />
                               <TableColumn fx:id="colLevel_4" prefWidth="120.0" text="货架层号" />
                               <TableColumn fx:id="colLevel_5" prefWidth="120.0" text="货架层中库位" />
-                              <TableColumn fx:id="colCargoSpaceBarCode" prefWidth="120.0" text="条形码" />
+                              <TableColumn fx:id="colSlotBarCode" prefWidth="120.0" text="条形码" />
                           </columns>
                         </TableView>
                         <TableView fx:id="bottomTable" prefHeight="200.0" prefWidth="200.0">
@@ -168,17 +168,17 @@
                </font>
             </Button>
             <Separator />
-            <Button fx:id="btnNewLocation" mnemonicParsing="false" onAction="#newCargoSpace" text="新建库位">
+            <Button fx:id="btnNewLocation" mnemonicParsing="false" onAction="#newSlot" text="新建库位">
                <font>
                   <Font size="14.0" />
                </font>
             </Button>
-            <Button fx:id="btnUpdateLocation" mnemonicParsing="false" onAction="#updateCargoSpace" text="修改库位">
+            <Button fx:id="btnUpdateLocation" mnemonicParsing="false" onAction="#updateSlot" text="修改库位">
                <font>
                   <Font size="14.0" />
                </font>
             </Button>
-            <Button fx:id="btnRmLocation" mnemonicParsing="false" onAction="#removeCargoSpace" text="删除库位">
+            <Button fx:id="btnRmLocation" mnemonicParsing="false" onAction="#removeSlot" text="删除库位">
                <font>
                   <Font size="14.0" />
                </font>

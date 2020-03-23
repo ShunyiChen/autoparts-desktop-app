@@ -1,16 +1,9 @@
-package com.shunyi.autoparts.ui.common.example;
+package com.shunyi.autoparts.ui.common.deleteme;
 import javafx.application.Application;
-import javafx.scene.Group;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TreeSet;
 
 public class Main extends Application {
     public static void main(String[] args) {

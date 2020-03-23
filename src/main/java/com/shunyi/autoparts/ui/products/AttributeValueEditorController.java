@@ -2,8 +2,9 @@ package com.shunyi.autoparts.ui.products;
 
 import com.shunyi.autoparts.ui.common.GoogleJson;
 import com.shunyi.autoparts.ui.common.HttpClient;
-import com.shunyi.autoparts.ui.model.AttributeName;
-import com.shunyi.autoparts.ui.model.AttributeValue;
+import com.shunyi.autoparts.ui.common.Sort;
+import com.shunyi.autoparts.ui.common.vo.AttributeName;
+import com.shunyi.autoparts.ui.common.vo.AttributeValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ComboBox;
@@ -28,13 +29,13 @@ public class AttributeValueEditorController {
         this.updated = selectedAttributeValue;
         initComboBox();
         boxStatus.setValue(selectedAttributeValue.getStatus());
-        boxSort.setValue(selectedAttributeValue.getSort() == 1?Sort.ASC.getName():Sort.DESC.getName());
+        boxSort.setValue(selectedAttributeValue.getSort() == 1? Sort.ASC.getName():Sort.DESC.getName());
         String[] str = selectedAttributeValue.getRgb().split(",");
         colorPicker.setValue(new Color(Double.valueOf(str[0]), Double.valueOf(str[1]), Double.valueOf(str[2]), 1));
         initEvents();
         // 如果不是颜色属性，则隐藏颜色选择项
 
-        if(!selectedAttributeName.isColorProperty()) {
+        if(!selectedAttributeName.getColorProperty()) {
             colorLabel.setVisible(false);
             colorPicker.setVisible(false);
         }

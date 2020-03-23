@@ -3,7 +3,10 @@ package com.shunyi.autoparts.ui.products;
 import com.shunyi.autoparts.ui.common.EditingCell;
 import com.shunyi.autoparts.ui.common.GoogleJson;
 import com.shunyi.autoparts.ui.common.HttpClient;
-import com.shunyi.autoparts.ui.model.*;
+import com.shunyi.autoparts.ui.common.vo.AttributeName;
+import com.shunyi.autoparts.ui.common.vo.AttributeValue;
+import com.shunyi.autoparts.ui.common.vo.Product;
+import com.shunyi.autoparts.ui.common.vo.SKU;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -36,7 +39,6 @@ public class SKUGeneratorController {
     private TableColumn<ObservableList<TableCellMetadata>, String> colBarCode = new TableColumn<>("*条形码");
     private TableColumn<ObservableList<TableCellMetadata>, String> colProductCode = new TableColumn<>("产品编码");
     private List<TableColumn<ObservableList<TableCellMetadata>, String>> otherColumns = new ArrayList<>();
-//    private Attribute[] attributes;
 
     @FXML
     ScrollPane scrollPane;
@@ -174,7 +176,7 @@ public class SKUGeneratorController {
         AttributeName[] attributeNames = GoogleJson.GET().fromJson(json, AttributeName[].class);
         List<AttributeName> list = Arrays.asList(attributeNames);
         //销售属性
-        List<AttributeName> saleAttributes = list.stream().filter(AttributeName::isSaleProperty).collect(Collectors.toList());
+        List<AttributeName> saleAttributes = list.stream().filter(AttributeName::getSaleProperty).collect(Collectors.toList());
         int columnCount = 0;
         //销售属性列
         for (AttributeName attributeName : saleAttributes) {

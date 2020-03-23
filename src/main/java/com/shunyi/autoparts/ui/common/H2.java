@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.shunyi.autoparts.ui.model.RemoteConnection;
+import com.shunyi.autoparts.ui.common.entities.RemoteConnection;
 import org.h2.tools.DeleteDbFiles;
 
 /** 远程连接H2存储 */

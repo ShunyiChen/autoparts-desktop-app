@@ -14,30 +14,26 @@ module desktopapp {
     requires commons.logging;
     requires org.apache.commons.io;
 
-    opens com.shunyi.autoparts.ui to javafx.fxml;
-    opens com.shunyi.autoparts.ui.main to javafx.fxml;
-    opens com.shunyi.autoparts.ui.stock to javafx.fxml;
-    opens com.shunyi.autoparts.ui.products to javafx.fxml;
-    opens com.shunyi.autoparts.ui.system to javafx.fxml;
-    opens com.shunyi.autoparts.ui.common to com.google.gson;
-    opens com.shunyi.autoparts.ui.model to com.google.gson;
-
     exports com.shunyi.autoparts.ui;
     exports com.shunyi.autoparts.ui.buy;
     exports com.shunyi.autoparts.ui.system;
-    exports com.shunyi.autoparts.ui.model;
+    exports com.shunyi.autoparts.ui.common.vo;
     exports com.shunyi.autoparts.ui.supplier;
     exports com.shunyi.autoparts.ui.login;
     exports com.shunyi.autoparts.ui.main;
     exports com.shunyi.autoparts.ui.dashboard;
     exports com.shunyi.autoparts.ui.stock;
     exports com.shunyi.autoparts.ui.products;
-    exports com.shunyi.autoparts.ui.common.example;
+    exports com.shunyi.autoparts.ui.common.deleteme;
 
     opens com.shunyi.autoparts.ui.buy;
     opens com.shunyi.autoparts.ui.supplier;
     opens com.shunyi.autoparts.ui.login;
-//    opens org.openjfx to javafx.fxml;
-//    exports org.openjfx;
-
+    opens com.shunyi.autoparts.ui to javafx.fxml;
+    opens com.shunyi.autoparts.ui.main to javafx.fxml;
+    opens com.shunyi.autoparts.ui.stock to javafx.fxml;
+    opens com.shunyi.autoparts.ui.products to javafx.fxml;
+    opens com.shunyi.autoparts.ui.system to javafx.fxml;
+    opens com.shunyi.autoparts.ui.common to com.google.gson;
+    opens com.shunyi.autoparts.ui.common.vo to com.google.gson;
 }

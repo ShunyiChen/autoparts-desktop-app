@@ -2,7 +2,7 @@ package com.shunyi.autoparts.ui.system;
 
 import com.shunyi.autoparts.ui.common.GoogleJson;
 import com.shunyi.autoparts.ui.common.HttpClient;
-import com.shunyi.autoparts.ui.model.*;
+import com.shunyi.autoparts.ui.common.vo.*;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
@@ -143,7 +143,8 @@ public class EditRoleController {
 
     private void creatingRole() {
         //新建一个角色
-        Role createdRole = new Role(txtName.getText(), txtDesc.getText());
+//        Role createdRole = new Role(txtName.getText(), txtDesc.getText());
+        Role createdRole = new Role();
         String json = GoogleJson.GET().toJson(createdRole);
         //新建角色与用户关系
         try {
