@@ -2,8 +2,8 @@ package com.shunyi.autoparts.ui.main;
 
 import com.shunyi.autoparts.ui.common.ENV;
 import com.shunyi.autoparts.ui.common.HttpClient;
-import com.shunyi.autoparts.ui.model.Shop;
-import com.shunyi.autoparts.ui.model.User;
+import com.shunyi.autoparts.ui.common.vo.Shop;
+import com.shunyi.autoparts.ui.common.vo.User;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
