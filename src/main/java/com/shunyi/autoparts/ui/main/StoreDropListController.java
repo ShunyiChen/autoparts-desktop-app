@@ -27,7 +27,7 @@ public class StoreDropListController {
         storeLabel.setStyle("-fx-font-size: 14;-fx-text-fill: rgb(255,255,255);");
         storeComboBox.setStyle("-fx-font-size: 14;");
 
-        String userName = (String) Env.getInstance().lookup("loginUser");
+        String userName = Env.getInstance().getStringValue(Env.CURRENT_USER);
         try {
             User user = HttpClient.GET("/users/username/"+userName, User.class);
             if("root".equals(user.getUsername())) {

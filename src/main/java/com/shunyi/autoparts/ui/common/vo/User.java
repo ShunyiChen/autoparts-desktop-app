@@ -17,7 +17,7 @@ public class User {
 	/** 姓名 */
 	private String chineseName;
 	/** 英文名 */
-	private String EnglishName;
+	private String englishName;
 	/** 性别 */
 	private String sex;
 	/** 电话 */
@@ -55,7 +55,7 @@ public class User {
 		this.id = id;
 		this.username = username;
 		this.chineseName = chineseName;
-		EnglishName = englishName;
+		this.englishName = englishName;
 		this.sex = sex;
 		this.phone = phone;
 		this.email = email;
@@ -98,11 +98,11 @@ public class User {
 	}
 
 	public String getEnglishName() {
-		return EnglishName;
+		return englishName;
 	}
 
 	public void setEnglishName(String englishName) {
-		EnglishName = englishName;
+		this.englishName = englishName;
 	}
 
 	public String getSex() {

@@ -25,7 +25,7 @@
                            <top>
                               <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                                 <items>
-                                    <Button mnemonicParsing="false" onAction="#createNewUser" text="新建">
+                                    <Button mnemonicParsing="false" onAction="#createNewUser" text="新建用户">
                                        <font>
                                           <Font size="14.0" />
                                        </font>
@@ -88,7 +88,7 @@
                   <top>
                       <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                           <items>
-                              <Button mnemonicParsing="false" onAction="#createNewRole" text="新建">
+                              <Button mnemonicParsing="false" onAction="#createNewRole" text="新建角色">
                                   <font>
                                       <Font size="14.0" />
                                   </font>
@@ -178,7 +178,7 @@
                            <top>
                               <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                                 <items>
-                                  <Button mnemonicParsing="false" onAction="#createNewVFS" text="新建">
+                                  <Button mnemonicParsing="false" onAction="#createNewVFS" text="新建VFS">
                                        <font>
                                           <Font size="14.0" />
                                        </font>

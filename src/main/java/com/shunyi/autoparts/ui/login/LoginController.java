@@ -26,8 +26,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 
 /**
  * @Description: 登录界面
@@ -36,7 +35,6 @@ import java.util.concurrent.Executors;
  * @Version: 1.0
  */
 public class LoginController {
-    private ExecutorService executor = Executors.newSingleThreadExecutor();
     private KeyCodeCombination keyCodeCombination = new KeyCodeCombination(KeyCode.ENTER);
     private MainApp application;
     private ICONS icons = ICONS.getInstance();
@@ -69,6 +67,13 @@ public class LoginController {
 
     @FXML
     public void signIn(ActionEvent event) {
+        ThreadFactory namedThreadFactory = (Runnable r) -> new Thread(r, "TreeInfo_thread_pool_" + r.hashCode());
+
+        //Common Thread Pool
+        ExecutorService pool = new ThreadPoolExecutor(1, 200,
+                0L, TimeUnit.MILLISECONDS,
+                new LinkedBlockingQueue<Runnable>(1024), namedThreadFactory, new ThreadPoolExecutor.AbortPolicy());
+
 
         Task<Integer> task = new Task<>() {
 
@@ -89,7 +94,7 @@ public class LoginController {
                 } else {
                     Platform.runLater(() ->  progressBar.setProgress(0.1d));
                     RemoteConnection rc = comboboxConnections.getValue();
-                    Env.getInstance().addToEnvironment("RemoteConnection", rc);
+                    Env.getInstance().put(Env.REMOTE_CONNECTION, rc);
                     String json = "{\"username\":\""+txtUsername.getText().trim()+"\",\"password\":\""+txtPassword.getText().trim()+"\"}";
                     Platform.runLater(() ->  progressBar.setProgress(0.2d));
                     try {
@@ -104,8 +109,8 @@ public class LoginController {
                             //删除Enter监听
                             application.getScene().getAccelerators().remove(keyCodeCombination);
 
-                            Env.getInstance().addToEnvironment("Authorization", "Bearer "+res.getToken());
-                            Env.getInstance().addToEnvironment("loginUser", res.getUsername());
+                            Env.getInstance().put(Env.AUTHORIZATION, "Bearer "+res.getToken());
+                            Env.getInstance().put(Env.CURRENT_USER, res.getUsername());
 
                             Platform.runLater(() -> progressBar.setProgress(1d));
                             application.gotoDashboard();
@@ -135,8 +140,11 @@ public class LoginController {
             }
         };
 
-        executor.execute(task);
-        executor.shutdown();
+//        executor.execute(task);
+//        executor.shutdown();
+
+        pool.execute(task);
+        pool.shutdown();//gracefully shutdown
     }
 
     @FXML

@@ -6,6 +6,12 @@ import java.util.Map;
 /** 系统全局环境变量 */
 public class Env {
 
+    /** key */
+    public static final String AUTHORIZATION = "Authorization";
+    public static final String CURRENT_USER = "currentUser";
+    public static final String REMOTE_CONNECTION = "RemoteConnection";
+
+
     private Env() {}
 
     private static class SingletonHolder {
@@ -18,12 +24,16 @@ public class Env {
 
     private Map<String, Object> environment = new HashMap();
 
-    public void addToEnvironment(String propName, Object propVal) {
+    public void put(String propName, Object propVal) {
         environment.put(propName, propVal);
     }
 
-    public Map<String, Object> getEnvironment() {
-        return environment;
+    public String getStringValue(String key) {
+        return environment.get(key).toString();
+    }
+
+    public Object getObjectValue(String key) {
+        return environment.get(key);
     }
 
     public Object lookup(String name) {

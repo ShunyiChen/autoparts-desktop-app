@@ -1,5 +1,6 @@
 package com.shunyi.autoparts.ui.system;
 
+import com.shunyi.autoparts.ui.common.Env;
 import com.shunyi.autoparts.ui.common.GoogleJson;
 import com.shunyi.autoparts.ui.common.HttpClient;
 import com.shunyi.autoparts.ui.common.vo.*;
@@ -152,11 +153,16 @@ public class EditUserController {
         }
     }
 
+    /**
+     * 创建用户
+     */
     private void creatingUser() {
         //新建用户与店铺关系
         String encryptedPassword = encoder.encode(txtPassword.getText());
 //        User createdUser = new User(txtUserName.getText(), encryptedPassword, boxEnabled.isSelected());
         User createdUser = new User();
+        createdUser.setCreator(Env.getInstance().getStringValue(Env.CURRENT_USER));
+
         String json = GoogleJson.GET().toJson(createdUser);
 
         try {

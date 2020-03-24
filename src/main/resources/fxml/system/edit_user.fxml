@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="591.0" prefWidth="279.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.shunyi.autoparts.ui.system.EditUserController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="596.0" prefWidth="299.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.shunyi.autoparts.ui.system.EditUserController">
    <children>
       <FlowPane alignment="CENTER_LEFT" prefHeight="43.0" prefWidth="500.0">
          <children>
@@ -81,7 +81,7 @@
       </FlowPane>
       <ScrollPane prefHeight="152.0" prefWidth="279.0">
          <content>
-            <VBox fx:id="vBoxShop" prefHeight="153.0" prefWidth="264.0" spacing="5.0">
+            <VBox fx:id="vBoxStore" prefHeight="154.0" prefWidth="279.0" spacing="5.0">
                <children>
                   <CheckBox mnemonicParsing="false" text="CheckBox">
                      <font>
@@ -107,9 +107,9 @@
                   <Font size="14.0" />
                </font>
             </Label>
-            <ScrollPane prefHeight="152.0" prefWidth="279.0">
+            <ScrollPane prefHeight="152.0" prefWidth="298.0">
                <content>
-                  <VBox fx:id="vBoxRole" prefHeight="153.0" prefWidth="264.0" spacing="5.0">
+                  <VBox fx:id="vBoxRole" prefHeight="153.0" spacing="5.0">
                      <children>
                         <CheckBox mnemonicParsing="false" text="CheckBox">
                            <font>

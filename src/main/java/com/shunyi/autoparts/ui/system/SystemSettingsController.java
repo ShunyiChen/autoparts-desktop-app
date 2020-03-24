@@ -452,7 +452,7 @@ public class SystemSettingsController {
         itemNewStore.setOnAction(event -> {
             Callback<Store, String> callback = store -> {
                 TreeItem<Store> parent = storeTree.getSelectionModel().getSelectedItem();
-                store.setCreator(Env.getInstance().getEnvironment().get("loginUser").toString());
+                store.setCreator(Env.getInstance().getStringValue(Env.CURRENT_USER));
                 store.setParentId(parent.getValue().getId());
                 store.setParent(false);
                 String json = GoogleJson.GET().toJson(store);
@@ -481,7 +481,7 @@ public class SystemSettingsController {
                     updatedStore = GoogleJson.GET().fromJson(json, Store.class);
                     updatedStore.setCode(store.getCode());
                     updatedStore.setName(store.getName());
-                    updatedStore.setUpdater(Env.getInstance().getEnvironment().get("loginUser").toString());
+                    updatedStore.setUpdater(Env.getInstance().getStringValue(Env.CURRENT_USER));
                     updatedStore.setUpdatedCount(updatedStore.getUpdatedCount() + 1);
                     json = GoogleJson.GET().toJson(updatedStore);
                     HttpClient.PUT("/stores/"+selected.getValue().getId(), json);
