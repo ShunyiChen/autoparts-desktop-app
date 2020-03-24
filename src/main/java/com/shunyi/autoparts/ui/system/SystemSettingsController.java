@@ -1,9 +1,7 @@
 package com.shunyi.autoparts.ui.system;
 
 import com.shunyi.autoparts.ui.MainApp;
-import com.shunyi.autoparts.ui.common.GoogleJson;
-import com.shunyi.autoparts.ui.common.HttpClient;
-import com.shunyi.autoparts.ui.common.VFSClient;
+import com.shunyi.autoparts.ui.common.*;
 import com.shunyi.autoparts.ui.common.vo.*;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
@@ -19,9 +17,7 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -30,19 +26,17 @@ import java.util.stream.Collectors;
  * @CreateDate: 2020/1/8 16:24
  * @Version: 1.0
  */
-public class MaintenanceController {
+public class SystemSettingsController {
     private MainApp application;
     private ContextMenu menu = new ContextMenu();
     private MenuItem itemNewStore = new MenuItem("新建店铺");
     private MenuItem itemRMStore = new MenuItem("删除店铺");
-    private MenuItem itemRNStore = new MenuItem("重命名");
+    private MenuItem itemRNStore = new MenuItem("编辑");
 
     private ContextMenu vfsMenu = new ContextMenu();
     private MenuItem itemNew = new MenuItem("新建类目");
     private MenuItem itemRM = new MenuItem("删除类目");
     private MenuItem itemRN = new MenuItem("重命名");
-
-
     @FXML
     private TreeView<Store> storeTree;
     @FXML
@@ -57,7 +51,6 @@ public class MaintenanceController {
     private TableColumn<User, String> colStores;
     @FXML
     private TableColumn<User, String> colRoles;
-
 
     @FXML
     private TableView<Role> roleTable;
@@ -111,6 +104,28 @@ public class MaintenanceController {
     private TableColumn<VFS, String> colCanWrite;
     @FXML
     private TableColumn<VFS, String> colAcquiescent;
+
+    /**
+     *
+     * @param application
+     */
+    public void prepare(MainApp application) {
+        this.application = application;
+        //初始化店铺树
+        initStoreTree();
+        //初始化树右键菜单
+        initStoreMenuItems();
+        //初始化用户表格
+        initUserTable();
+        //初始化角色表格
+        initRoleTable();
+        //初始化权限表格
+        initPermissionTable();
+        //初始化VFS树
+        initVFSTree();
+        //初始化VFS表格
+        initVFSTable();
+    }
 
     @FXML
     void createNewUser() {
@@ -205,7 +220,7 @@ public class MaintenanceController {
         userTable.getItems().clear();
         String json = null;
         try {
-            json = HttpClient.GET("/users/shop/"+item.getValue().getId());
+            json = HttpClient.GET("/users/store/"+item.getValue().getId());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -283,40 +298,11 @@ public class MaintenanceController {
         dialog.show();
     }
 
-    /**
-     *
-     * @param application
-     */
-    public void prepare(MainApp application) {
-        this.application = application;
-
-        //初始化用户表格
-        initUserTable();
-
-        //初始化店铺树
-        initStoreTree();
-
-        //初始化树右键菜单
-        initMenuItems();
-
-        //初始化角色表格
-        initRoleTable();
-
-        //初始化权限表格
-        initPermissionTable();
-
-        //初始化VFS树
-        initVFSTree();
-
-        //初始化VFS表格
-        initVFSTable();
-    }
-
     private void initUserTable() {
 
         userTable.setId("my-table");
 
-        Map<Long, String> shopMap = getAllStoresMap();
+        Map<Long, String> storeMap = getAllStoresMap();
         Map<Long, String> roleMap = getAllRolesMap();
 
         colUserId.setCellValueFactory(new PropertyValueFactory<User, String>("id"));
@@ -325,11 +311,11 @@ public class MaintenanceController {
                 new SimpleObjectProperty<>(param.getValue().getEnabled() == null ? "否" : param.getValue().getEnabled()? "是":"否")
         );
         colStores.setCellValueFactory(param -> {
-                List<Long> shopIds = param.getValue().getUserStoreMappingSet().stream().map(e -> e.getId().getStoreId()).collect(Collectors.toList());
+                List<Long> storeIds = param.getValue().getUserStoreMappingSet().stream().map(e -> e.getId().getStoreId()).collect(Collectors.toList());
                 StringBuilder names = new StringBuilder();
-                for(Long shopId : shopIds) {
-                    if(shopMap.containsKey(shopId)) {
-                        names.append(shopMap.get(shopId));
+                for(Long storeId : storeIds) {
+                    if(storeMap.containsKey(storeId)) {
+                        names.append(storeMap.get(storeId));
                         names.append(",");
                     }
                 }
@@ -395,19 +381,19 @@ public class MaintenanceController {
 
     private Map<Long, String> getAllStoresMap() {
         HashMap<Long, String> map = new HashMap<>();
-        Store[] shops = getAllStores();
-        for(Store shop : shops) {
-            map.put(shop.getId(), shop.getName());
+        Store[] stores = getAllStores();
+        for(Store store : stores) {
+            map.put(store.getId(), store.getName());
         }
         return map;
     }
 
-
+    /**
+     * 初始化店铺树
+     */
     private void initStoreTree() {
         Store[] allStores = getAllStores();
-//        Store shop = new Store("全部店铺",-1L,true);
-        Store store = new Store();
-        store.setId(0L);
+        Store store = new Store(0L,"", "所有店铺", -1L, false, new HashSet<UserStoreMapping>(), null, null, null, null, null, null, Constants.DELETE_FLAG_FALSE, null);
         TreeItem<Store> rootItem = new TreeItem<>(store);
         storeTree.setRoot(rootItem);
         //初始化树节点
@@ -428,7 +414,7 @@ public class MaintenanceController {
                         }
                     } else {
                         try {
-                            data = HttpClient.GET("/users/shop/"+selectedItem.getValue().getId());
+                            data = HttpClient.GET("/users/store/"+selectedItem.getValue().getId());
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -447,12 +433,11 @@ public class MaintenanceController {
                 }
             }
         });
-
     }
 
     private void initStoreNodes(TreeItem<Store> parentItem, Store[] allStores) {
         for(Store s : allStores) {
-            if(s.getParentId() == parentItem.getValue().getId()) {
+            if(s.getParentId().equals(parentItem.getValue().getId())) {
                 TreeItem<Store> item = new TreeItem<>(s);
                 initStoreNodes(item, allStores);
                 parentItem.getChildren().add(item);
@@ -460,17 +445,20 @@ public class MaintenanceController {
         }
     }
 
-    private void initMenuItems() {
+    /**
+     * 初始化店铺菜单项目
+     */
+    private void initStoreMenuItems() {
         itemNewStore.setOnAction(event -> {
-            Callback callback = param -> {
-                String name = param.toString();
+            Callback<Store, String> callback = store -> {
                 TreeItem<Store> parent = storeTree.getSelectionModel().getSelectedItem();
-//                Store shop = new Store(name, parent.getValue().getId(), false);
-                Store store = new Store();
+                store.setCreator(Env.getInstance().getEnvironment().get("loginUser").toString());
+                store.setParentId(parent.getValue().getId());
+                store.setParent(false);
                 String json = GoogleJson.GET().toJson(store);
                 String idStr = null;
                 try {
-                    idStr = HttpClient.POST("/shops", json);
+                    idStr = HttpClient.POST("/stores", json);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -480,36 +468,47 @@ public class MaintenanceController {
                 storeTree.getSelectionModel().select(newItem);
                 return null;
             };
+
             editStore(callback, null);
         });
+
         itemRNStore.setOnAction(event -> {
             TreeItem<Store> selected = storeTree.getSelectionModel().getSelectedItem();
-            Callback callback = param -> {
-                String name = param.toString();
+            Callback<Store, String> callback = store -> {
                 Store updatedStore = null;
                 try {
-                    String json = HttpClient.GET("/shops/"+selected.getValue().getId());
+                    String json = HttpClient.GET("/stores/"+selected.getValue().getId());
                     updatedStore = GoogleJson.GET().fromJson(json, Store.class);
-                    updatedStore.setName(name);
+                    updatedStore.setCode(store.getCode());
+                    updatedStore.setName(store.getName());
+                    updatedStore.setUpdater(Env.getInstance().getEnvironment().get("loginUser").toString());
+                    updatedStore.setUpdatedCount(updatedStore.getUpdatedCount() + 1);
                     json = GoogleJson.GET().toJson(updatedStore);
-                    HttpClient.PUT("/shops/"+selected.getValue().getId(), json);
+                    HttpClient.PUT("/stores/"+selected.getValue().getId(), json);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
                 selected.setValue(updatedStore);
                 return null;
             };
-            editStore(callback, (Store)selected.getValue());
+
+            editStore(callback, selected.getValue());
         });
         itemRMStore.setOnAction(event -> {
             removeStore();
         });
     }
 
-    private void editStore(Callback callback, Store selectedStore) {
+    /**
+     * 编辑店铺
+     *
+     * @param callback
+     * @param selectedStore
+     */
+    private void editStore(Callback<Store, String> callback, Store selectedStore) {
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource(
-                        "/fxml/system/edit_shop.fxml"
+                        "/fxml/system/edit_store.fxml"
                 )
         );
         VBox root = null;
@@ -524,7 +523,7 @@ public class MaintenanceController {
         });
         EditStoreController controller = loader.getController();
         controller.prepare(dialog, callback, selectedStore);
-        dialog.setTitle("新建店铺");
+        dialog.setTitle(selectedStore==null?"新建店铺":"更新店铺");
         dialog.initOwner(application.getStage());
         dialog.setResizable(false);
         dialog.initModality(Modality.APPLICATION_MODAL);
@@ -534,11 +533,14 @@ public class MaintenanceController {
         dialog.show();
     }
 
+    /**
+     * 删除店铺
+     */
     private void removeStore() {
         TreeItem<Store> selected = storeTree.getSelectionModel().getSelectedItem();
         String data = null;
         try {
-            data = HttpClient.GET("/usershopmappings/shop/"+selected.getValue().getId());
+            data = HttpClient.GET("/userstoremappings/store/"+selected.getValue().getId());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -554,7 +556,7 @@ public class MaintenanceController {
             alertConfirm.setHeaderText("请确认是否删除当前店铺");
             alertConfirm.showAndWait().filter(response -> response == ButtonType.YES).ifPresent(response -> {
                 try {
-                    HttpClient.DELETE("/shops/"+selected.getValue().getId());
+                    HttpClient.DELETE("/stores/"+selected.getValue().getId());
                     TreeItem<Store> parent = selected.getParent();
                     parent.getChildren().remove(selected);
                     parent.setExpanded(true);
@@ -564,12 +566,13 @@ public class MaintenanceController {
                     e.printStackTrace();
                 }
             });
-
         }
     }
 
+    /**
+     * 初始化角色表格
+     */
     private void initRoleTable() {
-
         roleTable.setId("my-table");
         Map<Long, String> userMap = getAllUsersMap();
         Map<Long, String> permissionMap = getAllPermissionsMap();
@@ -716,6 +719,12 @@ public class MaintenanceController {
         editRole(callback, role);
     }
 
+    /**
+     * 编辑角色
+     *
+     * @param callback
+     * @param selectedRole
+     */
     private void editRole(Callback<Role, String> callback, Role selectedRole) {
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource(

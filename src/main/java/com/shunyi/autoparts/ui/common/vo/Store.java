@@ -139,6 +139,9 @@ public class Store {
     }
 
     public Integer getUpdatedCount() {
+        if(updatedCount == null) {
+            return 0;
+        }
         return updatedCount;
     }
 

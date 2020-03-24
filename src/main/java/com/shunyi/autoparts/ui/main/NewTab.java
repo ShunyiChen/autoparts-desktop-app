@@ -1,6 +1,5 @@
 package com.shunyi.autoparts.ui.main;
 
-import com.shunyi.autoparts.ui.common.entities.RemoteConnection;
 import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 
@@ -16,6 +15,12 @@ public class NewTab extends Tab {
     private String text;
     private TabContent tabContent;
 
+    /**
+     * Constructor
+     *
+     * @param text          tab文本
+     * @param tabContent    tab内容组件
+     */
     public NewTab(String text, TabContent tabContent) {
         super(text, tabContent);
         this.text = text;
@@ -48,11 +53,11 @@ public class NewTab extends Tab {
         });
         itemCloseOthers.setOnAction(e -> {
             ObservableList<Tab> tabs = this.getTabPane().getTabs();
-            Iterator<Tab> iter = tabs.iterator();
-            while(iter.hasNext()) {
-                Tab tab = iter.next();
+            Iterator<Tab> iterator = tabs.iterator();
+            while(iterator.hasNext()) {
+                Tab tab = iterator.next();
                 if(tab != this) {
-                    iter.remove();
+                    iterator.remove();
                 }
             }
         });
@@ -61,21 +66,7 @@ public class NewTab extends Tab {
         });
 
         this.setOnCloseRequest(e -> {
-
             tabContent.willClose();
-
-
         });
-
-        this.setOnClosed(e -> {
-            System.out.println("closed");
-//            if(this.getTabPane() != null) {
-//                this.getTabPane().getTabs().add(this);
-//            }
-        });
-        this.setOnSelectionChanged(e -> {
-            System.out.println("setOnSelectionChanged "+ ((NewTab)e.getTarget()).getText());
-        });
-
     }
 }

@@ -18,4 +18,7 @@ public class Constants {
     public static final String PRODUCT_DETAILS = "配件明细";
     public static final String SYSTEM_SETTINGS = "系统设置";
 
+    public static final Boolean DELETE_FLAG_TRUE = true;
+    public static final Boolean DELETE_FLAG_FALSE = false;
+
 }

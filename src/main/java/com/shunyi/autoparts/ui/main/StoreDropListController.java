@@ -19,27 +19,27 @@ import java.io.IOException;
  */
 public class StoreDropListController {
     @FXML
-    private Label shopLabel;
+    private Label storeLabel;
     @FXML
-    private ComboBox<Store> shopComboBox;
+    private ComboBox<Store> storeComboBox;
 
     public void prepare() {
-        shopLabel.setStyle("-fx-font-size: 14;-fx-text-fill: rgb(255,255,255);");
-        shopComboBox.setStyle("-fx-font-size: 14;");
+        storeLabel.setStyle("-fx-font-size: 14;-fx-text-fill: rgb(255,255,255);");
+        storeComboBox.setStyle("-fx-font-size: 14;");
 
         String userName = (String) Env.getInstance().lookup("loginUser");
         try {
             User user = HttpClient.GET("/users/username/"+userName, User.class);
             if("root".equals(user.getUsername())) {
                 Store[] userStores = HttpClient.GET("/stores", Store[].class);
-                shopComboBox.getItems().addAll(userStores);
-                shopComboBox.getSelectionModel().select(0);
+                storeComboBox.getItems().addAll(userStores);
+                storeComboBox.getSelectionModel().select(0);
 
             } else {
                 Store[] userStores = HttpClient.GET("/stores/user/"+user.getId(), Store[].class);
                 if(userStores.length > 0) {
-                    shopComboBox.getItems().addAll(userStores);
-                    shopComboBox.getSelectionModel().select(0);
+                    storeComboBox.getItems().addAll(userStores);
+                    storeComboBox.getSelectionModel().select(0);
                 }
             }
 

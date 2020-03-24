@@ -7,18 +7,16 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
-
 /** 编辑店铺Controller */
 public class EditStoreController {
-
     private Stage dialog;
     private Callback callback;
+    @FXML
+    private TextField txtCode;
     @FXML
     private TextField txtName;
     @FXML
     private Button btnOk;
-
-
     @FXML
     void cancel() {
         dialog.close();
@@ -26,7 +24,10 @@ public class EditStoreController {
 
     @FXML
     void ok() {
-        callback.call(txtName.getText());
+        Store store = new Store();
+        store.setCode(txtCode.getText());
+        store.setName(txtName.getText());
+        callback.call(store);
         dialog.close();
     }
 
@@ -35,6 +36,7 @@ public class EditStoreController {
         this.callback = callback;
         btnOk.setStyle(String.format("-fx-base: %s;", "rgb(63,81,181)"));
         if(selectedStore != null) {
+            txtCode.setText(selectedStore.getCode());
             txtName.setText(selectedStore.getName());
         }
     }

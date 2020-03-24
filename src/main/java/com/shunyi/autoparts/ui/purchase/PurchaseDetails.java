@@ -1,5 +1,6 @@
 package com.shunyi.autoparts.ui.purchase;
 
+import com.shunyi.autoparts.ui.MainApp;
 import com.shunyi.autoparts.ui.main.TabContent;
 
 /**
@@ -9,6 +10,12 @@ import com.shunyi.autoparts.ui.main.TabContent;
  * @Version: 1.0
  */
 public class PurchaseDetails extends TabContent {
+
+    private MainApp application;
+
+    public PurchaseDetails(MainApp application) {
+        this.application = application;
+    }
     
     @Override
     protected void reload() {

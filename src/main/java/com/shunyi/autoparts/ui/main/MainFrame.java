@@ -3,8 +3,6 @@ package com.shunyi.autoparts.ui.main;
 import com.shunyi.autoparts.ui.MainApp;
 import com.shunyi.autoparts.ui.common.Constants;
 import com.shunyi.autoparts.ui.common.ICONS;
-import com.shunyi.autoparts.ui.dashboard.Dashboard;
-import com.shunyi.autoparts.ui.buy.PurchaseOrder;
 import com.shunyi.autoparts.ui.inventory.InventoryDetails;
 import com.shunyi.autoparts.ui.products.ProductDetails;
 import com.shunyi.autoparts.ui.purchase.PurchaseDetails;
@@ -12,13 +10,10 @@ import com.shunyi.autoparts.ui.purchase.PurchaseReturnDetails;
 import com.shunyi.autoparts.ui.sale.SalesDetails;
 import com.shunyi.autoparts.ui.sale.SalesReturnDetails;
 import com.shunyi.autoparts.ui.sale.SalesView;
-import com.shunyi.autoparts.ui.stock.StockManagement;
 import com.shunyi.autoparts.ui.supplier.SupplierDetails;
-import com.shunyi.autoparts.ui.supplier.SupplierManagement;
 import com.shunyi.autoparts.ui.system.SystemSettings;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
 import javafx.util.Callback;
 
 /**
@@ -29,7 +24,6 @@ public class MainFrame extends BorderPane {
     private TitleBar toolbar;
     private Navigation navigation;
     private ContentPane contentPane;
-//    private Dashboard dashboard;
     private ICONS icons = ICONS.getInstance();
     private TabPane tabPane = new TabPane();
     private NewTab salesViewTab;
@@ -72,7 +66,7 @@ public class MainFrame extends BorderPane {
             public Object call(Object param) {
                 toolbar.setTitle(Constants.SALES_VIEW);
                 if(salesViewTab == null) {
-                    salesViewTab = new NewTab(Constants.SALES_VIEW, new SalesView());
+                    salesViewTab = new NewTab(Constants.SALES_VIEW, new SalesView(application));
                 }
                 contentPane.addNewTab(salesViewTab);
                 return null;
@@ -83,7 +77,7 @@ public class MainFrame extends BorderPane {
             public Object call(Object param) {
                 toolbar.setTitle(Constants.PURCHASE_DETAILS);
                 if(purchaseDetailsTab == null) {
-                    purchaseDetailsTab = new NewTab(Constants.PURCHASE_DETAILS, new PurchaseDetails());
+                    purchaseDetailsTab = new NewTab(Constants.PURCHASE_DETAILS, new PurchaseDetails(application));
                 }
                 contentPane.addNewTab(purchaseDetailsTab);
                 return null;
@@ -165,7 +159,7 @@ public class MainFrame extends BorderPane {
 //                Maintenance systemMaintenance = new Maintenance(application);
                 toolbar.setTitle(Constants.SYSTEM_SETTINGS);
                 if(systemSettingsTab == null) {
-                    systemSettingsTab = new NewTab(Constants.SYSTEM_SETTINGS, new SystemSettings());
+                    systemSettingsTab = new NewTab(Constants.SYSTEM_SETTINGS, new SystemSettings(application));
                 }
                 contentPane.addNewTab(systemSettingsTab);
                 return null;

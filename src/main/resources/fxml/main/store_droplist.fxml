@@ -8,11 +8,11 @@
 
 <FlowPane alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="35.0" prefWidth="245.0" fx:controller="com.shunyi.autoparts.ui.main.StoreDropListController" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Label fx:id="shopLabel" text="门店: ">
+      <Label fx:id="storeLabel" text="门店: ">
          <font>
             <Font size="14.0" />
          </font>
       </Label>
-      <ComboBox fx:id="shopComboBox" prefWidth="150.0" />
+      <ComboBox fx:id="storeComboBox" prefWidth="150.0" />
    </children>
 </FlowPane>
