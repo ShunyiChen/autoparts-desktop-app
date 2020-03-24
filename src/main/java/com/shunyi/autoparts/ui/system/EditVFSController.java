@@ -1,5 +1,6 @@
 package com.shunyi.autoparts.ui.system;
 
+import com.shunyi.autoparts.ui.common.Constants;
 import com.shunyi.autoparts.ui.common.NumberValidationUtils;
 import com.shunyi.autoparts.ui.common.vo.VFS;
 import com.shunyi.autoparts.ui.common.VFSClient;
@@ -29,9 +30,11 @@ public class EditVFSController {
     @FXML
     private ComboBox<String> comboxProtocol;
     @FXML
-    private CheckBox checkboxCanRead;
+    private CheckBox checkboxMaster;
     @FXML
-    private CheckBox checkboxCanWrite;
+    private CheckBox checkboxReadable;
+    @FXML
+    private CheckBox checkboxWritable;
     @FXML
     private Button btnOK;
 
@@ -44,8 +47,7 @@ public class EditVFSController {
     @FXML
     private void ok() {
         if(validate()) {
-            VFS vfs = new VFS();
-//            VFS vfs = new VFS(txtName.getText(), comboxProtocol.getValue(), txtHost.getText(), Integer.parseInt(txtPort.getText()), txtHome.getText(), txtUserName.getText(), txtPassword.getText(), checkboxCanRead.isSelected(), checkboxCanWrite.isSelected(), 0L);
+            VFS vfs = new VFS(0L, txtName.getText(), comboxProtocol.getValue(), txtHost.getText(), Integer.parseInt(txtPort.getText()), txtHome.getText(), txtUserName.getText(), txtPassword.getText(), checkboxReadable.isSelected(), checkboxWritable.isSelected(), 0L, Constants.VFS_MASTER_FALSE, null, null, null, null, null, null, null, null);
             callback.call(vfs);
             dialog.close();
         }
@@ -55,8 +57,7 @@ public class EditVFSController {
     private void testConnection() {
         if(validate()) {
             try {
-//                VFS vfs = new VFS(0L,txtName.getText(), comboxProtocol.getValue(), txtHost.getText(), Integer.parseInt(txtPort.getText()), txtHome.getText(), txtUserName.getText(), txtPassword.getText(), checkboxCanRead.isSelected(), checkboxCanWrite.isSelected(), 0L);
-                VFS vfs = new VFS();
+                VFS vfs = new VFS(0L, txtName.getText(), comboxProtocol.getValue(), txtHost.getText(), Integer.parseInt(txtPort.getText()), txtHome.getText(), txtUserName.getText(), txtPassword.getText(), checkboxReadable.isSelected(), checkboxWritable.isSelected(), 0L, Constants.VFS_MASTER_FALSE, null, null, null, null, null, null, null, null);
                 boolean testResult = VFSClient.testConnection(vfs);
                 if(testResult) {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
@@ -113,8 +114,9 @@ public class EditVFSController {
             txtPassword.setText(selectedVFS.getPassword());
             comboxProtocol.setValue(selectedVFS.getProtocol());
             txtPort.setText(selectedVFS.getPort()+"");
-            checkboxCanRead.setSelected(selectedVFS.getCanRead());
-            checkboxCanWrite.setSelected(selectedVFS.getCanWrite());
+            checkboxMaster.setSelected(selectedVFS.getMaster());
+            checkboxReadable.setSelected(selectedVFS.getReadable());
+            checkboxWritable.setSelected(selectedVFS.getWritable());
         }
     }
 }

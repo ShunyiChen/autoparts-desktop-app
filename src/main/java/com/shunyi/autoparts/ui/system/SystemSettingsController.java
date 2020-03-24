@@ -110,11 +110,11 @@ public class SystemSettingsController {
     @FXML
     private TableColumn<VFS, String> colVFSPassword;
     @FXML
-    private TableColumn<VFS, String> colCanRead;
+    private TableColumn<VFS, String> colReadable;
     @FXML
-    private TableColumn<VFS, String> colCanWrite;
+    private TableColumn<VFS, String> colWritable;
     @FXML
-    private TableColumn<VFS, String> colAcquiescent;
+    private TableColumn<VFS, String> colMaster;
 
     /**
      *
@@ -162,6 +162,7 @@ public class SystemSettingsController {
             userTable.getItems().remove(selectedUser);
             userTable.getItems().add(i, updatedUser);
             userTable.getSelectionModel().select(updatedUser);
+            userTable.refresh();
             return "";
         });
 
@@ -221,6 +222,7 @@ public class SystemSettingsController {
                 e.printStackTrace();
             }
             userTable.getItems().remove(deleteUser);
+            userTable.refresh();
         });
 
     }
@@ -314,7 +316,6 @@ public class SystemSettingsController {
         userTable.setId("my-table");
         Map<Long, String> storeMap = getAllStoresMap();
         Map<Long, String> roleMap = getAllRolesMap();
-
         colUserId.setCellValueFactory(new PropertyValueFactory<User, String>("id"));
         colUserName.setCellValueFactory(new PropertyValueFactory<User, String>("username"));
         colChineseName.setCellValueFactory(new PropertyValueFactory<User, String>("chineseName"));
@@ -327,7 +328,7 @@ public class SystemSettingsController {
                 new SimpleObjectProperty<>(param.getValue().getEnabled() == null ? "否" : param.getValue().getEnabled()? "是":"否")
         );
         colStores.setCellValueFactory(param -> {
-                List<Long> storeIds = param.getValue().getUserStoreMappingSet().stream().map(e -> e.getId().getStoreId()).collect(Collectors.toList());
+                List<Long> storeIds = param.getValue().getUserStoreMappingSet().stream().map(e -> e.getId().getStoreId()).sorted(Comparator.comparingLong(e -> e.longValue())).collect(Collectors.toList());
                 StringBuilder names = new StringBuilder();
                 for(Long storeId : storeIds) {
                     if(storeMap.containsKey(storeId)) {
@@ -342,7 +343,7 @@ public class SystemSettingsController {
             }
         );
         colRoles.setCellValueFactory(param -> {
-                List<Long> roleIds = param.getValue().getUserRoleMappingSet().stream().map(e -> e.getId().getRoleId()).collect(Collectors.toList());
+                List<Long> roleIds = param.getValue().getUserRoleMappingSet().stream().map(e -> e.getId().getRoleId()).sorted(Comparator.comparingLong(e -> e.longValue())).collect(Collectors.toList());
                 StringBuilder names = new StringBuilder();
                 for(Long roleId : roleIds) {
                     if(roleMap.containsKey(roleId)) {
@@ -597,7 +598,7 @@ public class SystemSettingsController {
         colRoleName.setCellValueFactory(new PropertyValueFactory<Role, String>("name"));
         colRoleDesc.setCellValueFactory(new PropertyValueFactory<Role, String>("description"));
         colUsers.setCellValueFactory(param -> {
-            List<Long> userIds = param.getValue().getUserRoleMappingSet().stream().map(e -> e.getId().getUserId()).collect(Collectors.toList());
+            List<Long> userIds = param.getValue().getUserRoleMappingSet().stream().map(e -> e.getId().getUserId()).sorted(Comparator.comparingLong(e -> e.longValue())).collect(Collectors.toList());
             StringBuilder names = new StringBuilder();
             for(Long userId : userIds) {
                 if(userMap.containsKey(userId)) {
@@ -612,7 +613,7 @@ public class SystemSettingsController {
         });
 
         colPermissions.setCellValueFactory(param -> {
-            List<Long> permissionIds = param.getValue().getRolePermissionMappingSet().stream().map(e -> e.getId().getPermissionId()).collect(Collectors.toList());
+            List<Long> permissionIds = param.getValue().getRolePermissionMappingSet().stream().map(e -> e.getId().getPermissionId()).sorted(Comparator.comparingLong(e -> e.longValue())).collect(Collectors.toList());
             StringBuilder names = new StringBuilder();
             for(Long permissionId : permissionIds) {
                 if(permissionMap.containsKey(permissionId)) {
@@ -920,7 +921,7 @@ public class SystemSettingsController {
         colPermissionDesc.setCellValueFactory(new PropertyValueFactory<Permission, String>("description"));
         colPermissionCode.setCellValueFactory(new PropertyValueFactory<Permission, String>("code"));
         colPermissionRoles.setCellValueFactory(param -> {
-                    List<Long> roleIds = param.getValue().getRolePermissionMappingSet().stream().map(e -> e.getId().getRoleId()).collect(Collectors.toList());
+                    List<Long> roleIds = param.getValue().getRolePermissionMappingSet().stream().map(e -> e.getId().getRoleId()).sorted(Comparator.comparingLong(e -> e.longValue())).collect(Collectors.toList());
                     StringBuilder names = new StringBuilder();
                     for(Long roleId : roleIds) {
                         if(roleMap.containsKey(roleId)) {
@@ -960,9 +961,7 @@ public class SystemSettingsController {
     }
 
     private void initVFSTree() {
-//        VFSCategory rootCategory = new VFSCategory("全部分类", -1, true);
-        VFSCategory rootCategory = new VFSCategory();
-        rootCategory.setId(0L);
+        VFSCategory rootCategory = new VFSCategory(0L, "所有分类", -1L, Constants.PARENT_TRUE, null, null, null, null, null, null, Constants.DELETE_FLAG_FALSE, null);
         TreeItem<VFSCategory> rootItem = new TreeItem<>(rootCategory);
         vfsTree.setRoot(rootItem);
         initVFSCategoryNodes(rootItem);
@@ -973,10 +972,18 @@ public class SystemSettingsController {
                 TreeItem<VFSCategory> item = vfsTree.getSelectionModel().getSelectedItem();
                 vfsTable.getItems().clear();
                 String json = null;
-                try {
-                    json = HttpClient.GET("/vfs/vfscategory/"+item.getValue().getId());
-                } catch (IOException e) {
-                    e.printStackTrace();
+                if(item.getValue().getId() == 0L) {
+                    try {
+                        json = HttpClient.GET("/vfs");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    try {
+                        json = HttpClient.GET("/vfs/vfscategory/"+item.getValue().getId());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
                 VFS[] vfs = GoogleJson.GET().fromJson(json, VFS[].class);
                 vfsTable.getItems().addAll(vfs);
@@ -1128,15 +1135,27 @@ public class SystemSettingsController {
         colVFSPassword.setCellValueFactory(param ->
                 new SimpleObjectProperty<>("******")
         );
-        colCanRead.setCellValueFactory(param ->
-                new SimpleObjectProperty<>(param.getValue().getCanRead()?"是": "否")
-        );
-        colCanWrite.setCellValueFactory(param ->
-                new SimpleObjectProperty<>(param.getValue().getCanWrite()?"是": "否")
-        );
-        colAcquiescent.setCellValueFactory(param ->
-                new SimpleObjectProperty<>(param.getValue().getAcquiescent()?"✓": "")
-        );
+        colReadable.setCellValueFactory(param -> {
+             if(param.getValue().getReadable() == null) {
+                 return new SimpleObjectProperty<>("否");
+             } else {
+                 return new SimpleObjectProperty<>(param.getValue().getReadable()?"是": "否");
+             }
+        });
+        colWritable.setCellValueFactory(param -> {
+            if(param.getValue().getWritable() == null) {
+                return new SimpleObjectProperty<>("否");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getWritable()?"是": "否");
+            }
+        });
+        colMaster.setCellValueFactory(param -> {
+            if(param.getValue().getMaster() == null) {
+                return new SimpleObjectProperty<>("");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getMaster()?"✓": "");
+            }
+        });
 
         vfsTable.setOnMouseClicked((MouseEvent event) -> {
             if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2){
@@ -1144,19 +1163,28 @@ public class SystemSettingsController {
             }
         });
         ContextMenu menu = new ContextMenu();
-        MenuItem itemNew = new MenuItem("新建");
+        MenuItem itemNew = new MenuItem("新建VFS");
         MenuItem itemEdit= new MenuItem("编辑");
         MenuItem itemDel = new MenuItem("删除");
+        MenuItem itemMaster = new MenuItem("设置为主要的");
+        MenuItem itemTest = new MenuItem("测试连接");
+
         itemNew.setOnAction(e ->{
-            createNewRole();
+            createNewVFS();
         });
         itemEdit.setOnAction(e ->{
-            updateRole();
+            updateVFS();
         });
         itemDel.setOnAction(e ->{
-            deleteRole();
+            deleteVFS();
         });
-        menu.getItems().addAll(itemNew, new SeparatorMenuItem() ,itemEdit, itemDel);
+        itemMaster.setOnAction(e -> {
+            updateMaster();
+        });
+        itemTest.setOnAction(e -> {
+            testConnection();
+        });
+        menu.getItems().addAll(itemNew, new SeparatorMenuItem() ,itemEdit, itemDel, new SeparatorMenuItem(), itemMaster, itemTest);
         vfsTable.addEventHandler(MouseEvent.MOUSE_CLICKED, t -> {
             if(t.getButton() == MouseButton.SECONDARY) {
                 menu.show(vfsTable, t.getScreenX(), t.getScreenY());
@@ -1318,7 +1346,7 @@ public class SystemSettingsController {
     }
 
     @FXML
-    private void updateAcquiescent() {
+    private void updateMaster() {
         VFS selectedVFS = vfsTable.getSelectionModel().getSelectedItem();
         if(selectedVFS == null) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);

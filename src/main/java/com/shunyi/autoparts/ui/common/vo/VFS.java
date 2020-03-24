@@ -25,13 +25,13 @@ public class VFS {
     /** 连接密码 */
     private String password;
     /** 可读 */
-    private Boolean canRead;
+    private Boolean readable;
     /** 可写 */
-    private Boolean canWrite;
+    private Boolean writable;
     /** VFS类目ID */
     private Long categoryId;
     /** 默认的 */
-    private Boolean acquiescent;
+    private Boolean master;
     /** 创建时间 */
     private Date dateCreated;
     /** 创建者 */
@@ -51,7 +51,7 @@ public class VFS {
 
     public VFS() {}
 
-    public VFS(Long id, String name, String protocol, String host, Integer port, String home, String userName, String password, Boolean canRead, Boolean canWrite, Long categoryId, Boolean acquiescent, Date dateCreated, String creator, Date dateUpdated, String updater, Integer updatedCount, Date dateDeleted, Boolean deleteFlag, String deleter) {
+    public VFS(Long id, String name, String protocol, String host, Integer port, String home, String userName, String password, Boolean readable, Boolean writable, Long categoryId, Boolean master, Date dateCreated, String creator, Date dateUpdated, String updater, Integer updatedCount, Date dateDeleted, Boolean deleteFlag, String deleter) {
         this.id = id;
         this.name = name;
         this.protocol = protocol;
@@ -60,10 +60,10 @@ public class VFS {
         this.home = home;
         this.userName = userName;
         this.password = password;
-        this.canRead = canRead;
-        this.canWrite = canWrite;
+        this.readable = readable;
+        this.writable = writable;
         this.categoryId = categoryId;
-        this.acquiescent = acquiescent;
+        this.master = master;
         this.dateCreated = dateCreated;
         this.creator = creator;
         this.dateUpdated = dateUpdated;
@@ -138,20 +138,20 @@ public class VFS {
         this.password = password;
     }
 
-    public Boolean getCanRead() {
-        return canRead;
+    public Boolean getReadable() {
+        return readable;
     }
 
-    public void setCanRead(Boolean canRead) {
-        this.canRead = canRead;
+    public void setReadable(Boolean readable) {
+        this.readable = readable;
     }
 
-    public Boolean getCanWrite() {
-        return canWrite;
+    public Boolean getWritable() {
+        return writable;
     }
 
-    public void setCanWrite(Boolean canWrite) {
-        this.canWrite = canWrite;
+    public void setWritable(Boolean writable) {
+        this.writable = writable;
     }
 
     public Long getCategoryId() {
@@ -162,12 +162,12 @@ public class VFS {
         this.categoryId = categoryId;
     }
 
-    public Boolean getAcquiescent() {
-        return acquiescent;
+    public Boolean getMaster() {
+        return master;
     }
 
-    public void setAcquiescent(Boolean acquiescent) {
-        this.acquiescent = acquiescent;
+    public void setMaster(Boolean master) {
+        this.master = master;
     }
 
     public Date getDateCreated() {

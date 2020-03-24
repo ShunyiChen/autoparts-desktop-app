@@ -144,6 +144,8 @@ public class EditUserController {
             } else {
                 creatingUser();
             }
+
+
             dialog.close();
         }
     }
@@ -270,7 +272,7 @@ public class EditUserController {
             alert.show();
             return false;
         }
-        else if(!existCheck(txtUserName.getText().trim())) {
+        else if(existCheck(txtUserName.getText().trim())) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
             alert.setHeaderText("用户已存在");
             alert.show();
@@ -279,7 +281,16 @@ public class EditUserController {
         return true;
     }
 
+    /**
+     * 检查用户名是否存在
+     *
+     * @param userName
+     * @return
+     */
     private boolean existCheck(String userName) {
+        if(Constants.ROOT.equalsIgnoreCase(userName)) {
+            return true;
+        }
         try {
             String data = HttpClient.GET("/users");
             User[] users = GoogleJson.GET().fromJson(data, User[].class);
@@ -287,15 +298,15 @@ public class EditUserController {
                 if(selectedUser != null && u.getId().equals(selectedUser.getId())) {
                     continue;
                 }
-                if(u.getUsername().equalsIgnoreCase(userName) || userName.equalsIgnoreCase("root")) {
-                    return false;
+                if(u.getUsername().equalsIgnoreCase(userName)) {
+                    return true;
                 }
             }
 
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return true;
+        return false;
     }
 
     /**

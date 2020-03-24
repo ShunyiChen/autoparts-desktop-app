@@ -20,5 +20,9 @@ public class Constants {
 
     public static final Boolean DELETE_FLAG_TRUE = true;
     public static final Boolean DELETE_FLAG_FALSE = false;
-
+    public static final String ROOT = "root";
+    public static final Boolean PARENT_TRUE = true;
+    public static final Boolean PARENT_FALSE = false;
+    public static final Boolean VFS_MASTER_TRUE = true;
+    public static final Boolean VFS_MASTER_FALSE = false;
 }

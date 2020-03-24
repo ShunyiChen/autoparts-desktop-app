@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.SplitPane?>
@@ -10,7 +11,6 @@
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.control.TreeView?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.text.Font?>
 
 <TabPane fx:id="tabPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="534.0" prefWidth="975.0" side="LEFT" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.shunyi.autoparts.ui.system.SystemSettingsController">
@@ -57,28 +57,28 @@
                               </ToolBar>
                            </top>
                            <center>
-                              <TableView fx:id="userTable" BorderPane.alignment="CENTER">
+                              <TableView fx:id="userTable" prefHeight="396.0" prefWidth="799.0" BorderPane.alignment="CENTER">
                                 <columns>
                                     <TableColumn fx:id="colUserId" prefWidth="75.0" text="ID" visible="false" />
                                     <TableColumn fx:id="colUserName" prefWidth="175.0" text="用户名" />
+                                    <TableColumn fx:id="colRoles" prefWidth="175.0" text="拥有角色" />
+                                    <TableColumn fx:id="colStores" prefWidth="175.0" text="访问店铺" />
+                                    <TableColumn fx:id="colEnabled" prefWidth="75.0" text="是否已激活" />
                                     <TableColumn fx:id="colChineseName" prefWidth="175.0" text="中文名" />
                                     <TableColumn fx:id="colEnglishName" prefWidth="175.0" text="英文名" />
                                     <TableColumn fx:id="colSex" prefWidth="75.0" text="性别" />
                                     <TableColumn fx:id="colPhone" prefWidth="175.0" text="电话" />
                                     <TableColumn fx:id="colEmail" prefWidth="175.0" text="电子邮箱" />
-                                    <TableColumn fx:id="colEnabled" prefWidth="75.0" text="是否已激活" />
-                                    <TableColumn fx:id="colStores" prefWidth="175.0" text="访问店铺" />
-                                    <TableColumn fx:id="colRoles" prefWidth="175.0" text="拥有角色" />
                                 </columns>
+                                 <BorderPane.margin>
+                                    <Insets bottom="30.0" />
+                                 </BorderPane.margin>
                               </TableView>
                            </center>
                         </BorderPane>
                      </items>
                   </SplitPane>
-               </center>
-               <bottom>
-                  <FlowPane prefHeight="30.0" prefWidth="945.0" BorderPane.alignment="CENTER" />
-               </bottom></BorderPane>
+               </center></BorderPane>
          </content></Tab>
       <Tab text="角色管理">
           <content>
@@ -90,8 +90,11 @@
                               <TableColumn fx:id="colRoleName" prefWidth="175.0" text="角色名" />
                               <TableColumn fx:id="colRoleDesc" prefWidth="275.0" text="描述" />
                               <TableColumn fx:id="colUsers" prefWidth="175.0" text="用户" />
-                              <TableColumn fx:id="colPermissions" prefWidth="175.0" text="权限" />
+                              <TableColumn fx:id="colPermissions" prefWidth="600.0" text="权限" />
                           </columns>
+                     <BorderPane.margin>
+                        <Insets bottom="30.0" />
+                     </BorderPane.margin>
                       </TableView>
                   </center>
                   <top>
@@ -136,6 +139,9 @@
                               <TableColumn fx:id="colPermissionCode" prefWidth="75.0" text="编码" />
                               <TableColumn fx:id="colPermissionRoles" prefWidth="275.0" text="角色" />
                           </columns>
+                     <BorderPane.margin>
+                        <Insets bottom="30.0" />
+                     </BorderPane.margin>
                       </TableView>
                   </center>
                   <top>
@@ -178,10 +184,13 @@
                                     <TableColumn fx:id="colVFSHome" prefWidth="275.0" text="主目录" />
                                     <TableColumn fx:id="colVFSUserName" prefWidth="75.0" text="连接用户名" />
                                     <TableColumn fx:id="colVFSPassword" prefWidth="75.0" text="连接密码" />
-                                    <TableColumn fx:id="colCanRead" prefWidth="75.0" text="可读" />
-                                    <TableColumn fx:id="colCanWrite" prefWidth="75.0" text="可写" />
-                                    <TableColumn fx:id="colAcquiescent" prefWidth="55.0" text="默认的" />
+                                    <TableColumn fx:id="colReadable" prefWidth="75.0" text="可读" />
+                                    <TableColumn fx:id="colWritable" prefWidth="75.0" text="可写" />
+                                    <TableColumn fx:id="colMaster" prefWidth="55.0" text="主要的" />
                                 </columns>
+                                 <BorderPane.margin>
+                                    <Insets bottom="30.0" />
+                                 </BorderPane.margin>
                               </TableView>
                            </center>
                            <top>
@@ -209,7 +218,7 @@
                                         </font>
                                     </Button>
                                     <Separator />
-                                    <Button mnemonicParsing="false" onAction="#updateAcquiescent" text="设置默认">
+                                    <Button mnemonicParsing="false" onAction="#updateMaster" text="设置为主要的">
                                         <font>
                                             <Font size="14.0" />
                                         </font>

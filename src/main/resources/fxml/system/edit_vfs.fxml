@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="372.0" prefWidth="302.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.shunyi.autoparts.ui.system.EditVFSController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="388.0" prefWidth="302.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.shunyi.autoparts.ui.system.EditVFSController">
    <children>
       <FlowPane alignment="CENTER_LEFT" prefHeight="40.0" prefWidth="600.0">
          <children>
@@ -107,19 +107,24 @@
             </PasswordField>
          </children>
       </FlowPane>
-      <FlowPane alignment="CENTER" layoutX="10.0" layoutY="260.0" prefHeight="33.0" prefWidth="353.0">
+      <FlowPane alignment="CENTER" hgap="10.0" layoutX="10.0" layoutY="260.0" prefHeight="58.0" prefWidth="302.0">
          <children>
-            <CheckBox fx:id="checkboxCanRead" mnemonicParsing="false" text="可读">
+            <CheckBox fx:id="checkboxMaster" layoutX="98.0" layoutY="17.0" mnemonicParsing="false" text="主要VFS">
                <font>
                   <Font size="14.0" />
                </font>
             </CheckBox>
-            <CheckBox fx:id="checkboxCanWrite" mnemonicParsing="false" text="可写">
+            <CheckBox fx:id="checkboxReadable" mnemonicParsing="false" text="可读">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </CheckBox>
+            <CheckBox fx:id="checkboxWritable" mnemonicParsing="false" text="可写">
                <font>
                   <Font size="14.0" />
                </font>
                <FlowPane.margin>
-                  <Insets left="20.0" />
+                  <Insets />
                </FlowPane.margin>
             </CheckBox>
          </children>
