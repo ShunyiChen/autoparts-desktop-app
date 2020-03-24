@@ -36,4 +36,5 @@ module desktopapp {
     opens com.shunyi.autoparts.ui.system to javafx.fxml;
     opens com.shunyi.autoparts.ui.common to com.google.gson;
     opens com.shunyi.autoparts.ui.common.vo to com.google.gson;
+    opens com.shunyi.autoparts.ui.common.entities to javafx.base;
 }

@@ -6,9 +6,8 @@ plugins {
 }
 
 // 设置 JDK 版本
-sourceCompatibility = 13
-targetCompatibility = 13
-
+project.sourceCompatibility=1.11
+project.targetCompatibility=1.11
 
 //repositories {
 //    mavenCentral()
