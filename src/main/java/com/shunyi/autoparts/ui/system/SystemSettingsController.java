@@ -46,6 +46,17 @@ public class SystemSettingsController {
     @FXML
     private TableColumn colUserName;
     @FXML
+    private TableColumn colChineseName;
+    @FXML
+    private TableColumn colEnglishName;
+    @FXML
+    private TableColumn colSex;
+    @FXML
+    private TableColumn colPhone;
+    @FXML
+    private TableColumn colEmail;
+
+    @FXML
     private TableColumn<User, String> colEnabled;
     @FXML
     private TableColumn<User, String> colStores;
@@ -266,6 +277,7 @@ public class SystemSettingsController {
 
 
     /**
+     * 编辑用户
      *
      * @param callback
      * @param selectedUser
@@ -299,14 +311,18 @@ public class SystemSettingsController {
     }
 
     private void initUserTable() {
-
         userTable.setId("my-table");
-
         Map<Long, String> storeMap = getAllStoresMap();
         Map<Long, String> roleMap = getAllRolesMap();
 
         colUserId.setCellValueFactory(new PropertyValueFactory<User, String>("id"));
         colUserName.setCellValueFactory(new PropertyValueFactory<User, String>("username"));
+        colChineseName.setCellValueFactory(new PropertyValueFactory<User, String>("chineseName"));
+        colEnglishName.setCellValueFactory(new PropertyValueFactory<User, String>("englishName"));
+        colSex.setCellValueFactory(new PropertyValueFactory<User, String>("sex"));
+        colPhone.setCellValueFactory(new PropertyValueFactory<User, String>("phone"));
+        colEmail.setCellValueFactory(new PropertyValueFactory<User, String>("email"));
+
         colEnabled.setCellValueFactory(param ->
                 new SimpleObjectProperty<>(param.getValue().getEnabled() == null ? "否" : param.getValue().getEnabled()? "是":"否")
         );

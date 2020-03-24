@@ -1,5 +1,6 @@
 package com.shunyi.autoparts.ui.system;
 
+import com.shunyi.autoparts.ui.common.Constants;
 import com.shunyi.autoparts.ui.common.Env;
 import com.shunyi.autoparts.ui.common.GoogleJson;
 import com.shunyi.autoparts.ui.common.HttpClient;
@@ -14,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -159,12 +161,8 @@ public class EditUserController {
     private void creatingUser() {
         //新建用户与店铺关系
         String encryptedPassword = encoder.encode(txtPassword.getText());
-//        User createdUser = new User(txtUserName.getText(), encryptedPassword, boxEnabled.isSelected());
-        User createdUser = new User();
-        createdUser.setCreator(Env.getInstance().getStringValue(Env.CURRENT_USER));
-
+        User createdUser = new User(0L, txtUserName.getText(), "", "", "", "", "", encryptedPassword, boxEnabled.isSelected(), new HashSet<UserStoreMapping>(), new HashSet<UserRoleMapping>(), null, Env.getInstance().getStringValue(Env.CURRENT_USER), null, null, null, null, Constants.DELETE_FLAG_FALSE, null);
         String json = GoogleJson.GET().toJson(createdUser);
-
         try {
             String idStr = HttpClient.POST("/users", json);
             createdUser.setId(Long.valueOf(idStr));
@@ -286,10 +284,10 @@ public class EditUserController {
             String data = HttpClient.GET("/users");
             User[] users = GoogleJson.GET().fromJson(data, User[].class);
             for(User u : users) {
-                if(selectedUser != null && u.getId() == selectedUser.getId()) {
+                if(selectedUser != null && u.getId().equals(selectedUser.getId())) {
                     continue;
                 }
-                if(u.getUsername().equalsIgnoreCase(userName)) {
+                if(u.getUsername().equalsIgnoreCase(userName) || userName.equalsIgnoreCase("root")) {
                     return false;
                 }
             }
@@ -299,7 +297,6 @@ public class EditUserController {
         }
         return true;
     }
-
 
     /**
      *

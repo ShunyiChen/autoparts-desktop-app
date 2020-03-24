@@ -1,5 +1,7 @@
 package com.shunyi.autoparts.ui.system;
 
+import com.shunyi.autoparts.ui.common.Constants;
+import com.shunyi.autoparts.ui.common.Env;
 import com.shunyi.autoparts.ui.common.GoogleJson;
 import com.shunyi.autoparts.ui.common.HttpClient;
 import com.shunyi.autoparts.ui.common.vo.*;
@@ -11,7 +13,9 @@ import javafx.util.Callback;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 
@@ -143,8 +147,7 @@ public class EditRoleController {
 
     private void creatingRole() {
         //新建一个角色
-//        Role createdRole = new Role(txtName.getText(), txtDesc.getText());
-        Role createdRole = new Role();
+        Role createdRole = new Role(0L, txtName.getText(), txtDesc.getText(), new HashSet<UserRoleMapping>(), new HashSet<RolePermissionMapping>(), null, Env.getInstance().getStringValue(Env.CURRENT_USER), null, null, null, null, Constants.DELETE_FLAG_FALSE, null);
         String json = GoogleJson.GET().toJson(createdRole);
         //新建角色与用户关系
         try {
