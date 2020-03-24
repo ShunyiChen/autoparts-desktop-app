@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
@@ -11,8 +12,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.text.Font?>
 
-<?import javafx.scene.control.Separator?>
-<TabPane fx:id="tabPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="534.0" prefWidth="975.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.shunyi.autoparts.ui.system.MaintenanceController">
+<TabPane fx:id="tabPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="534.0" prefWidth="975.0" side="LEFT" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.shunyi.autoparts.ui.system.MaintenanceController">
   <tabs>
     <Tab text="用户管理">
          <content>
@@ -40,13 +40,13 @@
                                           <Font size="14.0" />
                                        </font>
                                     </Button>
-                                    <Separator/>
+                                    <Separator />
                                     <Button mnemonicParsing="false" onAction="#refreshUser" text="刷新">
                                         <font>
                                             <Font size="14.0" />
                                         </font>
                                     </Button>
-                                    <Separator/>
+                                    <Separator />
                                     <Button mnemonicParsing="false" onAction="#resetPassword" text="重置密码">
                                         <font>
                                             <Font size="14.0" />
@@ -58,7 +58,7 @@
                            <center>
                               <TableView fx:id="userTable" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                                 <columns>
-                                    <TableColumn fx:id="colUserId" prefWidth="75.0" text="ID" visible="false"/>
+                                    <TableColumn fx:id="colUserId" prefWidth="75.0" text="ID" visible="false" />
                                     <TableColumn fx:id="colUserName" prefWidth="175.0" text="用户名" />
                                     <TableColumn fx:id="colEnabled" prefWidth="75.0" text="是否已激活" />
                                     <TableColumn fx:id="colShops" prefWidth="175.0" text="访问店铺" />
@@ -77,7 +77,7 @@
                   <center>
                       <TableView fx:id="roleTable" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                           <columns>
-                              <TableColumn fx:id="colRoleId" prefWidth="75.0" text="ID" visible="false"/>
+                              <TableColumn fx:id="colRoleId" prefWidth="75.0" text="ID" visible="false" />
                               <TableColumn fx:id="colRoleName" prefWidth="175.0" text="角色名" />
                               <TableColumn fx:id="colRoleDesc" prefWidth="275.0" text="描述" />
                               <TableColumn fx:id="colUsers" prefWidth="175.0" text="用户" />
@@ -103,7 +103,7 @@
                                       <Font size="14.0" />
                                   </font>
                               </Button>
-                              <Separator/>
+                              <Separator />
                               <Button mnemonicParsing="false" onAction="#refreshRole" text="刷新">
                                   <font>
                                       <Font size="14.0" />
@@ -121,7 +121,7 @@
                   <center>
                       <TableView fx:id="permissionTable" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                           <columns>
-                              <TableColumn fx:id="colPermissionId" prefWidth="75.0" text="ID" visible="false"/>
+                              <TableColumn fx:id="colPermissionId" prefWidth="75.0" text="ID" visible="false" />
                               <TableColumn fx:id="colPermissionName" prefWidth="175.0" text="权限名" />
                               <TableColumn fx:id="colPermissionDesc" prefWidth="275.0" text="描述" />
                               <TableColumn fx:id="colPermissionCode" prefWidth="75.0" text="编码" />
@@ -137,7 +137,7 @@
                                       <Font size="14.0" />
                                   </font>
                               </Button>
-                              <Separator/>
+                              <Separator />
                               <Button mnemonicParsing="false" onAction="#refreshPermission" text="刷新">
                                   <font>
                                       <Font size="14.0" />
@@ -161,7 +161,7 @@
                            <center>
                               <TableView fx:id="vfsTable" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                                 <columns>
-                                    <TableColumn fx:id="colVFSId" prefWidth="75.0" text="ID" visible="false"/>
+                                    <TableColumn fx:id="colVFSId" prefWidth="75.0" text="ID" visible="false" />
                                     <TableColumn fx:id="colVFSName" prefWidth="275.0" text="名称" />
                                     <TableColumn fx:id="colVFSProtocol" prefWidth="75.0" text="协议" />
                                     <TableColumn fx:id="colVFSHost" prefWidth="275.0" text="主机地址" />
