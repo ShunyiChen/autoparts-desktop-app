@@ -145,4 +145,9 @@ public class Category {
     public void setDeleter(String deleter) {
         this.deleter = deleter;
     }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }

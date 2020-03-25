@@ -1,5 +1,7 @@
 package com.shunyi.autoparts.ui.products;
 
+import com.shunyi.autoparts.ui.common.Constants;
+import com.shunyi.autoparts.ui.common.Env;
 import com.shunyi.autoparts.ui.common.vo.Category;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -12,21 +14,21 @@ import javafx.util.Callback;
 
 /** 产品类目编辑器Controller */
 public class CategoryEditorController {
-    Stage subStage;
-    Category updatedCategory;
-    Callback<Category, Object> callback;
+    private Stage subStage;
+    private Category updatedCategory;
+    private Callback<Category, Object> callback;
     @FXML
-    Button btnOk;
+    private Button btnOk;
     @FXML
-    TextField txtName;
+    private TextField txtName;
 
     @FXML
-    void cancel(ActionEvent actionEvent) {
+    void cancel() {
         subStage.close();
     }
 
     @FXML
-    void ok(ActionEvent actionEvent) {
+    void ok() {
         if(txtName.getText().trim().equals("")) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
             alert.setHeaderText("名称不能为空");
@@ -36,6 +38,8 @@ public class CategoryEditorController {
         subStage.close();
         Category newCategory = new Category();
         newCategory.setName(txtName.getText());
+        newCategory.setCreator(Env.getInstance().getStringValue(Env.CURRENT_USER));
+        newCategory.setDeleteFlag(Constants.DELETE_FLAG_FALSE);
         callback.call(newCategory);
     }
 
@@ -44,7 +48,6 @@ public class CategoryEditorController {
         this.updatedCategory = updatedCategory;
         this.callback = callback;
         btnOk.setStyle(String.format("-fx-base: %s;", "rgb(63,81,181)"));
-
         if(updatedCategory != null) {
             txtName.setText(updatedCategory.getName());
         }

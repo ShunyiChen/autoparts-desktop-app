@@ -143,10 +143,9 @@ public class MainFrame extends BorderPane {
         ClickableItem productDetails = new ClickableItem(icons.car_door(), Constants.PRODUCT_DETAILS, new Callback() {
             @Override
             public Object call(Object param) {
-//                ProductManagement ProductManagement = new ProductManagement(application);
                 toolbar.setTitle(Constants.PRODUCT_DETAILS);
                 if(productDetailsTab == null) {
-                    productDetailsTab = new NewTab(Constants.PRODUCT_DETAILS, new ProductDetails());
+                    productDetailsTab = new NewTab(Constants.PRODUCT_DETAILS, new ProductDetails(application));
                 }
                 contentPane.addNewTab(productDetailsTab);
                 return null;

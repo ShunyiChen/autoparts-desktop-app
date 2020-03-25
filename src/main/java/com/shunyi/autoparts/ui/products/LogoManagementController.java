@@ -1,8 +1,6 @@
 package com.shunyi.autoparts.ui.products;
 
-import com.shunyi.autoparts.ui.common.GoogleJson;
-import com.shunyi.autoparts.ui.common.HttpClient;
-import com.shunyi.autoparts.ui.common.VFSClient;
+import com.shunyi.autoparts.ui.common.*;
 import com.shunyi.autoparts.ui.common.vo.BrandSeries;
 import com.shunyi.autoparts.ui.common.vo.Logo;
 import com.shunyi.autoparts.ui.common.vo.VFS;
@@ -69,9 +67,7 @@ public class LogoManagementController {
                         String path = "/logo/"+newFileName;
                         //上传文件到vfs
                         VFSClient.uploadSingleFile(selectedFile, defaultVFS, path);
-
-//                    Logo newLogo = new Logo(path, defaultVFS);
-                        Logo newLogo = new Logo();
+                        Logo newLogo = new Logo(0L, path, defaultVFS, null, Env.getInstance().getStringValue(Env.CURRENT_USER),null,null,null,null, Constants.DELETE_FLAG_FALSE,null);
                         String data = GoogleJson.GET().toJson(newLogo);
                         String logoId = HttpClient.POST("/logos", data);
                         newLogo.setId(Long.valueOf(logoId));
@@ -196,8 +192,6 @@ public class LogoManagementController {
             }
         });
     }
-
-
 
     public void prepare(Stage dialog, boolean isChooser, Callback<FlowPane, String> callback) {
         this.dialog = dialog;

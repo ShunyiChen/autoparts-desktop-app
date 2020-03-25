@@ -1,5 +1,6 @@
 package com.shunyi.autoparts.ui.products;
 
+import com.shunyi.autoparts.ui.common.Constants;
 import com.shunyi.autoparts.ui.common.GoogleJson;
 import com.shunyi.autoparts.ui.common.HttpClient;
 import com.shunyi.autoparts.ui.common.Sort;
@@ -51,7 +52,7 @@ public class AttributeManagementController {
     }
 
     private void initCategoryTree() {
-        TreeItem<Category> root = new TreeItem<>(new Category(0L, "全部类目",0L, true, null, null, null, null, null, null, false, null));
+        TreeItem<Category> root = new TreeItem<>(new Category(0L, "所有类目",-1L, Constants.PARENT_TRUE, null, null, null, null, null, null, Constants.DELETE_FLAG_FALSE, null));
         initTreeNodes(root);
         categoryTree.setRoot(root);
 

@@ -1,5 +1,6 @@
 package com.shunyi.autoparts.ui.products;
 
+import com.shunyi.autoparts.ui.common.Constants;
 import com.shunyi.autoparts.ui.common.GoogleJson;
 import com.shunyi.autoparts.ui.common.HttpClient;
 import com.shunyi.autoparts.ui.common.vo.Category;
@@ -91,8 +92,7 @@ public class CategoryChooserController {
         });
         btnChooser.setStyle(String.format("-fx-base: %s;", "rgb(63,81,181)"));
 
-//        Category category = new Category("全部类目",0L, true);
-        Category category = new Category();
+        Category category = new Category(0L,"所有类目",-1L, Constants.PARENT_TRUE, null, null, null, null, null, null, Constants.DELETE_FLAG_FALSE, null);
         TreeItem<Category> root = new TreeItem<Category>(category);
         treeView.setRoot(root);
         initTreeNodes(root);

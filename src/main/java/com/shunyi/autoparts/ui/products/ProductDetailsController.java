@@ -1,6 +1,7 @@
 package com.shunyi.autoparts.ui.products;
 
 import com.shunyi.autoparts.ui.MainApp;
+import com.shunyi.autoparts.ui.common.Constants;
 import com.shunyi.autoparts.ui.common.GoogleJson;
 import com.shunyi.autoparts.ui.common.NumberValidationUtils;
 import com.shunyi.autoparts.ui.common.HttpClient;
@@ -27,7 +28,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 /** 配件管理Controller */
-public class ProductManagementController {
+public class ProductDetailsController {
 
     private MainApp application;
 
@@ -707,7 +708,7 @@ public class ProductManagementController {
     }
 
     private void initTreeView() {
-        TreeItem<Category> root = new TreeItem<>(new Category(0L, "全部类目",0L, true, null, null, null, null, null, null, false, null));
+        TreeItem<Category> root = new TreeItem<>(new Category(0L, "所有类目",-1L, Constants.PARENT_TRUE, null, null, null, null, null, null, Constants.DELETE_FLAG_FALSE, null));
         initTreeNodes(root);
         treeView.setRoot(root);
         treeView.setCellFactory(p -> new TextFieldTreeCell<>(new StringConverter<>(){

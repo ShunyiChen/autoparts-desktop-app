@@ -1,5 +1,7 @@
 package com.shunyi.autoparts.ui.products;
 
+import com.shunyi.autoparts.ui.common.Constants;
+import com.shunyi.autoparts.ui.common.Env;
 import com.shunyi.autoparts.ui.common.HttpClient;
 import com.shunyi.autoparts.ui.common.VFSClient;
 import com.shunyi.autoparts.ui.common.vo.BrandSeries;
@@ -163,9 +165,7 @@ public class BrandSeriesEditorController {
     @FXML
     private void continueAdd() {
         if(validation()) {
-//            BrandSeries newBrandSeries = new BrandSeries(selectedCategory, txtChineseName.getText(), txtEnglishName.getText(), txtDesc.getText(), choosedLogo, boxStatus.getValue(), txtOfficialWebSite.getText());
-
-            BrandSeries newBrandSeries = new BrandSeries();
+            BrandSeries newBrandSeries = new BrandSeries(0L, selectedCategory, txtChineseName.getText(), txtEnglishName.getText(), txtDesc.getText(), choosedLogo, boxStatus.getValue(), txtOfficialWebSite.getText(), null, Env.getInstance().getStringValue(Env.CURRENT_USER),null, null,null, null, Constants.DELETE_FLAG_FALSE, null);
             callback.call(newBrandSeries);
         }
     }
