@@ -1,5 +1,6 @@
 package com.shunyi.autoparts.ui.products;
 
+import com.shunyi.autoparts.ui.common.Env;
 import com.shunyi.autoparts.ui.common.vo.Car;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -36,6 +37,7 @@ public class CarEditorController {
             Car car = new Car();
             car.setCode(txtCode.getText());
             car.setModel(txtName.getText());
+            car.setUpdater(Env.getInstance().getStringValue(Env.CURRENT_USER));
             callback.call(car);
         }
     }
@@ -46,6 +48,7 @@ public class CarEditorController {
             Car car = new Car();
             car.setCode(txtCode.getText());
             car.setModel(txtName.getText());
+            car.setCreator(Env.getInstance().currentUser());
             callback.call(car);
         }
     }

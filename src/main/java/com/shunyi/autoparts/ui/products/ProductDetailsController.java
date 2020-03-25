@@ -47,7 +47,7 @@ public class ProductDetailsController {
     @FXML
     private TextField txtImported;
     @FXML
-    private TextField txtPlace;
+    private TextField txtOrigin;
     @FXML
     private TextField txtCar;
     @FXML
@@ -93,7 +93,7 @@ public class ProductDetailsController {
         }
         condition.setUnit(txtUnit.getText());
         condition.setImported(txtImported.getText());
-        condition.setOrigin(txtPlace.getText());
+        condition.setOrigin(txtOrigin.getText());
 
         String json = GoogleJson.GET().toJson(condition);
         String data = null;
@@ -115,7 +115,7 @@ public class ProductDetailsController {
         txtPrice.setText("");
         txtUnit.setText("");
         txtImported.setText("");
-        txtPlace.setText("");
+        txtOrigin.setText("");
         txtCar.setText("");
     }
 

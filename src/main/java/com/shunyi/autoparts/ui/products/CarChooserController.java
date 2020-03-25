@@ -1,6 +1,8 @@
 package com.shunyi.autoparts.ui.products;
 
 import com.google.gson.Gson;
+import com.shunyi.autoparts.ui.common.Constants;
+import com.shunyi.autoparts.ui.common.Env;
 import com.shunyi.autoparts.ui.common.GoogleJson;
 import com.shunyi.autoparts.ui.common.HttpClient;
 import com.shunyi.autoparts.ui.common.vo.Car;
@@ -20,7 +22,6 @@ import java.io.IOException;
 
 /** 车辆类目选择器Controller */
 public class CarChooserController {
-
     @FXML
     private Button btnChooser;
     @FXML
@@ -86,7 +87,7 @@ public class CarChooserController {
         }
     }
     
-    void newCar() {
+    private void newCar() {
         TreeItem<Car> parent = treeView.getSelectionModel().getSelectedItem();
         if(parent == null) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
@@ -112,7 +113,7 @@ public class CarChooserController {
         openCarEditor(callback, null);
     }
 
-    void updateCar() {
+    private void updateCar() {
         TreeItem<Car> selected = treeView.getSelectionModel().getSelectedItem();
         if(selected == null) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
@@ -143,7 +144,7 @@ public class CarChooserController {
         openCarEditor(callback, selected.getValue());
     }
 
-    void openCarEditor(Callback<Car, Object> callback, Car updatedCar) {
+    private void openCarEditor(Callback<Car, Object> callback, Car updatedCar) {
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource(
                         "/fxml/products/car_editor.fxml"
@@ -169,7 +170,7 @@ public class CarChooserController {
         subStage.show();
     }
 
-    void removeCar() {
+    private void removeCar() {
         TreeItem<Car> selected = treeView.getSelectionModel().getSelectedItem();
         if(selected == null) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
@@ -201,7 +202,7 @@ public class CarChooserController {
         initTreeContextMenu();
     }
     
-    void initTreeView() {
+    private void initTreeView() {
         treeView.setEditable(false);
         treeView.setOnMouseClicked(event -> {
             if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2){
@@ -240,9 +241,7 @@ public class CarChooserController {
 //        });
         
         btnChooser.setStyle(String.format("-fx-base: %s;", "rgb(63,81,181)"));
-
-//        Car car = new Car("","全部车型类目",0L, true);
-        Car car = new Car();
+        Car car = new Car(0L, "All","所有车型", -1L, Constants.PARENT_TRUE, null, Env.getInstance().getStringValue(Env.CURRENT_USER), null, null, null, null, Constants.DELETE_FLAG_FALSE, null);
         TreeItem<Car> root = new TreeItem<Car>(car);
         treeView.setRoot(root);
         initTreeNodes(root);
@@ -254,9 +253,9 @@ public class CarChooserController {
 
     void initTreeContextMenu() {
         ContextMenu menu = new ContextMenu();
-        MenuItem itemNew = new MenuItem("新建车型类目");
-        MenuItem itemUpdate = new MenuItem("更改");
-        MenuItem itemRM = new MenuItem("删除");
+        MenuItem itemNew = new MenuItem("新建车型");
+        MenuItem itemUpdate = new MenuItem("更 改");
+        MenuItem itemRM = new MenuItem("删 除");
         MenuItem itemRN = new MenuItem("重命名");
         menu.getItems().addAll(itemNew, itemUpdate, itemRM, new SeparatorMenuItem(), itemRN);
         treeView.setEditable(true);

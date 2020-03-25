@@ -39,4 +39,8 @@ public class Env {
     public Object lookup(String name) {
         return environment.get(name);
     }
+
+    public String currentUser() {
+        return this.getStringValue(CURRENT_USER);
+    }
 }

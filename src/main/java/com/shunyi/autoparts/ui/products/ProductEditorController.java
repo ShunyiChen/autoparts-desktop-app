@@ -1,8 +1,6 @@
 package com.shunyi.autoparts.ui.products;
 
-import com.shunyi.autoparts.ui.common.GoogleJson;
-import com.shunyi.autoparts.ui.common.NumberValidationUtils;
-import com.shunyi.autoparts.ui.common.HttpClient;
+import com.shunyi.autoparts.ui.common.*;
 import com.shunyi.autoparts.ui.common.vo.BrandSeries;
 import com.shunyi.autoparts.ui.common.vo.Car;
 import com.shunyi.autoparts.ui.common.vo.Category;
@@ -24,12 +22,12 @@ import java.util.Arrays;
 
 /** 产品编辑器Controller */
 public class ProductEditorController {
-    Stage dialog;
-    Product updatedProduct;
-    Callback<Product, Object> callback;
-    Car selectedCar;
-    Category selectedCategory;
-    BrandSeries selectedBrand;
+    private Stage dialog;
+    private Product updatedProduct;
+    private Callback<Product, Object> callback;
+    private Car selectedCar;
+    private Category selectedCategory;
+    private BrandSeries selectedBrand;
 
     @FXML
     Button btnSaveAndClose;
@@ -50,9 +48,9 @@ public class ProductEditorController {
     @FXML
     TextField txtCar;
     @FXML
-    TextField txtPlace;
+    TextField txtOrigin;
     @FXML
-    TextArea txtOthers;
+    TextArea txtNotes;
 
     @FXML
     void choose(ActionEvent actionEvent) {
@@ -87,70 +85,32 @@ public class ProductEditorController {
     }
 
     @FXML
-    void cancel(ActionEvent actionEvent) {
+    private void cancel(ActionEvent actionEvent) {
         dialog.close();
     }
 
     @FXML
-    void saveAndClose(ActionEvent actionEvent) {
+    private void saveAndClose(ActionEvent actionEvent) {
         if(validate()) {
             dialog.close();
-            BigDecimal price = new BigDecimal(Double.valueOf(txtPrice.getText())).setScale(2, RoundingMode.HALF_UP);
-            Product newProduct = new Product();
-            newProduct.setCode(txtCode.getText());
-
-//                    0L,
-//                    txtCode.getText(),
-//                    txtName.getText(),
-//                    boxBrand.getValue(),
-//                    selectedCar,
-//                    txtUnit.getText(),
-//                    boxImported.getValue(),
-//                    txtPlace.getText(),
-//                    price,
-//                    txtOthers.getText(),
-//                    null, null, null, null,null, null, false, null);
+            BigDecimal listPrice;
+            listPrice = new BigDecimal(Double.valueOf(txtPrice.getText())).setScale(2, RoundingMode.HALF_UP);
+            Product newProduct = new Product(0L, txtCode.getText(), txtName.getText(), boxBrand.getValue(), selectedCar, txtUnit.getText(), listPrice, boxImported.getValue(), txtOrigin.getText(), txtNotes.getText(), null, Env.getInstance().getStringValue(Env.CURRENT_USER),null,null,null,null, Constants.DELETE_FLAG_FALSE,null);
             callback.call(newProduct);
         }
     }
-
-
-    /**
-     *  this.id = id;
-     *         this.code = code;
-     *         this.name = name;
-     *         this.brandSeries = brandSeries;
-     *         this.car = car;
-     *         this.unit = unit;
-     *         this.listPrice = listPrice;
-     *         this.imported = imported;
-     *         this.origin = origin;
-     *         this.notes = notes;
-     *         this.dateCreated = dateCreated;
-     *         this.creator = creator;
-     *         this.dateUpdated = dateUpdated;
-     *         this.updater = updater;
-     *         this.updatedCount = updatedCount;
-     *         this.dateDeleted = dateDeleted;
-     *         this.deleteFlag = deleteFlag;
-     *         this.deleter = deleter;
-     */
-
 
     @FXML
-    void continueAdd(ActionEvent actionEvent) {
+    private void continueAdd(ActionEvent actionEvent) {
         if(validate()) {
-            BigDecimal price = new BigDecimal(Double.valueOf(txtPrice.getText())).setScale(2, RoundingMode.HALF_UP);
-            Product newProduct = new Product();
-//                    txtCode.getText(),
-//                    txtName.getText(),
-//                    boxBrand.getValue(),
-//                    selectedCar, txtUnit.getText(), boxImported.getValue(), txtPlace.getText(), price, txtOthers.getText());
+            BigDecimal listPrice;
+            listPrice = new BigDecimal(Double.valueOf(txtPrice.getText())).setScale(2, RoundingMode.HALF_UP);
+            Product newProduct = new Product(0L, txtCode.getText(), txtName.getText(), boxBrand.getValue(), selectedCar, txtUnit.getText(), listPrice, boxImported.getValue(), txtOrigin.getText(), txtNotes.getText(), null, Env.getInstance().getStringValue(Env.CURRENT_USER),null,null,null,null, Constants.DELETE_FLAG_FALSE,null);
             callback.call(newProduct);
         }
     }
 
-    boolean validate() {
+    private boolean validate() {
         if(txtCode.getText().trim().equals("")) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
             alert.setHeaderText("编码不能为空");
@@ -210,8 +170,8 @@ public class ProductEditorController {
             boxImported.setValue(updatedProduct.getImported());
             txtCar.setText(updatedProduct.getCar().getModel());
             selectedCar = updatedProduct.getCar();
-            txtPlace.setText(updatedProduct.getOrigin());
-            txtOthers.setText(updatedProduct.getNotes());
+            txtOrigin.setText(updatedProduct.getOrigin());
+            txtNotes.setText(updatedProduct.getNotes());
 
             btnContinueAdd.setVisible(false);
         }

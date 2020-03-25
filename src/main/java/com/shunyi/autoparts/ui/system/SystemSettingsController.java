@@ -37,6 +37,9 @@ public class SystemSettingsController {
     private MenuItem itemNew = new MenuItem("新建类目");
     private MenuItem itemRM = new MenuItem("删除类目");
     private MenuItem itemRN = new MenuItem("重命名");
+    private Map<Long, String> storeMap;
+    private Map<Long, String> roleMap;
+
     @FXML
     private TreeView<Store> storeTree;
     @FXML
@@ -224,11 +227,13 @@ public class SystemSettingsController {
             userTable.getItems().remove(deleteUser);
             userTable.refresh();
         });
-
     }
 
     @FXML
     void refreshUser() {
+         storeMap = getAllStoresMap();
+         roleMap = getAllRolesMap();
+
         TreeItem<Store> item = storeTree.getSelectionModel().getSelectedItem();
         userTable.getItems().clear();
         String json = null;
@@ -239,6 +244,7 @@ public class SystemSettingsController {
         }
         User[] users = GoogleJson.GET().fromJson(json, User[].class);
         userTable.getItems().addAll(users);
+        userTable.refresh();
     }
 
     @FXML
@@ -314,8 +320,9 @@ public class SystemSettingsController {
 
     private void initUserTable() {
         userTable.setId("my-table");
-        Map<Long, String> storeMap = getAllStoresMap();
-        Map<Long, String> roleMap = getAllRolesMap();
+        storeMap = getAllStoresMap();
+        roleMap = getAllRolesMap();
+
         colUserId.setCellValueFactory(new PropertyValueFactory<User, String>("id"));
         colUserName.setCellValueFactory(new PropertyValueFactory<User, String>("username"));
         colChineseName.setCellValueFactory(new PropertyValueFactory<User, String>("chineseName"));
