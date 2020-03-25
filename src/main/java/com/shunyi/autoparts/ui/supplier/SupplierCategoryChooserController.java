@@ -1,5 +1,7 @@
 package com.shunyi.autoparts.ui.supplier;
 
+import com.shunyi.autoparts.ui.common.Constants;
+import com.shunyi.autoparts.ui.common.Env;
 import com.shunyi.autoparts.ui.common.GoogleJson;
 import com.shunyi.autoparts.ui.common.HttpClient;
 import com.shunyi.autoparts.ui.common.vo.SupplierCategory;
@@ -78,6 +80,12 @@ public class ChooserCategoryController {
         }
     }
 
+    /**
+     *
+     * @param subStage
+     * @param selectedCategory
+     * @param callback
+     */
     public void prepare(Stage subStage, SupplierCategory selectedCategory, Callback callback) {
         this.subStage = subStage;
         this.selectedCategory = selectedCategory;
@@ -90,9 +98,7 @@ public class ChooserCategoryController {
             }
         });
         btnChooser.setStyle(String.format("-fx-base: %s;", "rgb(63,81,181)"));
-
-//        SupplierCategory sc = new SupplierCategory("全部供应商",0, true);
-        SupplierCategory sc = new SupplierCategory();
+        SupplierCategory sc = new SupplierCategory(0L, "所有供应商", -1L, Constants.PARENT_TRUE, null, Env.getInstance().currentUser(), null, null, null, null, Constants.DELETE_FLAG_FALSE, null);
         TreeItem<SupplierCategory> root = new TreeItem<SupplierCategory>(sc);
         treeView.setRoot(root);
         initTreeNodes(root);
