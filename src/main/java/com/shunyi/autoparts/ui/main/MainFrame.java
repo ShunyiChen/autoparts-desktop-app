@@ -119,10 +119,9 @@ public class MainFrame extends BorderPane {
         ClickableItem supplierDetails = new ClickableItem(icons.account_multiple(), Constants.SUPPLIER_DETAILS, new Callback() {
             @Override
             public Object call(Object param) {
-//                SupplierManagement supplierManagement = new SupplierManagement(application);
                 toolbar.setTitle(Constants.SUPPLIER_DETAILS);
                 if(supplierDetailsTab == null) {
-                    supplierDetailsTab = new NewTab(Constants.SUPPLIER_DETAILS, new SupplierDetails());
+                    supplierDetailsTab = new NewTab(Constants.SUPPLIER_DETAILS, new SupplierDetails(application));
                 }
                 contentPane.addNewTab(supplierDetailsTab);
                 return null;
@@ -131,7 +130,6 @@ public class MainFrame extends BorderPane {
         ClickableItem inventoryDetails = new ClickableItem(icons.warehouse(), Constants.INVENTORY_DETAILS, new Callback() {
             @Override
             public Object call(Object param) {
-//                StockManagement stockManagement = new StockManagement(application);
                 toolbar.setTitle(Constants.INVENTORY_DETAILS);
                 if(inventoryDetailsTab == null) {
                     inventoryDetailsTab = new NewTab(Constants.INVENTORY_DETAILS, new InventoryDetails());

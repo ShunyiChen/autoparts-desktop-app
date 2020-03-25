@@ -14,7 +14,7 @@ import javafx.util.Callback;
 import java.io.IOException;
 
 /** 供应商类目选择器Controller */
-public class ChooserCategoryController {
+public class SupplierCategoryChooserController {
 
     @FXML
     private Button btnChooser;

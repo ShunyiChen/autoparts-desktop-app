@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Separator?>
@@ -72,17 +73,17 @@
                   <Font size="14.0" />
                </font>
             </Button>
-            <Button mnemonicParsing="false" text="复制行数据">
+            <Button mnemonicParsing="false" text="行复制">
                 <font>
                     <Font size="14.0" />
                 </font>
             </Button>
-            <Button mnemonicParsing="false" text="创建SKU">
+            <Button mnemonicParsing="false" text="产品SKU">
                 <font>
                     <Font size="14.0" />
                 </font>
             </Button>
-            <Button mnemonicParsing="false" text="基本属性">
+            <Button mnemonicParsing="false" text="产品属性">
                 <font>
                     <Font size="14.0" />
                 </font>
@@ -104,16 +105,21 @@
                   <TableView fx:id="tableView" prefHeight="505.0" prefWidth="907.0" BorderPane.alignment="CENTER">
                     <columns>
                         <TableColumn fx:id="colCode" prefWidth="150.0" text="配件编码" />
+                        <TableColumn fx:id="colBarCode" prefWidth="150.0" text="条形码" />
                         <TableColumn fx:id="colName" prefWidth="150.0" text="配件名称" />
                         <TableColumn fx:id="colBrand" prefWidth="120.0" text="品牌" />
-                        <TableColumn fx:id="colPrice" prefWidth="120.0" text="列表价" />
-                        <TableColumn fx:id="colUnit" prefWidth="75.0" text="单位" />
-                        <TableColumn fx:id="colImported" prefWidth="75.0" text="进口" />
-                        <TableColumn fx:id="colPlace" prefWidth="75.0" text="产地" />
-                        <TableColumn fx:id="colCar" prefWidth="90.0" text="车型" />
-                        <TableColumn fx:id="colDateCreated" prefWidth="200.0" text="创建日期" />
-                        <TableColumn fx:id="colOther" prefWidth="150.0" text="其他" />
+                        <TableColumn fx:id="colCar" prefWidth="150.0" text="通用车型" />
+                        <TableColumn fx:id="colSupplier" prefWidth="150.0" text="供应商" />
+                        <TableColumn fx:id="colUnit" minWidth="0.0" prefWidth="0.0" text="单位" />
+                        <TableColumn fx:id="colPrice" prefWidth="150.0" text="列表价" />
+                        <TableColumn fx:id="colImported" prefWidth="46.0" text="进口" />
+                        <TableColumn fx:id="colOrigin" prefWidth="75.0" text="原产地" />
+                        <TableColumn fx:id="colNotes" prefWidth="150.0" text="备注" />
+                        <TableColumn fx:id="colDateCreated" prefWidth="175.0" text="创建日期" />
                     </columns>
+                     <BorderPane.margin>
+                        <Insets bottom="30.0" />
+                     </BorderPane.margin>
                   </TableView>
                </center>
                <top>
@@ -144,17 +150,17 @@
                                     <Font size="14.0" />
                                  </font>
                               </TextField>
-                              <Label alignment="CENTER" prefHeight="19.0" prefWidth="59.0" text="品牌:">
+                              <Label alignment="CENTER" prefHeight="19.0" prefWidth="59.0" text="条形码:">
                                  <font>
                                     <Font size="14.0" />
                                  </font>
                               </Label>
-                              <TextField fx:id="txtBrand" prefWidth="150.0">
+                              <TextField fx:id="txtBarCode" prefWidth="150.0">
                                  <font>
                                     <Font size="14.0" />
                                  </font>
                               </TextField>
-                              <Label alignment="CENTER" layoutX="455.0" layoutY="19.0" prefHeight="19.0" prefWidth="59.0" text="价格:">
+                              <Label alignment="CENTER" layoutX="455.0" layoutY="19.0" prefHeight="19.0" prefWidth="59.0" text="列表价:">
                                  <font>
                                     <Font size="14.0" />
                                  </font>
@@ -164,12 +170,12 @@
                                     <Font size="14.0" />
                                  </font>
                               </TextField>
-                              <Button mnemonicParsing="false" onAction="#search" prefHeight="29.0" prefWidth="74.0" text="查   询">
+                              <Button mnemonicParsing="false" onAction="#search" prefHeight="29.0" text="查  询">
                                  <font>
                                     <Font size="14.0" />
                                  </font>
                               </Button>
-                              <Button mnemonicParsing="false" onAction="#clear" prefHeight="29.0" prefWidth="74.0" text="清   空">
+                              <Button mnemonicParsing="false" onAction="#clear" prefHeight="29.0" text="清  空">
                                  <font>
                                     <Font size="14.0" />
                                  </font>
@@ -178,7 +184,7 @@
                         </FlowPane>
                         <FlowPane alignment="CENTER_LEFT" hgap="5.0" layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="907.0">
                            <children>
-                              <Label alignment="CENTER" prefHeight="19.0" prefWidth="60.0" text="单位:">
+                              <Label alignment="CENTER" prefHeight="19.0" prefWidth="60.0" text="供应商:">
                                  <font>
                                     <Font size="14.0" />
                                  </font>
@@ -186,32 +192,28 @@
                                     <Insets left="5.0" />
                                  </FlowPane.margin>
                               </Label>
-                              <TextField fx:id="txtUnit" prefWidth="150.0">
+                              <TextField fx:id="txtSupplier" prefWidth="150.0">
                                  <font>
                                     <Font size="14.0" />
                                  </font>
                               </TextField>
-                              <Label alignment="CENTER" prefHeight="19.0" prefWidth="60.0" text="进口:">
+                              <Label alignment="CENTER" prefHeight="19.0" prefWidth="60.0" text="进  口:">
                                  <font>
                                     <Font size="14.0" />
                                  </font>
                               </Label>
-                              <TextField fx:id="txtImported" prefWidth="150.0">
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font>
-                              </TextField>
-                              <Label alignment="CENTER" prefHeight="19.0" prefWidth="59.0" text="产地:">
+                              <ComboBox fx:id="comboImport" prefHeight="28.0" prefWidth="150.0" />
+                              <Label alignment="CENTER" prefHeight="19.0" prefWidth="59.0" text="原产地:">
                                  <font>
                                     <Font size="14.0" />
                                  </font>
                               </Label>
-                              <TextField fx:id="txtPlace" prefWidth="150.0">
+                              <TextField fx:id="txtOrigin" prefWidth="150.0">
                                  <font>
                                     <Font size="14.0" />
                                  </font>
                               </TextField>
-                              <Label alignment="CENTER" layoutX="455.0" layoutY="19.0" prefHeight="19.0" prefWidth="59.0" text="车型:">
+                              <Label alignment="CENTER" layoutX="455.0" layoutY="19.0" prefHeight="19.0" prefWidth="59.0" text="车  型:">
                                  <font>
                                     <Font size="14.0" />
                                  </font>

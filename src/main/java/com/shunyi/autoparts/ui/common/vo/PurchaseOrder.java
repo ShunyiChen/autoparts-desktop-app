@@ -31,8 +31,8 @@ public class PurchaseOrder {
     private User operator;
     /** 经办人 */
     private User verifier;
-    /** 结算方式 */
-    private Settlement settlement;
+//    /** 结算方式 */
+//    private Settlement settlement;
     /** 货款金额 */
     private BigDecimal amountA;
     /** 代垫费用 */
@@ -66,7 +66,7 @@ public class PurchaseOrder {
 
     public PurchaseOrder() {}
 
-    public PurchaseOrder(Long id, String orderId, Date orderDate, Warehouse warehouse, Supplier supplier, String invoiceType, String invoiceNo, BigDecimal freight, String notes, User operator, User verifier, Settlement settlement, BigDecimal amountA, BigDecimal amountB, BigDecimal amountC, BigDecimal amountD, BigDecimal amountE, String account, String status, Date dateCreated, String creator, Date dateUpdated, String updater, Integer updatedCount, Date dateDeleted, Boolean deleteFlag, String deleter) {
+    public PurchaseOrder(Long id, String orderId, Date orderDate, Warehouse warehouse, Supplier supplier, String invoiceType, String invoiceNo, BigDecimal freight, String notes, User operator, User verifier,  BigDecimal amountA, BigDecimal amountB, BigDecimal amountC, BigDecimal amountD, BigDecimal amountE, String account, String status, Date dateCreated, String creator, Date dateUpdated, String updater, Integer updatedCount, Date dateDeleted, Boolean deleteFlag, String deleter) {
         this.id = id;
         this.orderId = orderId;
         this.orderDate = orderDate;
@@ -78,7 +78,7 @@ public class PurchaseOrder {
         this.notes = notes;
         this.operator = operator;
         this.verifier = verifier;
-        this.settlement = settlement;
+//        this.settlement = settlement;
         this.amountA = amountA;
         this.amountB = amountB;
         this.amountC = amountC;
@@ -182,14 +182,6 @@ public class PurchaseOrder {
 
     public void setVerifier(User verifier) {
         this.verifier = verifier;
-    }
-
-    public Settlement getSettlement() {
-        return settlement;
-    }
-
-    public void setSettlement(Settlement settlement) {
-        this.settlement = settlement;
     }
 
     public BigDecimal getAmountA() {

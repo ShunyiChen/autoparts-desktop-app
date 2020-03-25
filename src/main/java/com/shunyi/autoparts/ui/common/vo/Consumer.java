@@ -3,37 +3,25 @@ package com.shunyi.autoparts.ui.common.vo;
 import java.util.Date;
 
 /**
- * @description 供应商
+ * @description 客户
  * @author Shunyi Chen
  * @date 2020/3/23
  */
-public class Supplier implements SupplierIF{
+public class Consumer {
     /** 自增ID */
     private Long id;
-    /** 供应商编码 */
+    /** 客户编码 */
     private String code;
-    /** 供应商单位名称 */
+    /** 客户单位名称 */
     private String name;
     /** 联系人 */
     private String contact;
-    /** 电话1 */
-    private String phone1;
-    /** 电话2 */
-    private String phone2;
-    /** 电子邮件 */
+    /** 电话好 */
+    private String phone;
+    /** Email */
     private String email;
-    /** 地址 */
-    private String address;
-    /** 邮编 */
-    private String postCode;
-    /** 等级 */
-    private Grade grade;
-    /** 付款方式 */
-    private Payment payment;
-    /** 备注 */
-    private String notes;
-    /** 供应商类目 */
-    private SupplierCategory category;
+    /** 车牌号 */
+    private String licensePlate;
     /** 创建时间 */
     private Date dateCreated;
     /** 创建者 */
@@ -51,22 +39,16 @@ public class Supplier implements SupplierIF{
     /** 删除者 */
     private String deleter;
 
-    public Supplier() {}
+    public Consumer() {}
 
-    public Supplier(Long id, String code, String name, String contact, String phone1, String phone2, String email, String address, String postCode, Grade grade, Payment payment, String notes, SupplierCategory category, Date dateCreated, String creator, Date dateUpdated, String updater, Integer updatedCount, Date dateDeleted, Boolean deleteFlag, String deleter) {
+    public Consumer(Long id, String code, String name, String contact, String phone, String email, String licensePlate, Date dateCreated, String creator, Date dateUpdated, String updater, Integer updatedCount, Date dateDeleted, Boolean deleteFlag, String deleter) {
         this.id = id;
         this.code = code;
         this.name = name;
         this.contact = contact;
-        this.phone1 = phone1;
-        this.phone2 = phone2;
+        this.phone = phone;
         this.email = email;
-        this.address = address;
-        this.postCode = postCode;
-        this.grade = grade;
-        this.payment = payment;
-        this.notes = notes;
-        this.category = category;
+        this.licensePlate = licensePlate;
         this.dateCreated = dateCreated;
         this.creator = creator;
         this.dateUpdated = dateUpdated;
@@ -77,7 +59,6 @@ public class Supplier implements SupplierIF{
         this.deleter = deleter;
     }
 
-    @Override
     public Long getId() {
         return id;
     }
@@ -110,20 +91,12 @@ public class Supplier implements SupplierIF{
         this.contact = contact;
     }
 
-    public String getPhone1() {
-        return phone1;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setPhone1(String phone1) {
-        this.phone1 = phone1;
-    }
-
-    public String getPhone2() {
-        return phone2;
-    }
-
-    public void setPhone2(String phone2) {
-        this.phone2 = phone2;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public String getEmail() {
@@ -134,52 +107,12 @@ public class Supplier implements SupplierIF{
         this.email = email;
     }
 
-    public String getAddress() {
-        return address;
+    public String getLicensePlate() {
+        return licensePlate;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getPostCode() {
-        return postCode;
-    }
-
-    public void setPostCode(String postCode) {
-        this.postCode = postCode;
-    }
-
-    public Grade getGrade() {
-        return grade;
-    }
-
-    public void setGrade(Grade grade) {
-        this.grade = grade;
-    }
-
-    public Payment getPayment() {
-        return payment;
-    }
-
-    public void setPayment(Payment payment) {
-        this.payment = payment;
-    }
-
-    public String getNotes() {
-        return notes;
-    }
-
-    public void setNotes(String notes) {
-        this.notes = notes;
-    }
-
-    public SupplierCategory getCategory() {
-        return category;
-    }
-
-    public void setCategory(SupplierCategory category) {
-        this.category = category;
+    public void setLicensePlate(String licensePlate) {
+        this.licensePlate = licensePlate;
     }
 
     public Date getDateCreated() {
@@ -244,10 +177,5 @@ public class Supplier implements SupplierIF{
 
     public void setDeleter(String deleter) {
         this.deleter = deleter;
-    }
-
-    @Override
-    public String toString() {
-        return name;
     }
 }

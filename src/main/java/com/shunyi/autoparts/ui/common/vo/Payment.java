@@ -1,38 +1,19 @@
 package com.shunyi.autoparts.ui.common.vo;
 
-import java.math.BigDecimal;
 import java.util.Date;
 
 /**
- * @description 产品（汽车配件）
+ * @description 支付方式
  * @author Shunyi Chen
  * @date 2020/3/23
  */
-public class Product {
+public class Payment {
     /** 自增ID */
     private Long id;
-    /** 产品编码 */
+    /** 支付编码 */
     private String code;
-    /** 条形码 */
-    private String barCode;
-    /** 产品名称 */
+    /** 支付方式 */
     private String name;
-    /** 品牌 */
-    private BrandSeries brandSeries;
-    /** 适合车型 */
-    private Car car;
-    /** 供应商 */
-    private Supplier supplier;
-    /** 单位 */
-    private String unit;
-    /** 列表价 */
-    private BigDecimal listPrice;
-    /** 进口 */
-    private String imported;
-    /** 原产地 */
-    private String origin;
-    /** 备注 */
-    private String notes;
     /** 创建时间 */
     private Date dateCreated;
     /** 创建者 */
@@ -50,21 +31,12 @@ public class Product {
     /** 删除者 */
     private String deleter;
 
-    public Product() {}
+    public Payment() {}
 
-    public Product(Long id, String code, String barCode, String name, BrandSeries brandSeries, Car car, Supplier supplier, String unit, BigDecimal listPrice, String imported, String origin, String notes, Date dateCreated, String creator, Date dateUpdated, String updater, Integer updatedCount, Date dateDeleted, Boolean deleteFlag, String deleter) {
+    public Payment(Long id, String code, String name, Date dateCreated, String creator, Date dateUpdated, String updater, Integer updatedCount, Date dateDeleted, Boolean deleteFlag, String deleter) {
         this.id = id;
         this.code = code;
-        this.barCode = barCode;
         this.name = name;
-        this.brandSeries = brandSeries;
-        this.car = car;
-        this.supplier = supplier;
-        this.unit = unit;
-        this.listPrice = listPrice;
-        this.imported = imported;
-        this.origin = origin;
-        this.notes = notes;
         this.dateCreated = dateCreated;
         this.creator = creator;
         this.dateUpdated = dateUpdated;
@@ -97,78 +69,6 @@ public class Product {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public BrandSeries getBrandSeries() {
-        return brandSeries;
-    }
-
-    public void setBrandSeries(BrandSeries brandSeries) {
-        this.brandSeries = brandSeries;
-    }
-
-    public Car getCar() {
-        return car;
-    }
-
-    public void setCar(Car car) {
-        this.car = car;
-    }
-
-    public String getBarCode() {
-        return barCode;
-    }
-
-    public void setBarCode(String barCode) {
-        this.barCode = barCode;
-    }
-
-    public Supplier getSupplier() {
-        return supplier;
-    }
-
-    public void setSupplier(Supplier supplier) {
-        this.supplier = supplier;
-    }
-
-    public String getUnit() {
-        return unit;
-    }
-
-    public void setUnit(String unit) {
-        this.unit = unit;
-    }
-
-    public BigDecimal getListPrice() {
-        return listPrice;
-    }
-
-    public void setListPrice(BigDecimal listPrice) {
-        this.listPrice = listPrice;
-    }
-
-    public String getImported() {
-        return imported;
-    }
-
-    public void setImported(String imported) {
-        this.imported = imported;
-    }
-
-    public String getOrigin() {
-        return origin;
-    }
-
-    public void setOrigin(String origin) {
-        this.origin = origin;
-    }
-
-    public String getNotes() {
-        return notes;
-    }
-
-    public void setNotes(String notes) {
-        this.notes = notes;
     }
 
     public Date getDateCreated() {

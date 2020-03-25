@@ -6,6 +6,7 @@ import com.shunyi.autoparts.ui.common.GoogleJson;
 import com.shunyi.autoparts.ui.common.NumberValidationUtils;
 import com.shunyi.autoparts.ui.common.HttpClient;
 import com.shunyi.autoparts.ui.common.vo.*;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -32,26 +33,26 @@ public class ProductDetailsController {
 
     private MainApp application;
 
-    private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
     @FXML
     private TextField txtCode;
     @FXML
     private TextField txtName;
     @FXML
-    private TextField txtBrand;
+    private TextField txtBarCode;
     @FXML
     private TextField txtPrice;
     @FXML
-    private TextField txtUnit;
+    private TextField txtSupplier;
     @FXML
-    private TextField txtImported;
+    private ComboBox<String> comboImport;
     @FXML
     private TextField txtOrigin;
     @FXML
     private TextField txtCar;
     @FXML
     private TableColumn colCode;
+    @FXML
+    private TableColumn colBarCode;
     @FXML
     private TableColumn colName;
     @FXML
@@ -65,11 +66,13 @@ public class ProductDetailsController {
     @FXML
     private TableColumn colCar;
     @FXML
-    private TableColumn colPlace;
+    private TableColumn colSupplier;
     @FXML
-    private TableColumn colDateCreated;
+    private TableColumn colOrigin;
     @FXML
-    private TableColumn colOther;
+    private TableColumn<Product, String> colDateCreated;
+    @FXML
+    private TableColumn colNotes;
     @FXML
     private TreeView<Category> treeView;
     @FXML
@@ -82,18 +85,20 @@ public class ProductDetailsController {
         Product condition = new Product();
         condition.setCode(txtCode.getText());
         condition.setName(txtName.getText());
-        BrandSeries brandSeries = new BrandSeries();
-        brandSeries.setChineseName(txtBrand.getText());
-        condition.setBrandSeries(brandSeries);
+        condition.setBarCode(txtBarCode.getText());
+        if(txtPrice.getText() != null && !txtPrice.getText().equals("")) {
+            if(NumberValidationUtils.isRealNumber(txtPrice.getText())) {
+                condition.setListPrice(new BigDecimal(txtPrice.getText()));
+            }
+        }
         Car car = new Car();
         car.setModel(txtCar.getText());
         condition.setCar(car);
-        if(!txtPrice.getText().equals("") && (NumberValidationUtils.isPositiveInteger(txtPrice.getText()) || NumberValidationUtils.isDecimal(txtPrice.getText()))) {
-            condition.setListPrice(BigDecimal.valueOf(Double.valueOf(txtPrice.getText())));
-        }
-        condition.setUnit(txtUnit.getText());
-        condition.setImported(txtImported.getText());
+        condition.setImported(comboImport.getValue());
         condition.setOrigin(txtOrigin.getText());
+        Supplier supplier = new Supplier();
+        supplier.setName(txtSupplier.getText());
+        condition.setSupplier(supplier);
 
         String json = GoogleJson.GET().toJson(condition);
         String data = null;
@@ -111,10 +116,10 @@ public class ProductDetailsController {
     private void clear() {
         txtCode.setText("");
         txtName.setText("");
-        txtBrand.setText("");
+        txtBarCode.setText("");
         txtPrice.setText("");
-        txtUnit.setText("");
-        txtImported.setText("");
+        txtSupplier.setText("");
+        comboImport.setValue(null);
         txtOrigin.setText("");
         txtCar.setText("");
     }
@@ -548,7 +553,7 @@ public class ProductDetailsController {
         Stage dialog = new Stage();
         BasicAttributesController controller = loader.getController();
         controller.prepare(dialog, selectedItem.getValue(), selectedRow);
-        dialog.setTitle("配件基本属性");
+        dialog.setTitle("产品属性");
         dialog.initOwner(application.getStage());
         dialog.setResizable(true);
         dialog.initModality(Modality.WINDOW_MODAL);
@@ -582,7 +587,7 @@ public class ProductDetailsController {
         Stage dialog = new Stage();
         SKUGeneratorController controller = loader.getController();
         controller.prepare(dialog, selectedProduct);
-        dialog.setTitle("生成SKU");
+        dialog.setTitle("产品SKU");
         dialog.initOwner(application.getStage());
         dialog.setMaximized(true);
         dialog.setScene(scene);
@@ -593,6 +598,8 @@ public class ProductDetailsController {
 
     public void prepare(MainApp application) {
         this.application = application;
+        initImportList();
+
         initTableView();
 
         initTreeView();
@@ -600,35 +607,32 @@ public class ProductDetailsController {
         initListView();
     }
 
+    private void initImportList() {
+        comboImport.getItems().addAll("", Constants.ORIGINAL, Constants.HOMEMADE);
+    }
+
     private void initTableView() {
+        tableView.setId("my-table");
         colCode.setCellValueFactory(new PropertyValueFactory<Product, String>("code"));
+        colBarCode.setCellValueFactory(new PropertyValueFactory<Product, String>("barCode"));
         colName.setCellValueFactory(new PropertyValueFactory<Product, String>("name"));
         colBrand.setCellValueFactory(new PropertyValueFactory<Product, String>("brandSeries"));
-        colPrice.setCellValueFactory(new PropertyValueFactory<Product, String>("priceExcludingTax"));
-        colUnit.setCellValueFactory(new PropertyValueFactory<Product, String>("unit"));
-        colImported.setCellValueFactory(new PropertyValueFactory<Product, String>("imported"));
         colCar.setCellValueFactory(new PropertyValueFactory<Product, String>("car"));
-        colPlace.setCellValueFactory(new PropertyValueFactory<Product, String>("placeOfOrigin"));
-        colDateCreated.setCellValueFactory(new PropertyValueFactory<Product, String>("dateCreated"));
-        colDateCreated.setCellFactory(column -> {
-            TableCell<Product, Date> cell = new TableCell<>() {
-                @Override
-                protected void updateItem(Date item, boolean empty) {
-                    super.updateItem(item, empty);
-                    if(empty) {
-                        setText(null);
-                    }
-                    else {
-                        if(item == null) {
-                            item = new Date();
-                        }
-                        setText(format.format(item));
-                    }
-                }
-            };
-            return cell;
+        colSupplier.setCellValueFactory(new PropertyValueFactory<Product, String>("supplier"));
+        colUnit.setCellValueFactory(new PropertyValueFactory<Product, String>("unit"));
+        colPrice.setCellValueFactory(new PropertyValueFactory<Product, String>("listPrice"));
+        colImported.setCellValueFactory(new PropertyValueFactory<Product, String>("imported"));
+        colOrigin.setCellValueFactory(new PropertyValueFactory<Product, String>("origin"));
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        colDateCreated.setCellValueFactory(param -> {
+            if(param.getValue().getDateCreated() == null) {
+                return new SimpleObjectProperty<>("");
+            } else {
+                return new SimpleObjectProperty<>(format.format(param.getValue().getDateCreated()));
+            }
         });
-        colOther.setCellValueFactory(new PropertyValueFactory<Product, String>("notes"));
+
+        colNotes.setCellValueFactory(new PropertyValueFactory<Product, String>("notes"));
         tableView.setOnMouseClicked((MouseEvent event) -> {
             if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2){
                  updateProduct();
@@ -636,9 +640,9 @@ public class ProductDetailsController {
         });
         ContextMenu menu = new ContextMenu();
 
-        MenuItem itemDuplicate = new MenuItem("复制行数据");
-        MenuItem itemProductSKU = new MenuItem("创建SKU");
-        MenuItem itemDefineProperties = new MenuItem("基本属性");
+        MenuItem itemDuplicate = new MenuItem("行复制");
+        MenuItem itemProductSKU = new MenuItem("产品SKU");
+        MenuItem itemDefineProperties = new MenuItem("产品属性");
 
         itemDefineProperties.setOnAction(e ->{
             openBasicAttributes();
@@ -650,7 +654,7 @@ public class ProductDetailsController {
             openProductSKU();
         });
 
-        menu.getItems().addAll(itemDuplicate, new SeparatorMenuItem(), itemProductSKU, itemDefineProperties);
+        menu.getItems().addAll(itemDuplicate, new SeparatorMenuItem(), itemProductSKU, new SeparatorMenuItem(), itemDefineProperties);
         tableView.addEventHandler(MouseEvent.MOUSE_CLICKED, t -> {
             if(t.getButton() == MouseButton.SECONDARY) {
                 menu.show(tableView, t.getScreenX(), t.getScreenY());

@@ -17,7 +17,6 @@ public class Constants {
     public static final String INVENTORY_DETAILS = "库存明细";
     public static final String PRODUCT_DETAILS = "配件明细";
     public static final String SYSTEM_SETTINGS = "系统设置";
-
     public static final Boolean DELETE_FLAG_TRUE = true;
     public static final Boolean DELETE_FLAG_FALSE = false;
     public static final String ROOT = "root";
@@ -25,4 +24,6 @@ public class Constants {
     public static final Boolean PARENT_FALSE = false;
     public static final Boolean VFS_MASTER_TRUE = true;
     public static final Boolean VFS_MASTER_FALSE = false;
+    public static final String HOMEMADE = "国产";
+    public static final String ORIGINAL  = "原厂";
 }

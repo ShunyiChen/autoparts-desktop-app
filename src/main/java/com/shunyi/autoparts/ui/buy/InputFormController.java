@@ -16,7 +16,7 @@ public class InputFormController {
     public void chooseSupplier(ActionEvent event) {
 //        FXMLLoader loader = new FXMLLoader(
 //                getClass().getResource(
-//                        "/fxml/supplier/supplier_management.fxml"
+//                        "/fxml/supplier/SupplierDetails.fxml"
 //                )
 //        );
 //        SplitPane root = null;
@@ -25,7 +25,7 @@ public class InputFormController {
 //        } catch (IOException e) {
 //            e.printStackTrace();
 //        }
-//        SupplierManagementController controller = loader.getController();
+//        SupplierDetailsController controller = loader.getController();
 //        controller.initTree();
 //        Scene scene = new Scene(root);
 //        Stage dialog = new Stage();

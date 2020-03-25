@@ -3,19 +3,17 @@ package com.shunyi.autoparts.ui.common.vo;
 import java.util.Date;
 
 /**
- * @description 供应商类目
+ * @description 信誉等级
  * @author Shunyi Chen
  * @date 2020/3/23
  */
-public class SupplierCategory implements SupplierIF {
+public class Grade {
     /** 自增ID */
     private Long id;
-    /** 类目名称 */
+    /** 信誉级别 */
+    private Integer level;
+    /** 等级名称 */
     private String name;
-    /** 父类目ID */
-    private Long parentId;
-    /** 是否父节点 */
-    private Boolean parent;
     /** 创建时间 */
     private Date dateCreated;
     /** 创建者 */
@@ -33,13 +31,12 @@ public class SupplierCategory implements SupplierIF {
     /** 删除者 */
     private String deleter;
 
-    public SupplierCategory() {}
+    public Grade() {}
 
-    public SupplierCategory(Long id, String name, Long parentId, Boolean parent, Date dateCreated, String creator, Date dateUpdated, String updater, Integer updatedCount, Date dateDeleted, Boolean deleteFlag, String deleter) {
+    public Grade(Long id, Integer level, String name, Date dateCreated, String creator, Date dateUpdated, String updater, Integer updatedCount, Date dateDeleted, Boolean deleteFlag, String deleter) {
         this.id = id;
+        this.level = level;
         this.name = name;
-        this.parentId = parentId;
-        this.parent = parent;
         this.dateCreated = dateCreated;
         this.creator = creator;
         this.dateUpdated = dateUpdated;
@@ -50,7 +47,6 @@ public class SupplierCategory implements SupplierIF {
         this.deleter = deleter;
     }
 
-    @Override
     public Long getId() {
         return id;
     }
@@ -59,28 +55,20 @@ public class SupplierCategory implements SupplierIF {
         this.id = id;
     }
 
+    public Integer getLevel() {
+        return level;
+    }
+
+    public void setLevel(Integer level) {
+        this.level = level;
+    }
+
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Long getParentId() {
-        return parentId;
-    }
-
-    public void setParentId(Long parentId) {
-        this.parentId = parentId;
-    }
-
-    public Boolean getParent() {
-        return parent;
-    }
-
-    public void setParent(Boolean parent) {
-        this.parent = parent;
     }
 
     public Date getDateCreated() {

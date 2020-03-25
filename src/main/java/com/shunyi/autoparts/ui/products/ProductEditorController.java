@@ -1,10 +1,8 @@
 package com.shunyi.autoparts.ui.products;
 
 import com.shunyi.autoparts.ui.common.*;
-import com.shunyi.autoparts.ui.common.vo.BrandSeries;
-import com.shunyi.autoparts.ui.common.vo.Car;
-import com.shunyi.autoparts.ui.common.vo.Category;
-import com.shunyi.autoparts.ui.common.vo.Product;
+import com.shunyi.autoparts.ui.common.vo.*;
+import com.shunyi.autoparts.ui.supplier.SupplierChooserController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -26,6 +24,7 @@ public class ProductEditorController {
     private Product updatedProduct;
     private Callback<Product, Object> callback;
     private Car selectedCar;
+    private Supplier selectedSupplier;
     private Category selectedCategory;
     private BrandSeries selectedBrand;
 
@@ -50,10 +49,46 @@ public class ProductEditorController {
     @FXML
     TextField txtOrigin;
     @FXML
+    TextField txtSupplier;
+    @FXML
+    TextField txtBarCode;
+    @FXML
     TextArea txtNotes;
 
     @FXML
-    void choose(ActionEvent actionEvent) {
+    private void supplierChooser() {
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource(
+                        "/fxml/supplier/SupplierChooser.fxml"
+                )
+        );
+        VBox root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Scene scene = new Scene(root);
+        Stage subStage = new Stage();
+        SupplierChooserController controller = loader.getController();
+        Callback<Supplier, String> callback = supplier -> {
+            selectedSupplier = supplier;
+            txtSupplier.setText(selectedSupplier.getName());
+            return null;
+        };
+        controller.prepare(subStage, selectedSupplier, callback);
+        subStage.setTitle("选择供应商");
+        subStage.initOwner(dialog);
+        subStage.setResizable(false);
+        subStage.initModality(Modality.APPLICATION_MODAL);
+        subStage.setScene(scene);
+        // center stage on screen
+        subStage.centerOnScreen();
+        subStage.show();
+    }
+
+    @FXML
+    private void carChooser() {
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource(
                         "/fxml/products/car_chooser.fxml"
@@ -85,27 +120,27 @@ public class ProductEditorController {
     }
 
     @FXML
-    private void cancel(ActionEvent actionEvent) {
+    private void cancel() {
         dialog.close();
     }
 
     @FXML
-    private void saveAndClose(ActionEvent actionEvent) {
+    private void saveAndClose() {
         if(validate()) {
             dialog.close();
             BigDecimal listPrice;
             listPrice = new BigDecimal(Double.valueOf(txtPrice.getText())).setScale(2, RoundingMode.HALF_UP);
-            Product newProduct = new Product(0L, txtCode.getText(), txtName.getText(), boxBrand.getValue(), selectedCar, txtUnit.getText(), listPrice, boxImported.getValue(), txtOrigin.getText(), txtNotes.getText(), null, Env.getInstance().getStringValue(Env.CURRENT_USER),null,null,null,null, Constants.DELETE_FLAG_FALSE,null);
+            Product newProduct = new Product(0L, txtCode.getText(), txtBarCode.getText(), txtName.getText(), boxBrand.getValue(), selectedCar, selectedSupplier, txtUnit.getText(), listPrice, boxImported.getValue(), txtOrigin.getText(), txtNotes.getText(), null, Env.getInstance().getStringValue(Env.CURRENT_USER),null,null,null,null, Constants.DELETE_FLAG_FALSE,null);
             callback.call(newProduct);
         }
     }
 
     @FXML
-    private void continueAdd(ActionEvent actionEvent) {
+    private void continueAdd() {
         if(validate()) {
             BigDecimal listPrice;
             listPrice = new BigDecimal(Double.valueOf(txtPrice.getText())).setScale(2, RoundingMode.HALF_UP);
-            Product newProduct = new Product(0L, txtCode.getText(), txtName.getText(), boxBrand.getValue(), selectedCar, txtUnit.getText(), listPrice, boxImported.getValue(), txtOrigin.getText(), txtNotes.getText(), null, Env.getInstance().getStringValue(Env.CURRENT_USER),null,null,null,null, Constants.DELETE_FLAG_FALSE,null);
+            Product newProduct = new Product(0L, txtCode.getText(), txtBarCode.getText(), txtName.getText(), boxBrand.getValue(), selectedCar, selectedSupplier, txtUnit.getText(), listPrice, boxImported.getValue(), txtOrigin.getText(), txtNotes.getText(), null, Env.getInstance().getStringValue(Env.CURRENT_USER),null,null,null,null, Constants.DELETE_FLAG_FALSE,null);
             callback.call(newProduct);
         }
     }
@@ -121,6 +156,11 @@ public class ProductEditorController {
             alert.setHeaderText("名称不能为空");
             alert.show();
             return false;
+        } else if(boxBrand.getValue() == null) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
+            alert.setHeaderText("品牌不能为空");
+            alert.show();
+            return false;
         } else if(selectedCar== null) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
             alert.setHeaderText("车型不能为空");
@@ -133,7 +173,12 @@ public class ProductEditorController {
             return false;
         } else if(txtPrice.getText().trim().equals("")) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
-            alert.setHeaderText("价格不能为空");
+            alert.setHeaderText("列表价不能为空");
+            alert.show();
+            return false;
+        } else if(txtUnit.getText().trim().equals("")) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
+            alert.setHeaderText("单位不能为空");
             alert.show();
             return false;
         } else if(!NumberValidationUtils.isPositiveDecimal(txtPrice.getText()) && !NumberValidationUtils.isPositiveInteger(txtPrice.getText())) {
@@ -164,25 +209,27 @@ public class ProductEditorController {
         if(updatedProduct != null) {
             txtCode.setText(updatedProduct.getCode());
             txtName.setText(updatedProduct.getName());
+            txtBarCode.setText(updatedProduct.getBarCode());
             boxBrand.setValue(selectedBrand);
             txtPrice.setText(updatedProduct.getListPrice().doubleValue()+"");
             txtUnit.setText(updatedProduct.getUnit());
             boxImported.setValue(updatedProduct.getImported());
             txtCar.setText(updatedProduct.getCar().getModel());
+            txtSupplier.setText(updatedProduct.getSupplier().getName());
             selectedCar = updatedProduct.getCar();
+            selectedSupplier = updatedProduct.getSupplier();
             txtOrigin.setText(updatedProduct.getOrigin());
             txtNotes.setText(updatedProduct.getNotes());
-
             btnContinueAdd.setVisible(false);
         }
     }
 
-    void initButton() {
+    private void initButton() {
         btnSaveAndClose.setStyle(String.format("-fx-base: %s;", "rgb(63,81,181)"));
     }
 
-    void initComboBox() {
-        boxImported.getItems().addAll("进口","国产");
+    private void initComboBox() {
+        boxImported.getItems().addAll(Constants.ORIGINAL, Constants.HOMEMADE);
         boxImported.getSelectionModel().select(0);
         boxImported.setStyle("-fx-font-size: 14px;");
         boxBrand.setStyle("-fx-font-size: 14px;");

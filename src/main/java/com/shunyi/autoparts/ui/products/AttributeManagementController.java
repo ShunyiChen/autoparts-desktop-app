@@ -261,8 +261,7 @@ public class AttributeManagementController {
     }
 
     private void initAttributesTree() {
-        AttributeName rootName = new AttributeName();
-        rootName.setName("全部属性");
+        AttributeName rootName = new AttributeName(0L, "所有属性", selectedCategory, false, false, false, false, false, false, false, false, false, "可用", Sort.ASC.getSort(), null, null, null, null, null, null, Constants.DELETE_FLAG_FALSE, null);
         TreeItem<AttributeIF> root = new TreeItem<>(rootName);
         try {
             String data = HttpClient.GET("/attributes/name/category/"+selectedCategory.getId());
@@ -290,7 +289,7 @@ public class AttributeManagementController {
         ContextMenu menu = new ContextMenu();
         MenuItem itemNewName = new MenuItem("新建属性名");
         MenuItem itemNewValue = new MenuItem("新建属性值");
-        MenuItem itemRM = new MenuItem("删  除");
+        MenuItem itemRM = new MenuItem("删 除");
         MenuItem itemRN = new MenuItem("重命名");
 
         itemNewName.setStyle("-fx-font-size: 14px;");

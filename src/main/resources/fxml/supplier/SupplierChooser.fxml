@@ -8,7 +8,7 @@
 <?import javafx.scene.text.Font?>
 
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="433.0" prefWidth="332.0" fx:controller="com.shunyi.autoparts.ui.supplier.SupplierCategoryChooserController" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="433.0" prefWidth="332.0" fx:controller="com.shunyi.autoparts.ui.supplier.SupplierChooserController" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <TreeView fx:id="treeView" prefHeight="432.0" prefWidth="332.0" />
       <FlowPane alignment="CENTER" prefHeight="88.0" prefWidth="600.0">

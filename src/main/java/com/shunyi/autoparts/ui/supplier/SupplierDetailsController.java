@@ -1,8 +1,12 @@
 package com.shunyi.autoparts.ui.supplier;
 
 import com.shunyi.autoparts.ui.MainApp;
+import com.shunyi.autoparts.ui.common.Constants;
+import com.shunyi.autoparts.ui.common.Env;
 import com.shunyi.autoparts.ui.common.GoogleJson;
 import com.shunyi.autoparts.ui.common.HttpClient;
+import com.shunyi.autoparts.ui.common.vo.Grade;
+import com.shunyi.autoparts.ui.common.vo.Payment;
 import com.shunyi.autoparts.ui.common.vo.Supplier;
 import com.shunyi.autoparts.ui.common.vo.SupplierCategory;
 import javafx.event.ActionEvent;
@@ -26,7 +30,10 @@ import javafx.util.StringConverter;
 import java.io.IOException;
 
 /** 供应商管理控制器 */
-public class SupplierManagementController {
+public class SupplierDetailsController {
+
+    private MainApp application;
+
     @FXML
     BorderPane mainPane;
     @FXML
@@ -42,12 +49,6 @@ public class SupplierManagementController {
     @FXML
     Button btnRemoveSupplier;
     @FXML
-    CheckBox cbTopName;
-    @FXML
-    Spinner<Integer> spiTopValue;
-    @FXML
-    CheckBox cbDynamic;
-    @FXML
     SplitPane splitPane;
     @FXML
     TreeView<SupplierCategory> supplierCategoryTree;
@@ -58,13 +59,16 @@ public class SupplierManagementController {
     @FXML
     TextField txtCode;
     @FXML
+    TextField txtName;
+    @FXML
+    ComboBox<Grade> comboGrade;
+    @FXML
     TextField txtContact;
     @FXML
     TextField txtPhone;
     @FXML
-    TextField txtName;
-    @FXML
-    TextField txtOthers;
+    ComboBox<Payment> comboPayment;
+
     @FXML
     private TableColumn colCode;
     @FXML
@@ -72,15 +76,26 @@ public class SupplierManagementController {
     @FXML
     private TableColumn colContact;
     @FXML
-    private TableColumn colPhone;
+    private TableColumn colPhone1;
     @FXML
-    private TableColumn colOther;
+    private TableColumn colPhone2;
+    @FXML
+    private TableColumn colEmail;
+    @FXML
+    private TableColumn colAddress;
+    @FXML
+    private TableColumn colPostcode;
+    @FXML
+    private TableColumn colGrade;
+    @FXML
+    private TableColumn colPayment;
+    @FXML
+    private TableColumn colNotes;
     @FXML
     private TableColumn colCategory;
-    private MainApp application;
 
     @FXML
-    public void newCategory(ActionEvent event) {
+    public void newCategory() {
         TreeItem<SupplierCategory> parent = supplierCategoryTree.getSelectionModel().getSelectedItem();
         Callback callback = new Callback() {
             @Override
@@ -93,8 +108,7 @@ public class SupplierManagementController {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-//                    SupplierCategory sc = new SupplierCategory(param.toString(), parent.getValue().getId(),false);
-                    SupplierCategory sc = new SupplierCategory();
+                    SupplierCategory sc = new SupplierCategory(0L, param.toString(), parent.getValue().getId(), Constants.PARENT_FALSE, null, Env.getInstance().currentUser(), null, null, null, null, Constants.DELETE_FLAG_FALSE, null);
                     try {
                         json = GoogleJson.GET().toJson(sc, SupplierCategory.class);
                         String idStr = HttpClient.POST("/supplier/categories",json);
@@ -274,13 +288,21 @@ public class SupplierManagementController {
     }
 
     @FXML
+    private void refresh() {
+
+    }
+
+    @FXML
     public void search(ActionEvent event) {
         Supplier supplier = new Supplier();
         supplier.setCode(txtCode.getText());
         supplier.setName(txtName.getText());
         supplier.setContact(txtContact.getText());
         supplier.setPhone1(txtPhone.getText());
-        supplier.setNotes(txtOthers.getText());
+        supplier.setPhone2(txtPhone.getText());
+        supplier.setPayment(comboPayment.getValue());
+        supplier.setGrade(comboGrade.getValue());
+
         String json = GoogleJson.GET().toJson(supplier);
         try {
             String data = HttpClient.POST("/suppliers/search", json);
@@ -293,15 +315,20 @@ public class SupplierManagementController {
     }
 
     @FXML
-    public void clear(ActionEvent event) {
+    public void clear() {
         txtCode.setText("");
+        txtName.setText("");
         txtContact.setText("");
         txtPhone.setText("");
-        txtName.setText("");
-        txtOthers.setText("");
+        comboGrade.setValue(null);
+        comboPayment.setValue(null);
     }
 
-    private void editCategory(Callback callback) {
+    /**
+     *
+     * @param callback
+     */
+    private void editCategory(Callback<Supplier, String> callback) {
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource(
                         "/fxml/supplier/edit_category.fxml"
@@ -351,7 +378,7 @@ public class SupplierManagementController {
      */
     private void getNodes(TreeItem<SupplierCategory> parent, SupplierCategory[] all) {
         for(SupplierCategory sc : all) {
-            if(sc.getParentId() == parent.getValue().getId()) {
+            if(sc.getParentId().equals(parent.getValue().getId())) {
                 TreeItem<SupplierCategory> node = new TreeItem<>(sc);
                 parent.getChildren().add(node);
                 parent.setExpanded(true);
@@ -366,21 +393,50 @@ public class SupplierManagementController {
      */
     public void prepare(MainApp application) {
         this.application = application;
-        final int initialValue = 30;
-        // Value factory.
-        SpinnerValueFactory<Integer> valueFactory = //
-                new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, initialValue);
-        spiTopValue.setValueFactory(valueFactory);
-        spiTopValue.setEditable(true);
+        //初始化分类树
+        initCategoryTree();
+        //初始化供应商表格
+        initSupplierTable();
 
-//        SupplierCategory sc = new SupplierCategory("全部供应商",0, true)
-        SupplierCategory sc = new SupplierCategory();
+        initGradeList();
+
+        initPaymentList();
+    }
+
+    private void initGradeList() {
+        comboGrade.setStyle("-fx-font-size: 14px;");
+        comboGrade.getItems().add(null);
+        try {
+            String json = HttpClient.GET("/grades");
+            Grade[] grades = GoogleJson.GET().fromJson(json, Grade[].class);
+            comboGrade.getItems().addAll(grades);
+            comboGrade.getSelectionModel().select(0);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void initPaymentList() {
+        comboPayment.setStyle("-fx-font-size: 14px;");
+        comboPayment.getItems().add(null);
+        try {
+            String json = HttpClient.GET("/payments");
+            Payment[] payments = GoogleJson.GET().fromJson(json, Payment[].class);
+            comboPayment.getItems().addAll(payments);
+            comboPayment.getSelectionModel().select(0);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void initCategoryTree() {
+        SupplierCategory sc = new SupplierCategory(0L, "所有供应商",-1L, Constants.PARENT_TRUE, null, null, null, null, null, null, Constants.DELETE_FLAG_FALSE, null);
         TreeItem<SupplierCategory> root = new TreeItem<SupplierCategory>(sc);
         initTreeNodes(root);
         supplierCategoryTree.setRoot(root);
         ContextMenu menu = new ContextMenu();
         MenuItem itemNew = new MenuItem("新建类目");
-        MenuItem itemRM = new MenuItem("删除类目");
+        MenuItem itemRM = new MenuItem("删 除");
         MenuItem itemRN = new MenuItem("重命名");
         menu.getItems().addAll(itemNew, itemRM, itemRN);
         supplierCategoryTree.setEditable(true);
@@ -406,7 +462,7 @@ public class SupplierManagementController {
         itemNew.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                newCategory(event);
+                newCategory();
             }
         });
         itemRM.setOnAction(new EventHandler<ActionEvent>() {
@@ -424,12 +480,14 @@ public class SupplierManagementController {
         supplierCategoryTree.setOnEditCommit(new EventHandler<TreeView.EditEvent<SupplierCategory>>() {
             @Override
             public void handle(TreeView.EditEvent<SupplierCategory> event) {
-                String path = "/supplier/categories/"+event.getNewValue().getId();
-                String json = GoogleJson.GET().toJson(event.getNewValue());
-                try {
-                    HttpClient.PUT(path, json);
-                } catch (IOException e) {
-                    e.printStackTrace();
+                if(!event.getNewValue().getId().equals(0L)) {
+                    String path = "/supplier/categories/"+event.getNewValue().getId();
+                    String json = GoogleJson.GET().toJson(event.getNewValue());
+                    try {
+                        HttpClient.PUT(path, json);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
@@ -447,9 +505,12 @@ public class SupplierManagementController {
                 supplierTable.getItems().addAll(suppliers);
             }
         });
+    }
 
+    private void initSupplierTable() {
         // 初始化table
         //Set the table to multi selection mode
+        supplierTable.setId("my-table");
         supplierTable.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         supplierTable.setEditable(false);
         supplierTable.setOnMouseClicked((MouseEvent event) -> {
@@ -477,12 +538,29 @@ public class SupplierManagementController {
                 new PropertyValueFactory<Supplier, String>("contact")
         );
         //电话列设置
-        colPhone.setCellValueFactory(
-                new PropertyValueFactory<Supplier, String>("phone")
+        colPhone1.setCellValueFactory(
+                new PropertyValueFactory<Supplier, String>("phone1")
         );
-        //其他列设置
-        colOther.setCellValueFactory(
-                new PropertyValueFactory<Supplier, String>("other")
+        colPhone2.setCellValueFactory(
+                new PropertyValueFactory<Supplier, String>("phone2")
+        );
+        colEmail.setCellValueFactory(
+                new PropertyValueFactory<Supplier, String>("email")
+        );
+        colAddress.setCellValueFactory(
+                new PropertyValueFactory<Supplier, String>("address")
+        );
+        colPostcode.setCellValueFactory(
+                new PropertyValueFactory<Supplier, String>("postCode")
+        );
+        colGrade.setCellValueFactory(
+                new PropertyValueFactory<Supplier, String>("grade")
+        );
+        colPayment.setCellValueFactory(
+                new PropertyValueFactory<Supplier, String>("payment")
+        );
+        colNotes.setCellValueFactory(
+                new PropertyValueFactory<Supplier, String>("notes")
         );
         //类目列设置
         colCategory.setCellValueFactory(
