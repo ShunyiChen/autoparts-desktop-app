@@ -78,7 +78,7 @@
                     <Font size="14.0" />
                 </font>
             </Button>
-            <Button mnemonicParsing="false" text="产品SKU">
+            <Button mnemonicParsing="false" text="产品sku">
                 <font>
                     <Font size="14.0" />
                 </font>

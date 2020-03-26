@@ -574,7 +574,7 @@ public class ProductDetailsController {
         }
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource(
-                        "/fxml/products/sku_generator.fxml"
+                        "/fxml/products/ProductSKU.fxml"
                 )
         );
         BorderPane root = null;
@@ -585,10 +585,11 @@ public class ProductDetailsController {
         }
         Scene scene = new Scene(root);
         Stage dialog = new Stage();
-        SKUGeneratorController controller = loader.getController();
+        ProductSKUController controller = loader.getController();
         controller.prepare(dialog, selectedProduct);
-        dialog.setTitle("产品SKU");
+        dialog.setTitle("产品sku");
         dialog.initOwner(application.getStage());
+        dialog.setResizable(true);
         dialog.setMaximized(true);
         dialog.setScene(scene);
         // center stage on screen
@@ -641,7 +642,7 @@ public class ProductDetailsController {
         ContextMenu menu = new ContextMenu();
 
         MenuItem itemDuplicate = new MenuItem("行复制");
-        MenuItem itemProductSKU = new MenuItem("产品SKU");
+        MenuItem itemProductSKU = new MenuItem("产品sku");
         MenuItem itemDefineProperties = new MenuItem("产品属性");
 
         itemDefineProperties.setOnAction(e ->{
