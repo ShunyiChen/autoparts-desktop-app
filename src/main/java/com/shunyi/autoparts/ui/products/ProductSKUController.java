@@ -4,6 +4,7 @@ import com.shunyi.autoparts.ui.common.Constants;
 import com.shunyi.autoparts.ui.common.EditingCell;
 import com.shunyi.autoparts.ui.common.Env;
 import com.shunyi.autoparts.ui.common.Status;
+import com.shunyi.autoparts.ui.common.vo.Picture;
 import com.shunyi.autoparts.ui.common.vo.Product;
 import com.shunyi.autoparts.ui.common.vo.SKU;
 import com.shunyi.autoparts.ui.common.vo.SKUSlotMapping;
@@ -120,8 +121,6 @@ public class ProductSKUController {
                 }
             }
         });
-
-
         colSpecification.setCellValueFactory(
                 new PropertyValueFactory<SKU, String>("specification")
         );
@@ -165,7 +164,7 @@ public class ProductSKUController {
 
     @FXML
     private void createNewSKU() {
-        SKU sku = new SKU(Constants.ID, product, "", "" ,"", "", Constants.QUANTITY, BigDecimal.ZERO, BigDecimal.ZERO, Status.AVAILABLE.getText(), "", "", new HashSet<SKUSlotMapping>(), null, Env.getInstance().currentUser(), null, null, null, null, Constants.DELETE_FLAG_FALSE, null);
+        SKU sku = new SKU(Constants.ID, product, "", "" ,"", "", Constants.QUANTITY, BigDecimal.ZERO, BigDecimal.ZERO, Status.AVAILABLE.getText(), "", "", new HashSet<SKUSlotMapping>(), new HashSet<Picture>(), null, Env.getInstance().currentUser(), null, null, null, null, Constants.DELETE_FLAG_FALSE, null);
         skuTable.getItems().add(sku);
         int index = skuTable.getItems().size() - 1;
         // Start editing

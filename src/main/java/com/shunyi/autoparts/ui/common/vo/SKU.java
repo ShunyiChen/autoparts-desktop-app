@@ -37,6 +37,8 @@ public class SKU {
     private String barCode;
     /** SKU与货位映射集合 */
     private Set<SKUSlotMapping> skuSlotMappings = new HashSet<>();
+    /** SKU图片列表 */
+    private Set<Picture> pictures = new HashSet<>();
     /** 创建时间 */
     private Date dateCreated;
     /** 创建者 */
@@ -56,7 +58,7 @@ public class SKU {
 
     public SKU() {}
 
-    public SKU(Long id, Product product, String skuCode, String skuName, String specification, String unit, Integer quantity, BigDecimal price, BigDecimal discountedPrice, String status, String properties, String barCode, Set<SKUSlotMapping> skuSlotMappings, Date dateCreated, String creator, Date dateUpdated, String updater, Integer updatedCount, Date dateDeleted, Boolean deleteFlag, String deleter) {
+    public SKU(Long id, Product product, String skuCode, String skuName, String specification, String unit, Integer quantity, BigDecimal price, BigDecimal discountedPrice, String status, String properties, String barCode, Set<SKUSlotMapping> skuSlotMappings, Set<Picture> pictures, Date dateCreated, String creator, Date dateUpdated, String updater, Integer updatedCount, Date dateDeleted, Boolean deleteFlag, String deleter) {
         this.id = id;
         this.product = product;
         this.skuCode = skuCode;
@@ -70,6 +72,7 @@ public class SKU {
         this.properties = properties;
         this.barCode = barCode;
         this.skuSlotMappings = skuSlotMappings;
+        this.pictures = pictures;
         this.dateCreated = dateCreated;
         this.creator = creator;
         this.dateUpdated = dateUpdated;
@@ -182,6 +185,14 @@ public class SKU {
 
     public void setSkuSlotMappings(Set<SKUSlotMapping> skuSlotMappings) {
         this.skuSlotMappings = skuSlotMappings;
+    }
+
+    public Set<Picture> getPictures() {
+        return pictures;
+    }
+
+    public void setPictures(Set<Picture> pictures) {
+        this.pictures = pictures;
     }
 
     public Date getDateCreated() {

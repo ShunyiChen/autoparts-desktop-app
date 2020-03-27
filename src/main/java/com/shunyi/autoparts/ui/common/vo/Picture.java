@@ -3,18 +3,16 @@ package com.shunyi.autoparts.ui.common.vo;
 import java.util.Date;
 
 /**
- * @description 产品图片表
+ * @description SKU图片
  * @author Shunyi Chen
  * @date 2020/3/23
  */
 public class Picture {
     /** 自增长ID */
     private Long id;
-    /** 产品ID */
-    private Long projectId;
     /** 图片路径 */
     private String path;
-    /** VFS文件系统 */
+    /** 图片所在VFS文件系统 */
     private VFS vfs;
     /** 创建时间 */
     private Date dateCreated;
@@ -33,11 +31,11 @@ public class Picture {
     /** 删除者 */
     private String deleter;
 
-    public Picture() {}
+    public Picture(){
+    }
 
-    public Picture(Long id, Long projectId, String path, VFS vfs, Date dateCreated, String creator, Date dateUpdated, String updater, Integer updatedCount, Date dateDeleted, Boolean deleteFlag, String deleter) {
+    public Picture(Long id, String path, VFS vfs, SKU sku, Date dateCreated, String creator, Date dateUpdated, String updater, Integer updatedCount, Date dateDeleted, Boolean deleteFlag, String deleter) {
         this.id = id;
-        this.projectId = projectId;
         this.path = path;
         this.vfs = vfs;
         this.dateCreated = dateCreated;
@@ -56,14 +54,6 @@ public class Picture {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Long getProjectId() {
-        return projectId;
-    }
-
-    public void setProjectId(Long projectId) {
-        this.projectId = projectId;
     }
 
     public String getPath() {
