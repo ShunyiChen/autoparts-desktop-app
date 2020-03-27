@@ -14,19 +14,19 @@ public enum Status {
     DISABLED("不可用");
 
     /**
-     * 状态名
+     * 文本名
      */
-    private String name;
+    private String text;
 
-    /**
-     * 构造方法
-     */
-    Status(String name) {
-        this.name = name;
+    Status(String text) {
+        this.text = text;
     }
 
-    public String getName() {
-        return name;
+    public String getText() {
+        return text;
     }
 
+    public void setText(String text) {
+        this.text = text;
+    }
 }

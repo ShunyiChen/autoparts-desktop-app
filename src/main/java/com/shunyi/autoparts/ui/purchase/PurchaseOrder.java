@@ -1,4 +1,4 @@
-package com.shunyi.autoparts.ui.buy;
+package com.shunyi.autoparts.ui.purchase;
 
 import javafx.scene.layout.BorderPane;
 
@@ -62,7 +62,7 @@ public class PurchaseOrder extends BorderPane {
 //    private BorderPane form() {
 //        FXMLLoader loader = new FXMLLoader(
 //                getClass().getResource(
-//                        "/fxml/buy/input_form.fxml"
+//                        "/fxml/purchase/input_form.fxml"
 //                )
 //        );
 //        GridPane inputForm = null;
@@ -106,7 +106,7 @@ public class PurchaseOrder extends BorderPane {
 //        });
 //        FXMLLoader loader2 = new FXMLLoader(
 //                getClass().getResource(
-//                        "/fxml/buy/footer.fxml"
+//                        "/fxml/purchase/footer.fxml"
 //                )
 //        );
 //        HBox footer = null;
@@ -202,7 +202,7 @@ public class PurchaseOrder extends BorderPane {
 //    private void print() {
 //        FXMLLoader loader = new FXMLLoader(
 //                getClass().getResource(
-//                        "/fxml/buy/printing.fxml"
+//                        "/fxml/purchase/printing.fxml"
 //                )
 //        );
 //        VBox root = null;
@@ -229,7 +229,7 @@ public class PurchaseOrder extends BorderPane {
 //    private void settings() {
 //        FXMLLoader loader = new FXMLLoader(
 //                getClass().getResource(
-//                        "/fxml/buy/settings.fxml"
+//                        "/fxml/purchase/settings.fxml"
 //                )
 //        );
 //        VBox root = null;
@@ -271,7 +271,7 @@ public class PurchaseOrder extends BorderPane {
 //    private TableView dataTable() {
 //        FXMLLoader loader = new FXMLLoader(
 //            getClass().getResource(
-//                    "/fxml/buy/data_table.fxml"
+//                    "/fxml/purchase/data_table.fxml"
 //            )
 //        );
 //        TableView<AutoPart> root = null;

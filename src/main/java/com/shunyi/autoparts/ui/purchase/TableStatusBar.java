@@ -1,4 +1,4 @@
-package com.shunyi.autoparts.ui.buy;
+package com.shunyi.autoparts.ui.purchase;
 
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;

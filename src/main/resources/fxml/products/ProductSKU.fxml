@@ -12,17 +12,17 @@
    <top>
       <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
         <items>
-          <Button mnemonicParsing="false" text="新增SKU" onAction="#createNewSKU">
+          <Button mnemonicParsing="false" text="新增sku" onAction="#createNewSKU">
                <font>
                   <Font size="14.0" />
                </font>
             </Button>
-            <Button mnemonicParsing="false" text="更改" onAction="#updateSKU">
+            <Button mnemonicParsing="false" text="保存" onAction="#save">
                <font>
                   <Font size="14.0" />
                </font>
             </Button>
-            <Button mnemonicParsing="false" text="删除" onAction="#deleteSKU">
+            <Button mnemonicParsing="false" text="删除" onAction="#delete">
                <font>
                   <Font size="14.0" />
                </font>
@@ -31,11 +31,11 @@
       </ToolBar>
    </top>
    <center>
-      <TableView prefHeight="555.0" prefWidth="1170.0" BorderPane.alignment="CENTER">
+      <TableView fx:id="skuTable" prefHeight="555.0" prefWidth="1170.0" BorderPane.alignment="CENTER">
         <columns>
             <TableColumn fx:id="colCode" prefWidth="75.0" text="SKU编码" />
-            <TableColumn fx:id="colName" prefWidth="75.0" text="SKU名称" />
-            <TableColumn fx:id="colSpecification" prefWidth="75.0" text="规格" />
+            <TableColumn fx:id="colName" prefWidth="175.0" text="SKU名称" />
+            <TableColumn fx:id="colSpecification" prefWidth="175.0" text="规格" />
             <TableColumn fx:id="colUnit" prefWidth="75.0" text="单位" />
             <TableColumn fx:id="colQuantity" prefWidth="75.0" text="库存数量" />
             <TableColumn fx:id="colPrice" prefWidth="75.0" text="原价" />
@@ -43,14 +43,14 @@
             <TableColumn fx:id="colStatus" prefWidth="75.0" text="状态" />
             <TableColumn fx:id="colProperties" prefWidth="75.0" text="属性字符串" />
             <TableColumn fx:id="colBarCode" prefWidth="75.0" text="条形码" />
-            <TableColumn fx:id="colSkuSlot" prefWidth="75.0" text="条形码" />
+            <TableColumn fx:id="colSkuSlot" prefWidth="75.0" text="货位" />
             <TableColumn fx:id="colSateCreated" prefWidth="75.0" text="创建时间" />
             <TableColumn fx:id="colCreator" prefWidth="75.0" text="创建者" />
             <TableColumn fx:id="colSateUpdated" prefWidth="75.0" text="更新时间" />
             <TableColumn fx:id="colUpdater" prefWidth="75.0" text="更新者" />
         </columns>
          <BorderPane.margin>
-            <Insets bottom="30.0" />
+            <Insets bottom="0.0" />
          </BorderPane.margin>
       </TableView>
    </center>

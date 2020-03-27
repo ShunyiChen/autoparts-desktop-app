@@ -147,7 +147,7 @@ public class AttributeValueCheckBox extends HBox {
                 //单价
                 rowData.add(new TableCellMetadata("0.00"));
                 //状态
-                rowData.add(new TableCellMetadata(Status.AVAILABLE.getName()));
+                rowData.add(new TableCellMetadata(Status.AVAILABLE.getText()));
                 //SKU名称
                 if(str.endsWith("/")) {
                     str = str.replaceAll(":\\d+/", "-") + selectedProduct.getName();

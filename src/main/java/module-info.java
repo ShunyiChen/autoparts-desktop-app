@@ -15,7 +15,7 @@ module desktopapp {
     requires org.apache.commons.io;
 
     exports com.shunyi.autoparts.ui;
-    exports com.shunyi.autoparts.ui.buy;
+    exports com.shunyi.autoparts.ui.purchase;
     exports com.shunyi.autoparts.ui.system;
     exports com.shunyi.autoparts.ui.common.vo;
     exports com.shunyi.autoparts.ui.supplier;
@@ -26,7 +26,7 @@ module desktopapp {
     exports com.shunyi.autoparts.ui.products;
     exports com.shunyi.autoparts.ui.common.deleteme;
 
-    opens com.shunyi.autoparts.ui.buy;
+    opens com.shunyi.autoparts.ui.purchase;
     opens com.shunyi.autoparts.ui.supplier;
     opens com.shunyi.autoparts.ui.login;
     opens com.shunyi.autoparts.ui to javafx.fxml;

@@ -590,7 +590,7 @@ public class ProductDetailsController {
         dialog.setTitle("产品sku");
         dialog.initOwner(application.getStage());
         dialog.setResizable(true);
-        dialog.setMaximized(true);
+//        dialog.setMaximized(true);
         dialog.setScene(scene);
         // center stage on screen
         dialog.centerOnScreen();

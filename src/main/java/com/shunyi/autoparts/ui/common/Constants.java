@@ -26,4 +26,9 @@ public class Constants {
     public static final Boolean VFS_MASTER_FALSE = false;
     public static final String HOMEMADE = "国产";
     public static final String ORIGINAL  = "原厂";
+
+    /** 值对象初始ID值 */
+    public static final Long ID = 0L;
+    /** SKU初始库存数量 */
+    public static final Integer QUANTITY = 0;
 }
