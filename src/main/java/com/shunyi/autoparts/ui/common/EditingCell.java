@@ -8,6 +8,8 @@ import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 
+import java.math.BigDecimal;
+
 /**
  * Editing cell for TableView
  *
@@ -37,8 +39,14 @@ public class EditingCell<S, T> extends TableCell<S, T> {
     @Override
     public void cancelEdit() {
         super.cancelEdit();
-
-        setText((String) getItem());
+        Object obj = getItem();
+        if(obj instanceof Integer) {
+            setText(String.valueOf(obj));
+        } else if (obj instanceof BigDecimal) {
+            setText(obj.toString());
+        } else {
+            setText((String)obj);
+        }
         setGraphic(null);
     }
 

@@ -1,6 +1,7 @@
 package com.shunyi.autoparts.ui.stock;
 
 import com.google.gson.Gson;
+import com.shunyi.autoparts.ui.common.Constants;
 import com.shunyi.autoparts.ui.common.HttpClient;
 import com.shunyi.autoparts.ui.common.vo.Warehouse;
 import javafx.fxml.FXML;
@@ -97,8 +98,7 @@ public class WarehouseChooserController {
         });
         btnChooser.setStyle(String.format("-fx-base: %s;", "rgb(63,81,181)"));
 
-//        Warehouse warehouse = new Warehouse("", "全部仓库",0L, true);
-        Warehouse warehouse = new Warehouse();
+        Warehouse warehouse = new Warehouse(Constants.ID, "", "所有仓库", Constants.PARENT_ID, Constants.PARENT_TRUE, null, null, null, null, null, null, null, null);
         TreeItem<Warehouse> root = new TreeItem<>(warehouse);
         treeView.setRoot(root);
         initTreeNodes(root);

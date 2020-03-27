@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="444.0" prefWidth="615.0" fx:controller="com.shunyi.autoparts.ui.products.AttributeCombinerController" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <bottom>
+      <VBox prefHeight="82.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+         <children>
+            <VBox prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <FlowPane alignment="CENTER_LEFT" prefHeight="36.0" prefWidth="600.0">
+                     <children>
+                        <Label alignment="CENTER" prefHeight="19.0" prefWidth="73.0" text="规格备注:">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <TextField prefHeight="29.0" prefWidth="532.0">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </TextField>
+                     </children>
+                  </FlowPane>
+                  <FlowPane alignment="CENTER_RIGHT" hgap="10.0" prefHeight="47.0" prefWidth="600.0">
+                     <children>
+                        <Button mnemonicParsing="false" text="取 消" onAction="#cancel">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Button>
+                        <Button fx:id="btnOK" mnemonicParsing="false" text="确 定" onAction="#ok">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Button>
+                     </children>
+                     <padding>
+                        <Insets right="10.0" />
+                     </padding>
+                  </FlowPane>
+               </children>
+            </VBox>
+         </children>
+      </VBox>
+   </bottom>
+   <center>
+      <ScrollPane  prefHeight="352.0" prefWidth="597.0" BorderPane.alignment="CENTER">
+         <content>
+            <VBox fx:id="vbox">
+               <children>
+                  <FlowPane alignment="CENTER_LEFT" hgap="10.0" prefHeight="41.0" prefWidth="600.0">
+                     <children>
+                        <Label text="属性1：">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <CheckBox mnemonicParsing="false" text="CheckBox">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </CheckBox>
+                        <CheckBox mnemonicParsing="false" text="CheckBox">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </CheckBox>
+                        <CheckBox mnemonicParsing="false" text="CheckBox">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </CheckBox>
+                     </children>
+                  </FlowPane>
+               </children>
+            </VBox>
+         </content>
+      </ScrollPane>
+   </center>
+</BorderPane>

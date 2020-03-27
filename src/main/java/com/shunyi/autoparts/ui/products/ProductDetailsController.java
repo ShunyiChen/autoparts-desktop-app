@@ -527,6 +527,7 @@ public class ProductDetailsController {
         dialog.show();
     }
 
+    @FXML
     private void openBasicAttributes() {
         TreeItem<Category> selectedItem = treeView.getSelectionModel().getSelectedItem();
         if(selectedItem == null) {
@@ -641,20 +642,19 @@ public class ProductDetailsController {
         });
         ContextMenu menu = new ContextMenu();
 
-        MenuItem itemDuplicate = new MenuItem("行复制");
+        MenuItem itemDuplicate = new MenuItem("复 制");
         MenuItem itemProductSKU = new MenuItem("产品sku");
         MenuItem itemDefineProperties = new MenuItem("产品属性");
 
-        itemDefineProperties.setOnAction(e ->{
-            openBasicAttributes();
-        });
         itemDuplicate.setOnAction(e ->{
             duplicate();
         });
         itemProductSKU.setOnAction(e ->{
             openProductSKU();
         });
-
+        itemDefineProperties.setOnAction(e ->{
+            openBasicAttributes();
+        });
         menu.getItems().addAll(itemDuplicate, new SeparatorMenuItem(), itemProductSKU, new SeparatorMenuItem(), itemDefineProperties);
         tableView.addEventHandler(MouseEvent.MOUSE_CLICKED, t -> {
             if(t.getButton() == MouseButton.SECONDARY) {
@@ -681,6 +681,7 @@ public class ProductDetailsController {
         return attributeValues;
     }
 
+    @FXML
     private void duplicate() {
         Product selected = tableView.getSelectionModel().getSelectedItem();
         String json = null;

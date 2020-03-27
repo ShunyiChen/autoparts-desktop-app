@@ -73,17 +73,17 @@
                   <Font size="14.0" />
                </font>
             </Button>
-            <Button mnemonicParsing="false" text="行复制">
+            <Button mnemonicParsing="false" text="复 制" onAction="#duplicate">
                 <font>
                     <Font size="14.0" />
                 </font>
             </Button>
-            <Button mnemonicParsing="false" text="产品sku">
+            <Button mnemonicParsing="false" text="产品sku" onAction="#openProductSKU">
                 <font>
                     <Font size="14.0" />
                 </font>
             </Button>
-            <Button mnemonicParsing="false" text="产品属性">
+            <Button mnemonicParsing="false" text="产品属性" onAction="#openBasicAttributes">
                 <font>
                     <Font size="14.0" />
                 </font>

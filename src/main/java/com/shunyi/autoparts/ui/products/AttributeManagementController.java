@@ -1,9 +1,6 @@
 package com.shunyi.autoparts.ui.products;
 
-import com.shunyi.autoparts.ui.common.Constants;
-import com.shunyi.autoparts.ui.common.GoogleJson;
-import com.shunyi.autoparts.ui.common.HttpClient;
-import com.shunyi.autoparts.ui.common.Sort;
+import com.shunyi.autoparts.ui.common.*;
 import com.shunyi.autoparts.ui.common.vo.AttributeIF;
 import com.shunyi.autoparts.ui.common.vo.AttributeName;
 import com.shunyi.autoparts.ui.common.vo.AttributeValue;
@@ -327,7 +324,7 @@ public class AttributeManagementController {
             TreeItem<AttributeIF> parent =  attributeTree.getSelectionModel().getSelectedItem();
             if(parent.getValue().getId() != 0L) {
                 if(parent.getValue() instanceof AttributeName) {
-                    AttributeValue newValue = new AttributeValue(0L, "新建属性值", "0,0,0", selectedCategory, (AttributeName)parent.getValue(),AttributeStatus.AVAILABLE.getName(), 1, null, null, null, null, null, null, false, null);
+                    AttributeValue newValue = new AttributeValue(0L, "新建属性值", "0,0,0", selectedCategory, (AttributeName)parent.getValue(), Status.AVAILABLE.getText(), 1, null, null, null, null, null, null, false, null);
                     String json = GoogleJson.GET().toJson(newValue);
                     try {
                         String idStr = HttpClient.POST("/attributes/value", json);

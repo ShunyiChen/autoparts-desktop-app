@@ -3,6 +3,7 @@ package com.shunyi.autoparts.ui.products;
 import com.shunyi.autoparts.ui.common.GoogleJson;
 import com.shunyi.autoparts.ui.common.HttpClient;
 import com.shunyi.autoparts.ui.common.Sort;
+import com.shunyi.autoparts.ui.common.Status;
 import com.shunyi.autoparts.ui.common.vo.AttributeName;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
@@ -56,14 +57,14 @@ public class AttributeNameEditorController {
         initEvents();
     }
 
-    void initComboBox() {
-        boxStatus.getItems().addAll(AttributeStatus.AVAILABLE.getName(), AttributeStatus.DISABLED.getName());
+    private void initComboBox() {
+        boxStatus.getItems().addAll(Status.AVAILABLE.getText(), Status.DISABLED.getText());
         boxSort.getItems().addAll(Sort.ASC.getName(), Sort.DESC.getName());
         boxStatus.setStyle("-fx-font-size: 14px;");
         boxSort.setStyle("-fx-font-size: 14px;");
     }
 
-    void initEvents() {
+    private void initEvents() {
         boxAllowAlias.setOnAction(e -> {
             updated.setAliasAllowed(boxAllowAlias.isSelected());
             update();
@@ -110,7 +111,7 @@ public class AttributeNameEditorController {
         });
     }
 
-    void update() {
+    private void update() {
         String json = GoogleJson.GET().toJson(updated);
         try {
             HttpClient.PUT("/attributes/name/"+updated.getId(), json);
