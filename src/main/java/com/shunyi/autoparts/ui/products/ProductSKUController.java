@@ -96,9 +96,10 @@ public class ProductSKUController {
         skuTable.getStylesheets().add(css);
         skuTable.setId("my-table");
         skuTable.setEditable(true);
+        //表格行双击事件
         skuTable.setOnMouseClicked(event -> {
             if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2){
-
+                SKU selectedSKU = skuTable.getSelectionModel().getSelectedItem();
                 FXMLLoader loader = new FXMLLoader(
                         getClass().getResource(
                                 "/fxml/products/AttributeCombiner.fxml"
@@ -113,7 +114,18 @@ public class ProductSKUController {
                 Scene scene = new Scene(root);
                 Stage dialog = new Stage();
                 AttributeCombinerController controller = loader.getController();
-                controller.prepare(dialog, product);
+                Callback<SKU, String> callback = new Callback<SKU, String>() {
+                    @Override
+                    public String call(SKU param) {
+                        selectedSKU.setSkuName(param.getSkuName());
+                        selectedSKU.setSpecification(param.getSpecification());
+                        selectedSKU.setProperties(param.getProperties());
+                        skuTable.refresh();
+                        skuTable.getSelectionModel().select(selectedSKU);
+                        return "";
+                    }
+                };
+                controller.prepare(dialog, product, selectedSKU, callback);
                 dialog.setTitle("属性组合");
                 dialog.initOwner(stage);
                 dialog.setResizable(true);
@@ -122,7 +134,6 @@ public class ProductSKUController {
                 // center stage on screen
                 dialog.centerOnScreen();
                 dialog.show();
-
             }
         });
 
@@ -158,6 +169,7 @@ public class ProductSKUController {
                 }
             }
         });
+
         colSpecification.setCellValueFactory(
                 new PropertyValueFactory<SKU, String>("specification")
         );

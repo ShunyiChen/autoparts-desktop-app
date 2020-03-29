@@ -1,72 +1,58 @@
 package com.shunyi.autoparts.ui.products;
 
-import com.shunyi.autoparts.ui.common.HttpClient;
-import com.shunyi.autoparts.ui.common.Status;
 import com.shunyi.autoparts.ui.common.vo.AttributeValue;
-import com.shunyi.autoparts.ui.common.vo.Product;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import com.shunyi.autoparts.ui.common.vo.SKU;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 
-import java.io.IOException;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
  * 属性值Checkbox
  */
 public class AttributeValueCheckBox extends HBox {
-    private Product selectedProduct;
     private CheckBox checkBoxWithoutName = new CheckBox();
     private HBox coloredBox = new HBox();
     private Label title = new Label();
     private AttributeValue attributeValue;
+    private TextField txtFieldNotes;
     private LinkedHashMap<Long, List<AttributeValueCheckBox>> checkboxGroup;
-    private TableColumn<ObservableList<TableCellMetadata>, String> tableColumn;
-    private TableView<ObservableList<TableCellMetadata>> tableView;
+    private SKU updatedSKU;
 
     /**
      * Constructor
      *
-     * @param selectedProduct 选择商品
-     * @param attributeValue  属性值
-     * @param checkboxGroup   复选框组
-     * @param tableColumn     表格列
-     * @param tableView       表格
+     * @param attributeValue
+     * @param txtFieldNotes
      */
-    AttributeValueCheckBox(Product selectedProduct,
-                           AttributeValue attributeValue,
-                           LinkedHashMap<Long, List<AttributeValueCheckBox>> checkboxGroup,
-                           TableColumn<ObservableList<TableCellMetadata>, String> tableColumn,
-                           TableView<ObservableList<TableCellMetadata>> tableView) {
-
-        this.selectedProduct = selectedProduct;
+     public AttributeValueCheckBox(AttributeValue attributeValue,
+                                   TextField txtFieldNotes,
+                                   LinkedHashMap<Long,List<AttributeValueCheckBox>> checkboxGroup, SKU updatedSKU) {
         this.attributeValue = attributeValue;
+        this.txtFieldNotes = txtFieldNotes;
         this.checkboxGroup = checkboxGroup;
-        this.tableColumn = tableColumn;
-        this.tableView = tableView;
+        this.updatedSKU = updatedSKU;
 
         if (attributeValue.getAttributeName().getColorProperty()) {
-            coloredBox.setPrefSize(20, 15);
+            coloredBox.setPrefSize(40, 15);
             String[] str = attributeValue.getRgb().split(",");
             int red = (int) (Double.parseDouble(str[0]) * 255);
             int green = (int) (Double.parseDouble(str[1]) * 255);
             int blue = (int) (Double.parseDouble(str[2]) * 255);
             String style = "-fx-font-size: 14px;" +
                     "-fx-background-color:rgb(" + red + "," + green + "," + blue + ");" +
-                    "-fx-border-radius:3;" +
+                    "-fx-border-radius:0;" +
                     "-fx-border-color:rgb(244,244,244);" +
                     "-fx-border-width:2;";
             coloredBox.setStyle(style);
-            this.getChildren().addAll(checkBoxWithoutName, coloredBox, title);
+            this.getChildren().addAll(checkBoxWithoutName, title, coloredBox);
         } else {
             this.getChildren().addAll(checkBoxWithoutName, title);
         }
@@ -82,123 +68,42 @@ public class AttributeValueCheckBox extends HBox {
     }
 
     private void initEvents() {
-        title.setOnMouseClicked(e -> {
-            checkBoxWithoutName.setSelected(!checkBoxWithoutName.isSelected());
-            updateTable();
+        checkBoxWithoutName.setOnAction(e -> {
+            fire();
         });
-        coloredBox.setOnMouseClicked(e -> {
-            checkBoxWithoutName.setSelected(!checkBoxWithoutName.isSelected());
-            updateTable();
-        });
-        checkBoxWithoutName.setOnAction(e -> updateTable());
     }
 
-    /**
-     * 更改商品属性表
-     */
-    private void updateTable() {
-        List<AttributeValueCheckBox> buttonGroup = checkboxGroup.get(attributeValue.getAttributeName().getId());
-        long exist = buttonGroup.stream().filter(AttributeValueCheckBox::isSelected).count();
-        if (exist > 0) {
-            if (!tableView.getColumns().contains(tableColumn)) {
-                tableView.getColumns().add(tableColumn);
-            }
-        } else {
-            tableView.getColumns().remove(tableColumn);
-        }
-        //表格销售属性列排序
-        tableView.getColumns().sort(Comparator.comparing(e -> {
-            TableColumnMetadata metadata = (TableColumnMetadata) e.getUserData();
-            return metadata.getColumnId();
-        }));
-        for (int i = 0; i < tableView.getColumns().size(); i++) {
-            final int index = i;
-            TableColumn<ObservableList<TableCellMetadata>, String> column = (TableColumn<ObservableList<TableCellMetadata>, String>) tableView.getColumns().get(i);
-            column.setCellValueFactory(param ->
-                new SimpleObjectProperty<>(param.getValue().get(index).getText())
-            );
-        }
-        //清空表格内容
-        tableView.getItems().clear();
-        List<List<String>> paramList = new ArrayList<>();
-        checkboxGroup.forEach((k, v) -> {
-            List<AttributeValueCheckBox> listBoxes = checkboxGroup.get(k);
-            List<String> straits = listBoxes.stream().filter(AttributeValueCheckBox::isSelected).map(e -> e.attributeValue.getName()+":"+e.attributeValue.getId()).collect(Collectors.toList());
-            if (straits.size() > 0) {
-                paramList.add(straits);
-            }
-        });
-        String result = multiRound(paramList, "", 0);
-        String[] array = result.split("\\$");
-        for (String str : array) {
-            ObservableList<TableCellMetadata> rowData = FXCollections.observableArrayList();
-            if (!str.equals("")) {
-                String[] subArray = str.split("/");
-                for(String subStr : subArray) {
-                    String attributeValueIdStr = subStr.substring(subStr.lastIndexOf(":")+1);
-                    String attributeValueName = subStr.substring(0, subStr.lastIndexOf(":"));
-                    TableCellMetadata cell = new TableCellMetadata(Long.valueOf(attributeValueIdStr), attributeValueName);
-                    rowData.add(cell);
+    private void fire() {
+        StringBuilder specification = new StringBuilder();
+        StringBuilder properties = new StringBuilder();
+        Iterator<Long> iter = checkboxGroup.keySet().iterator();
+        while(iter.hasNext()) {
+            Long key = iter.next();
+            List<AttributeValueCheckBox> list = checkboxGroup.get(key);
+            for(AttributeValueCheckBox checkBox : list) {
+                if(checkBox.isCheckBoxSelected()) {
+                    specification.append(checkBox.attributeValue.getName());
+                    specification.append(" - ");
+                    properties.append(checkBox.attributeValue.getAttributeName().getId()+":"+checkBox.attributeValue.getId());
+                    properties.append(";");
                 }
-                //单位
-                rowData.add(new TableCellMetadata("个"));
-                //数量
-                rowData.add(new TableCellMetadata("0"));
-                //单价
-                rowData.add(new TableCellMetadata("0.00"));
-                //状态
-                rowData.add(new TableCellMetadata(Status.AVAILABLE.getText()));
-                //SKU名称
-                if(str.endsWith("/")) {
-                    str = str.replaceAll(":\\d+/", "-") + selectedProduct.getName();
-                }
-                rowData.add(new TableCellMetadata(str));
-                //SKU二维码
-                try {
-                    String barcode = HttpClient.GET("/barcode");
-                    rowData.add(new TableCellMetadata(barcode));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                //产品编码
-                rowData.add(new TableCellMetadata(selectedProduct.getCode()));
-                tableView.getItems().add(rowData);
             }
         }
+        if(specification.toString().endsWith(" - ")) {
+            specification.delete(specification.length() - 3, specification.length());
+        }
+        txtFieldNotes.setText(specification.toString());
+        updatedSKU.setProperties(properties.toString());
+        updatedSKU.setSpecification(specification.toString());
+        updatedSKU.setSkuName(specification.toString());
     }
 
-    public String multiRound(List<List<String>> dataList, String temp, int index) {
-        if (index >= dataList.size()) {
-            return "";
-        }
-        StringBuilder out = new StringBuilder();
-        String tmp;
-        List<String> data = dataList.get(index);
-        for (String datum : data) {
-            tmp = datum + "/";
-            if (index < dataList.size()) {
-                out.append(multiRound(dataList, temp + tmp, index + 1));
-            }
-            if (index == dataList.size() - 1) {
-                out.append(temp).append(tmp).append("$");
-            }
-        }
-        return out.toString();
-    }
-
-    public boolean isSelected() {
-        return checkBoxWithoutName.isSelected();
+    private boolean isCheckBoxSelected() {
+         return checkBoxWithoutName.isSelected();
     }
 
     public void setSelected(boolean selected) {
         checkBoxWithoutName.setSelected(selected);
-    }
-
-    public TableColumn<ObservableList<TableCellMetadata>, String> getTableColumn() {
-        return tableColumn;
-    }
-
-    public AttributeValue getAttributeValue() {
-        return attributeValue;
+        fire();
     }
 }

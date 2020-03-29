@@ -261,6 +261,29 @@ public class SKU {
 
     @Override
     public String toString() {
-        return skuName;
+        return "SKU{" +
+                "id=" + id +
+                ", product=" + product +
+                ", skuCode='" + skuCode + '\'' +
+                ", skuName='" + skuName + '\'' +
+                ", specification='" + specification + '\'' +
+                ", unit='" + unit + '\'' +
+                ", quantity=" + quantity +
+                ", price=" + price +
+                ", discountedPrice=" + discountedPrice +
+                ", status='" + status + '\'' +
+                ", properties='" + properties + '\'' +
+                ", barCode='" + barCode + '\'' +
+                ", skuSlotMappings=" + skuSlotMappings +
+                ", pictures=" + pictures +
+                ", dateCreated=" + dateCreated +
+                ", creator='" + creator + '\'' +
+                ", dateUpdated=" + dateUpdated +
+                ", updater='" + updater + '\'' +
+                ", updatedCount=" + updatedCount +
+                ", dateDeleted=" + dateDeleted +
+                ", deleteFlag=" + deleteFlag +
+                ", deleter='" + deleter + '\'' +
+                '}';
     }
 }

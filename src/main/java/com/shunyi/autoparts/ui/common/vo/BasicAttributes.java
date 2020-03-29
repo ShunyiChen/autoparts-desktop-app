@@ -168,8 +168,28 @@ public class BasicAttributes {
         this.deleter = deleter;
     }
 
+//    @Override
+//    public String toString() {
+//        return attributeValue.getAttributeName().getName() + "-" +attributeValue.getName();
+//    }
+
     @Override
     public String toString() {
-        return attributeValue.getAttributeName().getName() + "-" +attributeValue.getName();
+        return "BasicAttributes{" +
+                "id=" + id +
+                ", product=" + product +
+                ", attributeNameId=" + attributeNameId +
+                ", attributeValue=" + attributeValue +
+                ", isSKU=" + isSKU +
+                ", skuId=" + skuId +
+                ", dateCreated=" + dateCreated +
+                ", creator='" + creator + '\'' +
+                ", dateUpdated=" + dateUpdated +
+                ", updater='" + updater + '\'' +
+                ", updatedCount=" + updatedCount +
+                ", dateDeleted=" + dateDeleted +
+                ", deleteFlag=" + deleteFlag +
+                ", deleter='" + deleter + '\'' +
+                '}';
     }
 }
