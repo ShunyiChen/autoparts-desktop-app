@@ -125,7 +125,7 @@ public class ProductSKUController {
                         return "";
                     }
                 };
-                controller.prepare(dialog, product, selectedSKU, callback);
+                controller.prepare(dialog, product, selectedSKU, callback, selectedSKU.getSpecification());
                 dialog.setTitle("属性组合");
                 dialog.initOwner(stage);
                 dialog.setResizable(true);

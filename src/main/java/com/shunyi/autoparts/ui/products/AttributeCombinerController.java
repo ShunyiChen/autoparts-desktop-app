@@ -28,6 +28,7 @@ public class AttributeCombinerController {
     private Stage dialog;
     private Product product;
     private SKU updatedSKU = new SKU();
+    private String specification;
     private LinkedHashMap<Long, List<AttributeValueCheckBox>> checkboxGroup = new LinkedHashMap<>();
     private List<Long> selectedAttributeValueIds = new ArrayList<>();
     private Callback<SKU, String> callback;
@@ -38,11 +39,20 @@ public class AttributeCombinerController {
     @FXML
     private Button btnOK;
 
-    public void prepare(Stage dialog, Product product, SKU updatedSKU, Callback<SKU, String> callback) {
+    /**
+     *
+     * @param dialog
+     * @param product
+     * @param updatedSKU
+     * @param callback
+     * @param specification  用于赋值，因为updatedSKU属性会被checlbox事件覆盖
+     */
+    public void prepare(Stage dialog, Product product, SKU updatedSKU, Callback<SKU, String> callback, String specification) {
         this.dialog = dialog;
         this.product = product;
         this.updatedSKU = updatedSKU;
         this.callback = callback;
+        this.specification = specification;
         vbox.getChildren().clear();
         btnOK.setStyle(String.format("-fx-base: %s;", "rgb(63,81,181)"));
         init();
@@ -79,7 +89,7 @@ public class AttributeCombinerController {
             checkboxGroup.put(attributeName.getId(), new ArrayList<>());
             vbox.getChildren().add(createCheckBoxFlowPane(attributeName));
         }
-        txtFieldNotes.setText("ddd");
+        txtFieldNotes.setText(specification);
     }
 
     /**
