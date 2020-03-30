@@ -32,7 +32,6 @@ import java.util.*;
 public class ProductDetailsController {
 
     private MainApp application;
-
     @FXML
     private TextField txtCode;
     @FXML

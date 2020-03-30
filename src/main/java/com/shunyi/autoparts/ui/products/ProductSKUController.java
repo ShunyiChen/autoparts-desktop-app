@@ -1,26 +1,21 @@
 package com.shunyi.autoparts.ui.products;
 
-import com.shunyi.autoparts.ui.MainApp;
 import com.shunyi.autoparts.ui.common.*;
 import com.shunyi.autoparts.ui.common.vo.Picture;
 import com.shunyi.autoparts.ui.common.vo.Product;
 import com.shunyi.autoparts.ui.common.vo.SKU;
 import com.shunyi.autoparts.ui.common.vo.SKUSlotMapping;
-import javafx.beans.binding.Bindings;
-import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
@@ -30,7 +25,11 @@ import javafx.util.Callback;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 产品SKU
@@ -190,7 +189,6 @@ public class ProductSKUController {
             }
         });
 
-
         colQuantity.setCellFactory(cellFactory);
         colQuantity.setCellValueFactory(
                 new PropertyValueFactory<SKU, Integer>("quantity")
@@ -228,7 +226,6 @@ public class ProductSKUController {
                 }
             }
         });
-
 
         colDiscountedPrice.setCellFactory(cellFactory);
         colDiscountedPrice.setCellValueFactory(
@@ -321,12 +318,56 @@ public class ProductSKUController {
 
     @FXML
     private void save() {
+        List<SKU> lstSKU = skuTable.getItems();
+        lstSKU.forEach(sku -> {
+            if(sku.getId() == null) {
+                String data = GoogleJson.GET().toJson(sku);
+                try {
+                    String idStr = HttpClient.POST("/sku", data);
+                    sku.setId(Long.valueOf(idStr));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                String data = GoogleJson.GET().toJson(sku);
+                try {
+                    HttpClient.PUT("/sku", data);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
 
+        List<Long> lstID = getProductSKUIDArray();
+        List<Long> deletableIds = lstID.stream().filter(e -> !existInTable(e)).collect(Collectors.toList());
+        for (Long deletableId : deletableIds) {
+            try {
+                HttpClient.DELETE("/sku/"+deletableId);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private boolean existInTable(Long id) {
+        List<Long> tableSKUIDs = skuTable.getItems().stream().map(e -> e.getId()).collect(Collectors.toList());
+        return tableSKUIDs.contains(id);
     }
 
     @FXML
     private void delete() {
         skuTable.getItems().removeAll(skuTable.getSelectionModel().getSelectedItems());
         skuTable.getSelectionModel().clearSelection();
+    }
+
+    private List<Long> getProductSKUIDArray() {
+        try {
+            SKU[] skuArray = HttpClient.GET("/sku/products/"+product.getId(), SKU[].class);
+            List<Long> lstID = Arrays.asList(skuArray).stream().map(e -> e.getId()).collect(Collectors.toList());
+            return lstID;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return new ArrayList<>();
     }
 }
