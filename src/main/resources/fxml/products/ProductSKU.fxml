@@ -19,15 +19,26 @@
                </font>
             </Button>
             <Separator />
-            <Button mnemonicParsing="false" text="保存" onAction="#save">
+            <Button fx:id="btnOK" mnemonicParsing="false" text="保存" onAction="#save">
                <font>
                   <Font size="14.0" />
                </font>
             </Button>
-            <Button mnemonicParsing="false" text="删除" onAction="#delete">
+            <Button fx:id="btnDelete" mnemonicParsing="false" text="删除" onAction="#delete">
                <font>
                   <Font size="14.0" />
                </font>
+            </Button>
+            <Separator />
+            <Button fx:id="btnSpec" mnemonicParsing="false" text="规格" onAction="#openSpec">
+                <font>
+                    <Font size="14.0" />
+                </font>
+            </Button>
+            <Button fx:id="btnSlot" mnemonicParsing="false" text="货位" onAction="#openSlotChooser">
+                <font>
+                    <Font size="14.0" />
+                </font>
             </Button>
         </items>
       </ToolBar>
@@ -46,9 +57,9 @@
             <TableColumn fx:id="colProperties" prefWidth="175.0" text="属性字符串" />
             <TableColumn fx:id="colBarCode" prefWidth="175.0" text="条形码" />
             <TableColumn fx:id="colSkuSlot" prefWidth="115.0" text="货位" />
-            <TableColumn fx:id="colSateCreated" prefWidth="115.0" text="创建时间" />
+            <TableColumn fx:id="colDateCreated" prefWidth="175.0" text="创建时间" />
             <TableColumn fx:id="colCreator" prefWidth="115.0" text="创建者" />
-            <TableColumn fx:id="colSateUpdated" prefWidth="115.0" text="更新时间" />
+            <TableColumn fx:id="colSateUpdated" prefWidth="175.0" text="更新时间" />
             <TableColumn fx:id="colUpdater" prefWidth="115.0" text="更新者" />
         </columns>
          <BorderPane.margin>

@@ -33,4 +33,6 @@ public class Constants {
     public static final Long PARENT_ID = -1L;
     /** SKU初始库存数量 */
     public static final Integer QUANTITY = 0;
+    /** 创建日期pattern */
+    public static final String PATTERN = "yyyy-MM-dd HH:mm:ss";
 }

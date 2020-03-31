@@ -624,7 +624,7 @@ public class ProductDetailsController {
         colPrice.setCellValueFactory(new PropertyValueFactory<Product, String>("listPrice"));
         colImported.setCellValueFactory(new PropertyValueFactory<Product, String>("imported"));
         colOrigin.setCellValueFactory(new PropertyValueFactory<Product, String>("origin"));
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat format = new SimpleDateFormat(Constants.PATTERN);
         colDateCreated.setCellValueFactory(param -> {
             if(param.getValue().getDateCreated() == null) {
                 return new SimpleObjectProperty<>("");

@@ -5,15 +5,15 @@ import com.shunyi.autoparts.ui.common.vo.Picture;
 import com.shunyi.autoparts.ui.common.vo.Product;
 import com.shunyi.autoparts.ui.common.vo.SKU;
 import com.shunyi.autoparts.ui.common.vo.SKUSlotMapping;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseButton;
@@ -25,6 +25,7 @@ import javafx.util.Callback;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -65,13 +66,19 @@ public class ProductSKUController {
     @FXML
     private TableColumn colSkuSlot;
     @FXML
-    private TableColumn colSateCreated;
+    private TableColumn<SKU, String> colDateCreated;
     @FXML
     private TableColumn colCreator;
     @FXML
-    private TableColumn colSateUpdated;
+    private TableColumn<SKU, String> colSateUpdated;
     @FXML
     private TableColumn colUpdater;
+    @FXML
+    private Button btnOK;
+    @FXML
+    private Button btnDelete;
+    @FXML
+    private Button btnSlot;
 
     /**
      * 构造器
@@ -95,44 +102,24 @@ public class ProductSKUController {
         skuTable.getStylesheets().add(css);
         skuTable.setId("my-table");
         skuTable.setEditable(true);
+
+        try {
+            SKU[] skuArray = HttpClient.GET("/sku/products/"+product.getId(), SKU[].class);
+            skuTable.getItems().addAll(skuArray);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         //表格行双击事件
         skuTable.setOnMouseClicked(event -> {
             if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2){
-                SKU selectedSKU = skuTable.getSelectionModel().getSelectedItem();
-                FXMLLoader loader = new FXMLLoader(
-                        getClass().getResource(
-                                "/fxml/products/AttributeCombiner.fxml"
-                        )
-                );
-                BorderPane root = null;
-                try {
-                    root = loader.load();
-                } catch (IOException e) {
-                    e.printStackTrace();
+                TablePosition tp = skuTable.getFocusModel().getFocusedCell();
+                if(tp.getTableColumn() == colSpecification) {
+                    openSpec();
                 }
-                Scene scene = new Scene(root);
-                Stage dialog = new Stage();
-                AttributeCombinerController controller = loader.getController();
-                Callback<SKU, String> callback = new Callback<SKU, String>() {
-                    @Override
-                    public String call(SKU param) {
-                        selectedSKU.setSkuName(param.getSkuName());
-                        selectedSKU.setSpecification(param.getSpecification());
-                        selectedSKU.setProperties(param.getProperties());
-                        skuTable.refresh();
-                        skuTable.getSelectionModel().select(selectedSKU);
-                        return "";
-                    }
-                };
-                controller.prepare(dialog, product, selectedSKU, callback, selectedSKU.getSpecification());
-                dialog.setTitle("属性组合");
-                dialog.initOwner(stage);
-                dialog.setResizable(true);
-                dialog.initModality(Modality.WINDOW_MODAL);
-                dialog.setScene(scene);
-                // center stage on screen
-                dialog.centerOnScreen();
-                dialog.show();
+                else if (tp.getTableColumn() == colSkuSlot) {
+                    openSlotChooser();
+                }
             }
         });
 
@@ -289,18 +276,35 @@ public class ProductSKUController {
         colSkuSlot.setCellValueFactory(
                 new PropertyValueFactory<SKU, String>("skuSlotMappings")
         );
-        colSateCreated.setCellValueFactory(
-                new PropertyValueFactory<SKU, String>("dateCreated")
-        );
+        SimpleDateFormat format = new SimpleDateFormat(Constants.PATTERN);
+        colDateCreated.setCellValueFactory(param -> {
+            if(param.getValue().getDateCreated() == null) {
+                return new SimpleObjectProperty<>("");
+            } else {
+                return new SimpleObjectProperty<>(format.format(param.getValue().getDateCreated()));
+            }
+        });
         colCreator.setCellValueFactory(
                 new PropertyValueFactory<SKU, String>("creator")
         );
-        colSateUpdated.setCellValueFactory(
-                new PropertyValueFactory<SKU, String>("dateUpdated")
-        );
+        colSateUpdated.setCellValueFactory(param -> {
+            if(param.getValue().getDateCreated() == null) {
+                return new SimpleObjectProperty<>("");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getDateUpdated() == null ? "" : format.format(param.getValue().getDateUpdated()));
+            }
+        });
         colUpdater.setCellValueFactory(
                 new PropertyValueFactory<SKU, String>("updater")
         );
+
+        skuTable.getItems().addListener(new ListChangeListener<SKU>(){
+            @Override
+            public void onChanged(Change<? extends SKU> c) {
+                btnOK.setDisable(false);
+            }
+        });
+        btnOK.setDisable(true);
     }
 
     @FXML
@@ -320,7 +324,7 @@ public class ProductSKUController {
     private void save() {
         List<SKU> lstSKU = skuTable.getItems();
         lstSKU.forEach(sku -> {
-            if(sku.getId() == null) {
+            if(sku.getId().equals(Constants.ID)) {
                 String data = GoogleJson.GET().toJson(sku);
                 try {
                     String idStr = HttpClient.POST("/sku", data);
@@ -328,10 +332,12 @@ public class ProductSKUController {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+
             } else {
+                sku.setUpdater(Env.getInstance().currentUser());
                 String data = GoogleJson.GET().toJson(sku);
                 try {
-                    HttpClient.PUT("/sku", data);
+                    HttpClient.PUT("/sku/"+sku.getId(), data);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -347,6 +353,7 @@ public class ProductSKUController {
                 e.printStackTrace();
             }
         }
+        btnOK.setDisable(true);
     }
 
     private boolean existInTable(Long id) {
@@ -358,6 +365,50 @@ public class ProductSKUController {
     private void delete() {
         skuTable.getItems().removeAll(skuTable.getSelectionModel().getSelectedItems());
         skuTable.getSelectionModel().clearSelection();
+    }
+
+    @FXML
+    private void openSlotChooser() {
+
+    }
+
+    @FXML
+    private void openSpec() {
+        SKU selectedSKU = skuTable.getSelectionModel().getSelectedItem();
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource(
+                        "/fxml/products/AttributeCombiner.fxml"
+                )
+        );
+        BorderPane root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Scene scene = new Scene(root);
+        Stage dialog = new Stage();
+        AttributeCombinerController controller = loader.getController();
+        Callback<SKU, String> callback = new Callback<SKU, String>() {
+            @Override
+            public String call(SKU param) {
+                selectedSKU.setSkuName(param.getSkuName());
+                selectedSKU.setSpecification(param.getSpecification());
+                selectedSKU.setProperties(param.getProperties());
+                skuTable.refresh();
+                skuTable.getSelectionModel().select(selectedSKU);
+                return "";
+            }
+        };
+        controller.prepare(dialog, product, selectedSKU, callback, selectedSKU.getSpecification());
+        dialog.setTitle("自定义规格");
+        dialog.initOwner(stage);
+        dialog.setResizable(true);
+        dialog.initModality(Modality.WINDOW_MODAL);
+        dialog.setScene(scene);
+        // center stage on screen
+        dialog.centerOnScreen();
+        dialog.show();
     }
 
     private List<Long> getProductSKUIDArray() {
