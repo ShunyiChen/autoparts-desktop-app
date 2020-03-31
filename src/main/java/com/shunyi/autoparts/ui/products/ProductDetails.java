@@ -9,7 +9,7 @@ import javafx.scene.layout.BorderPane;
 import java.io.IOException;
 
 /**
- * @Description:
+ * @Description: 配件明细
  * @Author: 陈顺谊
  * @CreateDate: 2020/3/23 23:08
  * @Version: 1.0

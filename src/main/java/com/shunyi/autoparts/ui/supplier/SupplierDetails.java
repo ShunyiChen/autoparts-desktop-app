@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.Objects;
 
 /**
- * @Description:
+ * @Description: 供应商明细
  * @Author: 陈顺谊
  * @CreateDate: 2020/3/23 23:05
  * @Version: 1.0

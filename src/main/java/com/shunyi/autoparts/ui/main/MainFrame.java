@@ -36,7 +36,6 @@ public class MainFrame extends BorderPane {
     private NewTab productDetailsTab;
     private NewTab systemSettingsTab;
 
-
     /**
      * Constructor
      *
@@ -52,7 +51,6 @@ public class MainFrame extends BorderPane {
         navigation = new Navigation(application);
         contentPane = new ContentPane(tabPane);
 //        dashboard = new Dashboard(application);
-
         this.setTop(toolbar);
         this.setLeft(navigation);
         this.setCenter(contentPane);
@@ -153,7 +151,6 @@ public class MainFrame extends BorderPane {
         ClickableItem systemSettings = new ClickableItem(icons.settings_transfer_outline(), Constants.SYSTEM_SETTINGS, new Callback() {
             @Override
             public Object call(Object param) {
-//                Maintenance systemMaintenance = new Maintenance(application);
                 toolbar.setTitle(Constants.SYSTEM_SETTINGS);
                 if(systemSettingsTab == null) {
                     systemSettingsTab = new NewTab(Constants.SYSTEM_SETTINGS, new SystemSettings(application));

@@ -30,7 +30,6 @@ public class ResetPasswordController {
     @FXML
     private Button btnReset;
 
-
     public void prepare(Stage dialog, Long userId) {
         this.dialog = dialog;
         this.userId = userId;

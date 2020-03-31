@@ -1,10 +1,7 @@
 package com.shunyi.autoparts.ui.products;
 
 import com.shunyi.autoparts.ui.MainApp;
-import com.shunyi.autoparts.ui.common.Constants;
-import com.shunyi.autoparts.ui.common.GoogleJson;
-import com.shunyi.autoparts.ui.common.NumberValidationUtils;
-import com.shunyi.autoparts.ui.common.HttpClient;
+import com.shunyi.autoparts.ui.common.*;
 import com.shunyi.autoparts.ui.common.vo.*;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
@@ -396,12 +393,20 @@ public class ProductDetailsController {
             alert.show();
             return;
         }
-
         Callback<Product, Object> callback = e -> {
             String json = GoogleJson.GET().toJson(e);
             try {
                 String idStr = HttpClient.POST("/products",json);
                 e.setId(Long.valueOf(idStr));
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+            // 为新建配件创建一个默认的SKU
+            SKU sku = new SKU(Constants.ID, e, "", e.getName(), e.getName(), e.getUnit(), Constants.QUANTITY, e.getListPrice(), e.getListPrice(), Status.AVAILABLE.getText(), "", "", new HashSet<SKUSlotMapping>(), new HashSet<Picture>(), null, null, null, null, null, null, null, null);
+            json = GoogleJson.GET().toJson(sku);
+            try {
+                String idStr = HttpClient.POST("/sku",json);
+                sku.setId(Long.valueOf(idStr));
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
@@ -489,14 +494,35 @@ public class ProductDetailsController {
         }
         Alert alertConfirm = new Alert(Alert.AlertType.CONFIRMATION, "", ButtonType.NO, ButtonType.YES);
         alertConfirm.setHeaderText("是否删除该商品？");
+        alertConfirm.setContentText("删除同时将删除配件SKU");
         alertConfirm.showAndWait().filter(response -> response == ButtonType.YES).ifPresent(response -> {
             try {
+                //删除商品所有SKU
+                SKU[] skuArray = HttpClient.GET("/sku/products/"+selectedProduct.getId(), SKU[].class);
+                Arrays.asList(skuArray).forEach(e -> {
+                    try {
+                        HttpClient.DELETE("/sku/"+e.getId());
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                });
+                //删除商品基本属性
+                BasicAttributes[] basicAttributes = HttpClient.GET("/basic/attributes/products/"+selectedProduct.getId(), BasicAttributes[].class);
+                Arrays.asList(basicAttributes).forEach(e -> {
+                    try {
+                        HttpClient.DELETE("/basic/attributes/"+e.getId());
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                });
+                //删除商品
                 HttpClient.DELETE("/products/"+selectedProduct.getId());
             } catch (IOException e) {
                 e.printStackTrace();
             }
             tableView.getItems().remove(selectedProduct);
         });
+
     }
 
     private void openCustomAttributes() {
@@ -535,9 +561,7 @@ public class ProductDetailsController {
             alert.show();
             return;
         }
-
         Product selectedRow = tableView.getSelectionModel().getSelectedItem();
-
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource(
                         "/fxml/products/basic_attributes.fxml"
@@ -640,11 +664,9 @@ public class ProductDetailsController {
             }
         });
         ContextMenu menu = new ContextMenu();
-
         MenuItem itemDuplicate = new MenuItem("复 制");
         MenuItem itemProductSKU = new MenuItem("产品sku");
         MenuItem itemDefineProperties = new MenuItem("产品属性");
-
         itemDuplicate.setOnAction(e ->{
             duplicate();
         });

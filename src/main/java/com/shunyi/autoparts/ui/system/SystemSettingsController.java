@@ -142,7 +142,7 @@ public class SystemSettingsController {
     }
 
     @FXML
-    void createNewUser() {
+    private void createNewUser() {
         Callback<User, String> callback = (user ->{
             userTable.getItems().add(user);
             userTable.refresh();
@@ -152,7 +152,7 @@ public class SystemSettingsController {
     }
 
     @FXML
-    void updateUser() {
+    private void updateUser() {
         User selectedUser = userTable.getSelectionModel().getSelectedItem();
         if(selectedUser == null) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
@@ -181,7 +181,7 @@ public class SystemSettingsController {
     }
 
     @FXML
-    void deleteUser() {
+    private void deleteUser() {
         User deleteUser = userTable.getSelectionModel().getSelectedItem();
         if(deleteUser == null) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
@@ -230,7 +230,7 @@ public class SystemSettingsController {
     }
 
     @FXML
-    void refreshUser() {
+    private void refreshUser() {
          storeMap = getAllStoresMap();
          roleMap = getAllRolesMap();
 
