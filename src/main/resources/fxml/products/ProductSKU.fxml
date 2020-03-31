@@ -35,11 +35,6 @@
                     <Font size="14.0" />
                 </font>
             </Button>
-            <Button fx:id="btnSlot" mnemonicParsing="false" text="货位" onAction="#openSlotChooser">
-                <font>
-                    <Font size="14.0" />
-                </font>
-            </Button>
         </items>
       </ToolBar>
    </top>

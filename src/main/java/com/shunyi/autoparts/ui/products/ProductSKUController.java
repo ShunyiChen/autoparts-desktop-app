@@ -77,8 +77,6 @@ public class ProductSKUController {
     private Button btnOK;
     @FXML
     private Button btnDelete;
-    @FXML
-    private Button btnSlot;
 
     /**
      * 构造器
@@ -365,7 +363,6 @@ public class ProductSKUController {
         skuTable.getSelectionModel().clearSelection();
     }
 
-    @FXML
     private void openSlotChooser() {
 
     }
