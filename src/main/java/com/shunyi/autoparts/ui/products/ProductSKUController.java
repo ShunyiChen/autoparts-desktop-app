@@ -87,6 +87,7 @@ public class ProductSKUController {
     public void prepare(Stage stage, Product product) {
         this.stage = stage;
         this.product = product;
+        btnOK.setDisable(true);
         initCellFactory();
         initSKUTable();
     }
@@ -120,12 +121,15 @@ public class ProductSKUController {
                 }
             }
         });
+        //监听表格内容变更
+        skuTable.getItems().addListener((ListChangeListener.Change<? extends SKU> c) -> {
+            btnOK.setDisable(false);
+        });
 
         colCode.setCellValueFactory(
             new PropertyValueFactory<SKU, String>("skuCode")
         );
         colCode.setCellFactory(cellFactory);
-//        colCode.setCellFactory(TextFieldTableCell.forTableColumn());
         colCode.setOnEditCommit((EventHandler<TableColumn.CellEditEvent<SKU, String>>) t -> {
             ObservableList<SKU> data = t.getTableView().getItems();
             if(data != null) {
@@ -134,6 +138,7 @@ public class ProductSKUController {
                     if(selected != null) {
                         selected.setSkuCode(t.getNewValue());
                     }
+                    data.set(t.getTablePosition().getRow(), selected);
                 }
             }
         });
@@ -150,6 +155,7 @@ public class ProductSKUController {
                     if(selected != null) {
                         selected.setSkuName(t.getNewValue());
                     }
+                    data.set(t.getTablePosition().getRow(), selected);
                 }
             }
         });
@@ -170,6 +176,7 @@ public class ProductSKUController {
                     if(selected != null) {
                         selected.setUnit(t.getNewValue());
                     }
+                    data.set(t.getTablePosition().getRow(), selected);
                 }
             }
         });
@@ -264,6 +271,7 @@ public class ProductSKUController {
                     SKU selected = data.get( t.getTablePosition().getRow());
                     if(selected != null) {
                         selected.setBarCode(t.getNewValue());
+                        data.set(t.getTablePosition().getRow(), selected);
                     }
                 }
             }
@@ -293,14 +301,6 @@ public class ProductSKUController {
         colUpdater.setCellValueFactory(
                 new PropertyValueFactory<SKU, String>("updater")
         );
-
-        skuTable.getItems().addListener(new ListChangeListener<SKU>(){
-            @Override
-            public void onChanged(Change<? extends SKU> c) {
-                btnOK.setDisable(false);
-            }
-        });
-        btnOK.setDisable(true);
     }
 
     @FXML
@@ -392,6 +392,7 @@ public class ProductSKUController {
                 selectedSKU.setProperties(param.getProperties());
                 skuTable.refresh();
                 skuTable.getSelectionModel().select(selectedSKU);
+                btnOK.setDisable(false);
                 return "";
             }
         };

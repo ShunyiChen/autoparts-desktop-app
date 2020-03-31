@@ -54,6 +54,7 @@ public class AttributeCombinerController {
         this.callback = callback;
         this.specification = specification;
         vbox.getChildren().clear();
+        vbox.prefWidthProperty().bind(dialog.widthProperty());
         btnOK.setStyle(String.format("-fx-base: %s;", "rgb(63,81,181)"));
         init();
         initCheckBoxesGroup();
@@ -88,6 +89,9 @@ public class AttributeCombinerController {
         for(AttributeName attributeName : distinctList) {
             checkboxGroup.put(attributeName.getId(), new ArrayList<>());
             vbox.getChildren().add(createCheckBoxFlowPane(attributeName));
+        }
+        if(distinctList.size() == 0) {
+            this.updatedSKU.setProperties("");
         }
         txtFieldNotes.setText(specification);
     }

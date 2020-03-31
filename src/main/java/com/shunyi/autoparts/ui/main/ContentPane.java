@@ -19,7 +19,6 @@ public class ContentPane extends BorderPane {
 
     private BorderPane viewport = new BorderPane();
     private TabPane tabPane;
-//    private List<String> tabTextList = new ArrayList<>();
 
     public ContentPane(TabPane tabPane) {
         this.tabPane = tabPane;

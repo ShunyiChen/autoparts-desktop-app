@@ -163,6 +163,12 @@ public class ProductDetailsController {
     @FXML
     private void updateCategory() {
         TreeItem<Category> selected = treeView.getSelectionModel().getSelectedItem();
+        if(selected == null) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
+            alert.setHeaderText("请选择一个节点");
+            alert.show();
+            return;
+        }
         if(selected.getValue().getId() == 0) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
             alert.setHeaderText("根节点不可更新");
@@ -194,6 +200,11 @@ public class ProductDetailsController {
         }
     }
 
+    /**
+     *
+     * @param callback
+     * @param updatedCategory
+     */
     private void openCategoryEditor(Callback<Category, Object> callback, Category updatedCategory) {
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource(
@@ -252,6 +263,13 @@ public class ProductDetailsController {
             alertConfirm.setHeaderText("是否删除该类目？");
             alertConfirm.showAndWait().filter(response -> response == ButtonType.YES).ifPresent(response -> {
                 try {
+                    BrandSeries[] brandSeries = HttpClient.GET("/brandSeries/category/"+selected.getValue().getId(), BrandSeries[].class);
+                    if(brandSeries.length > 0) {
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
+                        alert.setHeaderText("该类目下存在品牌无法删除");
+                        alert.show();
+                        return;
+                    }
                     HttpClient.DELETE("/categories/"+selected.getValue().getId());
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -350,6 +368,13 @@ public class ProductDetailsController {
         alertConfirm.setHeaderText("是否删除该品牌？");
         alertConfirm.showAndWait().filter(response -> response == ButtonType.YES).ifPresent(response -> {
             try {
+                Product[] products = HttpClient.GET("/products/brandSeries/"+selected.getId(), Product[].class);
+                if(products.length > 0) {
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
+                    alert.setHeaderText("该品牌下存在配件无法删除");
+                    alert.show();
+                    return;
+                }
                 HttpClient.DELETE("/brandSeries/"+selected.getId());
             } catch (IOException e) {
                 e.printStackTrace();
@@ -562,6 +587,12 @@ public class ProductDetailsController {
             return;
         }
         Product selectedRow = tableView.getSelectionModel().getSelectedItem();
+        if(selectedRow == null) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
+            alert.setHeaderText("请选择一个配件");
+            alert.show();
+            return;
+        }
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource(
                         "/fxml/products/basic_attributes.fxml"
@@ -705,6 +736,12 @@ public class ProductDetailsController {
     @FXML
     private void duplicate() {
         Product selected = tableView.getSelectionModel().getSelectedItem();
+        if(selected == null) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
+            alert.setHeaderText("请选择一个配件");
+            alert.show();
+            return;
+        }
         String json = null;
         try {
             json = HttpClient.GET("/products/"+selected.getId());

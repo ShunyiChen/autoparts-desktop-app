@@ -57,7 +57,7 @@
       </ToolBar>
    </top>
    <center>
-      <SplitPane fx:id="splitPane" dividerPositions="0.2" prefHeight="160.0" BorderPane.alignment="CENTER">
+      <SplitPane fx:id="splitPane" dividerPositions="0.14" prefHeight="160.0" BorderPane.alignment="CENTER">
          <items>
             <TreeView fx:id="supplierCategoryTree" prefHeight="671.0" />
             <BorderPane prefHeight="200.0" prefWidth="200.0">

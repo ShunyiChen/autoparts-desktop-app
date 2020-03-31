@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TreeView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<TabPane fx:id="tabPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="515.0" prefWidth="1265.0" side="LEFT" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.shunyi.autoparts.ui.inventory.InventoryDetailsController">
+    <tabs>
+        <Tab text="SKU明细">
+            <content>
+                <BorderPane>
+                    <center>
+                        <SplitPane dividerPositions="0.14" prefHeight="160.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                            <items>
+                                <BorderPane prefHeight="398.0" prefWidth="219.0">
+                                    <center>
+                                        <TreeView fx:id="treeView" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+                                    </center>
+                                </BorderPane>
+                                <BorderPane prefHeight="200.0" prefWidth="200.0">
+                                    <top>
+                                        <VBox prefHeight="85.0" prefWidth="980.0" BorderPane.alignment="CENTER">
+                                            <children>
+                                                <FlowPane alignment="CENTER_LEFT" hgap="5.0" prefHeight="40.0" prefWidth="511.0">
+                                                    <children>
+                                          <Label layoutX="10.0" layoutY="21.0" text="配件编码:">
+                                             <font>
+                                                <Font size="14.0" />
+                                             </font>
+                                          </Label>
+                                          <TextField fx:id="txtProductCode" layoutX="140.0" layoutY="16.0" prefWidth="150.0">
+                                             <font>
+                                                <Font size="14.0" />
+                                             </font>
+                                          </TextField>
+                                                        <Label text="配件名称:">
+                                                            <font>
+                                                                <Font size="14.0" />
+                                                            </font>
+                                                        </Label>
+                                                        <TextField fx:id="txtProductName" prefWidth="150.0">
+                                                            <font>
+                                                                <Font size="14.0" />
+                                                            </font>
+                                                        </TextField>
+                                                        <Label text="SKU编码:">
+                                                            <font>
+                                                                <Font size="14.0" />
+                                                            </font>
+                                                        </Label>
+                                                        <TextField fx:id="txtSKUCode" prefWidth="150.0">
+                                                            <font>
+                                                                <Font size="14.0" />
+                                                            </font>
+                                                        </TextField>
+                                                        <Label text="SKU名称:">
+                                                            <font>
+                                                                <Font size="14.0" />
+                                                            </font>
+                                                        </Label>
+                                                        <TextField fx:id="txtSKUName" prefWidth="150.0">
+                                                            <font>
+                                                                <Font size="14.0" />
+                                                            </font>
+                                                        </TextField>
+                                                        <Button mnemonicParsing="false" text="查  询" onAction="#searchSKU">
+                                                            <font>
+                                                                <Font size="14.0" />
+                                                            </font>
+                                                        </Button>
+                                                        <Button mnemonicParsing="false" text="清  空" onAction="#clearSKUCondition">
+                                                            <font>
+                                                                <Font size="14.0" />
+                                                            </font>
+                                                        </Button>
+                                                    </children>
+                                                </FlowPane>
+                                                <FlowPane alignment="CENTER_LEFT" prefHeight="40.0" prefWidth="200.0">
+                                                    <children>
+                                                        <Label alignment="CENTER" prefHeight="19.0" prefWidth="65.0" text="供应商:">
+                                                            <font>
+                                                                <Font size="14.0" />
+                                                            </font>
+                                                        </Label>
+                                                        <TextField fx:id="txtSupplier" prefWidth="150.0">
+                                                            <font>
+                                                                <Font size="14.0" />
+                                                            </font>
+                                                        </TextField>
+                                                        <Label alignment="CENTER" prefHeight="19.0" prefWidth="69.0" text="条形码:">
+                                                            <font>
+                                                                <Font size="14.0" />
+                                                            </font>
+                                                        </Label>
+                                                        <TextField fx:id="txtBarcode" prefWidth="150.0">
+                                                            <font>
+                                                                <Font size="14.0" />
+                                                            </font>
+                                                        </TextField>
+                                                        <Label alignment="CENTER" prefHeight="19.0" prefWidth="70.0" text="规格:">
+                                                            <font>
+                                                                <Font size="14.0" />
+                                                            </font>
+                                                        </Label>
+                                                        <TextField fx:id="txtSpec" prefWidth="150.0">
+                                                            <font>
+                                                                <Font size="14.0" />
+                                                            </font>
+                                                        </TextField>
+                                                    </children>
+                                                </FlowPane>
+                                            </children>
+                                        </VBox>
+                                    </top>
+                                    <center>
+                                        <TableView fx:id="tableViewForSKUDetails" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                                            <columns>
+                                                <TableColumn fx:id="colProductCode" prefWidth="75.0" text="配件编号" />
+                                                <TableColumn fx:id="colProductName" prefWidth="75.0" text="配件名称" />
+                                                <TableColumn fx:id="colProductBarcode" prefWidth="75.0" text="配件条形码" />
+                                                <TableColumn fx:id="colBrand" prefWidth="75.0" text="品牌" />
+                                                <TableColumn fx:id="colCar" prefWidth="75.0" text="通用车型" />
+                                                <TableColumn fx:id="colSupplier" prefWidth="75.0" text="供应商" />
+                                                <TableColumn fx:id="colUnit" prefWidth="75.0" text="单位" />
+                                                <TableColumn fx:id="colListPrice" prefWidth="75.0" text="列表价" />
+                                                <TableColumn fx:id="colImport" prefWidth="75.0" text="进口" />
+                                                <TableColumn fx:id="colOrigin" prefWidth="75.0" text="原产地" />
+                                                <TableColumn fx:id="colSKUCode" prefWidth="75.0" text="SKU编码" />
+                                                <TableColumn fx:id="colSKUName" prefWidth="75.0" text="SKU名称" />
+                                                <TableColumn fx:id="colSpec" prefWidth="75.0" text="规格" />
+                                                <TableColumn fx:id="colQty" prefWidth="75.0" text="库存数量" />
+                                                <TableColumn fx:id="colPrice" prefWidth="75.0" text="销售价" />
+                                                <TableColumn fx:id="colDiscountedPrice" prefWidth="75.0" text="折扣价" />
+                                                <TableColumn fx:id="colStatus" prefWidth="75.0" text="状态" />
+                                                <TableColumn fx:id="colSKUBarcode" prefWidth="75.0" text="条形码" />
+                                            </columns>
+                                            <BorderPane.margin>
+                                                <Insets bottom="30.0" />
+                                            </BorderPane.margin>
+                                        </TableView>
+                                    </center>
+                                </BorderPane>
+                            </items>
+                        </SplitPane>
+                    </center>
+                </BorderPane>
+            </content>
+        </Tab>
+      <Tab text="库存商品明细账">
+         <content>
+            <BorderPane>
+               <center>
+                  <SplitPane dividerPositions="0.14" prefHeight="160.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                     <items>
+                        <BorderPane prefHeight="398.0" prefWidth="219.0">
+                           <center>
+                              <TreeView fx:id="treeView1" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+                           </center>
+                        </BorderPane>
+                        <BorderPane prefHeight="200.0" prefWidth="200.0">
+                           <top>
+                              <VBox prefHeight="85.0" prefWidth="980.0" BorderPane.alignment="CENTER">
+                                 <children>
+                                    <FlowPane alignment="CENTER_LEFT" hgap="5.0" prefHeight="40.0" prefWidth="511.0">
+                                       <children>
+                                          <Label text="产品名称:">
+                                             <font>
+                                                <Font size="14.0" />
+                                             </font>
+                                          </Label>
+                                          <TextField prefWidth="150.0">
+                                             <font>
+                                                <Font size="14.0" />
+                                             </font>
+                                          </TextField>
+                                          <Label text="SKU编码:">
+                                             <font>
+                                                <Font size="14.0" />
+                                             </font>
+                                          </Label>
+                                          <TextField prefWidth="150.0">
+                                             <font>
+                                                <Font size="14.0" />
+                                             </font>
+                                          </TextField>
+                                          <Label text="SKU名称:">
+                                             <font>
+                                                <Font size="14.0" />
+                                             </font>
+                                          </Label>
+                                          <TextField prefWidth="150.0">
+                                             <font>
+                                                <Font size="14.0" />
+                                             </font>
+                                          </TextField>
+                                          <Label alignment="CENTER" prefHeight="19.0" prefWidth="60.0" text="规格:">
+                                             <font>
+                                                <Font size="14.0" />
+                                             </font>
+                                          </Label>
+                                          <TextField prefWidth="150.0">
+                                             <font>
+                                                <Font size="14.0" />
+                                             </font>
+                                          </TextField>
+                                          <Button mnemonicParsing="false" text="查  询" onAction="#searchAccount">
+                                             <font>
+                                                <Font size="14.0" />
+                                             </font>
+                                          </Button>
+                                          <Button mnemonicParsing="false" text="清  空" onAction="#clearAccountCondition">
+                                             <font>
+                                                <Font size="14.0" />
+                                             </font>
+                                          </Button>
+                                       </children>
+                                    </FlowPane>
+                                    <FlowPane alignment="CENTER_LEFT" prefHeight="40.0" prefWidth="200.0">
+                                       <children>
+                                          <Label layoutX="225.0" layoutY="21.0" prefHeight="19.0" prefWidth="65.0" text="统计日期:">
+                                             <font>
+                                                <Font size="14.0" />
+                                             </font>
+                                          </Label>
+                                          <DatePicker prefHeight="29.0" prefWidth="150.0" />
+                                          <Label alignment="CENTER" layoutX="444.0" layoutY="21.0" prefHeight="19.0" prefWidth="69.0" text="- 至 - ">
+                                             <font>
+                                                <Font size="14.0" />
+                                             </font>
+                                          </Label>
+                                          <DatePicker layoutX="513.0" layoutY="16.0" prefHeight="29.0" prefWidth="150.0" />
+                                       </children>
+                                    </FlowPane>
+                                 </children>
+                              </VBox>
+                           </top>
+                           <center>
+                              <TableView fx:id="tableViewForAccount" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                                 <columns>
+                                    <TableColumn fx:id="colProductCode2" prefWidth="125.0" text="产品编码" />
+                                    <TableColumn fx:id="colProductName2" prefWidth="150.0" text="产品名称" />
+                                    <TableColumn fx:id="colSKUCode2" prefWidth="125.0" text="SKU编码" />
+                                    <TableColumn fx:id="colSKUName2" prefWidth="150.0" text="SKU名称" />
+                                    <TableColumn fx:id="colSKUSpec2" prefWidth="150.0" text="规格" />
+                                    <TableColumn fx:id="colImport2" prefWidth="150.0" text="进货">
+                                       <columns>
+                                          <TableColumn fx:id="colQty1" prefWidth="75.0" text="数量" />
+                                          <TableColumn fx:id="colPrice1" prefWidth="75.0" text="单价" />
+                                          <TableColumn fx:id="colSum1" prefWidth="75.0" text="金额" />
+                                       </columns>
+                                    </TableColumn>
+                                    <TableColumn prefWidth="75.0" text="销售">
+                                       <columns>
+                                          <TableColumn fx:id="colQty2" prefWidth="75.0" text="数量" />
+                                          <TableColumn fx:id="colPrice2" prefWidth="75.0" text="单价" />
+                                          <TableColumn fx:id="colSum2" prefWidth="75.0" text="金额" />
+                                       </columns>
+                                    </TableColumn>
+                                    <TableColumn prefWidth="75.0" text="结存">
+                                       <columns>
+                                          <TableColumn fx:id="colQty3" prefWidth="75.0" text="数量" />
+                                          <TableColumn fx:id="colPrice3" prefWidth="75.0" text="单价" />
+                                          <TableColumn fx:id="colSum3" prefWidth="75.0" text="金额" />
+                                       </columns>
+                                    </TableColumn>
+                                 </columns>
+                                 <BorderPane.margin>
+                                    <Insets bottom="30.0" />
+                                 </BorderPane.margin>
+                              </TableView>
+                           </center>
+                        </BorderPane>
+                     </items>
+                  </SplitPane>
+               </center>
+            </BorderPane>
+         </content>
+      </Tab>
+    </tabs>
+</TabPane>
