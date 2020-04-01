@@ -3,6 +3,7 @@ package com.shunyi.autoparts.ui.purchase;
 import com.shunyi.autoparts.ui.MainApp;
 import com.shunyi.autoparts.ui.common.GoogleJson;
 import com.shunyi.autoparts.ui.common.HttpClient;
+import com.shunyi.autoparts.ui.common.vo.PurchaseOrder;
 import com.shunyi.autoparts.ui.common.vo.Supplier;
 import com.shunyi.autoparts.ui.supplier.EditSupplierController;
 import com.shunyi.autoparts.ui.system.EditVFSController;
@@ -17,6 +18,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 import java.io.IOException;
 
@@ -37,19 +39,13 @@ public class PurchaseDetailsController {
 
     @FXML
     private void create() {
-//        FXMLLoader loader = new FXMLLoader(
-//                getClass().getResource(
-//                        "/fxml/purchase/POEditor.fxml"
-//                )
-//        );
-//        BorderPane root = null;
-//        try {
-//            root = loader.load();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        controller = loader.getController();
-
+        PurchaseOrder purchaseOrder = new PurchaseOrder();
+        Callback<PurchaseOrder, String> callback = new Callback<PurchaseOrder, String>() {
+            @Override
+            public String call(PurchaseOrder param) {
+                return null;
+            }
+        };
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource(
                         "/fxml/purchase/POEditor.fxml"
@@ -63,10 +59,8 @@ public class PurchaseDetailsController {
         }
         Scene scene = new Scene(root);
         Stage dialog = new Stage();
-        dialog.setOnHiding(e -> {
-        });
         POEditorController controller = loader.getController();
-        controller.prepare(dialog);
+        controller.prepare(dialog, callback, purchaseOrder);
         dialog.setTitle("新建进货单");
         dialog.initOwner(application.getStage());
         dialog.setResizable(true);

@@ -4,15 +4,15 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 /**
- * @description 进货单实体类
+ * @description 采购订单VO
  * @author Shunyi Chen
  * @date 2020/3/23
  */
 public class PurchaseOrder {
-    /** 自增长ID */
+    /** ID */
     private Long id;
     /** 单号 */
-    private String orderId;
+    private String orderNo;
     /** 单据日期 */
     private Date orderDate;
     /** 仓库 */
@@ -27,24 +27,28 @@ public class PurchaseOrder {
     private BigDecimal freight;
     /** 备注 */
     private String notes;
-    /** 操作用户 */
-    private User operator;
-    /** 经办人 */
-    private User verifier;
-//    /** 结算方式 */
-//    private Settlement settlement;
-    /** 货款金额 */
-    private BigDecimal amountA;
-    /** 代垫费用 */
-    private BigDecimal amountB;
-    /** 本次优惠 */
-    private BigDecimal amountC;
-    /** 应付总额 */
-    private BigDecimal amountD;
-    /** 本次付款 */
-    private BigDecimal amountE;
-    /** 账号 */
+    /** 结算方式 */
+    private String payment;
+    /** 应付账号 */
     private String account;
+    /** 合计数量 */
+    private Integer totalQty;
+    /** 折后金额 */
+    private BigDecimal discountedAmount;
+    /** 合计金额 */
+    private BigDecimal totalAmount;
+    /** 付款金额 */
+    private BigDecimal paidAmount;
+    /** 含税金额 */
+    private BigDecimal taxIncludedAmount;
+    /** 优惠 */
+    private BigDecimal discount;
+    /** 优惠后金额 */
+    private BigDecimal discountedAmount2;
+    /** 应付款 */
+    private BigDecimal due;
+    /** 经办人 */
+    private String operator;
     /** 订单状态 */
     private String status;
     /** 创建时间 */
@@ -66,9 +70,9 @@ public class PurchaseOrder {
 
     public PurchaseOrder() {}
 
-    public PurchaseOrder(Long id, String orderId, Date orderDate, Warehouse warehouse, Supplier supplier, String invoiceType, String invoiceNo, BigDecimal freight, String notes, User operator, User verifier,  BigDecimal amountA, BigDecimal amountB, BigDecimal amountC, BigDecimal amountD, BigDecimal amountE, String account, String status, Date dateCreated, String creator, Date dateUpdated, String updater, Integer updatedCount, Date dateDeleted, Boolean deleteFlag, String deleter) {
+    public PurchaseOrder(Long id, String orderNo, Date orderDate, Warehouse warehouse, Supplier supplier, String invoiceType, String invoiceNo, BigDecimal freight, String notes, String payment, String account, Integer totalQty, BigDecimal discountedAmount, BigDecimal totalAmount, BigDecimal paidAmount, BigDecimal taxIncludedAmount, BigDecimal discount, BigDecimal discountedAmount2, BigDecimal due, String operator, String status, Date dateCreated, String creator, Date dateUpdated, String updater, Integer updatedCount, Date dateDeleted, Boolean deleteFlag, String deleter) {
         this.id = id;
-        this.orderId = orderId;
+        this.orderNo = orderNo;
         this.orderDate = orderDate;
         this.warehouse = warehouse;
         this.supplier = supplier;
@@ -76,15 +80,17 @@ public class PurchaseOrder {
         this.invoiceNo = invoiceNo;
         this.freight = freight;
         this.notes = notes;
-        this.operator = operator;
-        this.verifier = verifier;
-//        this.settlement = settlement;
-        this.amountA = amountA;
-        this.amountB = amountB;
-        this.amountC = amountC;
-        this.amountD = amountD;
-        this.amountE = amountE;
+        this.payment = payment;
         this.account = account;
+        this.totalQty = totalQty;
+        this.discountedAmount = discountedAmount;
+        this.totalAmount = totalAmount;
+        this.paidAmount = paidAmount;
+        this.taxIncludedAmount = taxIncludedAmount;
+        this.discount = discount;
+        this.discountedAmount2 = discountedAmount2;
+        this.due = due;
+        this.operator = operator;
         this.status = status;
         this.dateCreated = dateCreated;
         this.creator = creator;
@@ -104,12 +110,12 @@ public class PurchaseOrder {
         this.id = id;
     }
 
-    public String getOrderId() {
-        return orderId;
+    public String getOrderNo() {
+        return orderNo;
     }
 
-    public void setOrderId(String orderId) {
-        this.orderId = orderId;
+    public void setOrderNo(String orderNo) {
+        this.orderNo = orderNo;
     }
 
     public Date getOrderDate() {
@@ -168,60 +174,12 @@ public class PurchaseOrder {
         this.notes = notes;
     }
 
-    public User getOperator() {
-        return operator;
+    public String getPayment() {
+        return payment;
     }
 
-    public void setOperator(User operator) {
-        this.operator = operator;
-    }
-
-    public User getVerifier() {
-        return verifier;
-    }
-
-    public void setVerifier(User verifier) {
-        this.verifier = verifier;
-    }
-
-    public BigDecimal getAmountA() {
-        return amountA;
-    }
-
-    public void setAmountA(BigDecimal amountA) {
-        this.amountA = amountA;
-    }
-
-    public BigDecimal getAmountB() {
-        return amountB;
-    }
-
-    public void setAmountB(BigDecimal amountB) {
-        this.amountB = amountB;
-    }
-
-    public BigDecimal getAmountC() {
-        return amountC;
-    }
-
-    public void setAmountC(BigDecimal amountC) {
-        this.amountC = amountC;
-    }
-
-    public BigDecimal getAmountD() {
-        return amountD;
-    }
-
-    public void setAmountD(BigDecimal amountD) {
-        this.amountD = amountD;
-    }
-
-    public BigDecimal getAmountE() {
-        return amountE;
-    }
-
-    public void setAmountE(BigDecimal amountE) {
-        this.amountE = amountE;
+    public void setPayment(String payment) {
+        this.payment = payment;
     }
 
     public String getAccount() {
@@ -230,6 +188,78 @@ public class PurchaseOrder {
 
     public void setAccount(String account) {
         this.account = account;
+    }
+
+    public Integer getTotalQty() {
+        return totalQty;
+    }
+
+    public void setTotalQty(Integer totalQty) {
+        this.totalQty = totalQty;
+    }
+
+    public BigDecimal getDiscountedAmount() {
+        return discountedAmount;
+    }
+
+    public void setDiscountedAmount(BigDecimal discountedAmount) {
+        this.discountedAmount = discountedAmount;
+    }
+
+    public BigDecimal getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(BigDecimal totalAmount) {
+        this.totalAmount = totalAmount;
+    }
+
+    public BigDecimal getPaidAmount() {
+        return paidAmount;
+    }
+
+    public void setPaidAmount(BigDecimal paidAmount) {
+        this.paidAmount = paidAmount;
+    }
+
+    public BigDecimal getTaxIncludedAmount() {
+        return taxIncludedAmount;
+    }
+
+    public void setTaxIncludedAmount(BigDecimal taxIncludedAmount) {
+        this.taxIncludedAmount = taxIncludedAmount;
+    }
+
+    public BigDecimal getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(BigDecimal discount) {
+        this.discount = discount;
+    }
+
+    public BigDecimal getDiscountedAmount2() {
+        return discountedAmount2;
+    }
+
+    public void setDiscountedAmount2(BigDecimal discountedAmount2) {
+        this.discountedAmount2 = discountedAmount2;
+    }
+
+    public BigDecimal getDue() {
+        return due;
+    }
+
+    public void setDue(BigDecimal due) {
+        this.due = due;
+    }
+
+    public String getOperator() {
+        return operator;
+    }
+
+    public void setOperator(String operator) {
+        this.operator = operator;
     }
 
     public String getStatus() {
