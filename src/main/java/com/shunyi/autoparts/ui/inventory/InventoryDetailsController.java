@@ -142,7 +142,6 @@ public class InventoryDetailsController {
 
     }
 
-
     public void prepare(Stage dialog) {
         initTreeViewForSKUDetails();
         initTreeViewForAccount();

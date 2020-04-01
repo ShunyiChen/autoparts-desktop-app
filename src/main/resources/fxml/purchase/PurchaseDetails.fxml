@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="635.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.shunyi.autoparts.ui.purchase.PurchaseDetailsController">
+   <top>
+       <VBox prefHeight="118.0" BorderPane.alignment="CENTER">
+           <children>
+            <ToolBar prefHeight="40.0" prefWidth="200.0">
+              <items>
+                <Button mnemonicParsing="false" onAction="#create" text="新 建">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Button>
+                  <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#update" text="更 改">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Button>
+                  <Button layoutX="62.0" layoutY="11.0" mnemonicParsing="false" onAction="#delete" text="删 除">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Button>
+                  <Separator />
+                  <Button layoutX="62.0" layoutY="11.0" mnemonicParsing="false" onAction="#refresh" text="刷 新">
+                      <font>
+                          <Font size="14.0" />
+                      </font>
+                  </Button>
+              </items>
+            </ToolBar>
+               <FlowPane alignment="CENTER_LEFT" hgap="5.0" prefHeight="38.0" prefWidth="511.0">
+                   <children>
+                       <Label alignment="CENTER" layoutX="10.0" layoutY="21.0" prefHeight="19.0" prefWidth="60.0" text="单  号:">
+                           <font>
+                               <Font size="14.0" />
+                           </font>
+                       </Label>
+                       <TextField fx:id="txtProductCode" layoutX="140.0" layoutY="16.0" prefWidth="150.0">
+                           <font>
+                               <Font size="14.0" />
+                           </font>
+                       </TextField>
+                       <Label text="单据日期:">
+                           <font>
+                               <Font size="14.0" />
+                           </font>
+                       </Label>
+                  <DatePicker prefHeight="28.0" prefWidth="149.0" />
+                       <Label alignment="CENTER" prefHeight="19.0" prefWidth="60.0" text="配件编号:">
+                           <font>
+                               <Font size="14.0" />
+                           </font>
+                       </Label>
+                       <TextField fx:id="txtSKUCode" prefWidth="150.0">
+                           <font>
+                               <Font size="14.0" />
+                           </font>
+                       </TextField>
+                       <Label text="配件名称:">
+                           <font>
+                               <Font size="14.0" />
+                           </font>
+                       </Label>
+                       <TextField fx:id="txtSKUName" prefWidth="150.0">
+                           <font>
+                               <Font size="14.0" />
+                           </font>
+                       </TextField>
+                       <Button mnemonicParsing="false" onAction="#search" text="查  询">
+                           <font>
+                               <Font size="14.0" />
+                           </font>
+                       </Button>
+                       <Button mnemonicParsing="false" onAction="#clearCondition" text="清  空">
+                           <font>
+                               <Font size="14.0" />
+                           </font>
+                       </Button>
+                   </children>
+               </FlowPane>
+               <FlowPane alignment="CENTER_LEFT" prefHeight="38.0" prefWidth="200.0">
+                   <children>
+                       <Label alignment="CENTER" prefHeight="19.0" prefWidth="65.0" text="供应商:">
+                           <font>
+                               <Font size="14.0" />
+                           </font>
+                       </Label>
+                       <TextField fx:id="txtSupplier" prefWidth="150.0">
+                           <font>
+                               <Font size="14.0" />
+                           </font>
+                       </TextField>
+                       <Label alignment="CENTER" prefHeight="19.0" prefWidth="69.0" text="条形码:">
+                           <font>
+                               <Font size="14.0" />
+                           </font>
+                       </Label>
+                       <TextField fx:id="txtBarcode" prefWidth="150.0">
+                           <font>
+                               <Font size="14.0" />
+                           </font>
+                       </TextField>
+                       <Label alignment="CENTER" prefHeight="19.0" prefWidth="70.0" text="SKU编码:">
+                           <font>
+                               <Font size="14.0" />
+                           </font>
+                       </Label>
+                       <TextField fx:id="txtSpec" prefWidth="150.0">
+                           <font>
+                               <Font size="14.0" />
+                           </font>
+                       </TextField>
+                  <Label alignment="CENTER" layoutX="444.0" layoutY="20.0" prefHeight="19.0" prefWidth="70.0" text="SKU规格:">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="txtSpec1" layoutX="514.0" layoutY="15.0" prefWidth="150.0">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </TextField>
+                   </children>
+               </FlowPane>
+           </children>
+       </VBox>
+   </top>
+   <center>
+      <TableView fx:id="tableView" BorderPane.alignment="CENTER">
+        <columns>
+          <TableColumn prefWidth="75.0" text="单据编号" />
+          <TableColumn prefWidth="75.0" text="单据日期" />
+            <TableColumn prefWidth="75.0" text="经办人" />
+            <TableColumn prefWidth="75.0" text="结算方式" />
+            <TableColumn prefWidth="120.0" text="供应商" />
+            <TableColumn prefWidth="75.0" text="联系人" />
+            <TableColumn prefWidth="75.0" text="电话" />
+            <TableColumn prefWidth="75.0" text="发票类型" />
+            <TableColumn prefWidth="76.0" text="发票No" />
+            <TableColumn prefWidth="90.0" text="付款账户" />
+            <TableColumn prefWidth="88.0" text="付款金额" />
+            <TableColumn prefWidth="75.0" text="合计数量" />
+            <TableColumn prefWidth="75.0" text="折后金额" />
+            <TableColumn prefWidth="75.0" text="合计金额" />
+            <TableColumn prefWidth="75.0" text="含税金额" />
+            <TableColumn prefWidth="75.0" text="优惠" />
+            <TableColumn prefWidth="75.0" text="优惠后金额" />
+            <TableColumn prefWidth="75.0" text="当前应付款" />
+            <TableColumn prefWidth="90.0" text="状态" />
+            <TableColumn prefWidth="120.0" text="备注" />
+        </columns>
+         <BorderPane.margin>
+            <Insets bottom="30.0" />
+         </BorderPane.margin>
+      </TableView>
+   </center>
+</BorderPane>
