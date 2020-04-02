@@ -6,12 +6,12 @@ import java.io.Serializable;
 import java.util.Objects;
 
 /**
- * @description 用户和店铺映射关系
+ * @description 用户和店铺映射关系VO
  * @author Shunyi Chen
  * @date 2020/3/23
  */
 public class UserStoreMapping {
-
+    /** ID */
     public static class Id implements Serializable {
 
         /** 用户ID */
@@ -69,7 +69,7 @@ public class UserStoreMapping {
         }
     }
 
-    protected UserStoreMapping.Id id = new Id();
+    protected UserStoreMapping.Id id = new UserStoreMapping.Id();
 
     @JsonIgnore
     protected User user;

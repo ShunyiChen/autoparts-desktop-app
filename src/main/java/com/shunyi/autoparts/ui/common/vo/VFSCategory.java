@@ -1,9 +1,7 @@
 package com.shunyi.autoparts.ui.common.vo;
 
-import java.util.Date;
-
 /**
- * @description VFS类目
+ * @description VFS分类VO
  * @author Shunyi Chen
  * @date 2020/3/23
  */
@@ -16,38 +14,14 @@ public class VFSCategory {
     private Long parentId;
     /** 是否父节点 */
     private Boolean parent;
-    /** 创建时间 */
-    private Date dateCreated;
-    /** 创建者 */
-    private String creator;
-    /** 更新时间 */
-    private Date dateUpdated;
-    /** 更新者 */
-    private String updater;
-    /** 更新次数 */
-    private Integer updatedCount;
-    /** 删除时间 */
-    private Date dateDeleted;
-    /** 删除标记 */
-    private Boolean deleteFlag;
-    /** 删除者 */
-    private String deleter;
 
     public VFSCategory() {}
 
-    public VFSCategory(Long id, String name, Long parentId, Boolean parent, Date dateCreated, String creator, Date dateUpdated, String updater, Integer updatedCount, Date dateDeleted, Boolean deleteFlag, String deleter) {
+    public VFSCategory(Long id, String name, Long parentId, Boolean parent) {
         this.id = id;
         this.name = name;
         this.parentId = parentId;
         this.parent = parent;
-        this.dateCreated = dateCreated;
-        this.creator = creator;
-        this.dateUpdated = dateUpdated;
-        this.updater = updater;
-        this.updatedCount = updatedCount;
-        this.dateDeleted = dateDeleted;
-        this.deleteFlag = deleteFlag;
-        this.deleter = deleter;
     }
 
     public Long getId() {
@@ -80,70 +54,6 @@ public class VFSCategory {
 
     public void setParent(Boolean parent) {
         this.parent = parent;
-    }
-
-    public Date getDateCreated() {
-        return dateCreated;
-    }
-
-    public void setDateCreated(Date dateCreated) {
-        this.dateCreated = dateCreated;
-    }
-
-    public String getCreator() {
-        return creator;
-    }
-
-    public void setCreator(String creator) {
-        this.creator = creator;
-    }
-
-    public Date getDateUpdated() {
-        return dateUpdated;
-    }
-
-    public void setDateUpdated(Date dateUpdated) {
-        this.dateUpdated = dateUpdated;
-    }
-
-    public String getUpdater() {
-        return updater;
-    }
-
-    public void setUpdater(String updater) {
-        this.updater = updater;
-    }
-
-    public Integer getUpdatedCount() {
-        return updatedCount;
-    }
-
-    public void setUpdatedCount(Integer updatedCount) {
-        this.updatedCount = updatedCount;
-    }
-
-    public Date getDateDeleted() {
-        return dateDeleted;
-    }
-
-    public void setDateDeleted(Date dateDeleted) {
-        this.dateDeleted = dateDeleted;
-    }
-
-    public Boolean getDeleteFlag() {
-        return deleteFlag;
-    }
-
-    public void setDeleteFlag(Boolean deleteFlag) {
-        this.deleteFlag = deleteFlag;
-    }
-
-    public String getDeleter() {
-        return deleter;
-    }
-
-    public void setDeleter(String deleter) {
-        this.deleter = deleter;
     }
 
     @Override

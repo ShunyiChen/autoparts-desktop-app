@@ -150,7 +150,7 @@ public class InventoryDetailsController {
     }
 
     private void initTreeViewForSKUDetails() {
-        TreeItem<Category> root = new TreeItem<>(new Category(0L, "所有类目", -1L, Constants.PARENT_TRUE, null, null, null, null, null, null, Constants.DELETE_FLAG_FALSE, null));
+        TreeItem<Category> root = new TreeItem<>(new Category(0L, "所有类目", -1L, Constants.PARENT_TRUE, new Warehouse()));
         initTreeNodes(root);
         treeView.setRoot(root);
         treeView.setCellFactory(p -> new TextFieldTreeCell<>(new StringConverter<>() {
@@ -192,22 +192,22 @@ public class InventoryDetailsController {
     }
 
     private void initTreeViewForAccount() {
-        TreeItem<Category> root = new TreeItem<>(new Category(0L, "所有类目",-1L, Constants.PARENT_TRUE, null, null, null, null, null, null, Constants.DELETE_FLAG_FALSE, null));
-        initTreeNodes(root);
-        treeView1.setRoot(root);
-        treeView1.setCellFactory(p -> new TextFieldTreeCell<>(new StringConverter<>(){
-
-            @Override
-            public String toString(Category object) {
-                return object.getName();
-            }
-
-            @Override
-            public Category fromString(String string) {
-                p.getEditingItem().getValue().setName(string);
-                return p.getEditingItem().getValue();
-            }
-        }));
+//        TreeItem<Category> root = new TreeItem<>(new Category(0L, "所有类目",-1L, Constants.PARENT_TRUE, null, null, null, null, null, null, Constants.DELETE_FLAG_FALSE, null));
+//        initTreeNodes(root);
+//        treeView1.setRoot(root);
+//        treeView1.setCellFactory(p -> new TextFieldTreeCell<>(new StringConverter<>(){
+//
+//            @Override
+//            public String toString(Category object) {
+//                return object.getName();
+//            }
+//
+//            @Override
+//            public Category fromString(String string) {
+//                p.getEditingItem().getValue().setName(string);
+//                return p.getEditingItem().getValue();
+//            }
+//        }));
     }
 
     /**
@@ -269,20 +269,20 @@ public class InventoryDetailsController {
                 return new SimpleObjectProperty<>(param.getValue().getProduct().getBarCode());
             }
         });
-        colBrand.setCellValueFactory(param -> {
-            if(param.getValue().getProduct().getBrandSeries() == null) {
-                return new SimpleObjectProperty<>("");
-            } else {
-                return new SimpleObjectProperty<>(param.getValue().getProduct().getBrandSeries().getChineseName());
-            }
-        });
-        colCar.setCellValueFactory(param -> {
-            if(param.getValue().getProduct().getCar() == null) {
-                return new SimpleObjectProperty<>("");
-            } else {
-                return new SimpleObjectProperty<>(param.getValue().getProduct().getCar().getModel());
-            }
-        });
+//        colBrand.setCellValueFactory(param -> {
+//            if(param.getValue().getProduct().getBrandSeries() == null) {
+//                return new SimpleObjectProperty<>("");
+//            } else {
+//                return new SimpleObjectProperty<>(param.getValue().getProduct().getBrandSeries().getChineseName());
+//            }
+//        });
+//        colCar.setCellValueFactory(param -> {
+//            if(param.getValue().getProduct().getCar() == null) {
+//                return new SimpleObjectProperty<>("");
+//            } else {
+//                return new SimpleObjectProperty<>(param.getValue().getProduct().getCar().getModel());
+//            }
+//        });
         colSupplier.setCellValueFactory(param -> {
             if(param.getValue().getProduct().getSupplier() == null) {
                 return new SimpleObjectProperty<>("");
@@ -297,13 +297,13 @@ public class InventoryDetailsController {
                 return new SimpleObjectProperty<>(param.getValue().getProduct().getUnit());
             }
         });
-        colListPrice.setCellValueFactory(param -> {
-            if(param.getValue().getProduct().getListPrice() == null) {
-                return new SimpleObjectProperty<>("");
-            } else {
-                return new SimpleObjectProperty<>(param.getValue().getProduct().getListPrice().setScale(2, RoundingMode.HALF_UP).toString());
-            }
-        });
+//        colListPrice.setCellValueFactory(param -> {
+//            if(param.getValue().getProduct().getListPrice() == null) {
+//                return new SimpleObjectProperty<>("");
+//            } else {
+//                return new SimpleObjectProperty<>(param.getValue().getProduct().getListPrice().setScale(2, RoundingMode.HALF_UP).toString());
+//            }
+//        });
         colImport.setCellValueFactory(param -> {
             if(param.getValue().getProduct().getImported() == null) {
                 return new SimpleObjectProperty<>("");
@@ -311,13 +311,13 @@ public class InventoryDetailsController {
                 return new SimpleObjectProperty<>(param.getValue().getProduct().getImported());
             }
         });
-        colOrigin.setCellValueFactory(param -> {
-            if(param.getValue().getProduct().getImported() == null) {
-                return new SimpleObjectProperty<>("");
-            } else {
-                return new SimpleObjectProperty<>(param.getValue().getProduct().getOrigin());
-            }
-        });
+//        colOrigin.setCellValueFactory(param -> {
+//            if(param.getValue().getProduct().getImported() == null) {
+//                return new SimpleObjectProperty<>("");
+//            } else {
+//                return new SimpleObjectProperty<>(param.getValue().getProduct().getOrigin());
+//            }
+//        });
         colSKUCode.setCellValueFactory(new PropertyValueFactory<SKU, String>("skuCode"));
         colSKUName.setCellValueFactory(new PropertyValueFactory<SKU, String>("skuName"));
         colSpec.setCellValueFactory(new PropertyValueFactory<SKU, String>("specification"));

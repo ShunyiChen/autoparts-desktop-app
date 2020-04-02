@@ -26,7 +26,7 @@ public class ProductEditorController {
     private Car selectedCar;
     private Supplier selectedSupplier;
     private Category selectedCategory;
-    private BrandSeries selectedBrand;
+//    private BrandSeries selectedBrand;
 
     @FXML
     Button btnSaveAndClose;
@@ -36,8 +36,8 @@ public class ProductEditorController {
     TextField txtCode;
     @FXML
     TextField txtName;
-    @FXML
-    ComboBox<BrandSeries> boxBrand;
+//    @FXML
+//    ComboBox<BrandSeries> boxBrand;
     @FXML
     TextField txtPrice;
     @FXML
@@ -105,7 +105,7 @@ public class ProductEditorController {
         CarChooserController controller = loader.getController();
         Callback<Car, Void> cb = e -> {
             selectedCar = e;
-            txtCar.setText(selectedCar.getModel());
+//            txtCar.setText(selectedCar.getModel());
             return null;
         };
         controller.prepare(subStage, selectedCar, cb);
@@ -127,21 +127,21 @@ public class ProductEditorController {
     @FXML
     private void saveAndClose() {
         if(validate()) {
-            dialog.close();
-            BigDecimal listPrice;
-            listPrice = new BigDecimal(Double.valueOf(txtPrice.getText())).setScale(2, RoundingMode.HALF_UP);
-            Product newProduct = new Product(0L, txtCode.getText(), txtBarCode.getText(), txtName.getText(), boxBrand.getValue(), selectedCar, selectedSupplier, txtUnit.getText(), listPrice, boxImported.getValue(), txtOrigin.getText(), txtNotes.getText(), null, Env.getInstance().getStringValue(Env.CURRENT_USER),null,null,null,null, Constants.DELETE_FLAG_FALSE,null);
-            callback.call(newProduct);
+//            dialog.close();
+//            BigDecimal listPrice;
+//            listPrice = new BigDecimal(Double.valueOf(txtPrice.getText())).setScale(2, RoundingMode.HALF_UP);
+//            Product newProduct = new Product(0L, txtCode.getText(), txtBarCode.getText(), txtName.getText(), boxBrand.getValue(), selectedCar, selectedSupplier, txtUnit.getText(), listPrice, boxImported.getValue(), txtOrigin.getText(), txtNotes.getText(), null, Env.getInstance().getStringValue(Env.CURRENT_USER),null,null,null,null, Constants.DELETE_FLAG_FALSE,null);
+//            callback.call(newProduct);
         }
     }
 
     @FXML
     private void continueAdd() {
         if(validate()) {
-            BigDecimal listPrice;
-            listPrice = new BigDecimal(Double.valueOf(txtPrice.getText())).setScale(2, RoundingMode.HALF_UP);
-            Product newProduct = new Product(0L, txtCode.getText(), txtBarCode.getText(), txtName.getText(), boxBrand.getValue(), selectedCar, selectedSupplier, txtUnit.getText(), listPrice, boxImported.getValue(), txtOrigin.getText(), txtNotes.getText(), null, Env.getInstance().getStringValue(Env.CURRENT_USER),null,null,null,null, Constants.DELETE_FLAG_FALSE,null);
-            callback.call(newProduct);
+//            BigDecimal listPrice;
+//            listPrice = new BigDecimal(Double.valueOf(txtPrice.getText())).setScale(2, RoundingMode.HALF_UP);
+//            Product newProduct = new Product(0L, txtCode.getText(), txtBarCode.getText(), txtName.getText(), boxBrand.getValue(), selectedCar, selectedSupplier, txtUnit.getText(), listPrice, boxImported.getValue(), txtOrigin.getText(), txtNotes.getText(), null, Env.getInstance().getStringValue(Env.CURRENT_USER),null,null,null,null, Constants.DELETE_FLAG_FALSE,null);
+//            callback.call(newProduct);
         }
     }
 
@@ -156,12 +156,14 @@ public class ProductEditorController {
             alert.setHeaderText("名称不能为空");
             alert.show();
             return false;
-        } else if(boxBrand.getValue() == null) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
-            alert.setHeaderText("品牌不能为空");
-            alert.show();
-            return false;
-        } else if(selectedCar== null) {
+        }
+//        else if(boxBrand.getValue() == null) {
+//            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
+//            alert.setHeaderText("品牌不能为空");
+//            alert.show();
+//            return false;
+//        }
+        else if(selectedCar== null) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
             alert.setHeaderText("车型不能为空");
             alert.show();
@@ -190,66 +192,66 @@ public class ProductEditorController {
         return true;
     }
 
-    /**
-     * 准备
-     * @param dialog
-     * @param updatedProduct
-     * @param callback
-     * @param selectedCategory
-     * @param selectedBrand
-     */
-    public void prepare(Stage dialog, Product updatedProduct, Callback<Product, Object> callback, Category selectedCategory, BrandSeries selectedBrand) {
-        this.dialog = dialog;
-        this.updatedProduct = updatedProduct;
-        this.callback = callback;
-        this.selectedCategory = selectedCategory;
-        this.selectedBrand = selectedBrand;
-        initButton();
-        initComboBox();
-        if(updatedProduct != null) {
-            txtCode.setText(updatedProduct.getCode());
-            txtName.setText(updatedProduct.getName());
-            txtBarCode.setText(updatedProduct.getBarCode());
-            boxBrand.setValue(selectedBrand);
-            txtPrice.setText(updatedProduct.getListPrice().doubleValue()+"");
-            txtUnit.setText(updatedProduct.getUnit());
-            boxImported.setValue(updatedProduct.getImported());
-            txtCar.setText(updatedProduct.getCar().getModel());
-            txtSupplier.setText(updatedProduct.getSupplier().getName());
-            selectedCar = updatedProduct.getCar();
-            selectedSupplier = updatedProduct.getSupplier();
-            txtOrigin.setText(updatedProduct.getOrigin());
-            txtNotes.setText(updatedProduct.getNotes());
-            btnContinueAdd.setVisible(false);
-        }
-    }
+//    /**
+//     * 准备
+//     * @param dialog
+//     * @param updatedProduct
+//     * @param callback
+//     * @param selectedCategory
+//     * @param selectedBrand
+//     */
+//    public void prepare(Stage dialog, Product updatedProduct, Callback<Product, Object> callback, Category selectedCategory, BrandSeries selectedBrand) {
+//        this.dialog = dialog;
+//        this.updatedProduct = updatedProduct;
+//        this.callback = callback;
+//        this.selectedCategory = selectedCategory;
+//        this.selectedBrand = selectedBrand;
+//        initButton();
+//        initComboBox();
+//        if(updatedProduct != null) {
+//            txtCode.setText(updatedProduct.getCode());
+//            txtName.setText(updatedProduct.getName());
+//            txtBarCode.setText(updatedProduct.getBarCode());
+//            boxBrand.setValue(selectedBrand);
+//            txtPrice.setText(updatedProduct.getListPrice().doubleValue()+"");
+//            txtUnit.setText(updatedProduct.getUnit());
+//            boxImported.setValue(updatedProduct.getImported());
+//            txtCar.setText(updatedProduct.getCar().getModel());
+//            txtSupplier.setText(updatedProduct.getSupplier().getName());
+//            selectedCar = updatedProduct.getCar();
+//            selectedSupplier = updatedProduct.getSupplier();
+//            txtOrigin.setText(updatedProduct.getOrigin());
+//            txtNotes.setText(updatedProduct.getNotes());
+//            btnContinueAdd.setVisible(false);
+//        }
+//    }
 
     private void initButton() {
         btnSaveAndClose.setStyle(String.format("-fx-base: %s;", "rgb(63,81,181)"));
     }
 
     private void initComboBox() {
-        boxImported.getItems().addAll(Constants.ORIGINAL, Constants.HOMEMADE);
-        boxImported.getSelectionModel().select(0);
-        boxImported.setStyle("-fx-font-size: 14px;");
-        boxBrand.setStyle("-fx-font-size: 14px;");
-        //通过类目ID获取品牌
-        String json = null;
-        try {
-            json = HttpClient.GET("/brandSeries/category/"+selectedCategory.getId());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        BrandSeries[] brands = GoogleJson.GET().fromJson(json, BrandSeries[].class);
-        boxBrand.getItems().addAll(brands);
-        //默认选中品牌
-        if(selectedBrand != null) {
-            Arrays.stream(brands).forEach(e -> {
-                if(e.getId().equals(selectedBrand.getId())) {
-                    boxBrand.getSelectionModel().select(e);
-                }
-            });
-        }
+//        boxImported.getItems().addAll(Constants.ORIGINAL, Constants.HOMEMADE);
+//        boxImported.getSelectionModel().select(0);
+//        boxImported.setStyle("-fx-font-size: 14px;");
+//        boxBrand.setStyle("-fx-font-size: 14px;");
+//        //通过类目ID获取品牌
+//        String json = null;
+//        try {
+//            json = HttpClient.GET("/brandSeries/category/"+selectedCategory.getId());
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        BrandSeries[] brands = GoogleJson.GET().fromJson(json, BrandSeries[].class);
+//        boxBrand.getItems().addAll(brands);
+//        //默认选中品牌
+//        if(selectedBrand != null) {
+//            Arrays.stream(brands).forEach(e -> {
+//                if(e.getId().equals(selectedBrand.getId())) {
+//                    boxBrand.getSelectionModel().select(e);
+//                }
+//            });
+//        }
     }
 
 }

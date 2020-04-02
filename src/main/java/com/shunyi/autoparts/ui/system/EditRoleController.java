@@ -147,7 +147,7 @@ public class EditRoleController {
 
     private void creatingRole() {
         //新建一个角色
-        Role createdRole = new Role(0L, txtName.getText(), txtDesc.getText(), new HashSet<UserRoleMapping>(), new HashSet<RolePermissionMapping>(), null, Env.getInstance().getStringValue(Env.CURRENT_USER), null, null, null, null, Constants.DELETE_FLAG_FALSE, null);
+        Role createdRole = new Role(0L, txtName.getText(), txtDesc.getText(), new HashSet<UserRoleMapping>(), new HashSet<RolePermissionMapping>());
         String json = GoogleJson.GET().toJson(createdRole);
         //新建角色与用户关系
         try {

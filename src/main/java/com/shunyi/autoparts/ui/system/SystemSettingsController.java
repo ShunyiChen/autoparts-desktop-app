@@ -417,7 +417,7 @@ public class SystemSettingsController {
      */
     private void initStoreTree() {
         Store[] allStores = getAllStores();
-        Store store = new Store(0L,"", "所有店铺", -1L, false, new HashSet<UserStoreMapping>(), null, null, null, null, null, null, Constants.DELETE_FLAG_FALSE, null);
+        Store store = new Store(0L,"", "所有店铺", -1L, false, new HashSet<UserStoreMapping>());
         TreeItem<Store> rootItem = new TreeItem<>(store);
         storeTree.setRoot(rootItem);
         //初始化树节点
@@ -475,21 +475,21 @@ public class SystemSettingsController {
     private void initStoreMenuItems() {
         itemNewStore.setOnAction(event -> {
             Callback<Store, String> callback = store -> {
-                TreeItem<Store> parent = storeTree.getSelectionModel().getSelectedItem();
-                store.setCreator(Env.getInstance().getStringValue(Env.CURRENT_USER));
-                store.setParentId(parent.getValue().getId());
-                store.setParent(false);
-                String json = GoogleJson.GET().toJson(store);
-                String idStr = null;
-                try {
-                    idStr = HttpClient.POST("/stores", json);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                store.setId(Long.valueOf(idStr));
-                TreeItem<Store> newItem = new TreeItem<>(store);
-                parent.getChildren().add(newItem);
-                storeTree.getSelectionModel().select(newItem);
+//                TreeItem<Store> parent = storeTree.getSelectionModel().getSelectedItem();
+//                store.setCreator(Env.getInstance().getStringValue(Env.CURRENT_USER));
+//                store.setParentId(parent.getValue().getId());
+//                store.setParent(false);
+//                String json = GoogleJson.GET().toJson(store);
+//                String idStr = null;
+//                try {
+//                    idStr = HttpClient.POST("/stores", json);
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//                store.setId(Long.valueOf(idStr));
+//                TreeItem<Store> newItem = new TreeItem<>(store);
+//                parent.getChildren().add(newItem);
+//                storeTree.getSelectionModel().select(newItem);
                 return null;
             };
 
@@ -500,19 +500,19 @@ public class SystemSettingsController {
             TreeItem<Store> selected = storeTree.getSelectionModel().getSelectedItem();
             Callback<Store, String> callback = store -> {
                 Store updatedStore = null;
-                try {
-                    String json = HttpClient.GET("/stores/"+selected.getValue().getId());
-                    updatedStore = GoogleJson.GET().fromJson(json, Store.class);
-                    updatedStore.setCode(store.getCode());
-                    updatedStore.setName(store.getName());
-                    updatedStore.setUpdater(Env.getInstance().getStringValue(Env.CURRENT_USER));
-                    updatedStore.setUpdatedCount(updatedStore.getUpdatedCount() + 1);
-                    json = GoogleJson.GET().toJson(updatedStore);
-                    HttpClient.PUT("/stores/"+selected.getValue().getId(), json);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                selected.setValue(updatedStore);
+//                try {
+//                    String json = HttpClient.GET("/stores/"+selected.getValue().getId());
+//                    updatedStore = GoogleJson.GET().fromJson(json, Store.class);
+//                    updatedStore.setCode(store.getCode());
+//                    updatedStore.setName(store.getName());
+//                    updatedStore.setUpdater(Env.getInstance().getStringValue(Env.CURRENT_USER));
+//                    updatedStore.setUpdatedCount(updatedStore.getUpdatedCount() + 1);
+//                    json = GoogleJson.GET().toJson(updatedStore);
+//                    HttpClient.PUT("/stores/"+selected.getValue().getId(), json);
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//                selected.setValue(updatedStore);
                 return null;
             };
 
@@ -968,7 +968,7 @@ public class SystemSettingsController {
     }
 
     private void initVFSTree() {
-        VFSCategory rootCategory = new VFSCategory(0L, "所有分类", -1L, Constants.PARENT_TRUE, null, null, null, null, null, null, Constants.DELETE_FLAG_FALSE, null);
+        VFSCategory rootCategory = new VFSCategory(0L, "所有分类", -1L, Constants.PARENT_TRUE);
         TreeItem<VFSCategory> rootItem = new TreeItem<>(rootCategory);
         vfsTree.setRoot(rootItem);
         initVFSCategoryNodes(rootItem);

@@ -1,10 +1,7 @@
 package com.shunyi.autoparts.ui.products;
 
 import com.shunyi.autoparts.ui.common.*;
-import com.shunyi.autoparts.ui.common.vo.AttributeIF;
-import com.shunyi.autoparts.ui.common.vo.AttributeName;
-import com.shunyi.autoparts.ui.common.vo.AttributeValue;
-import com.shunyi.autoparts.ui.common.vo.Category;
+import com.shunyi.autoparts.ui.common.vo.*;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -49,7 +46,7 @@ public class AttributeManagementController {
     }
 
     private void initCategoryTree() {
-        TreeItem<Category> root = new TreeItem<>(new Category(0L, "所有类目",-1L, Constants.PARENT_TRUE, null, null, null, null, null, null, Constants.DELETE_FLAG_FALSE, null));
+        TreeItem<Category> root = new TreeItem<>(new Category(0L, "所有类目",-1L, Constants.PARENT_TRUE, new Warehouse()));
         initTreeNodes(root);
         categoryTree.setRoot(root);
 
@@ -258,7 +255,7 @@ public class AttributeManagementController {
     }
 
     private void initAttributesTree() {
-        AttributeName rootName = new AttributeName(0L, "所有属性", selectedCategory, false, false, false, false, false, false, false, false, false, "可用", Sort.ASC.getSort(), null, null, null, null, null, null, Constants.DELETE_FLAG_FALSE, null);
+        AttributeName rootName = new AttributeName(0L, "所有属性", selectedCategory, false, false, false, false, false, false, false, false, false, "可用", Sort.ASC.getSort());
         TreeItem<AttributeIF> root = new TreeItem<>(rootName);
         try {
             String data = HttpClient.GET("/attributes/name/category/"+selectedCategory.getId());
@@ -301,7 +298,7 @@ public class AttributeManagementController {
                 alert.show();
                 return;
             }
-            AttributeName newName = new AttributeName(0L, "新建属性", selectedCategory, false, false, false, false, false, false, false, false, false, "可用", Sort.ASC.getSort(), null, null, null, null, null, null, false, null);
+            AttributeName newName = new AttributeName(0L, "新建属性", selectedCategory, false, false, false, false, false, false, false, false, false, "可用", Sort.ASC.getSort());
             String json = GoogleJson.GET().toJson(newName);
             try {
                 String idStr = HttpClient.POST("/attributes/name", json);
@@ -324,7 +321,7 @@ public class AttributeManagementController {
             TreeItem<AttributeIF> parent =  attributeTree.getSelectionModel().getSelectedItem();
             if(parent.getValue().getId() != 0L) {
                 if(parent.getValue() instanceof AttributeName) {
-                    AttributeValue newValue = new AttributeValue(0L, "新建属性值", "0,0,0", selectedCategory, (AttributeName)parent.getValue(), Status.AVAILABLE.getText(), 1, null, null, null, null, null, null, false, null);
+                    AttributeValue newValue = new AttributeValue(0L, "新建属性值", "0,0,0", selectedCategory, (AttributeName)parent.getValue(), Status.AVAILABLE.getText(), Sort.ASC.getSort());
                     String json = GoogleJson.GET().toJson(newValue);
                     try {
                         String idStr = HttpClient.POST("/attributes/value", json);

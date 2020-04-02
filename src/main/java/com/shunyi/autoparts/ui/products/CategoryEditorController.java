@@ -29,18 +29,18 @@ public class CategoryEditorController {
 
     @FXML
     void ok() {
-        if(txtName.getText().trim().equals("")) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
-            alert.setHeaderText("名称不能为空");
-            alert.show();
-            return;
-        }
-        subStage.close();
-        Category newCategory = new Category();
-        newCategory.setName(txtName.getText());
-        newCategory.setCreator(Env.getInstance().getStringValue(Env.CURRENT_USER));
-        newCategory.setDeleteFlag(Constants.DELETE_FLAG_FALSE);
-        callback.call(newCategory);
+//        if(txtName.getText().trim().equals("")) {
+//            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
+//            alert.setHeaderText("名称不能为空");
+//            alert.show();
+//            return;
+//        }
+//        subStage.close();
+//        Category newCategory = new Category();
+//        newCategory.setName(txtName.getText());
+//        newCategory.setCreator(Env.getInstance().getStringValue(Env.CURRENT_USER));
+//        newCategory.setDeleteFlag(Constants.DELETE_FLAG_FALSE);
+//        callback.call(newCategory);
     }
 
     public void prepare(Stage subStage, Category updatedCategory, Callback<Category, Object> callback) {

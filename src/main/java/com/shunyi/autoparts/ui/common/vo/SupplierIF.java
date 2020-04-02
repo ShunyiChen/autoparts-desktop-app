@@ -1,7 +1,7 @@
 package com.shunyi.autoparts.ui.common.vo;
 
 /**
- * @Description:
+ * @Description: 供应商接口
  * @Author: 陈顺谊
  * @CreateDate: 2020/3/25 21:56
  * @Version: 1.0

@@ -11,7 +11,7 @@ import java.util.Objects;
  * @date 2020/3/23
  */
 public class SKUSlotMapping {
-
+    /** ID */
     public static class Id implements Serializable {
         /** SKU ID */
         protected Long skuId;

@@ -1,10 +1,12 @@
 package com.shunyi.autoparts.ui.stock;
 
 import com.shunyi.autoparts.ui.MainApp;
+import com.shunyi.autoparts.ui.common.Constants;
 import com.shunyi.autoparts.ui.common.GoogleJson;
 import com.shunyi.autoparts.ui.common.HttpClient;
 import com.shunyi.autoparts.ui.common.vo.SKU;
 import com.shunyi.autoparts.ui.common.vo.Slot;
+import com.shunyi.autoparts.ui.common.vo.Store;
 import com.shunyi.autoparts.ui.common.vo.Warehouse;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -415,7 +417,7 @@ public class StockManagementController {
     public void prepare(MainApp application) {
         this.application = application;
         //初始化树
-        Warehouse warehouse = new Warehouse(0L, "ALL","全部仓库",0L, true, null, null, null, null, null, null, false, null);
+        Warehouse warehouse = new Warehouse(0L, "ALL","全部仓库",0L, Constants.PARENT_TRUE, new Store());
         warehouse.setId(0L);
         TreeItem<Warehouse> root = new TreeItem<>(warehouse);
         initTreeNodes(root);

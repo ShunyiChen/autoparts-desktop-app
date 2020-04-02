@@ -33,23 +33,23 @@ public class CarEditorController {
     @FXML
     void saveAndClose(ActionEvent actionEvent) {
         if(validate()) {
-            dialog.close();
-            Car car = new Car();
-            car.setCode(txtCode.getText());
-            car.setModel(txtName.getText());
-            car.setUpdater(Env.getInstance().getStringValue(Env.CURRENT_USER));
-            callback.call(car);
+//            dialog.close();
+//            Car car = new Car();
+//            car.setCode(txtCode.getText());
+//            car.setModel(txtName.getText());
+//            car.setUpdater(Env.getInstance().getStringValue(Env.CURRENT_USER));
+//            callback.call(car);
         }
     }
 
     @FXML
     void continueAdd(ActionEvent actionEvent) {
         if(validate()) {
-            Car car = new Car();
-            car.setCode(txtCode.getText());
-            car.setModel(txtName.getText());
-            car.setCreator(Env.getInstance().currentUser());
-            callback.call(car);
+//            Car car = new Car();
+//            car.setCode(txtCode.getText());
+//            car.setModel(txtName.getText());
+//            car.setCreator(Env.getInstance().currentUser());
+//            callback.call(car);
         }
     }
 
@@ -76,9 +76,9 @@ public class CarEditorController {
         initButton();
 
         if(updatedCar != null) {
-            txtCode.setText(updatedCar.getCode());
-            txtName.setText(updatedCar.getModel());
-            btnContinueAdd.setVisible(false);
+//            txtCode.setText(updatedCar.getCode());
+//            txtName.setText(updatedCar.getModel());
+//            btnContinueAdd.setVisible(false);
         }
     }
 

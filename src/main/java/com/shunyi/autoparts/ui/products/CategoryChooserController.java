@@ -80,25 +80,25 @@ public class CategoryChooserController {
     }
 
     public void prepare(Stage subStage, Category selectedCategory, Callback callback) {
-        this.subStage = subStage;
-        this.selectedCategory = selectedCategory;
-        this.callback = callback;
-        final String css = getClass().getResource("/css/styles.css").toExternalForm();
-        treeView.getStylesheets().add(css);
-        treeView.setOnMouseClicked(event -> {
-            if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2){
-                choose();
-            }
-        });
-        btnChooser.setStyle(String.format("-fx-base: %s;", "rgb(63,81,181)"));
+//        this.subStage = subStage;
+//        this.selectedCategory = selectedCategory;
+//        this.callback = callback;
+//        final String css = getClass().getResource("/css/styles.css").toExternalForm();
+//        treeView.getStylesheets().add(css);
+//        treeView.setOnMouseClicked(event -> {
+//            if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2){
+//                choose();
+//            }
+//        });
+//        btnChooser.setStyle(String.format("-fx-base: %s;", "rgb(63,81,181)"));
 
-        Category category = new Category(0L,"所有类目",-1L, Constants.PARENT_TRUE, null, null, null, null, null, null, Constants.DELETE_FLAG_FALSE, null);
-        TreeItem<Category> root = new TreeItem<Category>(category);
-        treeView.setRoot(root);
-        initTreeNodes(root);
-        //默认选中root
-        if(selectedCategory != null && selectedCategory.getId() == 0) {
-            treeView.getSelectionModel().select(root);
-        }
+//        Category category = new Category(0L,"所有类目",-1L, Constants.PARENT_TRUE, null, null, null, null, null, null, Constants.DELETE_FLAG_FALSE, null);
+//        TreeItem<Category> root = new TreeItem<Category>(category);
+//        treeView.setRoot(root);
+//        initTreeNodes(root);
+//        //默认选中root
+//        if(selectedCategory != null && selectedCategory.getId() == 0) {
+//            treeView.getSelectionModel().select(root);
+//        }
     }
 }

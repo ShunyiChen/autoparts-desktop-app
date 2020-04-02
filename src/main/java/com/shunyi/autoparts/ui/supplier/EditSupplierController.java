@@ -4,8 +4,6 @@ import com.shunyi.autoparts.ui.common.Constants;
 import com.shunyi.autoparts.ui.common.Env;
 import com.shunyi.autoparts.ui.common.GoogleJson;
 import com.shunyi.autoparts.ui.common.HttpClient;
-import com.shunyi.autoparts.ui.common.vo.Grade;
-import com.shunyi.autoparts.ui.common.vo.Payment;
 import com.shunyi.autoparts.ui.common.vo.Supplier;
 import com.shunyi.autoparts.ui.common.vo.SupplierCategory;
 import javafx.event.ActionEvent;
@@ -40,10 +38,10 @@ public class EditSupplierController {
     private TextField txtEmail;
     @FXML
     private TextField txtPostcode;
-    @FXML
-    private ComboBox<Grade> comboGrade;
-    @FXML
-    private ComboBox<Payment> comboPayment;
+//    @FXML
+//    private ComboBox<Grade> comboGrade;
+//    @FXML
+//    private ComboBox<Payment> comboPayment;
     @FXML
     private TextField txtNotes;
     @FXML
@@ -135,22 +133,22 @@ public class EditSupplierController {
 
     private void update(boolean closeStage) {
         if(checkInputs()) {
-            if(closeStage) {
-                dialog.close();
-            }
-            Supplier supplier = new Supplier(0L, txtCode.getText(), txtName.getText(), txtContact.getText(),txtPhone1.getText(),txtPhone2.getText(),txtEmail.getText(), txtAddress.getText(), txtPostcode.getText(), comboGrade.getValue(), comboPayment.getValue(), txtNotes.getText(), selectedCategory, null, null, null, Env.getInstance().currentUser(), null, null, Constants.DELETE_FLAG_FALSE, null);
-            supplier.setId(updatedSupplier.getId());
-            callback.call(supplier);
+//            if(closeStage) {
+//                dialog.close();
+//            }
+//            Supplier supplier = new Supplier(0L, txtCode.getText(), txtName.getText(), txtContact.getText(),txtPhone1.getText(),txtPhone2.getText(),txtEmail.getText(), txtAddress.getText(), txtPostcode.getText(), comboGrade.getValue(), comboPayment.getValue(), txtNotes.getText(), selectedCategory, null, null, null, Env.getInstance().currentUser(), null, null, Constants.DELETE_FLAG_FALSE, null);
+//            supplier.setId(updatedSupplier.getId());
+//            callback.call(supplier);
         }
     }
 
     private void add(boolean closeStage) {
         if(checkInputs()) {
-            if(closeStage) {
-                dialog.close();
-            }
-            Supplier supplier = new Supplier(0L, txtCode.getText(), txtName.getText(), txtContact.getText(),txtPhone1.getText(),txtPhone2.getText(),txtEmail.getText(), txtAddress.getText(), txtPostcode.getText(), comboGrade.getValue(), comboPayment.getValue(), txtNotes.getText(), selectedCategory, null, null, null, Env.getInstance().currentUser(), null, null, Constants.DELETE_FLAG_FALSE, null);
-            callback.call(supplier);
+//            if(closeStage) {
+//                dialog.close();
+//            }
+//            Supplier supplier = new Supplier(0L, txtCode.getText(), txtName.getText(), txtContact.getText(),txtPhone1.getText(),txtPhone2.getText(),txtEmail.getText(), txtAddress.getText(), txtPostcode.getText(), comboGrade.getValue(), comboPayment.getValue(), txtNotes.getText(), selectedCategory, null, null, null, Env.getInstance().currentUser(), null, null, Constants.DELETE_FLAG_FALSE, null);
+//            callback.call(supplier);
         }
     }
 
@@ -168,50 +166,50 @@ public class EditSupplierController {
         initPaymentList();
 
         if(updatedSupplier != null) {
-            try {
-                String json = HttpClient.GET("/supplier/categories/"+updatedSupplier.getCategory().getId());
-                selectedCategory = GoogleJson.GET().fromJson(json, SupplierCategory.class);
-                String name = selectedCategory.getId() == 0 ? "所有供应商":selectedCategory.getName();
-                txtCategory.setText(name);
-                txtCode.setText(updatedSupplier.getCode());
-                txtName.setText(updatedSupplier.getName());
-                txtContact.setText(updatedSupplier.getContact());
-                txtPhone1.setText(updatedSupplier.getPhone1());
-                txtPhone2.setText(updatedSupplier.getNotes());
-                txtAddress.setText(updatedSupplier.getAddress());
-                txtEmail.setText(updatedSupplier.getEmail());
-                txtPostcode.setText(updatedSupplier.getPostCode());
-                comboGrade.setValue(updatedSupplier.getGrade());
-                comboPayment.setValue(updatedSupplier.getPayment());
-                txtNotes.setText(updatedSupplier.getNotes());
-                btnContinueAdding.setVisible(false);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+//            try {
+//                String json = HttpClient.GET("/supplier/categories/"+updatedSupplier.getCategory().getId());
+//                selectedCategory = GoogleJson.GET().fromJson(json, SupplierCategory.class);
+//                String name = selectedCategory.getId() == 0 ? "所有供应商":selectedCategory.getName();
+//                txtCategory.setText(name);
+//                txtCode.setText(updatedSupplier.getCode());
+//                txtName.setText(updatedSupplier.getName());
+//                txtContact.setText(updatedSupplier.getContact());
+//                txtPhone1.setText(updatedSupplier.getPhone1());
+//                txtPhone2.setText(updatedSupplier.getNotes());
+//                txtAddress.setText(updatedSupplier.getAddress());
+//                txtEmail.setText(updatedSupplier.getEmail());
+//                txtPostcode.setText(updatedSupplier.getPostCode());
+//                comboGrade.setValue(updatedSupplier.getGrade());
+//                comboPayment.setValue(updatedSupplier.getPayment());
+//                txtNotes.setText(updatedSupplier.getNotes());
+//                btnContinueAdding.setVisible(false);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
         }
     }
 
     private void initGradeList() {
-        comboGrade.setStyle("-fx-font-size: 14px;");
-        try {
-            String json = HttpClient.GET("/grades");
-            Grade[] grades = GoogleJson.GET().fromJson(json, Grade[].class);
-            comboGrade.getItems().addAll(grades);
-            comboGrade.getSelectionModel().select(0);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        comboGrade.setStyle("-fx-font-size: 14px;");
+//        try {
+//            String json = HttpClient.GET("/grades");
+//            Grade[] grades = GoogleJson.GET().fromJson(json, Grade[].class);
+//            comboGrade.getItems().addAll(grades);
+//            comboGrade.getSelectionModel().select(0);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 
     private void initPaymentList() {
-        comboPayment.setStyle("-fx-font-size: 14px;");
-        try {
-            String json = HttpClient.GET("/payments");
-            Payment[] payments = GoogleJson.GET().fromJson(json, Payment[].class);
-            comboPayment.getItems().addAll(payments);
-            comboPayment.getSelectionModel().select(0);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        comboPayment.setStyle("-fx-font-size: 14px;");
+//        try {
+//            String json = HttpClient.GET("/payments");
+//            Payment[] payments = GoogleJson.GET().fromJson(json, Payment[].class);
+//            comboPayment.getItems().addAll(payments);
+//            comboPayment.getSelectionModel().select(0);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 }

@@ -1,23 +1,23 @@
 package com.shunyi.autoparts.ui.common.vo;
 
 /**
- * @description 车型VO
+ * @description 配件产地VO
  * @author Shunyi Chen
- * @date 2020/3/23
+ * @date 2020/4/2
  */
-public class Car {
+public class Place {
     /** 自增ID */
     private Long id;
-    /** 车型编码 */
+    /** 产地编码 */
     private String code;
-    /** 车型名称 */
+    /** 产地名称 */
     private String name;
     /** 备注 */
     private String notes;
 
-    public Car() {}
+    public Place() {}
 
-    public Car(Long id, String code, String name, String notes) {
+    public Place(Long id, String code, String name, String notes) {
         this.id = id;
         this.code = code;
         this.name = name;

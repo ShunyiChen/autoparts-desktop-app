@@ -11,6 +11,7 @@ import java.util.Objects;
  * @date 2020/3/23
  */
 public class UserRoleMapping {
+    /** ID */
     public static class Id implements Serializable {
 
         /** 用户ID */
@@ -51,9 +52,7 @@ public class UserRoleMapping {
         @Override
         public boolean equals(Object o) {
             if (this == o) {return true;}
-            if (o == null || getClass() != o.getClass()) {
-                return false;
-            }
+            if (o == null || getClass() != o.getClass()) {return false;}
             Id id = (Id) o;
             return Objects.equals(userId, id.userId) &&
                     Objects.equals(roleId, id.roleId);

@@ -70,7 +70,7 @@ public class SupplierChooserController {
             }
         });
         btnChooser.setStyle(String.format("-fx-base: %s;", "rgb(63,81,181)"));
-        SupplierCategory sc = new SupplierCategory(0L, "所有供应商", -1L, Constants.PARENT_TRUE, null, Env.getInstance().currentUser(), null, null, null, null, Constants.DELETE_FLAG_FALSE, null);
+        SupplierCategory sc = new SupplierCategory(0L, "所有供应商", -1L, Constants.PARENT_TRUE);
         TreeItem<SupplierIF> root = new TreeItem<>(sc);
         treeView.setRoot(root);
         initTreeNodes(root);

@@ -2,6 +2,7 @@ package com.shunyi.autoparts.ui.products;
 
 import com.shunyi.autoparts.ui.common.GoogleJson;
 import com.shunyi.autoparts.ui.common.HttpClient;
+import com.shunyi.autoparts.ui.common.Sort;
 import com.shunyi.autoparts.ui.common.vo.*;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -55,7 +56,7 @@ public class BasicAttributesController {
                 try {
                     AttributeValue[] attributeValues = HttpClient.GET("/attributes/value/name/"+an.getId(), AttributeValue[].class);
                     for(AttributeValue attributeValue : attributeValues) {
-                        BasicAttributes newBasicAttributes = new BasicAttributes(0L, selectedProject, an.getId(), attributeValue, false, 0L, null, null, null, null, null, null, false, null);
+                        BasicAttributes newBasicAttributes = new BasicAttributes(0L, selectedProject, an.getId(), attributeValue, false, 0L);
                         String json = GoogleJson.GET().toJson(newBasicAttributes);;
                         String idStr = HttpClient.POST("/basic/attributes", json);
                         newBasicAttributes.setId(Long.valueOf(idStr));

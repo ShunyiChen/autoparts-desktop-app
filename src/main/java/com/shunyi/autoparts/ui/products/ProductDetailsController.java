@@ -71,41 +71,41 @@ public class ProductDetailsController {
     private TableColumn colNotes;
     @FXML
     private TreeView<Category> treeView;
-    @FXML
-    private ListView<BrandSeries> listView;
+//    @FXML
+//    private ListView<BrandSeries> listView;
     @FXML
     private TableView<Product> tableView;
 
     @FXML
     private void search() {
-        Product condition = new Product();
-        condition.setCode(txtCode.getText());
-        condition.setName(txtName.getText());
-        condition.setBarCode(txtBarCode.getText());
-        if(txtPrice.getText() != null && !txtPrice.getText().equals("")) {
-            if(NumberValidationUtils.isRealNumber(txtPrice.getText())) {
-                condition.setListPrice(new BigDecimal(txtPrice.getText()));
-            }
-        }
-        Car car = new Car();
-        car.setModel(txtCar.getText());
-        condition.setCar(car);
-        condition.setImported(comboImport.getValue());
-        condition.setOrigin(txtOrigin.getText());
-        Supplier supplier = new Supplier();
-        supplier.setName(txtSupplier.getText());
-        condition.setSupplier(supplier);
-
-        String json = GoogleJson.GET().toJson(condition);
-        String data = null;
-        try {
-            data = HttpClient.POST("/products/search", json);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Product[] products = GoogleJson.GET().fromJson(data, Product[].class);
-        tableView.getItems().clear();
-        tableView.getItems().addAll(products);
+//        Product condition = new Product();
+//        condition.setCode(txtCode.getText());
+//        condition.setName(txtName.getText());
+//        condition.setBarCode(txtBarCode.getText());
+//        if(txtPrice.getText() != null && !txtPrice.getText().equals("")) {
+//            if(NumberValidationUtils.isRealNumber(txtPrice.getText())) {
+//                condition.setListPrice(new BigDecimal(txtPrice.getText()));
+//            }
+//        }
+//        Car car = new Car();
+//        car.setModel(txtCar.getText());
+//        condition.setCar(car);
+//        condition.setImported(comboImport.getValue());
+//        condition.setOrigin(txtOrigin.getText());
+//        Supplier supplier = new Supplier();
+//        supplier.setName(txtSupplier.getText());
+//        condition.setSupplier(supplier);
+//
+//        String json = GoogleJson.GET().toJson(condition);
+//        String data = null;
+//        try {
+//            data = HttpClient.POST("/products/search", json);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        Product[] products = GoogleJson.GET().fromJson(data, Product[].class);
+//        tableView.getItems().clear();
+//        tableView.getItems().addAll(products);
     }
 
     @FXML
@@ -233,8 +233,8 @@ public class ProductDetailsController {
 
     @FXML
     private void refreshCategory() {
-        initTreeView();
-        listView.getItems().clear();
+//        initTreeView();
+//        listView.getItems().clear();
     }
 
     @FXML
@@ -263,13 +263,13 @@ public class ProductDetailsController {
             alertConfirm.setHeaderText("是否删除该类目？");
             alertConfirm.showAndWait().filter(response -> response == ButtonType.YES).ifPresent(response -> {
                 try {
-                    BrandSeries[] brandSeries = HttpClient.GET("/brandSeries/category/"+selected.getValue().getId(), BrandSeries[].class);
-                    if(brandSeries.length > 0) {
-                        Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
-                        alert.setHeaderText("该类目下存在品牌无法删除");
-                        alert.show();
-                        return;
-                    }
+//                    BrandSeries[] brandSeries = HttpClient.GET("/brandSeries/category/"+selected.getValue().getId(), BrandSeries[].class);
+//                    if(brandSeries.length > 0) {
+//                        Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
+//                        alert.setHeaderText("该类目下存在品牌无法删除");
+//                        alert.show();
+//                        return;
+//                    }
                     HttpClient.DELETE("/categories/"+selected.getValue().getId());
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -296,217 +296,217 @@ public class ProductDetailsController {
 
     @FXML
     private void newBrand() {
-        TreeItem<Category> selectedCategory = treeView.getSelectionModel().getSelectedItem();
-        if(selectedCategory == null) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
-            alert.setHeaderText("请选择一个类目");
-            alert.show();
-            return;
-        } else if(selectedCategory.getValue().getId() == 0L) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
-            alert.setHeaderText("不能在根节点下创建品牌，请选中其他类目");
-            alert.show();
-            return;
-        }
-        Callback<BrandSeries, Object> callback = e -> {
-            String json = GoogleJson.GET().toJson(e);
-            try {
-                String idStr = HttpClient.POST("/brandSeries", json);
-                e.setId(Long.valueOf(idStr));
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-            listView.getItems().add(e);
-            return null;
-        };
-        openBrandSeriesEditor(callback, null, selectedCategory==null?null:selectedCategory.getValue());
+//        TreeItem<Category> selectedCategory = treeView.getSelectionModel().getSelectedItem();
+//        if(selectedCategory == null) {
+//            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
+//            alert.setHeaderText("请选择一个类目");
+//            alert.show();
+//            return;
+//        } else if(selectedCategory.getValue().getId() == 0L) {
+//            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
+//            alert.setHeaderText("不能在根节点下创建品牌，请选中其他类目");
+//            alert.show();
+//            return;
+//        }
+//        Callback<BrandSeries, Object> callback = e -> {
+//            String json = GoogleJson.GET().toJson(e);
+//            try {
+//                String idStr = HttpClient.POST("/brandSeries", json);
+//                e.setId(Long.valueOf(idStr));
+//            } catch (IOException ex) {
+//                ex.printStackTrace();
+//            }
+//            listView.getItems().add(e);
+//            return null;
+//        };
+//        openBrandSeriesEditor(callback, null, selectedCategory==null?null:selectedCategory.getValue());
     }
 
     @FXML
     private void updateBrand() {
-        BrandSeries selected = listView.getSelectionModel().getSelectedItem();
-        if(selected == null) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
-            alert.setHeaderText("请选择一个品牌");
-            alert.show();
-            return;
-        }
-        BrandSeries selectedBrandSeries = null;
-        try {
-            selectedBrandSeries = HttpClient.GET("/brandSeries/"+selected.getId(), BrandSeries.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Callback<BrandSeries, Object> callback = e -> {
-            e.setId(selected.getId());
-            String data = GoogleJson.GET().toJson(e);
-            try {
-                HttpClient.PUT("/brandSeries/"+e.getId(), data);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-            int index = listView.getItems().indexOf(selected);
-            listView.getItems().remove(index);
-            listView.getItems().add(index, e);
-            listView.getSelectionModel().select(e);
-            return null;
-        };
-        //因为不需要重复赋值，所有最后参数设置null
-        openBrandSeriesEditor(callback, selectedBrandSeries, null);
+//        BrandSeries selected = listView.getSelectionModel().getSelectedItem();
+//        if(selected == null) {
+//            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
+//            alert.setHeaderText("请选择一个品牌");
+//            alert.show();
+//            return;
+//        }
+//        BrandSeries selectedBrandSeries = null;
+//        try {
+//            selectedBrandSeries = HttpClient.GET("/brandSeries/"+selected.getId(), BrandSeries.class);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        Callback<BrandSeries, Object> callback = e -> {
+//            e.setId(selected.getId());
+//            String data = GoogleJson.GET().toJson(e);
+//            try {
+//                HttpClient.PUT("/brandSeries/"+e.getId(), data);
+//            } catch (IOException ex) {
+//                ex.printStackTrace();
+//            }
+//            int index = listView.getItems().indexOf(selected);
+//            listView.getItems().remove(index);
+//            listView.getItems().add(index, e);
+//            listView.getSelectionModel().select(e);
+//            return null;
+//        };
+//        //因为不需要重复赋值，所有最后参数设置null
+//        openBrandSeriesEditor(callback, selectedBrandSeries, null);
     }
 
     @FXML
     private void removeBrand() {
-        BrandSeries selected = listView.getSelectionModel().getSelectedItem();
-        if(selected == null) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
-            alert.setHeaderText("请选择一个要删除的品牌");
-            alert.show();
-            return;
-        }
-        Alert alertConfirm = new Alert(Alert.AlertType.CONFIRMATION, "", ButtonType.NO, ButtonType.YES);
-        alertConfirm.setHeaderText("是否删除该品牌？");
-        alertConfirm.showAndWait().filter(response -> response == ButtonType.YES).ifPresent(response -> {
-            try {
-                Product[] products = HttpClient.GET("/products/brandSeries/"+selected.getId(), Product[].class);
-                if(products.length > 0) {
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
-                    alert.setHeaderText("该品牌下存在配件无法删除");
-                    alert.show();
-                    return;
-                }
-                HttpClient.DELETE("/brandSeries/"+selected.getId());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            listView.getItems().remove(selected);
-        });
+//        BrandSeries selected = listView.getSelectionModel().getSelectedItem();
+//        if(selected == null) {
+//            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
+//            alert.setHeaderText("请选择一个要删除的品牌");
+//            alert.show();
+//            return;
+//        }
+//        Alert alertConfirm = new Alert(Alert.AlertType.CONFIRMATION, "", ButtonType.NO, ButtonType.YES);
+//        alertConfirm.setHeaderText("是否删除该品牌？");
+//        alertConfirm.showAndWait().filter(response -> response == ButtonType.YES).ifPresent(response -> {
+//            try {
+//                Product[] products = HttpClient.GET("/products/brandSeries/"+selected.getId(), Product[].class);
+//                if(products.length > 0) {
+//                    Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
+//                    alert.setHeaderText("该品牌下存在配件无法删除");
+//                    alert.show();
+//                    return;
+//                }
+//                HttpClient.DELETE("/brandSeries/"+selected.getId());
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//            listView.getItems().remove(selected);
+//        });
     }
 
-    private void openBrandSeriesEditor(Callback<BrandSeries, Object> callback, BrandSeries updatedBrandSeries, Category selectedCategory) {
-        FXMLLoader loader = new FXMLLoader(
-                getClass().getResource(
-                        "/fxml/products/brandseries_editor.fxml"
-                )
-        );
-        HBox root = null;
-        try {
-            root = loader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Scene scene = new Scene(root);
-        Stage dialog = new Stage();
-        BrandSeriesEditorController controller = loader.getController();
-        controller.prepare(dialog, updatedBrandSeries, callback, selectedCategory);
-        dialog.setTitle(updatedBrandSeries != null?"更改品牌":"新建品牌");
-        dialog.initOwner(application.getStage());
-        dialog.setResizable(false);
-        dialog.initModality(Modality.APPLICATION_MODAL);
-        dialog.setScene(scene);
-        // center stage on screen
-        dialog.centerOnScreen();
-        dialog.show();
-    }
+//    private void openBrandSeriesEditor(Callback<BrandSeries, Object> callback, BrandSeries updatedBrandSeries, Category selectedCategory) {
+//        FXMLLoader loader = new FXMLLoader(
+//                getClass().getResource(
+//                        "/fxml/products/brandseries_editor.fxml"
+//                )
+//        );
+//        HBox root = null;
+//        try {
+//            root = loader.load();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        Scene scene = new Scene(root);
+//        Stage dialog = new Stage();
+//        BrandSeriesEditorController controller = loader.getController();
+//        controller.prepare(dialog, updatedBrandSeries, callback, selectedCategory);
+//        dialog.setTitle(updatedBrandSeries != null?"更改品牌":"新建品牌");
+//        dialog.initOwner(application.getStage());
+//        dialog.setResizable(false);
+//        dialog.initModality(Modality.APPLICATION_MODAL);
+//        dialog.setScene(scene);
+//        // center stage on screen
+//        dialog.centerOnScreen();
+//        dialog.show();
+//    }
 
     @FXML
     private void newProduct() {
-        TreeItem<Category> selectedCategory = treeView.getSelectionModel().getSelectedItem();
-        if(selectedCategory == null) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
-            alert.setHeaderText("请选择产品分类");
-            alert.show();
-            return;
-        }
-        Callback<Product, Object> callback = e -> {
-            String json = GoogleJson.GET().toJson(e);
-            try {
-                String idStr = HttpClient.POST("/products",json);
-                e.setId(Long.valueOf(idStr));
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-            // 为新建配件创建一个默认的SKU
-            SKU sku = new SKU(Constants.ID, e, "", e.getName(), e.getName(), e.getUnit(), Constants.QUANTITY, e.getListPrice(), e.getListPrice(), Status.AVAILABLE.getText(), "", "", new HashSet<SKUSlotMapping>(), new HashSet<Picture>(), null, null, null, null, null, null, null, null);
-            json = GoogleJson.GET().toJson(sku);
-            try {
-                String idStr = HttpClient.POST("/sku",json);
-                sku.setId(Long.valueOf(idStr));
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-            //刷新表格
-            tableView.getItems().add(e);
-            tableView.getSelectionModel().select(e);
-            return null;
-        };
-        //初始品牌
-        BrandSeries selectedBrand = listView.getSelectionModel().getSelectedItem();
-        openProductEditor(callback, null, selectedCategory.getValue(), selectedBrand);
+//        TreeItem<Category> selectedCategory = treeView.getSelectionModel().getSelectedItem();
+//        if(selectedCategory == null) {
+//            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
+//            alert.setHeaderText("请选择产品分类");
+//            alert.show();
+//            return;
+//        }
+//        Callback<Product, Object> callback = e -> {
+//            String json = GoogleJson.GET().toJson(e);
+//            try {
+//                String idStr = HttpClient.POST("/products",json);
+//                e.setId(Long.valueOf(idStr));
+//            } catch (IOException ex) {
+//                ex.printStackTrace();
+//            }
+//            // 为新建配件创建一个默认的SKU
+//            SKU sku = new SKU(Constants.ID, e, "", e.getName(), e.getName(), e.getUnit(), Constants.QUANTITY, e.getListPrice(), e.getListPrice(), Status.AVAILABLE.getText(), "", "", new HashSet<SKUSlotMapping>(), new HashSet<Picture>(), null, null, null, null, null, null, null, null);
+//            json = GoogleJson.GET().toJson(sku);
+//            try {
+//                String idStr = HttpClient.POST("/sku",json);
+//                sku.setId(Long.valueOf(idStr));
+//            } catch (IOException ex) {
+//                ex.printStackTrace();
+//            }
+//            //刷新表格
+//            tableView.getItems().add(e);
+//            tableView.getSelectionModel().select(e);
+//            return null;
+//        };
+//        //初始品牌
+//        BrandSeries selectedBrand = listView.getSelectionModel().getSelectedItem();
+//        openProductEditor(callback, null, selectedCategory.getValue(), selectedBrand);
     }
 
     @FXML
     private void updateProduct() {
-        Product selected = tableView.getSelectionModel().getSelectedItem();
-        if(selected == null) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
-            alert.setHeaderText("请选择一个配件");
-            alert.show();
-            return;
-        }
-        BrandSeries selectedBrand = selected.getBrandSeries();
-        Category selectedCategory = selectedBrand.getCategory();
-        String data = null;
-        try {
-            data = HttpClient.GET("/products/"+selected.getId());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Product selectedProduct = GoogleJson.GET().fromJson(data, Product.class);
-        Callback<Product, Object> callback = e -> {
-            e.setId(selectedProduct.getId());
-            e.setDateCreated(selectedProduct.getDateCreated());
-            String json = GoogleJson.GET().toJson(e);
-            try {
-                HttpClient.PUT("/products/"+selectedProduct.getId(),json);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-            //刷新表格
-            int index = tableView.getSelectionModel().getSelectedIndex();
-            tableView.getItems().remove(selected);
-            tableView.getItems().add(index, e);
-            tableView.getSelectionModel().select(e);
-            return null;
-        };
-        openProductEditor(callback, selected, selectedCategory, selectedBrand);
+//        Product selected = tableView.getSelectionModel().getSelectedItem();
+//        if(selected == null) {
+//            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
+//            alert.setHeaderText("请选择一个配件");
+//            alert.show();
+//            return;
+//        }
+//        BrandSeries selectedBrand = selected.getBrandSeries();
+//        Category selectedCategory = selectedBrand.getCategory();
+//        String data = null;
+//        try {
+//            data = HttpClient.GET("/products/"+selected.getId());
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        Product selectedProduct = GoogleJson.GET().fromJson(data, Product.class);
+//        Callback<Product, Object> callback = e -> {
+//            e.setId(selectedProduct.getId());
+//            e.setDateCreated(selectedProduct.getDateCreated());
+//            String json = GoogleJson.GET().toJson(e);
+//            try {
+//                HttpClient.PUT("/products/"+selectedProduct.getId(),json);
+//            } catch (IOException ex) {
+//                ex.printStackTrace();
+//            }
+//            //刷新表格
+//            int index = tableView.getSelectionModel().getSelectedIndex();
+//            tableView.getItems().remove(selected);
+//            tableView.getItems().add(index, e);
+//            tableView.getSelectionModel().select(e);
+//            return null;
+//        };
+//        openProductEditor(callback, selected, selectedCategory, selectedBrand);
     }
 
-    private void openProductEditor(Callback<Product, Object> callback, Product updatedProduct, Category selectedCategory, BrandSeries selectedBrand) {
-        FXMLLoader loader = new FXMLLoader(
-                getClass().getResource(
-                        "/fxml/products/product_editor.fxml"
-                )
-        );
-        VBox root = null;
-        try {
-            root = loader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Scene scene = new Scene(root);
-        Stage dialog = new Stage();
-        ProductEditorController controller = loader.getController();
-        controller.prepare(dialog, updatedProduct, callback, selectedCategory, selectedBrand);
-        dialog.setTitle(updatedProduct != null?"更改配件":"新建配件");
-        dialog.initOwner(application.getStage());
-        dialog.setResizable(false);
-        dialog.initModality(Modality.APPLICATION_MODAL);
-        dialog.setScene(scene);
-        // center stage on screen
-        dialog.centerOnScreen();
-        dialog.show();
-    }
+//    private void openProductEditor(Callback<Product, Object> callback, Product updatedProduct, Category selectedCategory, BrandSeries selectedBrand) {
+//        FXMLLoader loader = new FXMLLoader(
+//                getClass().getResource(
+//                        "/fxml/products/product_editor.fxml"
+//                )
+//        );
+//        VBox root = null;
+//        try {
+//            root = loader.load();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        Scene scene = new Scene(root);
+//        Stage dialog = new Stage();
+//        ProductEditorController controller = loader.getController();
+//        controller.prepare(dialog, updatedProduct, callback, selectedCategory, selectedBrand);
+//        dialog.setTitle(updatedProduct != null?"更改配件":"新建配件");
+//        dialog.initOwner(application.getStage());
+//        dialog.setResizable(false);
+//        dialog.initModality(Modality.APPLICATION_MODAL);
+//        dialog.setScene(scene);
+//        // center stage on screen
+//        dialog.centerOnScreen();
+//        dialog.show();
+//    }
 
     @FXML
     private void removeProduct() {
@@ -735,44 +735,44 @@ public class ProductDetailsController {
 
     @FXML
     private void duplicate() {
-        Product selected = tableView.getSelectionModel().getSelectedItem();
-        if(selected == null) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
-            alert.setHeaderText("请选择一个配件");
-            alert.show();
-            return;
-        }
-        String json = null;
-        try {
-            json = HttpClient.GET("/products/"+selected.getId());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Product duplicated = GoogleJson.GET().fromJson(json, Product.class);
-        duplicated.setId(null);
-        json = GoogleJson.GET().toJson(duplicated);
-        try {
-            String idStr = HttpClient.POST("/products",json);
-            duplicated.setId(Long.valueOf(idStr));
-
-            List<AttributeValue> attributeValues = getProductBasicAttributeValues(selected);
-            for(AttributeValue v : attributeValues) {
-                BasicAttributes newBasicAttributes = new BasicAttributes(0L, duplicated, v.getAttributeName().getId(), v, false, 0L, null, null, null, null, null, null, false, null);
-                json = GoogleJson.GET().toJson(newBasicAttributes);
-                idStr = HttpClient.POST("/basic/attributes", json);
-                newBasicAttributes.setId(Long.valueOf(idStr));
-            }
-
-            tableView.getItems().add(duplicated);
-            tableView.getSelectionModel().select(duplicated);
-
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
+//        Product selected = tableView.getSelectionModel().getSelectedItem();
+//        if(selected == null) {
+//            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
+//            alert.setHeaderText("请选择一个配件");
+//            alert.show();
+//            return;
+//        }
+//        String json = null;
+//        try {
+//            json = HttpClient.GET("/products/"+selected.getId());
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        Product duplicated = GoogleJson.GET().fromJson(json, Product.class);
+//        duplicated.setId(null);
+//        json = GoogleJson.GET().toJson(duplicated);
+//        try {
+//            String idStr = HttpClient.POST("/products",json);
+//            duplicated.setId(Long.valueOf(idStr));
+//
+//            List<AttributeValue> attributeValues = getProductBasicAttributeValues(selected);
+//            for(AttributeValue v : attributeValues) {
+//                BasicAttributes newBasicAttributes = new BasicAttributes(0L, duplicated, v.getAttributeName().getId(), v, false, 0L, null, null, null, null, null, null, false, null);
+//                json = GoogleJson.GET().toJson(newBasicAttributes);
+//                idStr = HttpClient.POST("/basic/attributes", json);
+//                newBasicAttributes.setId(Long.valueOf(idStr));
+//            }
+//
+//            tableView.getItems().add(duplicated);
+//            tableView.getSelectionModel().select(duplicated);
+//
+//        } catch (IOException ex) {
+//            ex.printStackTrace();
+//        }
     }
 
     private void initTreeView() {
-        TreeItem<Category> root = new TreeItem<>(new Category(0L, "所有类目",-1L, Constants.PARENT_TRUE, null, null, null, null, null, null, Constants.DELETE_FLAG_FALSE, null));
+        TreeItem<Category> root = new TreeItem<>(new Category(0L, "所有类目",-1L, Constants.PARENT_TRUE, new Warehouse()));
         initTreeNodes(root);
         treeView.setRoot(root);
         treeView.setCellFactory(p -> new TextFieldTreeCell<>(new StringConverter<>(){
@@ -812,16 +812,16 @@ public class ProductDetailsController {
 
         treeView.setOnMouseClicked((MouseEvent event) -> {
             if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 1){
-                TreeItem<Category> item = treeView.getSelectionModel().getSelectedItem();
-                listView.getItems().clear();
-                String json = null;
-                try {
-                    json = HttpClient.GET("/brandSeries/category/"+item.getValue().getId());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                BrandSeries[] brands = GoogleJson.GET().fromJson(json, BrandSeries[].class);
-                listView.getItems().addAll(brands);
+//                TreeItem<Category> item = treeView.getSelectionModel().getSelectedItem();
+//                listView.getItems().clear();
+//                String json = null;
+//                try {
+//                    json = HttpClient.GET("/brandSeries/category/"+item.getValue().getId());
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//                BrandSeries[] brands = GoogleJson.GET().fromJson(json, BrandSeries[].class);
+//                listView.getItems().addAll(brands);
 
             } else if (event.getButton().equals(MouseButton.SECONDARY) && event.getClickCount() == 1) {
                 Category selectedCategory = treeView.getSelectionModel().getSelectedItem().getValue();
@@ -859,27 +859,27 @@ public class ProductDetailsController {
     }
 
     private void initListView() {
-        listView.setStyle("-fx-font-size: 14px;");
-        listView.setOnMouseClicked((MouseEvent event) -> {
-            if (event.getButton().equals(MouseButton.PRIMARY)){
-                if(event.getClickCount() == 2) {
-                    updateBrand();
-                } else if(event.getClickCount() == 1) {
-                    BrandSeries selectedBrand = listView.getSelectionModel().getSelectedItem();
-                    if(selectedBrand != null) {
-                        String data = null;
-                        try {
-                            data = HttpClient.GET("/products/brandSeries/"+selectedBrand.getId());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        Product[] products = GoogleJson.GET().fromJson(data, Product[].class);
-                        tableView.getItems().clear();
-                        tableView.getItems().addAll(products);
-                    }
-                }
-            }
-        });
+//        listView.setStyle("-fx-font-size: 14px;");
+//        listView.setOnMouseClicked((MouseEvent event) -> {
+//            if (event.getButton().equals(MouseButton.PRIMARY)){
+//                if(event.getClickCount() == 2) {
+//                    updateBrand();
+//                } else if(event.getClickCount() == 1) {
+//                    BrandSeries selectedBrand = listView.getSelectionModel().getSelectedItem();
+//                    if(selectedBrand != null) {
+//                        String data = null;
+//                        try {
+//                            data = HttpClient.GET("/products/brandSeries/"+selectedBrand.getId());
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
+//                        Product[] products = GoogleJson.GET().fromJson(data, Product[].class);
+//                        tableView.getItems().clear();
+//                        tableView.getItems().addAll(products);
+//                    }
+//                }
+//            }
+//        });
 
     }
 }

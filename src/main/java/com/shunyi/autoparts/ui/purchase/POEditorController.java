@@ -172,12 +172,12 @@ public class POEditorController {
         });
 
         comboboxSupplierCode.setOnAction(e -> {
-            if(comboboxSupplierCode.getValue() instanceof Supplier) {
-                Supplier supplier = comboboxSupplierCode.getValue();
-                txtSupplierName.setText(supplier.getName());
-                txtContact.setText(supplier.getContact());
-                txtPhone.setText(supplier.getPhone1()+","+supplier.getPhone2());
-            }
+//            if(comboboxSupplierCode.getValue() instanceof Supplier) {
+//                Supplier supplier = comboboxSupplierCode.getValue();
+//                txtSupplierName.setText(supplier.getName());
+//                txtContact.setText(supplier.getContact());
+//                txtPhone.setText(supplier.getPhone1()+","+supplier.getPhone2());
+//            }
 
         });
     }
@@ -206,20 +206,20 @@ public class POEditorController {
                 return new SimpleObjectProperty<>(param.getValue().getSku().getSpecification() );
             }
         });
-        colCar.setCellValueFactory(param -> {
-            if(param.getValue().getSku().getProduct().getCar() == null) {
-                return new SimpleObjectProperty<>("");
-            } else {
-                return new SimpleObjectProperty<>(param.getValue().getSku().getProduct().getCar().getModel());
-            }
-        });
-        colBrand.setCellValueFactory(param -> {
-            if(param.getValue().getSku().getProduct().getBrandSeries() == null) {
-                return new SimpleObjectProperty<>("");
-            } else {
-                return new SimpleObjectProperty<>(param.getValue().getSku().getProduct().getBrandSeries().getChineseName());
-            }
-        });
+//        colCar.setCellValueFactory(param -> {
+//            if(param.getValue().getSku().getProduct().getCar() == null) {
+//                return new SimpleObjectProperty<>("");
+//            } else {
+//                return new SimpleObjectProperty<>(param.getValue().getSku().getProduct().getCar().getModel());
+//            }
+//        });
+//        colBrand.setCellValueFactory(param -> {
+//            if(param.getValue().getSku().getProduct().getBrandSeries() == null) {
+//                return new SimpleObjectProperty<>("");
+//            } else {
+//                return new SimpleObjectProperty<>(param.getValue().getSku().getProduct().getBrandSeries().getChineseName());
+//            }
+//        });
         colBarCode.setCellValueFactory(param -> {
             if(param.getValue().getSku().getBarCode() == null) {
                 return new SimpleObjectProperty<>("");
@@ -234,36 +234,36 @@ public class POEditorController {
                 return new SimpleObjectProperty<>(param.getValue().getSku().getUnit());
             }
         });
-        colQty.setCellValueFactory(param -> {
-            if(param.getValue().getSku().getQuantity() == null) {
-                return new SimpleObjectProperty<>("");
-            } else {
-                return new SimpleObjectProperty<>(param.getValue().getSku().getQuantity().toString());
-            }
-        });
-        colPrice.setCellValueFactory(param -> {
-            if(param.getValue().getSku().getPrice() == null) {
-                return new SimpleObjectProperty<>("");
-            } else {
-                return new SimpleObjectProperty<>(param.getValue().getSku().getPrice().toString());
-            }
-        });
+//        colQty.setCellValueFactory(param -> {
+//            if(param.getValue().getSku().getQuantity() == null) {
+//                return new SimpleObjectProperty<>("");
+//            } else {
+//                return new SimpleObjectProperty<>(param.getValue().getSku().getQuantity().toString());
+//            }
+//        });
+//        colPrice.setCellValueFactory(param -> {
+//            if(param.getValue().getSku().getPrice() == null) {
+//                return new SimpleObjectProperty<>("");
+//            } else {
+//                return new SimpleObjectProperty<>(param.getValue().getSku().getPrice().toString());
+//            }
+//        });
     }
 
     @FXML
     private void addItem() {
-        SKU sku = new SKU();
-        Product product = new Product();
-        BrandSeries b = new BrandSeries();
-        b.setChineseName("博士");
-        product.setBrandSeries(b);
-        Car car = new Car();
-        product.setCar(car);
-        sku.setProduct(product);
-
-        PurchaseOrderItem item = new PurchaseOrderItem(Constants.ID, purchaseOrder, sku, BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,"");
-        tableView.getItems().add(item);
-        tableView.refresh();
+//        SKU sku = new SKU();
+//        Product product = new Product();
+//        BrandSeries b = new BrandSeries();
+//        b.setChineseName("博士");
+//        product.setBrandSeries(b);
+//        Car car = new Car();
+//        product.setCar(car);
+//        sku.setProduct(product);
+//
+//        PurchaseOrderItem item = new PurchaseOrderItem(Constants.ID, purchaseOrder, sku, BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,"");
+//        tableView.getItems().add(item);
+//        tableView.refresh();
     }
 
     @FXML

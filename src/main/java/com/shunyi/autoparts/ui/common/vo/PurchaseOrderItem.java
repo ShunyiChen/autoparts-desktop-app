@@ -3,7 +3,7 @@ package com.shunyi.autoparts.ui.common.vo;
 import java.math.BigDecimal;
 
 /**
- * @Description: 采购订单明细
+ * @Description: 采购订单明细VO
  * @Author: 陈顺谊
  * @CreateDate: 2020/4/1 12:36
  * @Version: 1.0

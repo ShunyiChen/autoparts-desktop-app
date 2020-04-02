@@ -5,12 +5,12 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * @description 系统用户
+ * @description 系统用户VO
  * @author Shunyi Chen
  * @date 2020/3/23
  */
 public class User {
-	/** 自增ID */
+	/** ID */
 	private Long id;
 	/** 用户名 */
 	private String username;
@@ -223,10 +223,5 @@ public class User {
 
 	public void setDeleter(String deleter) {
 		this.deleter = deleter;
-	}
-
-	@Override
-	public String toString() {
-		return username;
 	}
 }

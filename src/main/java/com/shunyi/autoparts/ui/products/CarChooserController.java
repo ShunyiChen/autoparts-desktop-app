@@ -71,19 +71,19 @@ public class CarChooserController {
      */
     private void getNodes(TreeItem<Car> parent, Car[] all) {
         for(Car sc : all) {
-            if(sc.getParentId() == parent.getValue().getId()) {
-                TreeItem<Car> node = new TreeItem<>(sc);
-                parent.getChildren().add(node);
-                parent.setExpanded(true);
-                getNodes(node, all);
-                //默认选中
-                if(selectedCar != null && selectedCar.getId() == sc.getId()) {
-                    // This line is the not-so-clearly documented magic.
-                    int row = treeView.getRow(node);
-                    // Now the row can be selected.
-                    treeView.getSelectionModel().select(row);
-                }
-            }
+//            if(sc.getParentId() == parent.getValue().getId()) {
+//                TreeItem<Car> node = new TreeItem<>(sc);
+//                parent.getChildren().add(node);
+//                parent.setExpanded(true);
+//                getNodes(node, all);
+//                //默认选中
+//                if(selectedCar != null && selectedCar.getId() == sc.getId()) {
+//                    // This line is the not-so-clearly documented magic.
+//                    int row = treeView.getRow(node);
+//                    // Now the row can be selected.
+//                    treeView.getSelectionModel().select(row);
+//                }
+//            }
         }
     }
     
@@ -96,18 +96,18 @@ public class CarChooserController {
             return;
         }
         Callback<Car, Object> callback = e -> {
-            e.setParent(false);
-            e.setParentId(parent.getValue().getId());
-            String json = GoogleJson.GET().toJson(e);
-            try {
-                String idStr = HttpClient.POST("/cars", json);
-                e.setId(Long.valueOf(idStr));
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-            TreeItem<Car> newItem = new TreeItem<>(e);
-            parent.getChildren().add(newItem);
-            parent.setExpanded(true);
+//            e.setParent(false);
+//            e.setParentId(parent.getValue().getId());
+//            String json = GoogleJson.GET().toJson(e);
+//            try {
+//                String idStr = HttpClient.POST("/cars", json);
+//                e.setId(Long.valueOf(idStr));
+//            } catch (IOException ex) {
+//                ex.printStackTrace();
+//            }
+//            TreeItem<Car> newItem = new TreeItem<>(e);
+//            parent.getChildren().add(newItem);
+//            parent.setExpanded(true);
             return null;
         };
         openCarEditor(callback, null);
@@ -127,18 +127,18 @@ public class CarChooserController {
             return;
         }
         Callback<Car, Object> callback = e -> {
-            selected.getValue().setCode(e.getCode());
-            selected.getValue().setModel(e.getModel());
-            String json = GoogleJson.GET().toJson(selected.getValue());
-            try {
-                HttpClient.PUT("/cars/"+selected.getValue().getId(), json);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-            //刷新树
-            selected.getParent().setExpanded(false);
-            selected.getParent().setExpanded(true);
-            treeView.getSelectionModel().select(selected);
+//            selected.getValue().setCode(e.getCode());
+//            selected.getValue().setModel(e.getModel());
+//            String json = GoogleJson.GET().toJson(selected.getValue());
+//            try {
+//                HttpClient.PUT("/cars/"+selected.getValue().getId(), json);
+//            } catch (IOException ex) {
+//                ex.printStackTrace();
+//            }
+//            //刷新树
+//            selected.getParent().setExpanded(false);
+//            selected.getParent().setExpanded(true);
+//            treeView.getSelectionModel().select(selected);
             return null;
         };
         openCarEditor(callback, selected.getValue());
@@ -241,7 +241,7 @@ public class CarChooserController {
 //        });
         
         btnChooser.setStyle(String.format("-fx-base: %s;", "rgb(63,81,181)"));
-        Car car = new Car(0L, "All","所有车型", -1L, Constants.PARENT_TRUE, null, Env.getInstance().getStringValue(Env.CURRENT_USER), null, null, null, null, Constants.DELETE_FLAG_FALSE, null);
+        Car car = new Car(0L, "All","所有车型", "");
         TreeItem<Car> root = new TreeItem<Car>(car);
         treeView.setRoot(root);
         initTreeNodes(root);

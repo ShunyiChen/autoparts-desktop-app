@@ -6,12 +6,12 @@ import java.io.Serializable;
 import java.util.Objects;
 
 /**
- * @description 角色和权限关系
+ * @description 角色和权限关系VO
  * @author Shunyi Chen
  * @date 2020/3/23
  */
 public class RolePermissionMapping {
-
+    /** ID */
     public static class Id implements Serializable {
 
         /** 角色ID */
@@ -51,12 +51,8 @@ public class RolePermissionMapping {
 
         @Override
         public boolean equals(Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (o == null || getClass() != o.getClass()) {
-                return false;
-            }
+            if (this == o) {return true;}
+            if (o == null || getClass() != o.getClass()) {return false;}
             Id id = (Id) o;
             return Objects.equals(roleId, id.roleId) &&
                     Objects.equals(permissionId, id.permissionId);

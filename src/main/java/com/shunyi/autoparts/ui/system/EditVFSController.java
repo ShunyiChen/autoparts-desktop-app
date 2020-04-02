@@ -47,7 +47,7 @@ public class EditVFSController {
     @FXML
     private void ok() {
         if(validate()) {
-            VFS vfs = new VFS(0L, txtName.getText(), comboxProtocol.getValue(), txtHost.getText(), Integer.parseInt(txtPort.getText()), txtHome.getText(), txtUserName.getText(), txtPassword.getText(), checkboxReadable.isSelected(), checkboxWritable.isSelected(), 0L, Constants.VFS_MASTER_FALSE, null, null, null, null, null, null, null, null);
+            VFS vfs = new VFS(0L, txtName.getText(), comboxProtocol.getValue(), txtHost.getText(), Integer.parseInt(txtPort.getText()), txtHome.getText(), txtUserName.getText(), txtPassword.getText(), checkboxReadable.isSelected(), checkboxWritable.isSelected(), 0L, Constants.VFS_MASTER_FALSE);
             callback.call(vfs);
             dialog.close();
         }
@@ -57,7 +57,7 @@ public class EditVFSController {
     private void testConnection() {
         if(validate()) {
             try {
-                VFS vfs = new VFS(0L, txtName.getText(), comboxProtocol.getValue(), txtHost.getText(), Integer.parseInt(txtPort.getText()), txtHome.getText(), txtUserName.getText(), txtPassword.getText(), checkboxReadable.isSelected(), checkboxWritable.isSelected(), 0L, Constants.VFS_MASTER_FALSE, null, null, null, null, null, null, null, null);
+                VFS vfs = new VFS(0L, txtName.getText(), comboxProtocol.getValue(), txtHost.getText(), Integer.parseInt(txtPort.getText()), txtHome.getText(), txtUserName.getText(), txtPassword.getText(), checkboxReadable.isSelected(), checkboxWritable.isSelected(), 0L, Constants.VFS_MASTER_FALSE);
                 boolean testResult = VFSClient.testConnection(vfs);
                 if(testResult) {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
