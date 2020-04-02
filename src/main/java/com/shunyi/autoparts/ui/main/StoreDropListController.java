@@ -4,6 +4,8 @@ import com.shunyi.autoparts.ui.common.Env;
 import com.shunyi.autoparts.ui.common.HttpClient;
 import com.shunyi.autoparts.ui.common.vo.Store;
 import com.shunyi.autoparts.ui.common.vo.User;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -26,7 +28,6 @@ public class StoreDropListController {
     public void prepare() {
         storeLabel.setStyle("-fx-font-size: 14;-fx-text-fill: rgb(255,255,255);");
         storeComboBox.setStyle("-fx-font-size: 14;");
-
         String userName = Env.getInstance().getStringValue(Env.CURRENT_USER);
         try {
             User user = HttpClient.GET("/users/username/"+userName, User.class);
@@ -47,5 +48,9 @@ public class StoreDropListController {
             e.printStackTrace();
         }
 
+        storeComboBox.getSelectionModel().selectedItemProperty().addListener(
+            (ChangeListener) (observable, oldValue, newValue) -> {
+                System.out.println("newvalue="+newValue);
+            });
     }
 }

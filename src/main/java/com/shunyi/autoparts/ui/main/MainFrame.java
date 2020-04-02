@@ -50,7 +50,6 @@ public class MainFrame extends BorderPane {
         toolbar = new TitleBar(application);
         navigation = new Navigation(application);
         contentPane = new ContentPane(tabPane);
-//        dashboard = new Dashboard(application);
         this.setTop(toolbar);
         this.setLeft(navigation);
         this.setCenter(contentPane);

@@ -46,35 +46,73 @@ public class ProductDetailsController {
     @FXML
     private TextField txtCar;
     @FXML
-    private TableColumn colCode;
+    private TreeView<Category> treeView;
     @FXML
-    private TableColumn colBarCode;
+    private TableView<SKU> tableView;
+    @FXML
+    private TableColumn colCode;
     @FXML
     private TableColumn colName;
     @FXML
-    private TableColumn colBrand;
-    @FXML
-    private TableColumn colPrice;
+    private TableColumn colSpec;
     @FXML
     private TableColumn colUnit;
     @FXML
-    private TableColumn colImported;
+    private TableColumn colBarCode;
+    @FXML
+    private TableColumn colStockQty;
+    @FXML
+    private TableColumn colImport;
+    @FXML
+    private TableColumn colPlace;
+    @FXML
+    private TableColumn colBrand;
     @FXML
     private TableColumn colCar;
     @FXML
-    private TableColumn colSupplier;
+    private TableColumn colDiscountPercentage;
     @FXML
-    private TableColumn colOrigin;
+    private TableColumn colAvgPrice;
     @FXML
-    private TableColumn<Product, String> colDateCreated;
+    private TableColumn colPurchasingPrice1;
+    @FXML
+    private TableColumn colPurchasingPrice2;
+    @FXML
+    private TableColumn colPurchasingPrice3;
+    @FXML
+    private TableColumn colSellingPrice1;
+    @FXML
+    private TableColumn colSellingPrice2;
+    @FXML
+    private TableColumn colSellingPrice3;
+    @FXML
+    private TableColumn colBottomPrice;
+    @FXML
+    private TableColumn colShortage;
+    @FXML
+    private TableColumn colStatus;
     @FXML
     private TableColumn colNotes;
     @FXML
-    private TreeView<Category> treeView;
-//    @FXML
-//    private ListView<BrandSeries> listView;
-    @FXML
-    private TableView<Product> tableView;
+    private TableColumn colSlot;
+
+    public void prepare(MainApp application) {
+        this.application = application;
+        comboImport.getItems().addAll("", Constants.ORIGINAL, Constants.HOMEMADE);
+
+        initComboBoxes();
+        //初始化分类
+        initTreeView();
+
+        initTableView();
+
+        initListView();
+    }
+
+    private void initComboBoxes() {
+        new AutoCompleteBox(comboImport);
+    }
+
 
     @FXML
     private void search() {
@@ -510,7 +548,7 @@ public class ProductDetailsController {
 
     @FXML
     private void removeProduct() {
-        Product selectedProduct = tableView.getSelectionModel().getSelectedItem();
+        SKU selectedProduct = tableView.getSelectionModel().getSelectedItem();
         if(selectedProduct == null) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
             alert.setHeaderText("请选择一个配件删除");
@@ -586,7 +624,7 @@ public class ProductDetailsController {
             alert.show();
             return;
         }
-        Product selectedRow = tableView.getSelectionModel().getSelectedItem();
+        SKU selectedRow = tableView.getSelectionModel().getSelectedItem();
         if(selectedRow == null) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
             alert.setHeaderText("请选择一个配件");
@@ -607,7 +645,7 @@ public class ProductDetailsController {
         Scene scene = new Scene(root);
         Stage dialog = new Stage();
         BasicAttributesController controller = loader.getController();
-        controller.prepare(dialog, selectedItem.getValue(), selectedRow);
+//        controller.prepare(dialog, selectedItem.getValue(), selectedRow);
         dialog.setTitle("产品属性");
         dialog.initOwner(application.getStage());
         dialog.setResizable(true);
@@ -620,7 +658,7 @@ public class ProductDetailsController {
 
     @FXML
     private void openProductSKU() {
-        Product selectedProduct = tableView.getSelectionModel().getSelectedItem();
+        SKU selectedProduct = tableView.getSelectionModel().getSelectedItem();
         if(selectedProduct == null) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
             alert.setHeaderText("请选择一个配件");
@@ -641,7 +679,7 @@ public class ProductDetailsController {
         Scene scene = new Scene(root);
         Stage dialog = new Stage();
         ProductSKUController controller = loader.getController();
-        controller.prepare(dialog, selectedProduct);
+//        controller.prepare(dialog, selectedProduct);
         dialog.setTitle("产品sku");
         dialog.initOwner(application.getStage());
         dialog.setResizable(true);
@@ -652,43 +690,43 @@ public class ProductDetailsController {
         dialog.show();
     }
 
-    public void prepare(MainApp application) {
-        this.application = application;
-        initImportList();
-
-        initTableView();
-
-        initTreeView();
-
-        initListView();
-    }
-
-    private void initImportList() {
-        comboImport.getItems().addAll("", Constants.ORIGINAL, Constants.HOMEMADE);
-    }
 
     private void initTableView() {
         tableView.setId("my-table");
-        colCode.setCellValueFactory(new PropertyValueFactory<Product, String>("code"));
-        colBarCode.setCellValueFactory(new PropertyValueFactory<Product, String>("barCode"));
-        colName.setCellValueFactory(new PropertyValueFactory<Product, String>("name"));
-        colBrand.setCellValueFactory(new PropertyValueFactory<Product, String>("brandSeries"));
-        colCar.setCellValueFactory(new PropertyValueFactory<Product, String>("car"));
-        colSupplier.setCellValueFactory(new PropertyValueFactory<Product, String>("supplier"));
-        colUnit.setCellValueFactory(new PropertyValueFactory<Product, String>("unit"));
-        colPrice.setCellValueFactory(new PropertyValueFactory<Product, String>("listPrice"));
-        colImported.setCellValueFactory(new PropertyValueFactory<Product, String>("imported"));
-        colOrigin.setCellValueFactory(new PropertyValueFactory<Product, String>("origin"));
-        SimpleDateFormat format = new SimpleDateFormat(Constants.PATTERN);
-        colDateCreated.setCellValueFactory(param -> {
-            if(param.getValue().getDateCreated() == null) {
-                return new SimpleObjectProperty<>("");
-            } else {
-                return new SimpleObjectProperty<>(format.format(param.getValue().getDateCreated()));
-            }
-        });
+        colCode.setCellValueFactory(new PropertyValueFactory<SKU, String>("skuCode"));
+        colName.setCellValueFactory(new PropertyValueFactory<SKU, String>("skuName"));
+        colSpec.setCellValueFactory(new PropertyValueFactory<SKU, String>("specification"));
+        colUnit.setCellValueFactory(new PropertyValueFactory<SKU, String>("unit"));
+        colBarCode.setCellValueFactory(new PropertyValueFactory<SKU, String>("barCode"));
+        colStockQty.setCellValueFactory(new PropertyValueFactory<SKU, String>("stockQty"));
+        colImport.setCellValueFactory(new PropertyValueFactory<SKU, String>("imported"));
+//        colPlace.setCellValueFactory(new PropertyValueFactory<SKU, String>("code"));
+//        colBrand.setCellValueFactory(new PropertyValueFactory<SKU, String>("code"));
+//        colCar.setCellValueFactory(new PropertyValueFactory<SKU, String>("code"));
+//        colDiscountPercentage.setCellValueFactory(new PropertyValueFactory<SKU, String>("code"));
+//        colAvgPrice.setCellValueFactory(new PropertyValueFactory<SKU, String>("code"));
+//        colPurchasingPrice1.setCellValueFactory(new PropertyValueFactory<SKU, String>("code"));
+//        colPurchasingPrice2.setCellValueFactory(new PropertyValueFactory<SKU, String>("code"));
+//        colPurchasingPrice3.setCellValueFactory(new PropertyValueFactory<SKU, String>("code"));
+//        colSellingPrice1.setCellValueFactory(new PropertyValueFactory<SKU, String>("code"));
+//        colSellingPrice2.setCellValueFactory(new PropertyValueFactory<SKU, String>("code"));
+//        colSellingPrice3.setCellValueFactory(new PropertyValueFactory<SKU, String>("code"));
+//        colBottomPrice.setCellValueFactory(new PropertyValueFactory<SKU, String>("code"));
+//        colShortage.setCellValueFactory(new PropertyValueFactory<SKU, String>("code"));
+//        colStatus.setCellValueFactory(new PropertyValueFactory<SKU, String>("code"));
+//        colNotes.setCellValueFactory(new PropertyValueFactory<SKU, String>("code"));
+//        colSlot.setCellValueFactory(new PropertyValueFactory<SKU, String>("code"));
+//        SimpleDateFormat format = new SimpleDateFormat(Constants.PATTERN);
+//        colDateCreated.setCellValueFactory(param -> {
+//            if(param.getValue().getDateCreated() == null) {
+//                return new SimpleObjectProperty<>("");
+//            } else {
+//                return new SimpleObjectProperty<>(format.format(param.getValue().getDateCreated()));
+//            }
+//        });
+//        colNotes.setCellValueFactory(new PropertyValueFactory<Product, String>("notes"));
 
-        colNotes.setCellValueFactory(new PropertyValueFactory<Product, String>("notes"));
+
         tableView.setOnMouseClicked((MouseEvent event) -> {
             if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2){
                  updateProduct();
@@ -771,7 +809,11 @@ public class ProductDetailsController {
 //        }
     }
 
+    /**
+     * 初始化分类
+     */
     private void initTreeView() {
+//        Warehouse warehouse = new Warehouse(Constants.ID, "", "仓库1", Constants.PARENT_TRUE);
         TreeItem<Category> root = new TreeItem<>(new Category(0L, "所有类目",-1L, Constants.PARENT_TRUE, new Warehouse()));
         initTreeNodes(root);
         treeView.setRoot(root);

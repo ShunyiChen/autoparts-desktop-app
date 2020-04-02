@@ -12,21 +12,18 @@ public class Warehouse {
     private String code;
     /** 名称 */
     private String name;
-    /** 父节点ID */
-    private Long parentId;
-    /** 是否是父节点 */
-    private Boolean parent;
+    /** 备注 */
+    private String notes;
     /** 所属店铺 */
     private Store store;
 
     public Warehouse() {}
 
-    public Warehouse(Long id, String code, String name, Long parentId, Boolean parent, Store store) {
+    public Warehouse(Long id, String code, String name, String notes, Store store) {
         this.id = id;
         this.code = code;
         this.name = name;
-        this.parentId = parentId;
-        this.parent = parent;
+        this.notes = notes;
         this.store = store;
     }
 
@@ -54,20 +51,12 @@ public class Warehouse {
         this.name = name;
     }
 
-    public Long getParentId() {
-        return parentId;
+    public String getNotes() {
+        return notes;
     }
 
-    public void setParentId(Long parentId) {
-        this.parentId = parentId;
-    }
-
-    public Boolean getParent() {
-        return parent;
-    }
-
-    public void setParent(Boolean parent) {
-        this.parent = parent;
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 
     public Store getStore() {
@@ -76,5 +65,10 @@ public class Warehouse {
 
     public void setStore(Store store) {
         this.store = store;
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

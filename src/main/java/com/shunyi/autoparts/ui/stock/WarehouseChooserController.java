@@ -69,21 +69,21 @@ public class WarehouseChooserController {
      * @param all
      */
     private void getNodes(TreeItem<Warehouse> parent, Warehouse[] all) {
-        for(Warehouse sc : all) {
-            if(sc.getParentId() == parent.getValue().getId()) {
-                TreeItem<Warehouse> node = new TreeItem<>(sc);
-                parent.getChildren().add(node);
-                parent.setExpanded(true);
-                getNodes(node, all);
-                //默认选中
-                if(selectedWarehouse != null && selectedWarehouse.getId() == sc.getId()) {
-                    // This line is the not-so-clearly documented magic.
-                    int row = treeView.getRow(node);
-                    // Now the row can be selected.
-                    treeView.getSelectionModel().select(row);
-                }
-            }
-        }
+//        for(Warehouse sc : all) {
+//            if(sc.getParentId() == parent.getValue().getId()) {
+//                TreeItem<Warehouse> node = new TreeItem<>(sc);
+//                parent.getChildren().add(node);
+//                parent.setExpanded(true);
+//                getNodes(node, all);
+//                //默认选中
+//                if(selectedWarehouse != null && selectedWarehouse.getId() == sc.getId()) {
+//                    // This line is the not-so-clearly documented magic.
+//                    int row = treeView.getRow(node);
+//                    // Now the row can be selected.
+//                    treeView.getSelectionModel().select(row);
+//                }
+//            }
+//        }
     }
 
     public void prepare(Stage subStage, Warehouse selectedWarehouse, Callback<Warehouse, Object> callback) {
@@ -99,7 +99,7 @@ public class WarehouseChooserController {
         });
         btnChooser.setStyle(String.format("-fx-base: %s;", "rgb(63,81,181)"));
 
-        Warehouse warehouse = new Warehouse(Constants.ID, "", "所有仓库", Constants.PARENT_ID, Constants.PARENT_TRUE, new Store());
+        Warehouse warehouse = new Warehouse(Constants.ID, "", "所有仓库", "", new Store());
         TreeItem<Warehouse> root = new TreeItem<>(warehouse);
         treeView.setRoot(root);
         initTreeNodes(root);

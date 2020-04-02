@@ -1,17 +1,14 @@
 package com.shunyi.autoparts.ui.common.deleteme;
 
 // Java program to create a combo box and add event handler to it
+import com.shunyi.autoparts.ui.common.AutoCompleteBox;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.collections.*;
 import javafx.stage.Stage;
-import javafx.scene.text.Text.*;
-import javafx.scene.paint.*;
-import javafx.scene.text.*;
+
 public class combo_box_2 extends Application {
 
     // Launch the application
@@ -42,7 +39,7 @@ public class combo_box_2 extends Application {
         ComboBox myComboBox = new ComboBox(FXCollections.observableArrayList(week_days));
         myComboBox.setStyle("-fx-font-size: 14;");
         //usually list of combobox items here
-        new AutoCompleteBox ( myComboBox );
+        new AutoCompleteBox( myComboBox );
 
 //        new AutoCompleteComboBoxListener(myComboBox);
 

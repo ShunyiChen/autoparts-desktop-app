@@ -104,12 +104,9 @@ public class TitleBar extends HBox implements EventHandler<MouseEvent> {
         title.setId("title");
         title.setPadding(new Insets(20));
 
-//        VBox vBox = new VBox();
         ImageView profileImage = new ImageView(icons.account_circle());
         Label userNameLabel = new Label(Env.getInstance().currentUser());
         userNameLabel.setStyle("-fx-font-size: 14;-fx-text-fill: rgb(255,255,255);");
-//        vBox.getChildren().addAll(profileImage, userNameLabel);
-
         profileImage.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent e) {
@@ -122,7 +119,6 @@ public class TitleBar extends HBox implements EventHandler<MouseEvent> {
         rightSubComponent2.getChildren().addAll(droplist, userNameLabel, profileImage);
         rightSubComponent2.setAlignment(Pos.CENTER_RIGHT);
         rightComponent.setRight(rightSubComponent2);
-
     }
 
     private void initRightClickMenu() {

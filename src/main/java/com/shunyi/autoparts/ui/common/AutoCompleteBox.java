@@ -1,18 +1,20 @@
-package com.shunyi.autoparts.ui.common.deleteme;
+package com.shunyi.autoparts.ui.common;
 
 
-import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.control.ComboBox;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 
+/**B
+ * @Description 自动完成的ComboBox
+ *
+ * @author Shunyi
+ * @CreateDate: 2020/4/2
+ */
 public class AutoCompleteBox implements EventHandler<KeyEvent>{
 
     private ComboBox comboBox;
@@ -22,7 +24,7 @@ public class AutoCompleteBox implements EventHandler<KeyEvent>{
     public AutoCompleteBox(final ComboBox comboBox) {
         this.comboBox = comboBox;
         this.data = comboBox.getItems();
-
+        comboBox.setStyle("-fx-font-size: 14;");
         this.doAutoCompleteBox();
     }
 
@@ -113,7 +115,5 @@ public class AutoCompleteBox implements EventHandler<KeyEvent>{
     private void moveCaret(int textLength) {
         this.comboBox.getEditor().positionCaret(textLength);
     }
-
-
 
 }
