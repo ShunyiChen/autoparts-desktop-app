@@ -36,7 +36,7 @@ public class WarehouseEditorController {
     @FXML
     private void ok() {
         if(validate()) {
-            Warehouse warehouse = new Warehouse(Constants.ID, txtCode.getText(), txtName.getText(), txtNotes.getText(), null);
+            Warehouse warehouse = new Warehouse(Constants.ID, txtCode.getText(), txtName.getText(), txtNotes.getText());
             callback.call(warehouse);
             dialog.close();
         }

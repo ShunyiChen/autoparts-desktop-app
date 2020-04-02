@@ -21,16 +21,19 @@ public class Store {
     private Boolean parent;
     /** 用户店铺映射关系 */
     protected Set<UserStoreMapping> userStoreMappingSet = new HashSet<>();
+    /** 仓库 */
+    private Warehouse warehouse;
 
     public Store() {}
 
-    public Store(Long id, String code, String name, Long parentId, Boolean parent, Set<UserStoreMapping> userStoreMappingSet) {
+    public Store(Long id, String code, String name, Long parentId, Boolean parent, Set<UserStoreMapping> userStoreMappingSet, Warehouse warehouse) {
         this.id = id;
         this.code = code;
         this.name = name;
         this.parentId = parentId;
         this.parent = parent;
         this.userStoreMappingSet = userStoreMappingSet;
+        this.warehouse = warehouse;
     }
 
     public Long getId() {
@@ -79,6 +82,14 @@ public class Store {
 
     public void setUserStoreMappingSet(Set<UserStoreMapping> userStoreMappingSet) {
         this.userStoreMappingSet = userStoreMappingSet;
+    }
+
+    public Warehouse getWarehouse() {
+        return warehouse;
+    }
+
+    public void setWarehouse(Warehouse warehouse) {
+        this.warehouse = warehouse;
     }
 
     @Override

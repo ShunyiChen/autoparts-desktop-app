@@ -14,17 +14,14 @@ public class Warehouse {
     private String name;
     /** 备注 */
     private String notes;
-    /** 所属店铺 */
-    private Store store;
 
     public Warehouse() {}
 
-    public Warehouse(Long id, String code, String name, String notes, Store store) {
+    public Warehouse(Long id, String code, String name, String notes) {
         this.id = id;
         this.code = code;
         this.name = name;
         this.notes = notes;
-        this.store = store;
     }
 
     public Long getId() {
@@ -57,14 +54,6 @@ public class Warehouse {
 
     public void setNotes(String notes) {
         this.notes = notes;
-    }
-
-    public Store getStore() {
-        return store;
-    }
-
-    public void setStore(Store store) {
-        this.store = store;
     }
 
     @Override

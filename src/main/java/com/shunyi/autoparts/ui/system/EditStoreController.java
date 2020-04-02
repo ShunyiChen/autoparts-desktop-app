@@ -8,9 +8,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -27,6 +25,7 @@ public class EditStoreController {
     private Stage dialog;
     private Callback<Store, String> callback;
     private Store selectedStore;
+    private Warehouse warehouse;
 
     @FXML
     private TextField txtCode;
@@ -45,11 +44,29 @@ public class EditStoreController {
 
     @FXML
     private void ok() {
-        Store store = new Store();
-        store.setCode(txtCode.getText());
-        store.setName(txtName.getText());
-        callback.call(store);
-        dialog.close();
+        if(validate()) {
+            Store store = new Store();
+            store.setCode(txtCode.getText());
+            store.setName(txtName.getText());
+            store.setWarehouse(warehouse);
+            callback.call(store);
+            dialog.close();
+        }
+    }
+
+    private boolean validate() {
+        if(txtName.getText().equals("")) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
+            alert.setHeaderText("仓库名称不能为空");
+            alert.show();
+            return false;
+        } else if(warehouse == null) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
+            alert.setHeaderText("请选择一个可用的仓库");
+            alert.show();
+            return false;
+        }
+        return true;
     }
 
     public void prepare(Stage dialog, Callback<Store, String> callback, Store selectedStore) {
@@ -64,6 +81,10 @@ public class EditStoreController {
         if(selectedStore != null) {
             txtCode.setText(selectedStore.getCode());
             txtName.setText(selectedStore.getName());
+            comboboxWarehouse.setValue(selectedStore.getWarehouse());
+
+            System.out.println("========="+selectedStore.getWarehouse());
+
         }
     }
 
@@ -125,9 +146,13 @@ public class EditStoreController {
         }
         new AutoCompleteBox(comboboxWarehouse);
 
-//        comboboxWarehouse.setOnAction(e -> {
-//            System.out.println(comboboxWarehouse.getEditor().getText());
-//        });
+        comboboxWarehouse.setOnAction(e -> {
+            try {
+                 warehouse = HttpClient.GET("/warehouses/name/"+comboboxWarehouse.getValue(), Warehouse.class);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        });
 
 //        comboboxWarehouse.getSelectionModel().selectedItemProperty().addListener(
 //                (ChangeListener) (observable, oldValue, newValue) -> {

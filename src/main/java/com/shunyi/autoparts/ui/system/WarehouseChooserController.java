@@ -65,7 +65,6 @@ public class WarehouseChooserController {
             @Override
             public String call(Warehouse warehouse) {
 
-                warehouse.setStore(store);
                 String json = GoogleJson.GET().toJson(warehouse);
                 try {
                     String idStr = HttpClient.POST("/warehouses", json);

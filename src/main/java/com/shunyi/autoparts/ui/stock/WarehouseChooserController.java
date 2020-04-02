@@ -99,7 +99,7 @@ public class WarehouseChooserController {
         });
         btnChooser.setStyle(String.format("-fx-base: %s;", "rgb(63,81,181)"));
 
-        Warehouse warehouse = new Warehouse(Constants.ID, "", "所有仓库", "", new Store());
+        Warehouse warehouse = new Warehouse(Constants.ID, "", "所有仓库", "");
         TreeItem<Warehouse> root = new TreeItem<>(warehouse);
         treeView.setRoot(root);
         initTreeNodes(root);
