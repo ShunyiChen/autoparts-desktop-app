@@ -4,7 +4,6 @@ import com.shunyi.autoparts.ui.common.AutoCompleteBox;
 import com.shunyi.autoparts.ui.common.HttpClient;
 import com.shunyi.autoparts.ui.common.vo.Store;
 import com.shunyi.autoparts.ui.common.vo.Warehouse;
-import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -12,7 +11,6 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -20,7 +18,12 @@ import javafx.util.Callback;
 import java.io.IOException;
 import java.util.Arrays;
 
-/** 编辑店铺Controller */
+/**
+ * @Description: 编辑门店Controller
+ * @Author: 陈顺谊
+ * @CreateDate: 2020/1/8 16:24
+ * @Version: 1.0
+ */
 public class EditStoreController {
     private Stage dialog;
     private Callback<Store, String> callback;
@@ -45,6 +48,17 @@ public class EditStoreController {
     @FXML
     private void ok() {
         if(validate()) {
+            try {
+                warehouse = HttpClient.GET("/warehouses/name/"+comboboxWarehouse.getValue(), Warehouse.class);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+            if(warehouse.getId() == null) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
+                alert.setHeaderText("请选择一个可用的仓库");
+                alert.show();
+                return;
+            }
             Store store = new Store();
             store.setCode(txtCode.getText());
             store.setName(txtName.getText());
@@ -58,11 +72,6 @@ public class EditStoreController {
         if(txtName.getText().equals("")) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
             alert.setHeaderText("仓库名称不能为空");
-            alert.show();
-            return false;
-        } else if(warehouse == null) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
-            alert.setHeaderText("请选择一个可用的仓库");
             alert.show();
             return false;
         }
@@ -82,9 +91,6 @@ public class EditStoreController {
             txtCode.setText(selectedStore.getCode());
             txtName.setText(selectedStore.getName());
             comboboxWarehouse.setValue(selectedStore.getWarehouse());
-
-            System.out.println("========="+selectedStore.getWarehouse());
-
         }
     }
 
@@ -145,19 +151,5 @@ public class EditStoreController {
             e.printStackTrace();
         }
         new AutoCompleteBox(comboboxWarehouse);
-
-        comboboxWarehouse.setOnAction(e -> {
-            try {
-                 warehouse = HttpClient.GET("/warehouses/name/"+comboboxWarehouse.getValue(), Warehouse.class);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-        });
-
-//        comboboxWarehouse.getSelectionModel().selectedItemProperty().addListener(
-//                (ChangeListener) (observable, oldValue, newValue) -> {
-//                    System.out.println("newvalue="+newValue);
-//
-//                });
     }
 }
