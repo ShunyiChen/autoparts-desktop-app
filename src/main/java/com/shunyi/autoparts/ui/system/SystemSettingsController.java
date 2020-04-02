@@ -475,21 +475,20 @@ public class SystemSettingsController {
     private void initStoreMenuItems() {
         itemNewStore.setOnAction(event -> {
             Callback<Store, String> callback = store -> {
-//                TreeItem<Store> parent = storeTree.getSelectionModel().getSelectedItem();
-//                store.setCreator(Env.getInstance().getStringValue(Env.CURRENT_USER));
-//                store.setParentId(parent.getValue().getId());
-//                store.setParent(false);
-//                String json = GoogleJson.GET().toJson(store);
-//                String idStr = null;
-//                try {
-//                    idStr = HttpClient.POST("/stores", json);
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//                store.setId(Long.valueOf(idStr));
-//                TreeItem<Store> newItem = new TreeItem<>(store);
-//                parent.getChildren().add(newItem);
-//                storeTree.getSelectionModel().select(newItem);
+                TreeItem<Store> parent = storeTree.getSelectionModel().getSelectedItem();
+                store.setParentId(parent.getValue().getId());
+                store.setParent(false);
+                String json = GoogleJson.GET().toJson(store);
+                String idStr = null;
+                try {
+                    idStr = HttpClient.POST("/stores", json);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                store.setId(Long.valueOf(idStr));
+                TreeItem<Store> newItem = new TreeItem<>(store);
+                parent.getChildren().add(newItem);
+                storeTree.getSelectionModel().select(newItem);
                 return null;
             };
 
@@ -500,19 +499,17 @@ public class SystemSettingsController {
             TreeItem<Store> selected = storeTree.getSelectionModel().getSelectedItem();
             Callback<Store, String> callback = store -> {
                 Store updatedStore = null;
-//                try {
-//                    String json = HttpClient.GET("/stores/"+selected.getValue().getId());
-//                    updatedStore = GoogleJson.GET().fromJson(json, Store.class);
-//                    updatedStore.setCode(store.getCode());
-//                    updatedStore.setName(store.getName());
-//                    updatedStore.setUpdater(Env.getInstance().getStringValue(Env.CURRENT_USER));
-//                    updatedStore.setUpdatedCount(updatedStore.getUpdatedCount() + 1);
-//                    json = GoogleJson.GET().toJson(updatedStore);
-//                    HttpClient.PUT("/stores/"+selected.getValue().getId(), json);
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//                selected.setValue(updatedStore);
+                try {
+                    String json = HttpClient.GET("/stores/"+selected.getValue().getId());
+                    updatedStore = GoogleJson.GET().fromJson(json, Store.class);
+                    updatedStore.setCode(store.getCode());
+                    updatedStore.setName(store.getName());
+                    json = GoogleJson.GET().toJson(updatedStore);
+                    HttpClient.PUT("/stores/"+selected.getValue().getId(), json);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                selected.setValue(updatedStore);
                 return null;
             };
 
@@ -780,9 +777,9 @@ public class SystemSettingsController {
     @FXML
     private void refreshRole() {
         roleTable.getItems().clear();
-
         Role[] roles = getAllRoles();
         roleTable.getItems().addAll(roles);
+        roleTable.refresh();
     }
 
     @FXML
@@ -832,7 +829,6 @@ public class SystemSettingsController {
             roleTable.getItems().remove(selectedRole);
         });
     }
-
 
     private Role[] getAllRoles() {
         String path = "/roles";
@@ -911,18 +907,15 @@ public class SystemSettingsController {
     @FXML
     private void refreshPermission() {
         permissionTable.getItems().clear();
-
         Permission[] permissions = getAllPermissions();
         permissionTable.getItems().addAll(permissions);
+        permissionTable.refresh();
     }
 
 
     private void initPermissionTable() {
-
         permissionTable.setId("my-table");
-
         Map<Long, String> roleMap = getAllRolesMap();
-
         colPermissionId.setCellValueFactory(new PropertyValueFactory<Permission, String>("id"));
         colPermissionName.setCellValueFactory(new PropertyValueFactory<Permission, String>("name"));
         colPermissionDesc.setCellValueFactory(new PropertyValueFactory<Permission, String>("description"));
@@ -1131,7 +1124,6 @@ public class SystemSettingsController {
 
     private void initVFSTable() {
         vfsTable.setId("my-table");
-
         colVFSId.setCellValueFactory(new PropertyValueFactory<VFS, String>("id"));
         colVFSName.setCellValueFactory(new PropertyValueFactory<VFS, String>("name"));
         colVFSProtocol.setCellValueFactory(new PropertyValueFactory<VFS, String>("protocol"));
@@ -1203,18 +1195,21 @@ public class SystemSettingsController {
     private void createNewVFS() {
         Callback<VFS, String> callback = new Callback<VFS, String>() {
             @Override
-            public String call(VFS param) {
+            public String call(VFS newVFS) {
                 TreeItem<VFSCategory> categoryTreeItem = vfsTree.getSelectionModel().getSelectedItem();
-                param.setCategoryId(categoryTreeItem.getValue().getId());
-                String data = GoogleJson.GET().toJson(param);
+                newVFS.setCategoryId(categoryTreeItem.getValue().getId());
+                String data = GoogleJson.GET().toJson(newVFS);
                 try {
                     String idStr = HttpClient.POST("/vfs", data);
-                    param.setId(Long.valueOf(idStr));
+                    newVFS.setId(Long.valueOf(idStr));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                vfsTable.getItems().add(param);
+                vfsTable.getItems().add(newVFS);
                 vfsTable.refresh();
+                vfsTable.getSelectionModel().select(newVFS);
+                //新建并设置为主要
+                updateMaster();
                 return null;
             }
         };
@@ -1283,6 +1278,7 @@ public class SystemSettingsController {
             }
             VFS[] vfs = GoogleJson.GET().fromJson(data, VFS[].class);
             vfsTable.getItems().addAll(vfs);
+            vfsTable.refresh();
         }
     }
 

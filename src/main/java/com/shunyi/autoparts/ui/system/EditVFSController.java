@@ -47,7 +47,7 @@ public class EditVFSController {
     @FXML
     private void ok() {
         if(validate()) {
-            VFS vfs = new VFS(0L, txtName.getText(), comboxProtocol.getValue(), txtHost.getText(), Integer.parseInt(txtPort.getText()), txtHome.getText(), txtUserName.getText(), txtPassword.getText(), checkboxReadable.isSelected(), checkboxWritable.isSelected(), 0L, Constants.VFS_MASTER_FALSE);
+            VFS vfs = new VFS(0L, txtName.getText(), comboxProtocol.getValue(), txtHost.getText(), Integer.parseInt(txtPort.getText()), txtHome.getText(), txtUserName.getText(), txtPassword.getText(), checkboxReadable.isSelected(), checkboxWritable.isSelected(), 0L, checkboxMaster.isSelected());
             callback.call(vfs);
             dialog.close();
         }

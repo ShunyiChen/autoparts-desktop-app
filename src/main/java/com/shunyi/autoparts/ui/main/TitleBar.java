@@ -1,6 +1,7 @@
 package com.shunyi.autoparts.ui.main;
 
 import com.shunyi.autoparts.ui.MainApp;
+import com.shunyi.autoparts.ui.common.Env;
 import com.shunyi.autoparts.ui.common.ICONS;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -15,6 +16,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 
 import java.io.IOException;
 
@@ -101,7 +103,13 @@ public class TitleBar extends HBox implements EventHandler<MouseEvent> {
         rightSubComponent.getChildren().addAll(title);
         title.setId("title");
         title.setPadding(new Insets(20));
+
+//        VBox vBox = new VBox();
         ImageView profileImage = new ImageView(icons.account_circle());
+        Label userNameLabel = new Label(Env.getInstance().currentUser());
+        userNameLabel.setStyle("-fx-font-size: 14;-fx-text-fill: rgb(255,255,255);");
+//        vBox.getChildren().addAll(profileImage, userNameLabel);
+
         profileImage.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent e) {
@@ -111,7 +119,7 @@ public class TitleBar extends HBox implements EventHandler<MouseEvent> {
             }
         });
         rightSubComponent2.setPadding(new Insets(10));
-        rightSubComponent2.getChildren().addAll(droplist, profileImage);
+        rightSubComponent2.getChildren().addAll(droplist, userNameLabel, profileImage);
         rightSubComponent2.setAlignment(Pos.CENTER_RIGHT);
         rightComponent.setRight(rightSubComponent2);
 

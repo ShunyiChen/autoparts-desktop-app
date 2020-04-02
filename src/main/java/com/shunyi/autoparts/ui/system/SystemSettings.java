@@ -17,6 +17,7 @@ import java.io.IOException;
 public class SystemSettings extends TabContent {
 
     private MainApp application;
+    private SystemSettingsController controller;
 
     /**
      * Constructor
@@ -40,7 +41,7 @@ public class SystemSettings extends TabContent {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        SystemSettingsController controller = loader.getController();
+        controller = loader.getController();
         controller.prepare(application);
 
         root.prefWidthProperty().bind(application.getScene().widthProperty());
@@ -57,7 +58,7 @@ public class SystemSettings extends TabContent {
 
     @Override
     protected void reload() {
-
+        controller.prepare(application);
     }
 
     @Override
