@@ -80,4 +80,9 @@ public class Store {
     public void setUserStoreMappingSet(Set<UserStoreMapping> userStoreMappingSet) {
         this.userStoreMappingSet = userStoreMappingSet;
     }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }

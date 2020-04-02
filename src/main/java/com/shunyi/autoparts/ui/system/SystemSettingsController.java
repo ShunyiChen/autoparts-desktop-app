@@ -417,7 +417,7 @@ public class SystemSettingsController {
      */
     private void initStoreTree() {
         Store[] allStores = getAllStores();
-        Store store = new Store(0L,"", "所有店铺", -1L, false, new HashSet<UserStoreMapping>());
+        Store store = new Store(0L,"", "所有店铺", -1L, Constants.PARENT_TRUE, new HashSet<UserStoreMapping>());
         TreeItem<Store> rootItem = new TreeItem<>(store);
         storeTree.setRoot(rootItem);
         //初始化树节点
