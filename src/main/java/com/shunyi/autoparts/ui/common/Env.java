@@ -3,6 +3,7 @@ package com.shunyi.autoparts.ui.common;
 import com.shunyi.autoparts.ui.common.vo.Store;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /** 系统全局环境变量 */
@@ -13,6 +14,7 @@ public class Env {
     public static final String CURRENT_USER = "currentUser";
     public static final String REMOTE_CONNECTION = "RemoteConnection";
     public static final String CURRENT_STORE = "currentStore";
+    public static final String STORES = "Stores";
 
     private Env() {}
 
@@ -48,5 +50,9 @@ public class Env {
 
     public Store currentStore() {
         return (Store) environment.get(CURRENT_STORE);
+    }
+
+    public Store[] stores() {
+        return (Store[]) environment.get(STORES);
     }
 }
