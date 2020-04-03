@@ -3,7 +3,6 @@ package com.shunyi.autoparts.ui.products;
 import com.shunyi.autoparts.ui.MainApp;
 import com.shunyi.autoparts.ui.common.*;
 import com.shunyi.autoparts.ui.common.vo.*;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -13,7 +12,6 @@ import javafx.scene.control.cell.TextFieldTreeCell;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -21,9 +19,9 @@ import javafx.util.Callback;
 import javafx.util.StringConverter;
 
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /** 配件管理Controller */
 public class ProductDetailsController {
@@ -103,6 +101,7 @@ public class ProductDetailsController {
     public void prepare(MainApp application) {
         this.application = application;
         comboImport.getItems().addAll("", Constants.ORIGINAL, Constants.HOMEMADE);
+        tableView.getItems().clear();
         initComboBoxes();
         initTreeView();
         initTableView();
@@ -878,8 +877,7 @@ public class ProductDetailsController {
 
     private void initTreeNodes(TreeItem<Category> root) {
         try {
-            String path = "/categories/sorted";
-            String data = HttpClient.GET(path);
+            String data = HttpClient.GET("/categories/sorted/"+Env.getInstance().currentStore().getId());
             Category[] res = GoogleJson.GET().fromJson(data, Category[].class);
             getNodes(root, res);
         } catch (IOException e) {

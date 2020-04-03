@@ -17,7 +17,7 @@ import java.io.IOException;
  */
 public class ProductDetails extends TabContent {
     private MainApp application;
-
+    private ProductDetailsController productDetailsController;
 
     /**
      * Constructor
@@ -41,8 +41,8 @@ public class ProductDetails extends TabContent {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        ProductDetailsController controller = loader.getController();
-        controller.prepare(application);
+        productDetailsController = loader.getController();
+        productDetailsController.prepare(application);
 
         //主面板右侧宽度
         DoubleBinding wBinding = application.getStage().widthProperty().subtract(application.getMainFrame().getNavigation().widthProperty().add(35));
@@ -54,6 +54,7 @@ public class ProductDetails extends TabContent {
 
     @Override
     protected void reload() {
+        productDetailsController.prepare(application);
     }
 
     @Override
