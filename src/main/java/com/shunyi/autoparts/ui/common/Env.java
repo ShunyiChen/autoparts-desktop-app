@@ -1,5 +1,7 @@
 package com.shunyi.autoparts.ui.common;
 
+import com.shunyi.autoparts.ui.common.vo.Store;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,7 +12,7 @@ public class Env {
     public static final String AUTHORIZATION = "Authorization";
     public static final String CURRENT_USER = "currentUser";
     public static final String REMOTE_CONNECTION = "RemoteConnection";
-
+    public static final String CURRENT_STORE = "currentStore";
 
     private Env() {}
 
@@ -42,5 +44,9 @@ public class Env {
 
     public String currentUser() {
         return this.getStringValue(CURRENT_USER);
+    }
+
+    public Store currentStore() {
+        return (Store) environment.get(CURRENT_STORE);
     }
 }

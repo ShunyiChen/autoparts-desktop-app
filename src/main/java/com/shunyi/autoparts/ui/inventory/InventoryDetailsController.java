@@ -150,7 +150,7 @@ public class InventoryDetailsController {
     }
 
     private void initTreeViewForSKUDetails() {
-        TreeItem<Category> root = new TreeItem<>(new Category(0L, "所有类目", -1L, Constants.PARENT_TRUE, new Warehouse()));
+        TreeItem<Category> root = new TreeItem<>(new Category(0L, "所有分类", -1L, Constants.PARENT_TRUE, new Store()));
         initTreeNodes(root);
         treeView.setRoot(root);
         treeView.setCellFactory(p -> new TextFieldTreeCell<>(new StringConverter<>() {

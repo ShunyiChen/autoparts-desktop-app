@@ -69,4 +69,8 @@ public class NewTab extends Tab {
             tabContent.willClose();
         });
     }
+
+    public TabContent getTabContent() {
+        return tabContent;
+    }
 }

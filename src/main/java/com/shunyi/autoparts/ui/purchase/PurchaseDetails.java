@@ -19,9 +19,7 @@ import java.io.IOException;
 public class PurchaseDetails extends TabContent {
 
     private MainApp application;
-    private PurchaseDetailsController controller;
-
-
+    private PurchaseDetailsController purchaseDetailsController;
     public PurchaseDetails(MainApp application) {
         this.application = application;
         initComponents();
@@ -39,11 +37,11 @@ public class PurchaseDetails extends TabContent {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        controller = loader.getController();
-        controller.prepare(application);
+        purchaseDetailsController = loader.getController();
+        purchaseDetailsController.prepare(application);
 
         //主面板右侧宽度
-        DoubleBinding wBinding = application.getStage().widthProperty().subtract(application.getDashboard().getNavigation().widthProperty().add(35));
+        DoubleBinding wBinding = application.getStage().widthProperty().subtract(application.getMainFrame().getNavigation().widthProperty().add(35));
         root.prefWidthProperty().bind(wBinding);
         DoubleBinding hBinding = application.getStage().heightProperty().subtract(120);
         root.prefHeightProperty().bind(hBinding);
@@ -52,7 +50,7 @@ public class PurchaseDetails extends TabContent {
 
     @Override
     protected void reload() {
-        controller.prepare(application);
+        purchaseDetailsController.prepare(application);
     }
 
     @Override

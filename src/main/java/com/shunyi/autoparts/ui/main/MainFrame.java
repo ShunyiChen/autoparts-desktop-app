@@ -140,7 +140,9 @@ public class MainFrame extends BorderPane {
             public Object call(Object param) {
                 toolbar.setTitle(Constants.PRODUCT_DETAILS);
                 if(productDetailsTab == null) {
-                    productDetailsTab = new NewTab(Constants.PRODUCT_DETAILS, new ProductDetails(application));
+                    ProductDetails productDetails = new ProductDetails(application);
+                    productDetailsTab = new NewTab(Constants.PRODUCT_DETAILS, productDetails);
+                    toolbar.addAffectedTabContent(productDetails);
                 }
                 contentPane.addNewTab(productDetailsTab);
                 return null;

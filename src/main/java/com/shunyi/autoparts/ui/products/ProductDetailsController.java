@@ -27,8 +27,8 @@ import java.util.*;
 
 /** 配件管理Controller */
 public class ProductDetailsController {
-
     private MainApp application;
+
     @FXML
     private TextField txtCode;
     @FXML
@@ -96,23 +96,22 @@ public class ProductDetailsController {
     @FXML
     private TableColumn colSlot;
 
+    /**
+     *
+     * @param application
+     */
     public void prepare(MainApp application) {
         this.application = application;
         comboImport.getItems().addAll("", Constants.ORIGINAL, Constants.HOMEMADE);
-
         initComboBoxes();
-        //初始化分类
         initTreeView();
-
         initTableView();
-
         initListView();
     }
 
     private void initComboBoxes() {
         new AutoCompleteBox(comboImport);
     }
-
 
     @FXML
     private void search() {
@@ -813,8 +812,7 @@ public class ProductDetailsController {
      * 初始化分类
      */
     private void initTreeView() {
-//        Warehouse warehouse = new Warehouse(Constants.ID, "", "仓库1", Constants.PARENT_TRUE);
-        TreeItem<Category> root = new TreeItem<>(new Category(0L, "所有类目",-1L, Constants.PARENT_TRUE, new Warehouse()));
+        TreeItem<Category> root = new TreeItem<>(new Category(0L, "所有分类",-1L, Constants.PARENT_TRUE, Env.getInstance().currentStore()));
         initTreeNodes(root);
         treeView.setRoot(root);
         treeView.setCellFactory(p -> new TextFieldTreeCell<>(new StringConverter<>(){
@@ -891,7 +889,7 @@ public class ProductDetailsController {
 
     private void getNodes(TreeItem<Category> parent, Category[] all) {
         for(Category sc : all) {
-            if(sc.getParentId() == parent.getValue().getId()) {
+            if(sc.getParentId().equals(parent.getValue().getId())) {
                 TreeItem<Category> node = new TreeItem<>(sc);
                 parent.getChildren().add(node);
                 parent.setExpanded(true);

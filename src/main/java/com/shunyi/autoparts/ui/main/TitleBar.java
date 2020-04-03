@@ -3,6 +3,7 @@ package com.shunyi.autoparts.ui.main;
 import com.shunyi.autoparts.ui.MainApp;
 import com.shunyi.autoparts.ui.common.Env;
 import com.shunyi.autoparts.ui.common.ICONS;
+import com.shunyi.autoparts.ui.common.vo.Store;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -19,6 +20,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @Description: 主界面标题栏
@@ -41,6 +46,8 @@ public class TitleBar extends HBox implements EventHandler<MouseEvent> {
     private MenuItem itemTheme = new MenuItem("主 题");
     private MenuItem itemQuit = new MenuItem("退 出");
     private ICONS icons = ICONS.getInstance();
+    private StoreDropListController storeDropListController;
+    private Set<TabContent> affectedTabContentSet = new HashSet<>();
 
     /**
      *
@@ -93,8 +100,8 @@ public class TitleBar extends HBox implements EventHandler<MouseEvent> {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        StoreDropListController controller = loader.getController();
-        controller.prepare();
+        storeDropListController = loader.getController();
+        storeDropListController.prepare(affectedTabContentSet);
 
         rightComponent.setId("bg");
         rightComponent.setEffect(new DropShadow());
@@ -158,14 +165,14 @@ public class TitleBar extends HBox implements EventHandler<MouseEvent> {
         this.getChildren().remove(leftComponent);
         rightSubComponent.getChildren().add(0, menuIcon);
         rightComponent.prefWidthProperty().bind(application.getScene().widthProperty());
-        application.getDashboard().getNavigation().minimize(true);
+        application.getMainFrame().getNavigation().minimize(true);
     }
 
     private void undock() {
         this.getChildren().add(0, leftComponent);
         rightSubComponent.getChildren().remove(menuIcon);
         rightComponent.prefWidthProperty().bind(application.getScene().widthProperty().subtract(240));
-        application.getDashboard().getNavigation().minimize(false);
+        application.getMainFrame().getNavigation().minimize(false);
     }
 
     @Override
@@ -191,5 +198,9 @@ public class TitleBar extends HBox implements EventHandler<MouseEvent> {
 
     public void setTitle(String title) {
         this.title.setText(title);
+    }
+
+    public void addAffectedTabContent(TabContent tabContent) {
+        affectedTabContentSet.add(tabContent);
     }
 }

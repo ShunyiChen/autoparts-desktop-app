@@ -9,8 +9,11 @@ import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tab;
 
 import java.io.IOException;
+import java.util.Iterator;
+import java.util.Set;
 
 /**
  * @Description: 门店下拉框controller
@@ -20,12 +23,16 @@ import java.io.IOException;
  * @Version: 1.0
  */
 public class StoreDropListController {
+
+    private Set<TabContent> affectedTabContentSet;
     @FXML
     private Label storeLabel;
     @FXML
     private ComboBox<Store> storeComboBox;
 
-    public void prepare() {
+
+    public void prepare(Set<TabContent> affectedTabContentSet) {
+        this.affectedTabContentSet = affectedTabContentSet;
         storeLabel.setStyle("-fx-font-size: 14;-fx-text-fill: rgb(255,255,255);");
         storeComboBox.setStyle("-fx-font-size: 14;");
         String userName = Env.getInstance().getStringValue(Env.CURRENT_USER);
@@ -35,12 +42,14 @@ public class StoreDropListController {
                 Store[] userStores = HttpClient.GET("/stores", Store[].class);
                 storeComboBox.getItems().addAll(userStores);
                 storeComboBox.getSelectionModel().select(0);
+                Env.getInstance().put(Env.CURRENT_STORE, storeComboBox.getValue());
 
             } else {
                 Store[] userStores = HttpClient.GET("/stores/user/"+user.getId(), Store[].class);
                 if(userStores.length > 0) {
                     storeComboBox.getItems().addAll(userStores);
                     storeComboBox.getSelectionModel().select(0);
+                    Env.getInstance().put(Env.CURRENT_STORE, storeComboBox.getValue());
                 }
             }
 
@@ -49,8 +58,13 @@ public class StoreDropListController {
         }
 
         storeComboBox.getSelectionModel().selectedItemProperty().addListener(
-            (ChangeListener) (observable, oldValue, newValue) -> {
-                System.out.println("newvalue="+newValue);
+            (ChangeListener<Store>) (observable, oldValue, newValue) -> {
+
+                Env.getInstance().put(Env.CURRENT_STORE, storeComboBox.getValue());
+
+                affectedTabContentSet.forEach(e -> {
+                    e.reload();
+                });
             });
     }
 }

@@ -1,6 +1,7 @@
 package com.shunyi.autoparts.ui.products;
 
 import com.shunyi.autoparts.ui.MainApp;
+import com.shunyi.autoparts.ui.common.vo.Store;
 import com.shunyi.autoparts.ui.main.TabContent;
 import javafx.beans.binding.DoubleBinding;
 import javafx.fxml.FXMLLoader;
@@ -15,9 +16,14 @@ import java.io.IOException;
  * @Version: 1.0
  */
 public class ProductDetails extends TabContent {
-
     private MainApp application;
 
+
+    /**
+     * Constructor
+     *
+     * @param application
+     */
     public ProductDetails(MainApp application) {
         this.application = application;
         initComponents();
@@ -39,7 +45,7 @@ public class ProductDetails extends TabContent {
         controller.prepare(application);
 
         //主面板右侧宽度
-        DoubleBinding wBinding = application.getStage().widthProperty().subtract(application.getDashboard().getNavigation().widthProperty().add(35));
+        DoubleBinding wBinding = application.getStage().widthProperty().subtract(application.getMainFrame().getNavigation().widthProperty().add(35));
         root.prefWidthProperty().bind(wBinding);
         DoubleBinding hBinding = application.getStage().heightProperty().subtract(120);
         root.prefHeightProperty().bind(hBinding);
@@ -48,11 +54,9 @@ public class ProductDetails extends TabContent {
 
     @Override
     protected void reload() {
-
     }
 
     @Override
     protected void willClose() {
-
     }
 }

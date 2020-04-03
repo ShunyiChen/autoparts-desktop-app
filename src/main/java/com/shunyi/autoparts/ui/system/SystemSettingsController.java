@@ -125,6 +125,11 @@ public class SystemSettingsController {
      */
     public void prepare(MainApp application) {
         this.application = application;
+
+        userTable.getItems().clear();
+        roleTable.getItems().clear();
+        permissionTable.getItems().clear();
+
         //初始化店铺树
         initStoreTree();
         //初始化树右键菜单
@@ -371,9 +376,9 @@ public class SystemSettingsController {
             }
         });
         ContextMenu menu = new ContextMenu();
-        MenuItem itemNew = new MenuItem("新建");
-        MenuItem itemEdit= new MenuItem("编辑");
-        MenuItem itemDel = new MenuItem("删除");
+        MenuItem itemNew = new MenuItem("新 建");
+        MenuItem itemEdit= new MenuItem("编 辑");
+        MenuItem itemDel = new MenuItem("删 除");
         itemNew.setOnAction(e ->{
             createNewUser();
         });
@@ -728,6 +733,7 @@ public class SystemSettingsController {
             int i = roleTable.getSelectionModel().getSelectedIndex();
             roleTable.getItems().remove(selectedRole);
             roleTable.getItems().add(i, updatedRole);
+            roleTable.refresh();
             roleTable.getSelectionModel().select(updatedRole);
             return "";
         };

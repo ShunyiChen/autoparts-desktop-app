@@ -14,17 +14,17 @@ public class Category {
     private Long parentId;
     /** 是否父节点 */
     private Boolean parent;
-    /** 所属仓库 */
-    private Warehouse warehouse;
+    /** 所属门店 */
+    private Store store;
 
     public Category() {}
 
-    public Category(Long id, String name, Long parentId, Boolean parent, Warehouse warehouse) {
+    public Category(Long id, String name, Long parentId, Boolean parent, Store store) {
         this.id = id;
         this.name = name;
         this.parentId = parentId;
         this.parent = parent;
-        this.warehouse = warehouse;
+        this.store = store;
     }
 
     public Long getId() {
@@ -59,11 +59,11 @@ public class Category {
         this.parent = parent;
     }
 
-    public Warehouse getWarehouse() {
-        return warehouse;
+    public Store getStore() {
+        return store;
     }
 
-    public void setWarehouse(Warehouse warehouse) {
-        this.warehouse = warehouse;
+    public void setStore(Store store) {
+        this.store = store;
     }
 }

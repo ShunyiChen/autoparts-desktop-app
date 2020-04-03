@@ -23,7 +23,7 @@ import java.io.IOException;
 public class MainApp extends Application {
     private Stage stage;
     private Scene scene;
-    private MainFrame dashboard;
+    private MainFrame mainFrame;
     private static String Name = "AutoParts 客户端";
     private static String VERSION = "v1.0";
 
@@ -40,8 +40,8 @@ public class MainApp extends Application {
 
     public void gotoDashboard() {
         Platform.runLater(() ->  {
-            dashboard = new MainFrame(this);
-            scene.setRoot(dashboard);
+            mainFrame = new MainFrame(this);
+            scene.setRoot(mainFrame);
             stage.setResizable(true);
             stage.setMaximized(true);
         });
@@ -79,8 +79,8 @@ public class MainApp extends Application {
         return stage;
     }
 
-    public MainFrame getDashboard() {
-        return dashboard;
+    public MainFrame getMainFrame() {
+        return mainFrame;
     }
 
     public static void main(String[] args) {
