@@ -8,15 +8,19 @@ package com.shunyi.autoparts.ui.common;
  */
 public class Constants {
 
+    public static final String PURCHASE_VIEW = "采购视图";
     public static final String SALES_VIEW = "销售视图";
-    public static final String PURCHASE_DETAILS = "采购明细";
-    public static final String PURCHASE_RETURN_DETAILS = "采购退货明细";
-    public static final String SALES_DETAILS = "销售明细";
-    public static final String SALES_RETURN_DETAILS = "销售退货明细";
-    public static final String SUPPLIER_DETAILS = "供应商明细";
+    public static final String PURCHASE_ORDER = "采购单";
+    public static final String PURCHASE_RETURN_ORDER = "采购退货单";
+    public static final String SALES_ORDER = "销售单";
+    public static final String SALES_RETURN_ORDER = "销售退货单";
+    public static final String INVENTORYING_ORDER = "盘点单";
+    public static final String PRICE_ADJUSTMENT_ORDER = "调价单";
     public static final String INVENTORY_DETAILS = "库存明细";
-    public static final String PRODUCT_DETAILS = "配件明细";
     public static final String SYSTEM_SETTINGS = "系统设置";
+//    public static final String SUPPLIER_DETAILS = "供应商明细";
+//    public static final String PRODUCT_DETAILS = "配件明细";
+
     public static final Boolean DELETE_FLAG_TRUE = true;
     public static final Boolean DELETE_FLAG_FALSE = false;
     public static final String ROOT = "root";

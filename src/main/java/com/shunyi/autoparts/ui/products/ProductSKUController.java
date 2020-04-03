@@ -167,18 +167,18 @@ public class ProductSKUController {
         colUnit.setCellValueFactory(
                 new PropertyValueFactory<SKU, String>("unit")
         );
-        colUnit.setOnEditCommit((EventHandler<TableColumn.CellEditEvent<SKU, String>>) t -> {
-            ObservableList<SKU> data = t.getTableView().getItems();
-            if(data != null) {
-                if(t.getTablePosition().getRow() < data.size()) {
-                    SKU selected = data.get( t.getTablePosition().getRow());
-                    if(selected != null) {
-                        selected.setUnit(t.getNewValue());
-                    }
-                    data.set(t.getTablePosition().getRow(), selected);
-                }
-            }
-        });
+//        colUnit.setOnEditCommit((EventHandler<TableColumn.CellEditEvent<SKU, String>>) t -> {
+//            ObservableList<SKU> data = t.getTableView().getItems();
+//            if(data != null) {
+//                if(t.getTablePosition().getRow() < data.size()) {
+//                    SKU selected = data.get( t.getTablePosition().getRow());
+//                    if(selected != null) {
+//                        selected.setUnit(t.getNewValue());
+//                    }
+//                    data.set(t.getTablePosition().getRow(), selected);
+//                }
+//            }
+//        });
 
         colQuantity.setCellFactory(cellFactory);
         colQuantity.setCellValueFactory(

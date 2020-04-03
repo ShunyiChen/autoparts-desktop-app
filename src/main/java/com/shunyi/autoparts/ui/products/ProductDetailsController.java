@@ -105,7 +105,6 @@ public class ProductDetailsController {
         initComboBoxes();
         initTreeView();
         initTableView();
-        initListView();
     }
 
     private void initComboBoxes() {
@@ -811,7 +810,7 @@ public class ProductDetailsController {
      * 初始化分类
      */
     private void initTreeView() {
-        TreeItem<Category> root = new TreeItem<>(new Category(0L, "所有分类",-1L, Constants.PARENT_TRUE, Env.getInstance().currentStore()));
+        TreeItem<Category> root = new TreeItem<>(new Category(Constants.ID, "所有分类",Constants.PARENT_ID, Constants.PARENT_TRUE, Env.getInstance().currentStore()));
         initTreeNodes(root);
         treeView.setRoot(root);
         treeView.setCellFactory(p -> new TextFieldTreeCell<>(new StringConverter<>(){
@@ -896,28 +895,5 @@ public class ProductDetailsController {
         }
     }
 
-    private void initListView() {
-//        listView.setStyle("-fx-font-size: 14px;");
-//        listView.setOnMouseClicked((MouseEvent event) -> {
-//            if (event.getButton().equals(MouseButton.PRIMARY)){
-//                if(event.getClickCount() == 2) {
-//                    updateBrand();
-//                } else if(event.getClickCount() == 1) {
-//                    BrandSeries selectedBrand = listView.getSelectionModel().getSelectedItem();
-//                    if(selectedBrand != null) {
-//                        String data = null;
-//                        try {
-//                            data = HttpClient.GET("/products/brandSeries/"+selectedBrand.getId());
-//                        } catch (IOException e) {
-//                            e.printStackTrace();
-//                        }
-//                        Product[] products = GoogleJson.GET().fromJson(data, Product[].class);
-//                        tableView.getItems().clear();
-//                        tableView.getItems().addAll(products);
-//                    }
-//                }
-//            }
-//        });
 
-    }
 }

@@ -1,39 +1,26 @@
 package com.shunyi.autoparts.ui.purchase;
 
 import com.shunyi.autoparts.ui.MainApp;
-import com.shunyi.autoparts.ui.common.GoogleJson;
-import com.shunyi.autoparts.ui.common.HttpClient;
 import com.shunyi.autoparts.ui.common.vo.PurchaseOrder;
-import com.shunyi.autoparts.ui.common.vo.Supplier;
-import com.shunyi.autoparts.ui.supplier.EditSupplierController;
-import com.shunyi.autoparts.ui.system.EditVFSController;
-import javafx.beans.binding.DoubleBinding;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import java.io.IOException;
 
 /**
- * @Description: 采购明细Controller
- * @Author: 陈顺谊
- * @CreateDate: 2020/4/1 3:17
+ * @Description: 采购订单Controller
+ * @Author: Shunyi
+ * @CreateDate: 2020/4/4
  * @Version: 1.0
  */
-public class PurchaseDetailsController {
+public class PurchaseOrderController {
     private MainApp application;
     private POEditorController controller;
-
-//    @FXML
-//    private ScrollPane scrollPane;
     @FXML
     private TableView tableView;
 
@@ -60,7 +47,7 @@ public class PurchaseDetailsController {
         Scene scene = new Scene(root);
         Stage dialog = new Stage();
         POEditorController controller = loader.getController();
-        controller.prepare(dialog, callback, purchaseOrder);
+//        controller.prepare(dialog, callback, purchaseOrder);
         dialog.setTitle("新建进货单");
         dialog.initOwner(application.getStage());
         dialog.setResizable(true);
@@ -69,7 +56,6 @@ public class PurchaseDetailsController {
         // center stage on screen
         dialog.centerOnScreen();
         dialog.show();
-
     }
 
     @FXML
@@ -94,10 +80,13 @@ public class PurchaseDetailsController {
 
     @FXML
     private void clearCondition() {
-
     }
 
-    public void prepare(MainApp application) {
+
+    public void clean() {
+    }
+
+    public void initialize(MainApp application) {
         this.application = application;
 //
 //        DoubleBinding wBinding = application.getStage().widthProperty().subtract(application.getDashboard().getNavigation().widthProperty().add(35));

@@ -4,13 +4,14 @@ import com.shunyi.autoparts.ui.MainApp;
 import com.shunyi.autoparts.ui.common.Constants;
 import com.shunyi.autoparts.ui.common.ICONS;
 import com.shunyi.autoparts.ui.inventory.InventoryDetails;
-import com.shunyi.autoparts.ui.products.ProductDetails;
-import com.shunyi.autoparts.ui.purchase.PurchaseDetails;
-import com.shunyi.autoparts.ui.purchase.PurchaseReturnDetails;
-import com.shunyi.autoparts.ui.sale.SalesDetails;
-import com.shunyi.autoparts.ui.sale.SalesReturnDetails;
+import com.shunyi.autoparts.ui.inventory.InventoryingOrder;
+import com.shunyi.autoparts.ui.inventory.PriceAdjustmentOrder;
+import com.shunyi.autoparts.ui.purchase.PurchaseOrder;
+import com.shunyi.autoparts.ui.purchase.PurchaseReturnOrder;
+import com.shunyi.autoparts.ui.purchase.PurchaseView;
+import com.shunyi.autoparts.ui.sale.SalesOrder;
+import com.shunyi.autoparts.ui.sale.SalesReturnOrder;
 import com.shunyi.autoparts.ui.sale.SalesView;
-import com.shunyi.autoparts.ui.supplier.SupplierDetails;
 import com.shunyi.autoparts.ui.system.SystemSettings;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
@@ -27,13 +28,15 @@ public class MainFrame extends BorderPane {
     private ICONS icons = ICONS.getInstance();
     private TabPane tabPane = new TabPane();
     private NewTab salesViewTab;
-    private NewTab purchaseDetailsTab;
-    private NewTab purchaseReturnDetailsTab;
-    private NewTab salesDetailsTab;
-    private NewTab salesReturnDetailsTab;
-    private NewTab supplierDetailsTab;
+    private NewTab purchaseViewTab;
+    private NewTab purchaseOrderTab;
+    private NewTab purchaseReturnOrderTab;
+    private NewTab salesOrderTab;
+    private NewTab salesReturnOrderTab;
+    private NewTab inventoryingOrderTab;
+    private NewTab priceAdjustmentOrderTab;
     private NewTab inventoryDetailsTab;
-    private NewTab productDetailsTab;
+
     private NewTab systemSettingsTab;
 
     /**
@@ -58,6 +61,19 @@ public class MainFrame extends BorderPane {
     }
 
     private void initEvents() {
+        //采购视图
+        ClickableItem purchaseView = new ClickableItem(icons.view_dashboard(), Constants.PURCHASE_VIEW, new Callback() {
+            @Override
+            public Object call(Object param) {
+                toolbar.setTitle(Constants.PURCHASE_VIEW);
+                if(purchaseViewTab == null) {
+                    purchaseViewTab = new NewTab(Constants.PURCHASE_VIEW, new PurchaseView(application));
+                }
+                contentPane.addNewTab(purchaseViewTab);
+                return null;
+            }
+        });
+        //销售视图
         ClickableItem salesView = new ClickableItem(icons.view_dashboard(), Constants.SALES_VIEW, new Callback() {
             @Override
             public Object call(Object param) {
@@ -69,86 +85,92 @@ public class MainFrame extends BorderPane {
                 return null;
             }
         });
-        ClickableItem purchaseDetails = new ClickableItem(icons.cart(), Constants.PURCHASE_DETAILS, new Callback() {
+        //采购单
+        ClickableItem purchaseOrder = new ClickableItem(icons.cart(), Constants.PURCHASE_ORDER, new Callback() {
             @Override
             public Object call(Object param) {
-                toolbar.setTitle(Constants.PURCHASE_DETAILS);
-                if(purchaseDetailsTab == null) {
-                    purchaseDetailsTab = new NewTab(Constants.PURCHASE_DETAILS, new PurchaseDetails(application));
+                toolbar.setTitle(Constants.PURCHASE_ORDER);
+                if(purchaseOrderTab == null) {
+                    purchaseOrderTab = new NewTab(Constants.PURCHASE_ORDER, new PurchaseOrder(application));
                 }
-                contentPane.addNewTab(purchaseDetailsTab);
+                contentPane.addNewTab(purchaseOrderTab);
                 return null;
             }
         });
-        ClickableItem purchaseReturnDetails = new ClickableItem(icons.cart_arrow_up(), Constants.PURCHASE_RETURN_DETAILS, new Callback() {
+        //采购退货单
+        ClickableItem purchaseReturnOrder = new ClickableItem(icons.cart_arrow_up(), Constants.PURCHASE_RETURN_ORDER, new Callback() {
             @Override
             public Object call(Object param) {
-                toolbar.setTitle(Constants.PURCHASE_RETURN_DETAILS);
-                if(purchaseReturnDetailsTab == null) {
-                    purchaseReturnDetailsTab = new NewTab(Constants.PURCHASE_RETURN_DETAILS, new PurchaseReturnDetails());
+                toolbar.setTitle(Constants.PURCHASE_RETURN_ORDER);
+                if(purchaseReturnOrderTab == null) {
+                    purchaseReturnOrderTab = new NewTab(Constants.PURCHASE_RETURN_ORDER, new PurchaseReturnOrder());
                 }
-                contentPane.addNewTab(purchaseReturnDetailsTab);
+                contentPane.addNewTab(purchaseReturnOrderTab);
                 return null;
             }
         });
-        ClickableItem salesDetails = new ClickableItem(icons.shopping(), Constants.SALES_DETAILS, new Callback() {
+        //销售单
+        ClickableItem salesOrder = new ClickableItem(icons.shopping(), Constants.SALES_ORDER, new Callback() {
             @Override
             public Object call(Object param) {
-                toolbar.setTitle(Constants.SALES_DETAILS);
-                if(salesDetailsTab == null) {
-                    salesDetailsTab = new NewTab(Constants.SALES_DETAILS, new SalesDetails());
+                toolbar.setTitle(Constants.SALES_ORDER);
+                if(salesOrderTab == null) {
+                    salesOrderTab = new NewTab(Constants.SALES_ORDER, new SalesOrder());
                 }
-                contentPane.addNewTab(salesDetailsTab);
+                contentPane.addNewTab(salesOrderTab);
                 return null;
             }
         });
-        ClickableItem salesReturnDetails = new ClickableItem(icons.shopping_outline(), Constants.SALES_RETURN_DETAILS, new Callback() {
+        //销售退货单
+        ClickableItem salesReturnOrder = new ClickableItem(icons.shopping_outline(), Constants.SALES_RETURN_ORDER, new Callback() {
             @Override
             public Object call(Object param) {
-                toolbar.setTitle(Constants.SALES_RETURN_DETAILS);
-                if(salesReturnDetailsTab == null) {
-                    salesReturnDetailsTab = new NewTab(Constants.SALES_RETURN_DETAILS, new SalesReturnDetails());
+                toolbar.setTitle(Constants.SALES_RETURN_ORDER);
+                if(salesReturnOrderTab == null) {
+                    salesReturnOrderTab = new NewTab(Constants.SALES_RETURN_ORDER, new SalesReturnOrder());
                 }
-                contentPane.addNewTab(salesReturnDetailsTab);
+                contentPane.addNewTab(salesReturnOrderTab);
                 return null;
             }
         });
-        ClickableItem supplierDetails = new ClickableItem(icons.account_multiple(), Constants.SUPPLIER_DETAILS, new Callback() {
+        //盘点单
+        ClickableItem inventoryingOrder = new ClickableItem(icons.account_multiple(), Constants.INVENTORYING_ORDER, new Callback() {
             @Override
             public Object call(Object param) {
-                toolbar.setTitle(Constants.SUPPLIER_DETAILS);
-                if(supplierDetailsTab == null) {
-                    supplierDetailsTab = new NewTab(Constants.SUPPLIER_DETAILS, new SupplierDetails(application));
+                toolbar.setTitle(Constants.INVENTORYING_ORDER);
+                if(inventoryingOrderTab == null) {
+                    inventoryingOrderTab = new NewTab(Constants.INVENTORYING_ORDER, new InventoryingOrder(application));
                 }
-                contentPane.addNewTab(supplierDetailsTab);
+                contentPane.addNewTab(inventoryingOrderTab);
                 return null;
             }
         });
-        ClickableItem inventoryDetails = new ClickableItem(icons.warehouse(), Constants.INVENTORY_DETAILS, new Callback() {
+        //调价单
+        ClickableItem priceAdjustmentOrder = new ClickableItem(icons.warehouse(), Constants.PRICE_ADJUSTMENT_ORDER, new Callback() {
+            @Override
+            public Object call(Object param) {
+                toolbar.setTitle(Constants.PRICE_ADJUSTMENT_ORDER);
+                if(priceAdjustmentOrderTab == null) {
+                    priceAdjustmentOrderTab = new NewTab(Constants.PRICE_ADJUSTMENT_ORDER, new PriceAdjustmentOrder(application));
+                }
+                contentPane.addNewTab(priceAdjustmentOrderTab);
+                return null;
+            }
+        });
+        //库存明细
+        ClickableItem inventoryDetails = new ClickableItem(icons.car_door(), Constants.INVENTORY_DETAILS, new Callback() {
             @Override
             public Object call(Object param) {
                 toolbar.setTitle(Constants.INVENTORY_DETAILS);
                 if(inventoryDetailsTab == null) {
                     inventoryDetailsTab = new NewTab(Constants.INVENTORY_DETAILS, new InventoryDetails(application));
+//                    toolbar.addAffectedTabContent(productDetails);
                 }
                 contentPane.addNewTab(inventoryDetailsTab);
                 return null;
             }
         });
-        ClickableItem productDetails = new ClickableItem(icons.car_door(), Constants.PRODUCT_DETAILS, new Callback() {
-            @Override
-            public Object call(Object param) {
-                toolbar.setTitle(Constants.PRODUCT_DETAILS);
-                if(productDetailsTab == null) {
-                    ProductDetails productDetails = new ProductDetails(application);
-                    productDetailsTab = new NewTab(Constants.PRODUCT_DETAILS, productDetails);
-                    toolbar.addAffectedTabContent(productDetails);
-                }
-                contentPane.addNewTab(productDetailsTab);
-                return null;
-            }
-        });
-
+        // 系统设置
         ClickableItem systemSettings = new ClickableItem(icons.settings_transfer_outline(), Constants.SYSTEM_SETTINGS, new Callback() {
             @Override
             public Object call(Object param) {
@@ -160,8 +182,7 @@ public class MainFrame extends BorderPane {
                 return null;
             }
         });
-
-        navigation.addClickableItem(salesView, purchaseDetails, purchaseReturnDetails, salesDetails, salesReturnDetails, supplierDetails, inventoryDetails, productDetails, systemSettings);
+        navigation.addClickableItem(purchaseView, salesView, purchaseOrder, purchaseReturnOrder, salesOrder, salesReturnOrder, inventoryingOrder, priceAdjustmentOrder, inventoryDetails, systemSettings);
     }
 
     public Navigation getNavigation() {

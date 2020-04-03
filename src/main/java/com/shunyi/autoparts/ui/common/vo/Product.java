@@ -8,14 +8,14 @@ import java.util.Set;
 /**
  * @description 配件VO
  * @author Shunyi Chen
- * @date 2020/3/23
+ * @date 2020/4/3
  */
 public class Product {
     /** 自增ID */
     private Long id;
     /** 产品编码 */
     private String code;
-    /** 类别 */
+    /** 分类 */
     private Category category;
     /** 产品名称 */
     private String name;
@@ -33,18 +33,12 @@ public class Product {
     private String englishName;
     /** 进口 */
     private String imported;
-    /** 折扣% */
-    private String discountPercentage;
-    /** 可用状态 */
-    private String status;
     /** 通用件号 */
     private String commonNumber;
     /** 材料 */
     private String materials;
     /** 所属公司 */
     private String company;
-    /** 备注 */
-    private String notes;
     /** 包装数量 */
     private Integer packingQuantity;
     /** 重量 */
@@ -92,7 +86,7 @@ public class Product {
 
     public Product() {}
 
-    public Product(Long id, String code, Category category, String name, String unit, String barCode, Set<ProductCarMapping> productCarMappingSet, Place place, Brand brand, String englishName, String imported, String discountPercentage, String status, String commonNumber, String materials, String company, String notes, Integer packingQuantity, BigDecimal weight, String manual, Supplier supplier, BigDecimal purchasingPrice1, BigDecimal purchasingPrice2, BigDecimal purchasingPrice3, BigDecimal sellingPrice1, BigDecimal sellingPrice2, BigDecimal sellingPrice3, BigDecimal bottomPrice, String foreignCurrencyUnit, String foreignCurrencyPrice, Boolean shortage, Date dateCreated, String creator, Date dateUpdated, String updater, Integer updatedCount, Date dateDeleted, Boolean deleteFlag, String deleter) {
+    public Product(Long id, String code, Category category, String name, String unit, String barCode, Set<ProductCarMapping> productCarMappingSet, Place place, Brand brand, String englishName, String imported, String commonNumber, String materials, String company, Integer packingQuantity, BigDecimal weight, String manual, Supplier supplier, BigDecimal purchasingPrice1, BigDecimal purchasingPrice2, BigDecimal purchasingPrice3, BigDecimal sellingPrice1, BigDecimal sellingPrice2, BigDecimal sellingPrice3, BigDecimal bottomPrice, String foreignCurrencyUnit, String foreignCurrencyPrice, Boolean shortage, Date dateCreated, String creator, Date dateUpdated, String updater, Integer updatedCount, Date dateDeleted, Boolean deleteFlag, String deleter) {
         this.id = id;
         this.code = code;
         this.category = category;
@@ -104,12 +98,9 @@ public class Product {
         this.brand = brand;
         this.englishName = englishName;
         this.imported = imported;
-        this.discountPercentage = discountPercentage;
-        this.status = status;
         this.commonNumber = commonNumber;
         this.materials = materials;
         this.company = company;
-        this.notes = notes;
         this.packingQuantity = packingQuantity;
         this.weight = weight;
         this.manual = manual;
@@ -222,22 +213,6 @@ public class Product {
         this.imported = imported;
     }
 
-    public String getDiscountPercentage() {
-        return discountPercentage;
-    }
-
-    public void setDiscountPercentage(String discountPercentage) {
-        this.discountPercentage = discountPercentage;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
     public String getCommonNumber() {
         return commonNumber;
     }
@@ -260,14 +235,6 @@ public class Product {
 
     public void setCompany(String company) {
         this.company = company;
-    }
-
-    public String getNotes() {
-        return notes;
-    }
-
-    public void setNotes(String notes) {
-        this.notes = notes;
     }
 
     public Integer getPackingQuantity() {

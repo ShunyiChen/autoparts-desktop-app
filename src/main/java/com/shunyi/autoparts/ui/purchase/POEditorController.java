@@ -227,13 +227,13 @@ public class POEditorController {
                 return new SimpleObjectProperty<>(param.getValue().getSku().getBarCode());
             }
         });
-        colUnit.setCellValueFactory(param -> {
-            if(param.getValue().getSku().getUnit() == null) {
-                return new SimpleObjectProperty<>("");
-            } else {
-                return new SimpleObjectProperty<>(param.getValue().getSku().getUnit());
-            }
-        });
+//        colUnit.setCellValueFactory(param -> {
+//            if(param.getValue().getSku().getUnit() == null) {
+//                return new SimpleObjectProperty<>("");
+//            } else {
+//                return new SimpleObjectProperty<>(param.getValue().getSku().getUnit());
+//            }
+//        });
 //        colQty.setCellValueFactory(param -> {
 //            if(param.getValue().getSku().getQuantity() == null) {
 //                return new SimpleObjectProperty<>("");

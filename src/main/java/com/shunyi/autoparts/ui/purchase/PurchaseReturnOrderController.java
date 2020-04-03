@@ -6,5 +6,5 @@ package com.shunyi.autoparts.ui.purchase;
  * @CreateDate: 2020/4/1 3:17
  * @Version: 1.0
  */
-public class PurchaseReturnDetailsController {
+public class PurchaseReturnOrderController {
 }

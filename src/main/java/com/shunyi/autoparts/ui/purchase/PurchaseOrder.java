@@ -1,26 +1,24 @@
 package com.shunyi.autoparts.ui.purchase;
 
 import com.shunyi.autoparts.ui.MainApp;
-import com.shunyi.autoparts.ui.inventory.InventoryDetailsController;
 import com.shunyi.autoparts.ui.main.TabContent;
 import javafx.beans.binding.DoubleBinding;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
 
 import java.io.IOException;
 
 /**
- * @Description:
- * @Author: 陈顺谊
+ * @Description: 采购单
+ * @Author: Shunyi Chen
  * @CreateDate: 2020/3/23 23:00
  * @Version: 1.0
  */
-public class PurchaseDetails extends TabContent {
-
+public class PurchaseOrder extends TabContent {
     private MainApp application;
-    private PurchaseDetailsController purchaseDetailsController;
-    public PurchaseDetails(MainApp application) {
+    private PurchaseOrderController purchaseDetailsController;
+
+    public PurchaseOrder(MainApp application) {
         this.application = application;
         initComponents();
     }
@@ -28,7 +26,7 @@ public class PurchaseDetails extends TabContent {
     private void initComponents() {
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource(
-                        "/fxml/purchase/PurchaseDetails.fxml"
+                        "/fxml/purchase/PurchaseOrder.fxml"
                 )
         );
         BorderPane root = null;
@@ -38,7 +36,7 @@ public class PurchaseDetails extends TabContent {
             e.printStackTrace();
         }
         purchaseDetailsController = loader.getController();
-        purchaseDetailsController.prepare(application);
+        purchaseDetailsController.initialize(application);
 
         //主面板右侧宽度
         DoubleBinding wBinding = application.getStage().widthProperty().subtract(application.getMainFrame().getNavigation().widthProperty().add(35));
@@ -50,7 +48,8 @@ public class PurchaseDetails extends TabContent {
 
     @Override
     protected void reload() {
-        purchaseDetailsController.prepare(application);
+        purchaseDetailsController.clean();
+        purchaseDetailsController.initialize(application);
     }
 
     @Override

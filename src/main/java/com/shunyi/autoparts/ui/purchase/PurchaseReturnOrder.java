@@ -3,16 +3,14 @@ package com.shunyi.autoparts.ui.purchase;
 import com.shunyi.autoparts.ui.main.TabContent;
 
 /**
- * @Description:
- * @Author: 陈顺谊
- * @CreateDate: 2020/3/23 23:02
- * @Version: 1.0
+ * @Description: 采购退货单
+ * @Author: Shunyi Chen
+ * @CreateDate: 2020/4/3
  */
-public class PurchaseReturnDetails extends TabContent {
+public class PurchaseReturnOrder extends TabContent {
 
     @Override
     protected void reload() {
-
     }
 
     @Override
