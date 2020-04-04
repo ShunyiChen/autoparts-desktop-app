@@ -8,7 +8,7 @@ import java.util.Set;
 /**
  * @description 产品SKU VO
  * @author Shunyi Chen
- * @date 2020/4/3
+ * @date 2020/4/4
  */
 public class SKU {
     /** 自增ID */
@@ -22,7 +22,7 @@ public class SKU {
     /** 规格 */
     private String specification;
     /** 条形码 */
-    private String barCode;
+    private String skuBarCode;
     /** 库存数量 */
     private Integer stockQty;
     /** 属性字符串 */
@@ -58,13 +58,13 @@ public class SKU {
 
     public SKU() {}
 
-    public SKU(Long id, Product product, String skuCode, String skuName, String specification, String barCode, Integer stockQty, String properties, String discountPercentage, String status, String notes, BigDecimal avgPrice, Set<SKUSlotMapping> skuSlotMappingSet, Set<SKUPhoto> photos, Date dateCreated, String creator, Date dateUpdated, String updater, Integer updatedCount, Date dateDeleted, Boolean deleteFlag, String deleter) {
+    public SKU(Long id, Product product, String skuCode, String skuName, String specification, String skuBarCode, Integer stockQty, String properties, String discountPercentage, String status, String notes, BigDecimal avgPrice, Set<SKUSlotMapping> skuSlotMappingSet, Set<SKUPhoto> photos, Date dateCreated, String creator, Date dateUpdated, String updater, Integer updatedCount, Date dateDeleted, Boolean deleteFlag, String deleter) {
         this.id = id;
         this.product = product;
         this.skuCode = skuCode;
         this.skuName = skuName;
         this.specification = specification;
-        this.barCode = barCode;
+        this.skuBarCode = skuBarCode;
         this.stockQty = stockQty;
         this.properties = properties;
         this.discountPercentage = discountPercentage;
@@ -123,12 +123,12 @@ public class SKU {
         this.specification = specification;
     }
 
-    public String getBarCode() {
-        return barCode;
+    public String getSkuBarCode() {
+        return skuBarCode;
     }
 
-    public void setBarCode(String barCode) {
-        this.barCode = barCode;
+    public void setSkuBarCode(String skuBarCode) {
+        this.skuBarCode = skuBarCode;
     }
 
     public Integer getStockQty() {

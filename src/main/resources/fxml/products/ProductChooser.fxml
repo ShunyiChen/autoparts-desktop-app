@@ -16,65 +16,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="622.0" prefWidth="1426.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.shunyi.autoparts.ui.products.ProductDetailsController">
-   <top>
-      <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-        <items>
-          <Button mnemonicParsing="false" onAction="#newCategory" text="新建类目">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Button>
-            <Button mnemonicParsing="false" onAction="#updateCategory" text="更改">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Button>
-            <Button mnemonicParsing="false" onAction="#removeCategory" text="删除">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Button>
-            <Button mnemonicParsing="false" onAction="#refreshCategory" text="刷新">
-                <font>
-                    <Font size="14.0" />
-                </font>
-            </Button>
-            <Separator />
-            <Button mnemonicParsing="false" onAction="#newProduct" text="新建配件">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Button>
-            <Button mnemonicParsing="false" onAction="#updateProduct" text="更改">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Button>
-            <Button mnemonicParsing="false" onAction="#removeProduct" text="删除">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Button>
-            <Button mnemonicParsing="false" onAction="#duplicate" text="复 制">
-                <font>
-                    <Font size="14.0" />
-                </font>
-            </Button>
-            <Separator layoutX="246.0" layoutY="10.0" />
-            <Button mnemonicParsing="false" onAction="#openBasicAttributes" text="配件属性">
-                <font>
-                    <Font size="14.0" />
-                </font>
-            </Button>
-            <Button mnemonicParsing="false" onAction="#openProductSKU" text="配件sku">
-                <font>
-                    <Font size="14.0" />
-                </font>
-            </Button>
-        </items>
-      </ToolBar>
-   </top>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="706.0" prefWidth="1244.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.shunyi.autoparts.ui.products.ProductChooserController">
    <center>
       <SplitPane dividerPositions="0.14" prefHeight="160.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <items>
@@ -187,7 +129,7 @@
                   </VBox>
                </top>
                <center>
-                  <TableView fx:id="tableView" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                  <TableView fx:id="tableView" prefHeight="200.0" prefWidth="200.0" tableMenuButtonVisible="true" BorderPane.alignment="CENTER">
                     <columns>
                         <TableColumn fx:id="colCode" prefWidth="75.0" text="编码" />
                         <TableColumn fx:id="colName" prefWidth="75.0" text="名称" />
@@ -219,4 +161,84 @@
          </items>
       </SplitPane>
    </center>
+   <top>
+      <VBox prefHeight="100.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+         <children>
+            <BorderPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: rgb(63,81,181);">
+               <left>
+                  <Label fx:id="headerText" alignment="CENTER" prefHeight="42.0" prefWidth="207.0" text="配件选择器" textFill="WHITE" BorderPane.alignment="CENTER">
+                     <font>
+                        <Font name="Microsoft YaHei" size="30.0" />
+                     </font>
+                  </Label>
+               </left>
+            </BorderPane>
+            <ToolBar prefHeight="40.0" prefWidth="200.0">
+              <items>
+                  <Button mnemonicParsing="false" onAction="#newProduct" text="新建配件">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Button>
+                  <Separator />
+                  <Button mnemonicParsing="false" onAction="#updateProduct" text="更改">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Button>
+                  <Button mnemonicParsing="false" onAction="#removeProduct" text="删除">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Button>
+                  <Separator />
+                  <Button mnemonicParsing="false" onAction="#refreshCategory" text="刷新">
+                      <font>
+                          <Font size="14.0" />
+                      </font>
+                  </Button>
+                  <Separator />
+                  <Button mnemonicParsing="false" onAction="#duplicate" text="复 制">
+                      <font>
+                          <Font size="14.0" />
+                      </font>
+                  </Button>
+                  <Separator layoutX="246.0" layoutY="10.0" />
+                  <Button mnemonicParsing="false" onAction="#openBasicAttributes" text="配件属性">
+                      <font>
+                          <Font size="14.0" />
+                      </font>
+                  </Button>
+                  <Button mnemonicParsing="false" onAction="#openProductSKU" text="配件sku">
+                      <font>
+                          <Font size="14.0" />
+                      </font>
+                  </Button>
+              </items>
+            </ToolBar>
+         </children>
+      </VBox>
+   </top>
+   <bottom>
+      <FlowPane alignment="CENTER_RIGHT" prefHeight="54.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button mnemonicParsing="false" text="取 消">
+               <font>
+                  <Font size="14.0" />
+               </font>
+               <FlowPane.margin>
+                  <Insets right="10.0" />
+               </FlowPane.margin>
+            </Button>
+            <Button fx:id="btnSelectAndReturn" mnemonicParsing="false" text="选中返回">
+               <font>
+                  <Font size="14.0" />
+               </font>
+               <FlowPane.margin>
+                  <Insets right="10.0" />
+               </FlowPane.margin>
+            </Button>
+         </children>
+      </FlowPane>
+   </bottom>
 </BorderPane>

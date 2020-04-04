@@ -13,6 +13,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -24,8 +25,12 @@ import java.util.Arrays;
 import java.util.List;
 
 /** 配件管理Controller */
-public class ProductDetailsController {
-    private MainApp application;
+public class ProductChooserController {
+    private Stage dialog;
+    @FXML
+    private Label headerText;
+    @FXML
+    private Button btnSelectAndReturn;
 
     @FXML
     private TextField txtCode;
@@ -96,15 +101,17 @@ public class ProductDetailsController {
 
     /**
      *
-     * @param application
+     * @param dialog
      */
-    public void prepare(MainApp application) {
-        this.application = application;
+    public void initialize(Stage dialog) {
+        this.dialog = dialog;
         comboImport.getItems().addAll("", Constants.ORIGINAL, Constants.HOMEMADE);
-        tableView.getItems().clear();
         initComboBoxes();
         initTreeView();
         initTableView();
+
+        btnSelectAndReturn.setStyle(String.format("-fx-base: %s;", "rgb(63,81,181)"));
+        headerText.setStyle("-fx-text-fill: rgb(255,255,255);");
     }
 
     private void initComboBoxes() {
@@ -257,7 +264,7 @@ public class ProductDetailsController {
         CategoryEditorController controller = loader.getController();
         controller.prepare(dialog, updatedCategory, callback);
         dialog.setTitle(updatedCategory != null?"更改类目":"新建类目");
-        dialog.initOwner(application.getStage());
+        dialog.initOwner(this.dialog);
         dialog.setResizable(false);
         dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.setScene(scene);
@@ -446,15 +453,8 @@ public class ProductDetailsController {
 
     @FXML
     private void newProduct() {
-//        TreeItem<Category> selectedCategory = treeView.getSelectionModel().getSelectedItem();
-//        if(selectedCategory == null) {
-//            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
-//            alert.setHeaderText("请选择产品分类");
-//            alert.show();
-//            return;
-//        }
-//        Callback<Product, Object> callback = e -> {
-//            String json = GoogleJson.GET().toJson(e);
+        Callback<Product, Object> callback = e -> {
+            String json = GoogleJson.GET().toJson(e);
 //            try {
 //                String idStr = HttpClient.POST("/products",json);
 //                e.setId(Long.valueOf(idStr));
@@ -470,14 +470,14 @@ public class ProductDetailsController {
 //            } catch (IOException ex) {
 //                ex.printStackTrace();
 //            }
-//            //刷新表格
+            //刷新表格
 //            tableView.getItems().add(e);
 //            tableView.getSelectionModel().select(e);
-//            return null;
-//        };
-//        //初始品牌
+            return null;
+        };
+        //初始品牌
 //        BrandSeries selectedBrand = listView.getSelectionModel().getSelectedItem();
-//        openProductEditor(callback, null, selectedCategory.getValue(), selectedBrand);
+        openProductEditor(callback, null);
     }
 
     @FXML
@@ -517,31 +517,38 @@ public class ProductDetailsController {
 //        openProductEditor(callback, selected, selectedCategory, selectedBrand);
     }
 
-//    private void openProductEditor(Callback<Product, Object> callback, Product updatedProduct, Category selectedCategory, BrandSeries selectedBrand) {
-//        FXMLLoader loader = new FXMLLoader(
-//                getClass().getResource(
-//                        "/fxml/products/product_editor.fxml"
-//                )
-//        );
-//        VBox root = null;
-//        try {
-//            root = loader.load();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        Scene scene = new Scene(root);
-//        Stage dialog = new Stage();
+    private void openProductEditor(Callback<Product, Object> callback, Product updatedProduct) {
+        TreeItem<Category> selectedCategory = treeView.getSelectionModel().getSelectedItem();
+        if(selectedCategory == null) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
+            alert.setHeaderText("请选择产品分类");
+            alert.show();
+            return;
+        }
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource(
+                        "/fxml/products/product_editor.fxml"
+                )
+        );
+        VBox root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Scene scene = new Scene(root);
+        Stage dialog = new Stage();
 //        ProductEditorController controller = loader.getController();
 //        controller.prepare(dialog, updatedProduct, callback, selectedCategory, selectedBrand);
-//        dialog.setTitle(updatedProduct != null?"更改配件":"新建配件");
-//        dialog.initOwner(application.getStage());
-//        dialog.setResizable(false);
-//        dialog.initModality(Modality.APPLICATION_MODAL);
-//        dialog.setScene(scene);
-//        // center stage on screen
-//        dialog.centerOnScreen();
-//        dialog.show();
-//    }
+        dialog.setTitle(updatedProduct != null?"更改配件":"新建配件");
+        dialog.initOwner(this.dialog);
+        dialog.setResizable(false);
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.setScene(scene);
+        // center stage on screen
+        dialog.centerOnScreen();
+        dialog.show();
+    }
 
     @FXML
     private void removeProduct() {
@@ -603,7 +610,7 @@ public class ProductDetailsController {
         AttributeManagementController controller = loader.getController();
         controller.prepare(dialog, selectedItem == null?null:selectedItem.getValue());
         dialog.setTitle("配件属性");
-        dialog.initOwner(application.getStage());
+        dialog.initOwner(this.dialog);
         dialog.setResizable(true);
         dialog.initModality(Modality.WINDOW_MODAL);
         dialog.setScene(scene);
@@ -644,7 +651,7 @@ public class ProductDetailsController {
         BasicAttributesController controller = loader.getController();
 //        controller.prepare(dialog, selectedItem.getValue(), selectedRow);
         dialog.setTitle("产品属性");
-        dialog.initOwner(application.getStage());
+        dialog.initOwner(this.dialog);
         dialog.setResizable(true);
         dialog.initModality(Modality.WINDOW_MODAL);
         dialog.setScene(scene);
@@ -678,7 +685,7 @@ public class ProductDetailsController {
         ProductSKUController controller = loader.getController();
 //        controller.prepare(dialog, selectedProduct);
         dialog.setTitle("产品sku");
-        dialog.initOwner(application.getStage());
+        dialog.initOwner(this.dialog);
         dialog.setResizable(true);
 //        dialog.setMaximized(true);
         dialog.setScene(scene);
@@ -872,6 +879,9 @@ public class ProductDetailsController {
                 }
             }
         });
+
+        //默认选择根节点
+        treeView.getSelectionModel().select(root);
     }
 
     private void initTreeNodes(TreeItem<Category> root) {

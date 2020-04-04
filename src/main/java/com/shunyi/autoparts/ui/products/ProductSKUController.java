@@ -269,7 +269,7 @@ public class ProductSKUController {
                 if(t.getTablePosition().getRow() < data.size()) {
                     SKU selected = data.get( t.getTablePosition().getRow());
                     if(selected != null) {
-                        selected.setBarCode(t.getNewValue());
+                        selected.setSkuBarCode(t.getNewValue());
                         data.set(t.getTablePosition().getRow(), selected);
                     }
                 }

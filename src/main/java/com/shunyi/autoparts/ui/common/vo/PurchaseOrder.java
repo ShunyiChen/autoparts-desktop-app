@@ -4,14 +4,14 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 /**
- * @description 采购订单
+ * @description 采购订单VO
  * @author Shunyi Chen
- * @date 2020/3/23
+ * @date 2020/4/4
  */
 public class PurchaseOrder {
     /** ID */
     private Long id;
-    /** 单号 */
+    /** 业务单号 */
     private String orderNo;
     /** 单据日期 */
     private Date orderDate;
@@ -62,8 +62,7 @@ public class PurchaseOrder {
     /** 删除者 */
     private String deleter;
 
-    public PurchaseOrder() {
-    }
+    public PurchaseOrder() {}
 
     public PurchaseOrder(Long id, String orderNo, Date orderDate, Warehouse warehouse, Supplier supplier, String invoiceType, String invoiceNo, BigDecimal freight, String notes, String payment, String account, Integer totalQty, BigDecimal discountedAmount, BigDecimal totalAmount, BigDecimal paidAmount, BigDecimal taxIncludedAmount, BigDecimal discount, BigDecimal discountedAmount2, BigDecimal due, String operator, String status, Date dateCreated, String creator, Date dateDeleted, Boolean deleteFlag, String deleter) {
         this.id = id;

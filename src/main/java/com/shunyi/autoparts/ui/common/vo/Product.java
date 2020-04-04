@@ -8,14 +8,14 @@ import java.util.Set;
 /**
  * @description 配件VO
  * @author Shunyi Chen
- * @date 2020/4/3
+ * @date 2020/4/4
  */
 public class Product {
     /** 自增ID */
     private Long id;
     /** 产品编码 */
     private String code;
-    /** 分类 */
+    /** 类别 */
     private Category category;
     /** 产品名称 */
     private String name;
@@ -23,7 +23,9 @@ public class Product {
     private String unit;
     /** 条形码 */
     private String barCode;
-    /** 配件与车型映射关系 */
+    /** 车型 */
+    private Car car;
+    /** 通用车型 */
     private Set<ProductCarMapping> productCarMappingSet = new HashSet<>();
     /** 产地 */
     private Place place;
@@ -84,15 +86,17 @@ public class Product {
     /** 删除者 */
     private String deleter;
 
-    public Product() {}
+    public Product() {
+    }
 
-    public Product(Long id, String code, Category category, String name, String unit, String barCode, Set<ProductCarMapping> productCarMappingSet, Place place, Brand brand, String englishName, String imported, String commonNumber, String materials, String company, Integer packingQuantity, BigDecimal weight, String manual, Supplier supplier, BigDecimal purchasingPrice1, BigDecimal purchasingPrice2, BigDecimal purchasingPrice3, BigDecimal sellingPrice1, BigDecimal sellingPrice2, BigDecimal sellingPrice3, BigDecimal bottomPrice, String foreignCurrencyUnit, String foreignCurrencyPrice, Boolean shortage, Date dateCreated, String creator, Date dateUpdated, String updater, Integer updatedCount, Date dateDeleted, Boolean deleteFlag, String deleter) {
+    public Product(Long id, String code, Category category, String name, String unit, String barCode, Car car, Set<ProductCarMapping> productCarMappingSet, Place place, Brand brand, String englishName, String imported, String commonNumber, String materials, String company, Integer packingQuantity, BigDecimal weight, String manual, Supplier supplier, BigDecimal purchasingPrice1, BigDecimal purchasingPrice2, BigDecimal purchasingPrice3, BigDecimal sellingPrice1, BigDecimal sellingPrice2, BigDecimal sellingPrice3, BigDecimal bottomPrice, String foreignCurrencyUnit, String foreignCurrencyPrice, Boolean shortage, Date dateCreated, String creator, Date dateUpdated, String updater, Integer updatedCount, Date dateDeleted, Boolean deleteFlag, String deleter) {
         this.id = id;
         this.code = code;
         this.category = category;
         this.name = name;
         this.unit = unit;
         this.barCode = barCode;
+        this.car = car;
         this.productCarMappingSet = productCarMappingSet;
         this.place = place;
         this.brand = brand;
@@ -171,6 +175,14 @@ public class Product {
 
     public void setBarCode(String barCode) {
         this.barCode = barCode;
+    }
+
+    public Car getCar() {
+        return car;
+    }
+
+    public void setCar(Car car) {
+        this.car = car;
     }
 
     public Set<ProductCarMapping> getProductCarMappingSet() {

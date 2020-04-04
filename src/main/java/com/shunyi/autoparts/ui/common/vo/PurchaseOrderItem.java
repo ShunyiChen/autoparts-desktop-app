@@ -4,9 +4,8 @@ import java.math.BigDecimal;
 
 /**
  * @Description: 采购订单明细VO
- * @Author: 陈顺谊
- * @CreateDate: 2020/4/1 12:36
- * @Version: 1.0
+ * @Author: Shunyi Chen
+ * @CreateDate: 2020/4/4
  */
 public class PurchaseOrderItem {
     /** 自增ID */
@@ -15,36 +14,42 @@ public class PurchaseOrderItem {
     private PurchaseOrder purchaseOrder;
     /** SKU */
     private SKU sku;
-    /** 金额 */
-    private BigDecimal amount;
+    /** 数量 */
+    private Integer quantity;
     /** 折扣 */
     private BigDecimal discount;
     /** 折后金额 */
     private BigDecimal discountedAmount;
     /** 税率% */
     private BigDecimal taxRate;
-    /** 税率% */
+    /** 税额 */
     private BigDecimal taxAmount;
     /** 含税单价 */
     private BigDecimal priceIncludingTax;
     /** 含税金额 */
     private BigDecimal amountIncludingTax;
+    /** 不含税单价 */
+    private Integer priceExcludingTax;
+    /** 不含税金额 */
+    private Integer amountExcludingTax;
     /** 备注 */
     private String notes;
 
     public PurchaseOrderItem() {}
 
-    public PurchaseOrderItem(Long id, PurchaseOrder purchaseOrder, SKU sku, BigDecimal amount, BigDecimal discount, BigDecimal discountedAmount, BigDecimal taxRate, BigDecimal taxAmount, BigDecimal priceIncludingTax, BigDecimal amountIncludingTax, String notes) {
+    public PurchaseOrderItem(Long id, PurchaseOrder purchaseOrder, SKU sku, Integer quantity, BigDecimal discount, BigDecimal discountedAmount, BigDecimal taxRate, BigDecimal taxAmount, BigDecimal priceIncludingTax, BigDecimal amountIncludingTax, Integer priceExcludingTax, Integer amountExcludingTax, String notes) {
         this.id = id;
         this.purchaseOrder = purchaseOrder;
         this.sku = sku;
-        this.amount = amount;
+        this.quantity = quantity;
         this.discount = discount;
         this.discountedAmount = discountedAmount;
         this.taxRate = taxRate;
         this.taxAmount = taxAmount;
         this.priceIncludingTax = priceIncludingTax;
         this.amountIncludingTax = amountIncludingTax;
+        this.priceExcludingTax = priceExcludingTax;
+        this.amountExcludingTax = amountExcludingTax;
         this.notes = notes;
     }
 
@@ -72,12 +77,12 @@ public class PurchaseOrderItem {
         this.sku = sku;
     }
 
-    public BigDecimal getAmount() {
-        return amount;
+    public Integer getQuantity() {
+        return quantity;
     }
 
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
     }
 
     public BigDecimal getDiscount() {
@@ -126,6 +131,22 @@ public class PurchaseOrderItem {
 
     public void setAmountIncludingTax(BigDecimal amountIncludingTax) {
         this.amountIncludingTax = amountIncludingTax;
+    }
+
+    public Integer getPriceExcludingTax() {
+        return priceExcludingTax;
+    }
+
+    public void setPriceExcludingTax(Integer priceExcludingTax) {
+        this.priceExcludingTax = priceExcludingTax;
+    }
+
+    public Integer getAmountExcludingTax() {
+        return amountExcludingTax;
+    }
+
+    public void setAmountExcludingTax(Integer amountExcludingTax) {
+        this.amountExcludingTax = amountExcludingTax;
     }
 
     public String getNotes() {

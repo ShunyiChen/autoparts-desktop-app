@@ -14,11 +14,11 @@ import java.io.IOException;
  * @CreateDate: 2020/3/23 23:00
  * @Version: 1.0
  */
-public class PurchaseOrder extends TabContent {
+public class PO extends TabContent {
     private MainApp application;
-    private PurchaseOrderController purchaseDetailsController;
+    private POController purchaseDetailsController;
 
-    public PurchaseOrder(MainApp application) {
+    public PO(MainApp application) {
         this.application = application;
         initComponents();
     }
@@ -26,7 +26,7 @@ public class PurchaseOrder extends TabContent {
     private void initComponents() {
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource(
-                        "/fxml/purchase/PurchaseOrder.fxml"
+                        "/fxml/purchase/PO.fxml"
                 )
         );
         BorderPane root = null;

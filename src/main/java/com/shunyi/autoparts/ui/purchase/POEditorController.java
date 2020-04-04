@@ -1,18 +1,24 @@
 package com.shunyi.autoparts.ui.purchase;
 
-import com.shunyi.autoparts.ui.common.Constants;
+import com.shunyi.autoparts.ui.common.EditingCell;
 import com.shunyi.autoparts.ui.common.Env;
 import com.shunyi.autoparts.ui.common.GoogleJson;
 import com.shunyi.autoparts.ui.common.HttpClient;
 import com.shunyi.autoparts.ui.common.vo.*;
+import com.shunyi.autoparts.ui.products.ProductChooserController;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.BorderPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.time.LocalDate;
 
 /**
@@ -22,10 +28,10 @@ import java.time.LocalDate;
  * @Version: 1.0
  */
 public class POEditorController {
-
     private Stage dialog;
-    private Callback<PurchaseOrder, String> callback;
-    private PurchaseOrder purchaseOrder;
+    private Callback<PO, String> callback;
+    private boolean readOnly;
+    private Callback<TableColumn<PurchaseOrderItem, String>, TableCell<PurchaseOrderItem, String>> cellFactory;
 
     @FXML
     private Button btnSubmit;
@@ -71,45 +77,185 @@ public class POEditorController {
     private TextField txtDue;
     @FXML
     private TextField txtOperator;
-
     @FXML
     private TableView<PurchaseOrderItem> tableView;
+    /** SKU编码 */
     @FXML
-    private TableColumn<PurchaseOrderItem, String> colSKUCode;
+    private TableColumn<PurchaseOrderItem, String> colSkuCode;
+    /** SKU名称 */
     @FXML
-    private TableColumn<PurchaseOrderItem, String> colSKUName;
+    private TableColumn<PurchaseOrderItem, String> colSkuName;
+    /** 规格 */
     @FXML
-    private TableColumn<PurchaseOrderItem, String> colSKUSpec;
+    private TableColumn<PurchaseOrderItem, String> colSpecification;
+    /** 数量 */
     @FXML
-    private TableColumn<PurchaseOrderItem, String> colCar;
+    private TableColumn colQty;
+    /** 条形码 */
     @FXML
-    private TableColumn<PurchaseOrderItem, String> colBrand;
+    private TableColumn colSkuBarCode;
+    /** 库存数量 */
     @FXML
-    private TableColumn<PurchaseOrderItem, String> colBarCode;
+    private TableColumn colStockQty;
+    /** 属性字符串(可隐藏) */
     @FXML
-    private TableColumn<PurchaseOrderItem, String> colUnit;
+    private TableColumn colProperties;
+    /** 折扣% */
     @FXML
-    private TableColumn<PurchaseOrderItem, String> colQty;
+    private TableColumn colDiscountPercentage;
+    /** 税率%  */
     @FXML
-    private TableColumn<PurchaseOrderItem, String> colPrice;
+    private TableColumn colTaxRate;
+    /** 税额 */
     @FXML
-    private TableColumn colAmount;
+    private TableColumn colTaxAmount;
+    /** 含税单价 */
     @FXML
-    private TableColumn<PurchaseOrderItem, String> colDiscountedPrice;
+    private TableColumn colPriceIncludingTax;
+    /** 含税金额 */
     @FXML
-    private TableColumn colDiscountedAmount;
+    private TableColumn colAmountIncludingTax;
+    /** 不含税单价 */
     @FXML
-    private TableColumn colCurrentQty;
+    private TableColumn colPriceExcludingTax;
+    /** 不含税金额 */
     @FXML
-    private TableColumn<PurchaseOrderItem, String> colSKUSlot;
+    private TableColumn colAmountExcludingTax;
+    /** 可用状态 */
+    @FXML
+    private TableColumn colStatus;
+    /** 备注 */
+    @FXML
+    private TableColumn colNotes;
+    /** 进货平均价 */
+    @FXML
+    private TableColumn colAvgPrice;
+    /** 所有货位 */
+    @FXML
+    private TableColumn colSlots;
+    /** 所有图片 */
+    @FXML
+    private TableColumn colPhotos;
+    /** 产品编码 */
+    @FXML
+    private TableColumn colCode;
+    /** 类别 */
+    @FXML
+    private TableColumn colCategory;
+    /** 产品名称 */
+    @FXML
+    private TableColumn colName;
+    /** 单位 */
+    @FXML
+    private TableColumn colUnit;
+    /** 产品条形码 */
+    @FXML
+    private TableColumn colBarCode;
+    /** 车型 */
+    @FXML
+    private TableColumn colCar;
+    /** 通用车型 */
+    @FXML
+    private TableColumn colCars;
+    /** 产地 */
+    @FXML
+    private TableColumn colPlace;
+    /** 品牌 */
+    @FXML
+    private TableColumn colBrand;
+    /** 英文名 */
+    @FXML
+    private TableColumn colEnglishName;
+    /** 进口 */
+    @FXML
+    private TableColumn colImported;
+    /** 通用件号 */
+    @FXML
+    private TableColumn colCommonNumber;
+    /** 材料 */
+    @FXML
+    private TableColumn colMaterials;
+    /** 所属公司 */
+    @FXML
+    private TableColumn colCompany;
+    /** 包装数量 */
+    @FXML
+    private TableColumn colPackingQuantity;
+    /** 重量 */
+    @FXML
+    private TableColumn colWeight;
+    /** 手册名称 */
+    @FXML
+    private TableColumn colManual;
+    /** 供应商 */
+    @FXML
+    private TableColumn colSupplier;
+    /** 一级进价 */
+    @FXML
+    private TableColumn colPurchasingPrice1;
+    /** 二级进价 */
+    @FXML
+    private TableColumn colPurchasingPrice2;
+    /** 三级进价 */
+    @FXML
+    private TableColumn colPurchasingPrice3;
+    /** 一级销价 */
+    @FXML
+    private TableColumn colSellingPrice1;
+    /** 二级销价 */
+    @FXML
+    private TableColumn colSellingPrice2;
+    /** 三级销价 */
+    @FXML
+    private TableColumn colSellingPrice3;
+    /** 最低销价 */
+    @FXML
+    private TableColumn colBottomPrice;
+    /** 外币单位 */
+    @FXML
+    private TableColumn colForeignCurrencyUnit;
+    /** 外币价格 */
+    @FXML
+    private TableColumn colForeignCurrencyPrice;
+    /** 紧缺件 */
+    @FXML
+    private TableColumn colShortage;
+    /** 创建时间 */
+    @FXML
+    private TableColumn colDateCreated;
+    /** 创建者 */
+    @FXML
+    private TableColumn colCreator;
+    /** 更新时间 */
+    @FXML
+    private TableColumn colDateUpdated;
+    /** 更新者 */
+    @FXML
+    private TableColumn colUpdator;
+    /** 更新次数 */
+    @FXML
+    private TableColumn colUpdateCount;
+    /** 删除时间 */
+    @FXML
+    private TableColumn colDateDeleted;
+    /** 删除标记 */
+    @FXML
+    private TableColumn colDeleteFlag;
+    /** 删除者 */
+    @FXML
+    private TableColumn colDeleter;
 
-
-    public void prepare(Stage dialog, Callback<PurchaseOrder, String> callback, PurchaseOrder purchaseOrder) {
+    public void initialize(Stage dialog, Callback<PO, String> callback, boolean readOnly) {
         this.dialog = dialog;
         this.callback = callback;
-        this.purchaseOrder = purchaseOrder;
+        this.readOnly = readOnly;
+        initCellFactory();
         initInputFields();
         initTable();
+    }
+
+    private void initCellFactory() {
+        cellFactory = p -> new EditingCell();
     }
 
     private void initInputFields() {
@@ -183,36 +329,65 @@ public class POEditorController {
     }
 
     private void initTable() {
-
         tableView.setId("my-table");
-        colSKUCode.setCellValueFactory(param -> {
+
+//        colBarCode.setCellFactory(cellFactory);
+//        colBarCode.setCellValueFactory(
+//                new PropertyValueFactory<SKU, String>("barCode")
+//        );
+//        colBarCode.setOnEditCommit((EventHandler<TableColumn.CellEditEvent<SKU, String>>) t -> {
+//            ObservableList<SKU> data = t.getTableView().getItems();
+//            if(data != null) {
+//                if(t.getTablePosition().getRow() < data.size()) {
+//                    SKU selected = data.get( t.getTablePosition().getRow());
+//                    if(selected != null) {
+//                        selected.setSkuBarCode(t.getNewValue());
+//                        data.set(t.getTablePosition().getRow(), selected);
+//                    }
+//                }
+//            }
+//        });
+
+        colSkuCode.setCellFactory(cellFactory);
+        colSkuCode.setCellValueFactory(param -> {
             if(param.getValue().getSku().getSkuCode() == null) {
                 return new SimpleObjectProperty<>("");
             } else {
                 return new SimpleObjectProperty<>(param.getValue().getSku().getSkuCode() );
             }
         });
-        colSKUName.setCellValueFactory(param -> {
+        colSkuCode.setOnEditCommit((EventHandler<TableColumn.CellEditEvent<PurchaseOrderItem, String>>) t -> {
+            ObservableList<PurchaseOrderItem> data = t.getTableView().getItems();
+            if(data != null) {
+                if(t.getTablePosition().getRow() < data.size()) {
+                    PurchaseOrderItem selected = data.get( t.getTablePosition().getRow());
+                    if(selected != null) {
+//                        selected.getSku().setSkuCode(t.getNewValue());
+//                        data.set(t.getTablePosition().getRow(), selected);
+                    }
+                }
+            }
+        });
+
+
+
+
+
+        colSkuName.setCellValueFactory(param -> {
             if(param.getValue().getSku().getSkuName() == null) {
                 return new SimpleObjectProperty<>("");
             } else {
                 return new SimpleObjectProperty<>(param.getValue().getSku().getSkuName() );
             }
         });
-        colSKUSpec.setCellValueFactory(param -> {
+        colSpecification.setCellValueFactory(param -> {
             if(param.getValue().getSku().getSpecification() == null) {
                 return new SimpleObjectProperty<>("");
             } else {
                 return new SimpleObjectProperty<>(param.getValue().getSku().getSpecification() );
             }
         });
-//        colCar.setCellValueFactory(param -> {
-//            if(param.getValue().getSku().getProduct().getCar() == null) {
-//                return new SimpleObjectProperty<>("");
-//            } else {
-//                return new SimpleObjectProperty<>(param.getValue().getSku().getProduct().getCar().getModel());
-//            }
-//        });
+
 //        colBrand.setCellValueFactory(param -> {
 //            if(param.getValue().getSku().getProduct().getBrandSeries() == null) {
 //                return new SimpleObjectProperty<>("");
@@ -220,13 +395,13 @@ public class POEditorController {
 //                return new SimpleObjectProperty<>(param.getValue().getSku().getProduct().getBrandSeries().getChineseName());
 //            }
 //        });
-        colBarCode.setCellValueFactory(param -> {
-            if(param.getValue().getSku().getBarCode() == null) {
-                return new SimpleObjectProperty<>("");
-            } else {
-                return new SimpleObjectProperty<>(param.getValue().getSku().getBarCode());
-            }
-        });
+//        colBarCode.setCellValueFactory(param -> {
+//            if(param.getValue().getSku().getBarCode() == null) {
+//                return new SimpleObjectProperty<>("");
+//            } else {
+//                return new SimpleObjectProperty<>(param.getValue().getSku().getBarCode());
+//            }
+//        });
 //        colUnit.setCellValueFactory(param -> {
 //            if(param.getValue().getSku().getUnit() == null) {
 //                return new SimpleObjectProperty<>("");
@@ -252,15 +427,40 @@ public class POEditorController {
 
     @FXML
     private void addItem() {
-//        SKU sku = new SKU();
-//        Product product = new Product();
-//        BrandSeries b = new BrandSeries();
-//        b.setChineseName("博士");
-//        product.setBrandSeries(b);
-//        Car car = new Car();
-//        product.setCar(car);
-//        sku.setProduct(product);
-//
+        //Open product chooser
+        Callback<PO, String> callback = new Callback<PO, String>() {
+            @Override
+            public String call(PO param) {
+                return null;
+            }
+        };
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource(
+                        "/fxml/products/ProductChooser.fxml"
+                )
+        );
+        BorderPane root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        ProductChooserController skuChooserController = loader.getController();
+        skuChooserController.initialize(this.dialog);
+
+        Scene scene = new Scene(root);
+        scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+        Stage dialog = new Stage();
+        dialog.setTitle("配件选择器");
+        dialog.initOwner(this.dialog);
+        dialog.setResizable(true);
+        dialog.setMaximized(false);
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.setScene(scene);
+        // center stage on screen
+        dialog.centerOnScreen();
+        dialog.show();
+
 //        PurchaseOrderItem item = new PurchaseOrderItem(Constants.ID, purchaseOrder, sku, BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,"");
 //        tableView.getItems().add(item);
 //        tableView.refresh();
@@ -287,6 +487,4 @@ public class POEditorController {
     private void submit() {
         dialog.close();
     }
-
-
 }

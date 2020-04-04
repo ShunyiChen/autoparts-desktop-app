@@ -107,7 +107,7 @@ public class InventoryDetailsController {
         searchSKU.setProduct(product);
         searchSKU.setSkuCode(txtSKUCode.getText());
         searchSKU.setSkuName(txtSKUName.getText());
-        searchSKU.setBarCode(txtBarcode.getText());
+        searchSKU.setSkuBarCode(txtBarcode.getText());
         searchSKU.setSpecification(txtSpec.getText());
         String json = GoogleJson.GET().toJson(searchSKU);
         String data;
