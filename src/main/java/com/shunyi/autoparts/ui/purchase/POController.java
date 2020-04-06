@@ -1,6 +1,7 @@
 package com.shunyi.autoparts.ui.purchase;
 
 import com.shunyi.autoparts.ui.MainApp;
+import com.shunyi.autoparts.ui.common.vo.PurchaseOrder;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -13,7 +14,7 @@ import javafx.util.Callback;
 import java.io.IOException;
 
 /**
- * @Description: 采购订单Controller
+ * @Description: 采购订单列表Controller
  * @Author: Shunyi
  * @CreateDate: 2020/4/4
  * @Version: 1.0
@@ -21,9 +22,12 @@ import java.io.IOException;
 public class POController {
     private MainApp application;
     private POEditorController poEditorController;
-
     @FXML
     private TextField txtNo;
+    @FXML
+    private DatePicker fromDate;
+    @FXML
+    private DatePicker toDate;
     @FXML
     private TextField txtSupplier;
     @FXML
@@ -31,15 +35,13 @@ public class POController {
     @FXML
     private TextField txtInvoiceNo;
     @FXML
-    private TextField txtNotes;
-    @FXML
     private ComboBox comboBoxStatus;
     @FXML
-    private DatePicker fromDate;
+    private TextField txtNotes;
+
+
     @FXML
-    private DatePicker toDate;
-    @FXML
-    private TableView<PO> tableView;
+    private TableView<PurchaseOrder> tableView;
     @FXML
     private TableColumn colDate;
     @FXML
@@ -90,6 +92,7 @@ public class POController {
         Callback<PO, String> callback = new Callback<PO, String>() {
             @Override
             public String call(PO param) {
+
                 return null;
             }
         };
@@ -157,5 +160,15 @@ public class POController {
 
     public void initialize(MainApp application) {
         this.application = application;
+        initTable();
+    }
+
+    private void initTable() {
+        PurchaseOrder po = new PurchaseOrder();
+
+        tableView.getItems().add(po);
+
+
+
     }
 }

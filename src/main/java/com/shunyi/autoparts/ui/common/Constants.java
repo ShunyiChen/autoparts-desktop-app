@@ -18,8 +18,6 @@ public class Constants {
     public static final String PRICE_ADJUSTMENT_ORDER = "调价单";
     public static final String INVENTORY_DETAILS = "库存明细";
     public static final String SYSTEM_SETTINGS = "系统设置";
-//    public static final String SUPPLIER_DETAILS = "供应商明细";
-//    public static final String PRODUCT_DETAILS = "配件明细";
 
     public static final Boolean DELETE_FLAG_TRUE = true;
     public static final Boolean DELETE_FLAG_FALSE = false;
@@ -39,4 +37,9 @@ public class Constants {
     public static final Integer QUANTITY = 0;
     /** 创建日期pattern */
     public static final String PATTERN = "yyyy-MM-dd HH:mm:ss";
+
+    /** 采购订单状态-未结算 */
+    public static final String UNCLOSED = "未结算";
+    /** 采购订单状态-已结算 */
+    public static final String CLOSED = "已结算";
 }

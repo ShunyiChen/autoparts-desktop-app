@@ -1,9 +1,6 @@
 package com.shunyi.autoparts.ui.purchase;
 
-import com.shunyi.autoparts.ui.common.EditingCell;
-import com.shunyi.autoparts.ui.common.Env;
-import com.shunyi.autoparts.ui.common.GoogleJson;
-import com.shunyi.autoparts.ui.common.HttpClient;
+import com.shunyi.autoparts.ui.common.*;
 import com.shunyi.autoparts.ui.common.vo.*;
 import com.shunyi.autoparts.ui.products.ProductChooserController;
 import javafx.beans.property.SimpleObjectProperty;
@@ -77,11 +74,11 @@ public class POEditorController {
     private TextField txtDue;
     @FXML
     private TextField txtOperator;
-    @FXML
-    private TableView<PurchaseOrderItem> tableView;
     /** SKU编码 */
     @FXML
     private TableColumn<PurchaseOrderItem, String> colSkuCode;
+    @FXML
+    private TableView<PurchaseOrderItem> tableView;
     /** SKU名称 */
     @FXML
     private TableColumn<PurchaseOrderItem, String> colSkuName;
@@ -331,6 +328,12 @@ public class POEditorController {
     private void initTable() {
         tableView.setId("my-table");
 
+        //初始化第一行空行
+//        PurchaseOrderItem item = new PurchaseOrderItem(Constants.ID, purchaseOrder, sku, BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,"");
+//        tableView.getItems().add(item);
+//        tableView.refresh();
+
+
 //        colBarCode.setCellFactory(cellFactory);
 //        colBarCode.setCellValueFactory(
 //                new PropertyValueFactory<SKU, String>("barCode")
@@ -347,7 +350,6 @@ public class POEditorController {
 //                }
 //            }
 //        });
-
         colSkuCode.setCellFactory(cellFactory);
         colSkuCode.setCellValueFactory(param -> {
             if(param.getValue().getSku().getSkuCode() == null) {
@@ -368,11 +370,6 @@ public class POEditorController {
                 }
             }
         });
-
-
-
-
-
         colSkuName.setCellValueFactory(param -> {
             if(param.getValue().getSku().getSkuName() == null) {
                 return new SimpleObjectProperty<>("");
@@ -387,7 +384,6 @@ public class POEditorController {
                 return new SimpleObjectProperty<>(param.getValue().getSku().getSpecification() );
             }
         });
-
 //        colBrand.setCellValueFactory(param -> {
 //            if(param.getValue().getSku().getProduct().getBrandSeries() == null) {
 //                return new SimpleObjectProperty<>("");
@@ -460,10 +456,6 @@ public class POEditorController {
         // center stage on screen
         dialog.centerOnScreen();
         dialog.show();
-
-//        PurchaseOrderItem item = new PurchaseOrderItem(Constants.ID, purchaseOrder, sku, BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,"");
-//        tableView.getItems().add(item);
-//        tableView.refresh();
     }
 
     @FXML
@@ -480,6 +472,9 @@ public class POEditorController {
 
     @FXML
     private void save() {
+        PurchaseOrder po = new PurchaseOrder();
+
+
         dialog.close();
     }
 

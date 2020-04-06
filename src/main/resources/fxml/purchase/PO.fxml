@@ -135,7 +135,7 @@
    <center>
       <TableView fx:id="tableView" BorderPane.alignment="CENTER">
         <columns>
-            <TableColumn fx:id="colDate" prefWidth="75.0" text="单据日期" />
+            <TableColumn fx:id="colDate" prefWidth="75.0" text="配件编码" />
             <TableColumn fx:id="colNo" prefWidth="75.0" text="单号" />
             <TableColumn fx:id="colSupplierCode" prefWidth="120.0" text="供应商编码" />
             <TableColumn fx:id="colSupplierName" prefWidth="120.0" text="供应商名" />
@@ -157,7 +157,6 @@
             <TableColumn fx:id="colAmountAfterDiscount" prefWidth="75.0" text="优惠后金额" />
             <TableColumn fx:id="colAccountPayable" prefWidth="75.0" text="当前应付款" />
             <TableColumn fx:id="colStatus" prefWidth="90.0" text="状态" />
-
         </columns>
          <BorderPane.margin>
             <Insets bottom="30.0" />

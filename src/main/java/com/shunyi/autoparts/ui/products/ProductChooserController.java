@@ -33,22 +33,6 @@ public class ProductChooserController {
     private Button btnSelectAndReturn;
 
     @FXML
-    private TextField txtCode;
-    @FXML
-    private TextField txtName;
-    @FXML
-    private TextField txtBarCode;
-    @FXML
-    private TextField txtPrice;
-    @FXML
-    private TextField txtSupplier;
-    @FXML
-    private ComboBox<String> comboImport;
-    @FXML
-    private TextField txtOrigin;
-    @FXML
-    private TextField txtCar;
-    @FXML
     private TreeView<Category> treeView;
     @FXML
     private TableView<SKU> tableView;
@@ -105,7 +89,7 @@ public class ProductChooserController {
      */
     public void initialize(Stage dialog) {
         this.dialog = dialog;
-        comboImport.getItems().addAll("", Constants.ORIGINAL, Constants.HOMEMADE);
+//        comboImport.getItems().addAll("", Constants.ORIGINAL, Constants.HOMEMADE);
         initComboBoxes();
         initTreeView();
         initTableView();
@@ -115,7 +99,7 @@ public class ProductChooserController {
     }
 
     private void initComboBoxes() {
-        new AutoCompleteBox(comboImport);
+//        new AutoCompleteBox(comboImport);
     }
 
     @FXML
@@ -152,14 +136,14 @@ public class ProductChooserController {
 
     @FXML
     private void clear() {
-        txtCode.setText("");
-        txtName.setText("");
-        txtBarCode.setText("");
-        txtPrice.setText("");
-        txtSupplier.setText("");
-        comboImport.setValue(null);
-        txtOrigin.setText("");
-        txtCar.setText("");
+//        txtCode.setText("");
+//        txtName.setText("");
+//        txtBarCode.setText("");
+//        txtPrice.setText("");
+//        txtSupplier.setText("");
+//        comboImport.setValue(null);
+//        txtOrigin.setText("");
+//        txtCar.setText("");
     }
 
     @FXML
