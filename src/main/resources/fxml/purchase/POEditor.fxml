@@ -154,6 +154,8 @@
    <center>
       <TableView fx:id="tableView" prefHeight="424.0" prefWidth="1164.0" tableMenuButtonVisible="true" BorderPane.alignment="CENTER">
         <columns>
+           <!-- 行号 -->
+           <TableColumn fx:id="colRowNumber" prefWidth="60.0" text="行号" />
            <!-- SKU编码 -->
            <TableColumn fx:id="colSkuCode" prefWidth="125.0" text="SKU编码" />
            <!-- SKU名称 -->

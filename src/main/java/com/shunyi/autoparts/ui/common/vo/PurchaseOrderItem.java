@@ -29,15 +29,15 @@ public class PurchaseOrderItem {
     /** 含税金额 */
     private BigDecimal amountIncludingTax;
     /** 不含税单价 */
-    private Integer priceExcludingTax;
+    private BigDecimal priceExcludingTax;
     /** 不含税金额 */
-    private Integer amountExcludingTax;
+    private BigDecimal amountExcludingTax;
     /** 备注 */
     private String notes;
 
     public PurchaseOrderItem() {}
 
-    public PurchaseOrderItem(Long id, PurchaseOrder purchaseOrder, SKU sku, Integer quantity, BigDecimal discount, BigDecimal discountedAmount, BigDecimal taxRate, BigDecimal taxAmount, BigDecimal priceIncludingTax, BigDecimal amountIncludingTax, Integer priceExcludingTax, Integer amountExcludingTax, String notes) {
+    public PurchaseOrderItem(Long id, PurchaseOrder purchaseOrder, SKU sku, Integer quantity, BigDecimal discount, BigDecimal discountedAmount, BigDecimal taxRate, BigDecimal taxAmount, BigDecimal priceIncludingTax, BigDecimal amountIncludingTax, BigDecimal priceExcludingTax, BigDecimal amountExcludingTax, String notes) {
         this.id = id;
         this.purchaseOrder = purchaseOrder;
         this.sku = sku;
@@ -133,19 +133,19 @@ public class PurchaseOrderItem {
         this.amountIncludingTax = amountIncludingTax;
     }
 
-    public Integer getPriceExcludingTax() {
+    public BigDecimal getPriceExcludingTax() {
         return priceExcludingTax;
     }
 
-    public void setPriceExcludingTax(Integer priceExcludingTax) {
+    public void setPriceExcludingTax(BigDecimal priceExcludingTax) {
         this.priceExcludingTax = priceExcludingTax;
     }
 
-    public Integer getAmountExcludingTax() {
+    public BigDecimal getAmountExcludingTax() {
         return amountExcludingTax;
     }
 
-    public void setAmountExcludingTax(Integer amountExcludingTax) {
+    public void setAmountExcludingTax(BigDecimal amountExcludingTax) {
         this.amountExcludingTax = amountExcludingTax;
     }
 

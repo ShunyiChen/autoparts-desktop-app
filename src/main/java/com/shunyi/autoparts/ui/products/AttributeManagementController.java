@@ -223,7 +223,7 @@ public class AttributeManagementController {
 
     private void initTreeNodes(TreeItem<Category> root) {
         try {
-            String path = "/categories/sorted";
+            String path = "/categories/sorted/"+Env.getInstance().currentStore().getId();
             String data = HttpClient.GET(path);
             Category[] res = GoogleJson.GET().fromJson(data, Category[].class);
             getNodes(root, res);

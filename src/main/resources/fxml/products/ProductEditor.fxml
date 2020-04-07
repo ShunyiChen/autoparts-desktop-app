@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="549.0" fx:controller="com.shunyi.autoparts.ui.products.ProductEditorController" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <center>
+      <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+         <children>
+            <FlowPane alignment="CENTER_LEFT" prefHeight="38.0" prefWidth="600.0">
+               <children>
+                  <Label alignment="CENTER_RIGHT" prefHeight="19.0" prefWidth="75.0" text="*编码:" textFill="RED">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <TextField prefWidth="170.0">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </TextField>
+                  <Label alignment="CENTER_RIGHT" prefHeight="19.0" prefWidth="75.0" text="*单位:" textFill="RED">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <ComboBox prefHeight="29.0" prefWidth="170.0" />
+               </children>
+            </FlowPane>
+            <FlowPane alignment="CENTER_LEFT" layoutX="10.0" layoutY="10.0" prefHeight="38.0" prefWidth="600.0">
+               <children>
+                  <Label alignment="CENTER_RIGHT" prefHeight="19.0" prefWidth="75.0" text="*名称:" textFill="RED">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <TextField prefWidth="170.0">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </TextField>
+                  <Label alignment="CENTER_RIGHT" prefHeight="19.0" prefWidth="75.0" text="分类:">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <TextField prefHeight="29.0" prefWidth="141.0">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </TextField>
+                  <Button mnemonicParsing="false" text="\@" />
+               </children>
+            </FlowPane>
+            <FlowPane alignment="CENTER_LEFT" layoutX="10.0" layoutY="48.0" prefHeight="38.0" prefWidth="600.0">
+               <children>
+                  <Label alignment="CENTER_RIGHT" prefHeight="19.0" prefWidth="75.0" text="条形码:">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <TextField prefWidth="170.0">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </TextField>
+                  <Label alignment="CENTER_RIGHT" layoutX="10.0" layoutY="22.0" prefHeight="19.0" prefWidth="75.0" text="车型:">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <TextField prefWidth="141.0">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </TextField>
+                  <Button mnemonicParsing="false" text="\@" />
+               </children>
+            </FlowPane>
+            <FlowPane alignment="CENTER_LEFT" layoutX="10.0" layoutY="86.0" prefHeight="38.0" prefWidth="600.0">
+               <children>
+                  <Label alignment="CENTER_RIGHT" prefHeight="19.0" prefWidth="75.0" text="产地:">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <TextField prefHeight="29.0" prefWidth="141.0">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </TextField>
+                  <Button layoutX="482.0" layoutY="18.0" mnemonicParsing="false" text="\@" />
+                  <Label alignment="CENTER_RIGHT" layoutX="10.0" layoutY="22.0" prefHeight="19.0" prefWidth="75.0" text="通用车型:">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <TextField prefWidth="141.0">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </TextField>
+                  <Button mnemonicParsing="false" text="\@" />
+               </children>
+            </FlowPane>
+            <FlowPane alignment="CENTER_LEFT" layoutX="10.0" layoutY="124.0" prefHeight="38.0" prefWidth="600.0">
+               <children>
+                  <Label alignment="CENTER_RIGHT" prefHeight="19.0" prefWidth="75.0" text="品牌:">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <TextField prefHeight="29.0" prefWidth="141.0">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </TextField>
+                  <Button layoutX="482.0" layoutY="18.0" mnemonicParsing="false" text="\@" />
+                  <Label alignment="CENTER_RIGHT" layoutX="10.0" layoutY="22.0" prefHeight="19.0" prefWidth="75.0" text="英文名:">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <TextField prefWidth="170.0">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </TextField>
+               </children>
+            </FlowPane>
+            <FlowPane alignment="CENTER_LEFT" layoutX="10.0" layoutY="162.0" prefHeight="38.0" prefWidth="600.0">
+               <children>
+                  <Label alignment="CENTER_RIGHT" prefHeight="19.0" prefWidth="75.0" text="进口:">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <ComboBox prefHeight="29.0" prefWidth="170.0" />
+                  <Label alignment="CENTER_RIGHT" layoutX="10.0" layoutY="22.0" prefHeight="19.0" prefWidth="75.0" text="通用件号:">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <TextField prefWidth="170.0">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </TextField>
+               </children>
+            </FlowPane>
+            <FlowPane alignment="CENTER_LEFT" layoutX="10.0" layoutY="200.0" prefHeight="38.0" prefWidth="600.0">
+               <children>
+                  <Label alignment="CENTER_RIGHT" prefHeight="19.0" prefWidth="75.0" text="材料:">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <TextField prefWidth="170.0">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </TextField>
+                  <Label alignment="CENTER_RIGHT" layoutX="10.0" layoutY="22.0" prefHeight="19.0" prefWidth="75.0" text="所属公司:">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <ComboBox prefHeight="29.0" prefWidth="170.0" />
+               </children>
+            </FlowPane>
+            <FlowPane alignment="CENTER_LEFT" layoutX="10.0" layoutY="162.0" prefHeight="38.0" prefWidth="600.0">
+               <children>
+                  <Label alignment="CENTER_RIGHT" prefHeight="19.0" prefWidth="75.0" text="重量:">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <TextField prefHeight="29.0" prefWidth="170.0">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </TextField>
+                  <Label alignment="CENTER_RIGHT" layoutX="10.0" layoutY="22.0" prefHeight="19.0" prefWidth="75.0" text="包装数量:">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <TextField prefWidth="170.0">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </TextField>
+               </children>
+            </FlowPane>
+            <FlowPane alignment="CENTER_LEFT" layoutX="10.0" layoutY="276.0" prefHeight="38.0" prefWidth="600.0">
+               <children>
+                  <Label alignment="CENTER_RIGHT" prefHeight="19.0" prefWidth="75.0" text="供应商:">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <TextField prefHeight="29.0" prefWidth="141.0">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </TextField>
+                  <Button mnemonicParsing="false" text="\@" />
+                  <Label alignment="CENTER_RIGHT" layoutX="10.0" layoutY="22.0" prefHeight="19.0" prefWidth="75.0" text="手册名称:">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <TextField prefWidth="170.0">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </TextField>
+               </children>
+            </FlowPane>
+            <FlowPane alignment="CENTER_LEFT" layoutX="10.0" layoutY="314.0" prefHeight="38.0" prefWidth="600.0">
+               <children>
+                  <Label alignment="CENTER_RIGHT" prefHeight="19.0" prefWidth="75.0" text="一级进价:">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <TextField prefHeight="29.0" prefWidth="170.0">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </TextField>
+                  <Label alignment="CENTER_RIGHT" layoutX="10.0" layoutY="22.0" prefHeight="19.0" prefWidth="75.0" text="一级销价:">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <TextField prefWidth="170.0">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </TextField>
+               </children>
+            </FlowPane>
+            <FlowPane alignment="CENTER_LEFT" layoutX="10.0" layoutY="352.0" prefHeight="38.0" prefWidth="600.0">
+               <children>
+                  <Label alignment="CENTER_RIGHT" prefHeight="19.0" prefWidth="75.0" text="二级进价:">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <TextField prefHeight="29.0" prefWidth="170.0">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </TextField>
+                  <Label alignment="CENTER_RIGHT" layoutX="10.0" layoutY="22.0" prefHeight="19.0" prefWidth="75.0" text="二级销价:">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <TextField prefWidth="170.0">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </TextField>
+               </children>
+            </FlowPane>
+            <FlowPane alignment="CENTER_LEFT" layoutX="10.0" layoutY="390.0" prefHeight="38.0" prefWidth="600.0">
+               <children>
+                  <Label alignment="CENTER_RIGHT" prefHeight="19.0" prefWidth="75.0" text="三级进价:">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <TextField prefHeight="29.0" prefWidth="170.0">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </TextField>
+                  <Label alignment="CENTER_RIGHT" layoutX="10.0" layoutY="22.0" prefHeight="19.0" prefWidth="75.0" text="三级销价:">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <TextField prefWidth="170.0">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </TextField>
+               </children>
+            </FlowPane>
+            <FlowPane alignment="CENTER_LEFT" layoutX="10.0" layoutY="428.0" prefHeight="38.0" prefWidth="600.0">
+               <children>
+                  <Label alignment="CENTER_RIGHT" prefHeight="19.0" prefWidth="75.0" text="外币单位:">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <TextField prefHeight="29.0" prefWidth="170.0">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </TextField>
+                  <Label alignment="CENTER_RIGHT" layoutX="10.0" layoutY="22.0" prefHeight="19.0" prefWidth="75.0" text="最低销价:">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <TextField prefWidth="170.0">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </TextField>
+               </children>
+            </FlowPane>
+            <FlowPane alignment="CENTER_LEFT" layoutX="10.0" layoutY="466.0" prefHeight="38.0" prefWidth="600.0">
+               <children>
+                  <Label alignment="CENTER_RIGHT" prefHeight="19.0" prefWidth="75.0" text="外币价格:">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <TextField prefHeight="29.0" prefWidth="170.0">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </TextField>
+                  <Label alignment="CENTER_RIGHT" layoutX="10.0" layoutY="22.0" prefHeight="19.0" prefWidth="75.0" text="紧缺件:">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <CheckBox alignment="CENTER" mnemonicParsing="false" prefHeight="16.0" prefWidth="25.0">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                     <FlowPane.margin>
+                        <Insets left="5.0" />
+                     </FlowPane.margin>
+                  </CheckBox>
+               </children>
+            </FlowPane>
+         </children>
+      </VBox>
+   </center>
+   <bottom>
+      <BorderPane prefHeight="53.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+         <right>
+            <FlowPane alignment="CENTER_RIGHT" hgap="5.0" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+               <children>
+                  <Button mnemonicParsing="false" text="取 消">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                     <FlowPane.margin>
+                        <Insets />
+                     </FlowPane.margin>
+                  </Button>
+                  <Button mnemonicParsing="false" text="保存退出">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                     <FlowPane.margin>
+                        <Insets right="10.0" />
+                     </FlowPane.margin>
+                  </Button>
+               </children>
+            </FlowPane>
+         </right>
+         <left>
+            <FlowPane alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+         </left>
+      </BorderPane>
+   </bottom>
+</BorderPane>

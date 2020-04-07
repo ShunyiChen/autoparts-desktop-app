@@ -3,19 +3,24 @@ package com.shunyi.autoparts.ui.purchase;
 import com.shunyi.autoparts.ui.common.*;
 import com.shunyi.autoparts.ui.common.vo.*;
 import com.shunyi.autoparts.ui.products.ProductChooserController;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 /**
@@ -26,7 +31,9 @@ import java.time.LocalDate;
  */
 public class POEditorController {
     private Stage dialog;
-    private Callback<PO, String> callback;
+    private Callback<PurchaseOrder, String> callback;
+    /** 采购订单 */
+    private PurchaseOrder order;
     private boolean readOnly;
     private Callback<TableColumn<PurchaseOrderItem, String>, TableCell<PurchaseOrderItem, String>> cellFactory;
 
@@ -74,11 +81,17 @@ public class POEditorController {
     private TextField txtDue;
     @FXML
     private TextField txtOperator;
+
+
+    /** 采购订单明细表 */
+    @FXML
+    private TableView<PurchaseOrderItem> tableView;
+    /** 行号 */
+    @FXML
+    private TableColumn<PurchaseOrderItem, String> colRowNumber;
     /** SKU编码 */
     @FXML
     private TableColumn<PurchaseOrderItem, String> colSkuCode;
-    @FXML
-    private TableView<PurchaseOrderItem> tableView;
     /** SKU名称 */
     @FXML
     private TableColumn<PurchaseOrderItem, String> colSkuName;
@@ -87,7 +100,7 @@ public class POEditorController {
     private TableColumn<PurchaseOrderItem, String> colSpecification;
     /** 数量 */
     @FXML
-    private TableColumn colQty;
+    private TableColumn<PurchaseOrderItem, String> colQty;
     /** 条形码 */
     @FXML
     private TableColumn colSkuBarCode;
@@ -242,13 +255,26 @@ public class POEditorController {
     @FXML
     private TableColumn colDeleter;
 
-    public void initialize(Stage dialog, Callback<PO, String> callback, boolean readOnly) {
+
+    /**
+     * Constructor
+     *
+     * @param dialog
+     * @param callback
+     * @param order
+     * @param readOnly
+     */
+    public void initialize(Stage dialog, Callback<PurchaseOrder, String> callback, PurchaseOrder order, boolean readOnly) {
         this.dialog = dialog;
         this.callback = callback;
+        if(order == null) {
+            this.order = new PurchaseOrder();
+        }
         this.readOnly = readOnly;
         initCellFactory();
         initInputFields();
         initTable();
+        addItem();
     }
 
     private void initCellFactory() {
@@ -326,13 +352,10 @@ public class POEditorController {
     }
 
     private void initTable() {
+        String css = getClass().getResource("/css/styles.css").toExternalForm();
+        tableView.getStylesheets().add(css);
         tableView.setId("my-table");
-
-        //初始化第一行空行
-//        PurchaseOrderItem item = new PurchaseOrderItem(Constants.ID, purchaseOrder, sku, BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,BigDecimal.ZERO,"");
-//        tableView.getItems().add(item);
-//        tableView.refresh();
-
+        tableView.setEditable(true);
 
 //        colBarCode.setCellFactory(cellFactory);
 //        colBarCode.setCellValueFactory(
@@ -350,7 +373,11 @@ public class POEditorController {
 //                }
 //            }
 //        });
-        colSkuCode.setCellFactory(cellFactory);
+
+        colRowNumber.setCellFactory(new RowNumberTableCell<>());
+
+//        colSkuCode.setCellFactory(cellFactory);
+        colSkuCode.setCellFactory(TextFieldTableCell.forTableColumn());
         colSkuCode.setCellValueFactory(param -> {
             if(param.getValue().getSku().getSkuCode() == null) {
                 return new SimpleObjectProperty<>("");
@@ -366,6 +393,21 @@ public class POEditorController {
                     if(selected != null) {
 //                        selected.getSku().setSkuCode(t.getNewValue());
 //                        data.set(t.getTablePosition().getRow(), selected);
+
+                        String skuCode = t.getNewValue();
+                        try {
+                            String json = HttpClient.GET("/sku/code/"+skuCode);
+                            SKU sku = GoogleJson.GET().fromJson(json, SKU.class);
+                            if(sku.getId() != null) {
+                                selected.getSku().setSkuCode(sku.getSkuCode());
+                            } else {
+                                Platform.runLater(() -> {
+                                    openProductChooser();
+                                });
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
@@ -384,6 +426,24 @@ public class POEditorController {
                 return new SimpleObjectProperty<>(param.getValue().getSku().getSpecification() );
             }
         });
+        colQty.setCellFactory(cellFactory);
+        colQty.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        colQty.setOnEditCommit(t -> {
+            ObservableList<PurchaseOrderItem> data = t.getTableView().getItems();
+            if(data != null) {
+                if(t.getTablePosition().getRow() < data.size()) {
+                    PurchaseOrderItem selected = data.get( t.getTablePosition().getRow());
+                    if(selected != null) {
+                        String newValue = t.getNewValue();
+                        if(NumberValidationUtils.isPositiveInteger(newValue)) {
+                            selected.setQuantity(Integer.parseInt(newValue));
+                            data.set(t.getTablePosition().getRow(), selected);
+                        }
+                    }
+                }
+            }
+        });
+
 //        colBrand.setCellValueFactory(param -> {
 //            if(param.getValue().getSku().getProduct().getBrandSeries() == null) {
 //                return new SimpleObjectProperty<>("");
@@ -423,6 +483,44 @@ public class POEditorController {
 
     @FXML
     private void addItem() {
+        SKU sku = new SKU();
+        sku.setSkuCode("");
+        sku.setSkuName("");
+        sku.setSpecification("");
+
+        //初始化第一行空行
+        PurchaseOrderItem item = new PurchaseOrderItem(Constants.ID, order, sku,0, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO,"");
+        tableView.getItems().add(item);
+        tableView.refresh();
+        tableView.getSelectionModel().select(item);
+    }
+
+    @FXML
+    private void removeItem() {
+        PurchaseOrderItem selectedItem = tableView.getSelectionModel().getSelectedItem();
+        tableView.getItems().remove(selectedItem);
+        tableView.refresh();
+    }
+
+    @FXML
+    private void cancel() {
+        dialog.close();
+    }
+
+    @FXML
+    private void save() {
+
+
+        dialog.close();
+    }
+
+    @FXML
+    private void submit() {
+        dialog.close();
+    }
+
+
+    private void openProductChooser() {
         //Open product chooser
         Callback<PO, String> callback = new Callback<PO, String>() {
             @Override
@@ -456,30 +554,5 @@ public class POEditorController {
         // center stage on screen
         dialog.centerOnScreen();
         dialog.show();
-    }
-
-    @FXML
-    private void removeItem() {
-        PurchaseOrderItem selectedItem = tableView.getSelectionModel().getSelectedItem();
-        tableView.getItems().remove(selectedItem);
-        tableView.refresh();
-    }
-
-    @FXML
-    private void cancel() {
-        dialog.close();
-    }
-
-    @FXML
-    private void save() {
-        PurchaseOrder po = new PurchaseOrder();
-
-
-        dialog.close();
-    }
-
-    @FXML
-    private void submit() {
-        dialog.close();
     }
 }

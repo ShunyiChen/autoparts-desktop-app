@@ -89,10 +89,10 @@ public class POController {
 
     @FXML
     private void create() {
-        Callback<PO, String> callback = new Callback<PO, String>() {
-            @Override
-            public String call(PO param) {
 
+        Callback<PurchaseOrder, String> callback = new Callback<PurchaseOrder, String>() {
+            @Override
+            public String call(PurchaseOrder param) {
                 return null;
             }
         };
@@ -110,7 +110,7 @@ public class POController {
         Scene scene = new Scene(root);
         Stage dialog = new Stage();
         poEditorController = loader.getController();
-        poEditorController.initialize(dialog, callback,false);
+        poEditorController.initialize(dialog, callback, null,false);
         dialog.setTitle("新建进货单");
         dialog.initOwner(application.getStage());
         dialog.setResizable(true);

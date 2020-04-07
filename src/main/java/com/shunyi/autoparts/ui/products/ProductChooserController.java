@@ -1,7 +1,9 @@
 package com.shunyi.autoparts.ui.products;
 
-import com.shunyi.autoparts.ui.MainApp;
-import com.shunyi.autoparts.ui.common.*;
+import com.shunyi.autoparts.ui.common.Constants;
+import com.shunyi.autoparts.ui.common.Env;
+import com.shunyi.autoparts.ui.common.GoogleJson;
+import com.shunyi.autoparts.ui.common.HttpClient;
 import com.shunyi.autoparts.ui.common.vo.*;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -13,7 +15,6 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -320,95 +321,6 @@ public class ProductChooserController {
         }
     }
 
-    @FXML
-    private void newBrand() {
-//        TreeItem<Category> selectedCategory = treeView.getSelectionModel().getSelectedItem();
-//        if(selectedCategory == null) {
-//            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
-//            alert.setHeaderText("请选择一个类目");
-//            alert.show();
-//            return;
-//        } else if(selectedCategory.getValue().getId() == 0L) {
-//            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
-//            alert.setHeaderText("不能在根节点下创建品牌，请选中其他类目");
-//            alert.show();
-//            return;
-//        }
-//        Callback<BrandSeries, Object> callback = e -> {
-//            String json = GoogleJson.GET().toJson(e);
-//            try {
-//                String idStr = HttpClient.POST("/brandSeries", json);
-//                e.setId(Long.valueOf(idStr));
-//            } catch (IOException ex) {
-//                ex.printStackTrace();
-//            }
-//            listView.getItems().add(e);
-//            return null;
-//        };
-//        openBrandSeriesEditor(callback, null, selectedCategory==null?null:selectedCategory.getValue());
-    }
-
-    @FXML
-    private void updateBrand() {
-//        BrandSeries selected = listView.getSelectionModel().getSelectedItem();
-//        if(selected == null) {
-//            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
-//            alert.setHeaderText("请选择一个品牌");
-//            alert.show();
-//            return;
-//        }
-//        BrandSeries selectedBrandSeries = null;
-//        try {
-//            selectedBrandSeries = HttpClient.GET("/brandSeries/"+selected.getId(), BrandSeries.class);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        Callback<BrandSeries, Object> callback = e -> {
-//            e.setId(selected.getId());
-//            String data = GoogleJson.GET().toJson(e);
-//            try {
-//                HttpClient.PUT("/brandSeries/"+e.getId(), data);
-//            } catch (IOException ex) {
-//                ex.printStackTrace();
-//            }
-//            int index = listView.getItems().indexOf(selected);
-//            listView.getItems().remove(index);
-//            listView.getItems().add(index, e);
-//            listView.getSelectionModel().select(e);
-//            return null;
-//        };
-//        //因为不需要重复赋值，所有最后参数设置null
-//        openBrandSeriesEditor(callback, selectedBrandSeries, null);
-    }
-
-    @FXML
-    private void removeBrand() {
-//        BrandSeries selected = listView.getSelectionModel().getSelectedItem();
-//        if(selected == null) {
-//            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
-//            alert.setHeaderText("请选择一个要删除的品牌");
-//            alert.show();
-//            return;
-//        }
-//        Alert alertConfirm = new Alert(Alert.AlertType.CONFIRMATION, "", ButtonType.NO, ButtonType.YES);
-//        alertConfirm.setHeaderText("是否删除该品牌？");
-//        alertConfirm.showAndWait().filter(response -> response == ButtonType.YES).ifPresent(response -> {
-//            try {
-//                Product[] products = HttpClient.GET("/products/brandSeries/"+selected.getId(), Product[].class);
-//                if(products.length > 0) {
-//                    Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
-//                    alert.setHeaderText("该品牌下存在配件无法删除");
-//                    alert.show();
-//                    return;
-//                }
-//                HttpClient.DELETE("/brandSeries/"+selected.getId());
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//            listView.getItems().remove(selected);
-//        });
-    }
-
 //    private void openBrandSeriesEditor(Callback<BrandSeries, Object> callback, BrandSeries updatedBrandSeries, Category selectedCategory) {
 //        FXMLLoader loader = new FXMLLoader(
 //                getClass().getResource(
@@ -511,10 +423,10 @@ public class ProductChooserController {
         }
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource(
-                        "/fxml/products/product_editor.fxml"
+                        "/fxml/products/ProductEditor.fxml"
                 )
         );
-        VBox root = null;
+        BorderPane root = null;
         try {
             root = loader.load();
         } catch (IOException e) {
@@ -596,7 +508,7 @@ public class ProductChooserController {
         dialog.setTitle("配件属性");
         dialog.initOwner(this.dialog);
         dialog.setResizable(true);
-        dialog.initModality(Modality.WINDOW_MODAL);
+        dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.setScene(scene);
         // center stage on screen
         dialog.centerOnScreen();
