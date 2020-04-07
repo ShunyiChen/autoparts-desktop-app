@@ -8,56 +8,73 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="148.0" prefWidth="319.0" fx:controller="com.shunyi.autoparts.ui.products.CarEditorController" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="167.0" prefWidth="336.0" spacing="10.0" fx:controller="com.shunyi.autoparts.ui.products.CarEditorController" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" >
    <children>
-      <FlowPane alignment="CENTER" hgap="5.0" prefHeight="40.0" prefWidth="600.0">
+      <FlowPane alignment="CENTER_LEFT">
          <children>
-            <Label text="车型编号:">
+            <Label alignment="CENTER" prefHeight="19.0" prefWidth="57.0" text="编 码:">
                <font>
                   <Font size="14.0" />
                </font>
+               <FlowPane.margin>
+                  <Insets right="10.0" />
+               </FlowPane.margin>
             </Label>
-            <TextField fx:id="txtCode" prefHeight="29.0" prefWidth="210.0">
+            <TextField fx:id="txtCode">
                <font>
                   <Font size="14.0" />
                </font>
             </TextField>
          </children>
          <VBox.margin>
-            <Insets top="10.0" />
+            <Insets />
          </VBox.margin>
       </FlowPane>
-      <FlowPane alignment="CENTER" hgap="5.0" prefHeight="40.0" prefWidth="600.0">
+      <FlowPane alignment="CENTER_LEFT" layoutX="10.0" layoutY="20.0">
          <children>
-            <Label text="车型名称:">
+            <Label alignment="CENTER" prefHeight="19.0" prefWidth="57.0" text="名 称:">
                <font>
                   <Font size="14.0" />
                </font>
+               <FlowPane.margin>
+                  <Insets right="10.0" />
+               </FlowPane.margin>
             </Label>
-            <TextField fx:id="txtName" prefHeight="29.0" prefWidth="210.0">
+            <TextField fx:id="txtName">
                <font>
                   <Font size="14.0" />
                </font>
             </TextField>
          </children>
-         <VBox.margin>
-            <Insets bottom="10.0" />
-         </VBox.margin>
       </FlowPane>
-      <FlowPane alignment="CENTER" hgap="10.0" prefHeight="58.0" prefWidth="319.0">
+      <FlowPane alignment="CENTER_LEFT" layoutX="10.0" layoutY="59.0">
          <children>
-            <Button mnemonicParsing="false" text="取   消" onAction="#cancel">
+            <Label alignment="CENTER" prefHeight="19.0" prefWidth="57.0" text="备 注">
                <font>
                   <Font size="14.0" />
                </font>
-            </Button>
-            <Button fx:id="btnSaveAndClose" mnemonicParsing="false" text="保存并关闭" onAction="#saveAndClose">
+               <FlowPane.margin>
+                  <Insets right="10.0" />
+               </FlowPane.margin>
+            </Label>
+            <TextField fx:id="txtNotes">
                <font>
                   <Font size="14.0" />
                </font>
+            </TextField>
+         </children>
+      </FlowPane>
+      <FlowPane alignment="CENTER" prefHeight="48.0" prefWidth="318.0">
+         <children>
+            <Button fx:id="btnCancel" mnemonicParsing="false" onAction="#cancel" text="取 消">
+               <font>
+                  <Font size="14.0" />
+               </font>
+               <FlowPane.margin>
+                  <Insets right="10.0" />
+               </FlowPane.margin>
             </Button>
-            <Button fx:id="btnContinueAdd" mnemonicParsing="false" text="继续添加" onAction="#continueAdd">
+            <Button fx:id="btnOk" mnemonicParsing="false" onAction="#ok" text="确 定">
                <font>
                   <Font size="14.0" />
                </font>
@@ -65,4 +82,7 @@
          </children>
       </FlowPane>
    </children>
+   <padding>
+      <Insets top="10.0" />
+   </padding>
 </VBox>

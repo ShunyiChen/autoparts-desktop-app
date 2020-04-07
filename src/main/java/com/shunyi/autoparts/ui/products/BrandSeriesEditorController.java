@@ -115,7 +115,7 @@ public class BrandSeriesEditorController {
 //    private void choose() {
 //        FXMLLoader loader = new FXMLLoader(
 //                getClass().getResource(
-//                        "/fxml/products/category_chooser.fxml"
+//                        "/fxml/products/CategoryChooser.fxml"
 //                )
 //        );
 //        VBox root = null;

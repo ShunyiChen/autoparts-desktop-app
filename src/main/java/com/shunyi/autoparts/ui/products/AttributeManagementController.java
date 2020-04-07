@@ -142,13 +142,13 @@ public class AttributeManagementController {
                 return null;
             }
         };
-        openCategoryEditor(callback, null);
+        openCategoryEditor(callback);
     }
 
-    private void openCategoryEditor(Callback<Category, Object> callback, Category updatedCategory) {
+    private void openCategoryEditor(Callback<Category, Object> callback) {
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource(
-                        "/fxml/products/category_editor.fxml"
+                        "/fxml/products/CategoryEditor.fxml"
                 )
         );
         VBox root = null;
@@ -160,8 +160,8 @@ public class AttributeManagementController {
         Scene scene = new Scene(root);
         Stage dialog = new Stage();
         CategoryEditorController controller = loader.getController();
-        controller.prepare(dialog, updatedCategory, callback);
-        dialog.setTitle(updatedCategory != null?"更改类目":"新建类目");
+        controller.prepare(dialog, callback);
+        dialog.setTitle("新建分类");
         dialog.initOwner(this.dialog);
         dialog.setResizable(false);
         dialog.initModality(Modality.APPLICATION_MODAL);
@@ -223,7 +223,7 @@ public class AttributeManagementController {
 
     private void initTreeNodes(TreeItem<Category> root) {
         try {
-            String path = "/categories/sorted/"+Env.getInstance().currentStore().getId();
+            String path = "/categories/store/"+Env.getInstance().currentStore().getId();
             String data = HttpClient.GET(path);
             Category[] res = GoogleJson.GET().fromJson(data, Category[].class);
             getNodes(root, res);

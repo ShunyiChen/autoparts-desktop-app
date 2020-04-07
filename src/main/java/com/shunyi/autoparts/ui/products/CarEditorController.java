@@ -1,8 +1,7 @@
 package com.shunyi.autoparts.ui.products;
 
-import com.shunyi.autoparts.ui.common.Env;
+import com.shunyi.autoparts.ui.common.Constants;
 import com.shunyi.autoparts.ui.common.vo.Car;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -11,79 +10,52 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
-/** 车型类目编辑Controller */
+/**
+ * @description 车辆编辑器Controller
+ *
+ * @author Shunyi Chen
+ * @date 2020/4/8
+ */
 public class CarEditorController {
-    Stage dialog;
-    Car updatedCar;
-    Callback<Car, Object> callback;
+    private Stage dialog;
+
+    private Callback<Car, String> callback;
     @FXML
-    Button btnSaveAndClose;
+    private TextField txtCode;
     @FXML
-    Button btnContinueAdd;
+    private TextField txtName;
     @FXML
-    TextField txtCode;
+    private TextField txtNotes;
     @FXML
-    TextField txtName;
+    private Button btnOk;
 
     @FXML
-    void cancel(ActionEvent actionEvent) {
+    private void cancel() {
         dialog.close();
     }
 
     @FXML
-    void saveAndClose(ActionEvent actionEvent) {
+    private void ok() {
         if(validate()) {
-//            dialog.close();
-//            Car car = new Car();
-//            car.setCode(txtCode.getText());
-//            car.setModel(txtName.getText());
-//            car.setUpdater(Env.getInstance().getStringValue(Env.CURRENT_USER));
-//            callback.call(car);
+            Car car = new Car(Constants.ID, txtCode.getText(), txtName.getText(), txtNotes.getText());
+            callback.call(car);
+            dialog.close();
         }
     }
 
-    @FXML
-    void continueAdd(ActionEvent actionEvent) {
-        if(validate()) {
-//            Car car = new Car();
-//            car.setCode(txtCode.getText());
-//            car.setModel(txtName.getText());
-//            car.setCreator(Env.getInstance().currentUser());
-//            callback.call(car);
-        }
+    public void initialize(Stage dialog, Callback<Car, String> callback) {
+        this.dialog = dialog;
+        this.callback = callback;
+        btnOk.setStyle(String.format("-fx-base: %s;", "rgb(63,81,181)"));
     }
 
-    boolean validate() {
-        if(txtCode.getText().trim().equals("")) {
+    private boolean validate() {
+        if(txtName.getText().equals("")) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
-            alert.setHeaderText("编号不能为空");
-            alert.show();
-            return false;
-        }
-        if(txtName.getText().trim().equals("")) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
-            alert.setHeaderText("名称不能为空");
+            alert.setHeaderText("车型名称不能为空");
             alert.show();
             return false;
         }
         return true;
     }
-
-    public void prepare(Stage dialog, Car updatedCar, Callback<Car, Object> callback) {
-        this.dialog = dialog;
-        this.updatedCar = updatedCar;
-        this.callback = callback;
-        initButton();
-
-        if(updatedCar != null) {
-//            txtCode.setText(updatedCar.getCode());
-//            txtName.setText(updatedCar.getModel());
-//            btnContinueAdd.setVisible(false);
-        }
-    }
-
-    void initButton() {
-        btnSaveAndClose.setStyle(String.format("-fx-base: %s;", "rgb(63,81,181)"));
-    }
-
 }

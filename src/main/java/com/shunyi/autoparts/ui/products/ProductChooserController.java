@@ -1,6 +1,5 @@
 package com.shunyi.autoparts.ui.products;
 
-import com.shunyi.autoparts.ui.common.Constants;
 import com.shunyi.autoparts.ui.common.Env;
 import com.shunyi.autoparts.ui.common.GoogleJson;
 import com.shunyi.autoparts.ui.common.HttpClient;
@@ -32,7 +31,6 @@ public class ProductChooserController {
     private Label headerText;
     @FXML
     private Button btnSelectAndReturn;
-
     @FXML
     private TreeView<Category> treeView;
     @FXML
@@ -83,6 +81,17 @@ public class ProductChooserController {
     private TableColumn colNotes;
     @FXML
     private TableColumn colSlot;
+
+
+    @FXML
+    private void cancel() {
+        dialog.close();
+    }
+
+    @FXML
+    private void selectAndReturn() {
+        dialog.close();
+    }
 
     /**
      *
@@ -184,58 +193,57 @@ public class ProductChooserController {
                 return null;
             }
         };
-        openCategoryEditor(callback, null);
+        openCategoryEditor(callback);
     }
 
     @FXML
     private void updateCategory() {
-        TreeItem<Category> selected = treeView.getSelectionModel().getSelectedItem();
-        if(selected == null) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
-            alert.setHeaderText("请选择一个节点");
-            alert.show();
-            return;
-        }
-        if(selected.getValue().getId() == 0) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
-            alert.setHeaderText("根节点不可更新");
-            alert.show();
-            return;
-        } else {
-            Callback<Category, Object> callback = new Callback<>() {
-                @Override
-                public Object call(Category param) {
-                    param.setId(selected.getValue().getId());
-                    param.setParent(selected.getValue().getParent());
-                    param.setParentId(selected.getValue().getParentId());
-                    String json = GoogleJson.GET().toJson(param);
-                    try {
-                        HttpClient.PUT("/categories/"+selected.getValue().getId(), json);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    //刷新节点
-                    selected.getValue().setName(param.getName());
-
-                    selected.getParent().setExpanded(false);
-                    selected.getParent().setExpanded(true);
-                    treeView.getSelectionModel().select(selected);
-                    return null;
-                }
-            };
-            openCategoryEditor(callback, selected.getValue());
-        }
+//        TreeItem<Category> selected = treeView.getSelectionModel().getSelectedItem();
+//        if(selected == null) {
+//            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
+//            alert.setHeaderText("请选择一个节点");
+//            alert.show();
+//            return;
+//        }
+//        if(selected.getValue().getId() == 0) {
+//            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
+//            alert.setHeaderText("根节点不可更新");
+//            alert.show();
+//            return;
+//        } else {
+//            Callback<Category, Object> callback = new Callback<>() {
+//                @Override
+//                public Object call(Category param) {
+//                    param.setId(selected.getValue().getId());
+//                    param.setParent(selected.getValue().getParent());
+//                    param.setParentId(selected.getValue().getParentId());
+//                    String json = GoogleJson.GET().toJson(param);
+//                    try {
+//                        HttpClient.PUT("/categories/"+selected.getValue().getId(), json);
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+//                    //刷新节点
+//                    selected.getValue().setName(param.getName());
+//
+//                    selected.getParent().setExpanded(false);
+//                    selected.getParent().setExpanded(true);
+//                    treeView.getSelectionModel().select(selected);
+//                    return null;
+//                }
+//            };
+//            openCategoryEditor(callback);
+//        }
     }
 
     /**
      *
      * @param callback
-     * @param updatedCategory
      */
-    private void openCategoryEditor(Callback<Category, Object> callback, Category updatedCategory) {
+    private void openCategoryEditor(Callback<Category, Object> callback) {
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource(
-                        "/fxml/products/category_editor.fxml"
+                        "/fxml/products/CategoryEditor.fxml"
                 )
         );
         VBox root = null;
@@ -247,8 +255,8 @@ public class ProductChooserController {
         Scene scene = new Scene(root);
         Stage dialog = new Stage();
         CategoryEditorController controller = loader.getController();
-        controller.prepare(dialog, updatedCategory, callback);
-        dialog.setTitle(updatedCategory != null?"更改类目":"新建类目");
+        controller.prepare(dialog, callback);
+        dialog.setTitle("新建配件分类");
         dialog.initOwner(this.dialog);
         dialog.setResizable(false);
         dialog.initModality(Modality.APPLICATION_MODAL);
@@ -273,7 +281,7 @@ public class ProductChooserController {
             alert.show();
             return;
         }
-        else if(selected.getValue().getId() == 0) {
+        else if(selected.getValue().getParentId() == 0L) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
             alert.setHeaderText("根节点不可删除");
             alert.show();
@@ -290,13 +298,6 @@ public class ProductChooserController {
             alertConfirm.setHeaderText("是否删除该类目？");
             alertConfirm.showAndWait().filter(response -> response == ButtonType.YES).ifPresent(response -> {
                 try {
-//                    BrandSeries[] brandSeries = HttpClient.GET("/brandSeries/category/"+selected.getValue().getId(), BrandSeries[].class);
-//                    if(brandSeries.length > 0) {
-//                        Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
-//                        alert.setHeaderText("该类目下存在品牌无法删除");
-//                        alert.show();
-//                        return;
-//                    }
                     HttpClient.DELETE("/categories/"+selected.getValue().getId());
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -308,7 +309,7 @@ public class ProductChooserController {
                     treeView.getSelectionModel().select(parent);
                 }
                 //设置节点是否为父节点
-                if(parent.isLeaf()) {
+                if(parent.getParent() != null) {
                     parent.getValue().setParent(false);
                     String json = GoogleJson.GET().toJson(parent.getValue());
                     try {
@@ -434,8 +435,8 @@ public class ProductChooserController {
         }
         Scene scene = new Scene(root);
         Stage dialog = new Stage();
-//        ProductEditorController controller = loader.getController();
-//        controller.prepare(dialog, updatedProduct, callback, selectedCategory, selectedBrand);
+        ProductEditorController controller = loader.getController();
+        controller.initialize(dialog, callback, selectedCategory.getValue());
         dialog.setTitle(updatedProduct != null?"更改配件":"新建配件");
         dialog.initOwner(this.dialog);
         dialog.setResizable(false);
@@ -713,7 +714,13 @@ public class ProductChooserController {
      * 初始化分类
      */
     private void initTreeView() {
-        TreeItem<Category> root = new TreeItem<>(new Category(Constants.ID, "所有分类",Constants.PARENT_ID, Constants.PARENT_TRUE, Env.getInstance().currentStore()));
+        Category rootCategory = null;
+        try {
+            rootCategory = HttpClient.GET("/category/root/"+Env.getInstance().currentStore().getId(), Category.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        TreeItem<Category> root = new TreeItem<>(rootCategory);
         initTreeNodes(root);
         treeView.setRoot(root);
         treeView.setCellFactory(p -> new TextFieldTreeCell<>(new StringConverter<>(){
@@ -730,20 +737,27 @@ public class ProductChooserController {
             }
         }));
         treeView.setOnEditCommit(event -> {
-            String path = "/categories/"+event.getNewValue().getId();
-            String json = GoogleJson.GET().toJson(event.getNewValue());
-            try {
-                HttpClient.PUT(path, json);
-            } catch (IOException e) {
-                e.printStackTrace();
+            if(event.getNewValue().getName().trim().equals("")) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
+                alert.setHeaderText("分类名称不能为空");
+                alert.show();
+                return;
+            } else {
+                String path = "/categories/"+event.getNewValue().getId();
+                String json = GoogleJson.GET().toJson(event.getNewValue());
+                try {
+                    HttpClient.PUT(path, json);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
         ContextMenu menu = new ContextMenu();
         MenuItem itemNew = new MenuItem("新建类目");
-        MenuItem itemRM = new MenuItem("删除类目");
+        MenuItem itemRM = new MenuItem("删 除");
         MenuItem itemRN = new MenuItem("重命名");
-        MenuItem itemProperties = new MenuItem("类目属性");
+        MenuItem itemProperties = new MenuItem("分类属性");
         treeView.setEditable(true);
         treeView.setContextMenu(menu);
         itemNew.setOnAction(event -> newCategory());
@@ -782,7 +796,7 @@ public class ProductChooserController {
 
     private void initTreeNodes(TreeItem<Category> root) {
         try {
-            String data = HttpClient.GET("/categories/sorted/"+Env.getInstance().currentStore().getId());
+            String data = HttpClient.GET("/categories/store/"+Env.getInstance().currentStore().getId());
             Category[] res = GoogleJson.GET().fromJson(data, Category[].class);
             getNodes(root, res);
         } catch (IOException e) {

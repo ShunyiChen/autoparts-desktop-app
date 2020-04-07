@@ -1,6 +1,6 @@
 package com.shunyi.autoparts.ui.products;
 
-import com.shunyi.autoparts.ui.common.Constants;
+import com.shunyi.autoparts.ui.common.Env;
 import com.shunyi.autoparts.ui.common.GoogleJson;
 import com.shunyi.autoparts.ui.common.HttpClient;
 import com.shunyi.autoparts.ui.common.vo.Category;
@@ -12,20 +12,26 @@ import javafx.util.Callback;
 
 import java.io.IOException;
 
-/** 产品类目选择器Controller */
+/**
+ * @description 配件分类选择器Controller
+ * @author Shunyi Chen
+ * @date 2020/4/7
+ */
 public class CategoryChooserController {
+
+    private Stage dialog;
+    private Category selectedCategory;
+    private Callback<Category, String> callback;
 
     @FXML
     private Button btnChooser;
     @FXML
     private TreeView<Category> treeView;
-    private Stage subStage;
-    private Category selectedCategory;
-    private Callback callback;
+
 
     @FXML
     private void cancel() {
-        subStage.close();
+        dialog.close();
     }
 
     @FXML
@@ -37,8 +43,8 @@ public class CategoryChooserController {
             alert.show();
             return;
         }
-        subStage.close();
         callback.call(selectedItem.getValue());
+        dialog.close();
     }
 
     /**
@@ -47,7 +53,7 @@ public class CategoryChooserController {
      */
     private void initTreeNodes(TreeItem<Category> root) {
         try {
-            String path = "/categories/sorted";
+            String path = "/categories/store/"+ Env.getInstance().currentStore().getId();
             String data = HttpClient.GET(path);
             Category[] res = GoogleJson.GET().fromJson(data, Category[].class);
             getNodes(root, res);
@@ -63,7 +69,7 @@ public class CategoryChooserController {
      */
     private void getNodes(TreeItem<Category> parent, Category[] all) {
         for(Category sc : all) {
-            if(sc.getParentId() == parent.getValue().getId()) {
+            if(sc.getParentId().equals(parent.getValue().getId())) {
                 TreeItem<Category> node = new TreeItem<>(sc);
                 parent.getChildren().add(node);
                 parent.setExpanded(true);
@@ -79,26 +85,29 @@ public class CategoryChooserController {
         }
     }
 
-    public void prepare(Stage subStage, Category selectedCategory, Callback callback) {
-//        this.subStage = subStage;
-//        this.selectedCategory = selectedCategory;
-//        this.callback = callback;
-//        final String css = getClass().getResource("/css/styles.css").toExternalForm();
-//        treeView.getStylesheets().add(css);
-//        treeView.setOnMouseClicked(event -> {
-//            if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2){
-//                choose();
-//            }
-//        });
-//        btnChooser.setStyle(String.format("-fx-base: %s;", "rgb(63,81,181)"));
-
-//        Category category = new Category(0L,"所有类目",-1L, Constants.PARENT_TRUE, null, null, null, null, null, null, Constants.DELETE_FLAG_FALSE, null);
-//        TreeItem<Category> root = new TreeItem<Category>(category);
-//        treeView.setRoot(root);
-//        initTreeNodes(root);
-//        //默认选中root
-//        if(selectedCategory != null && selectedCategory.getId() == 0) {
-//            treeView.getSelectionModel().select(root);
-//        }
+    public void initialize(Stage dialog, Callback<Category, String> callback, Category selectedCategory) {
+        this.dialog = dialog;
+        this.selectedCategory = selectedCategory;
+        this.callback = callback;
+        final String css = getClass().getResource("/css/styles.css").toExternalForm();
+        treeView.getStylesheets().add(css);
+        treeView.setOnMouseClicked(event -> {
+            if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2){
+                choose();
+            }
+        });
+        btnChooser.setStyle(String.format("-fx-base: %s;", "rgb(63,81,181)"));
+        try {
+            Category rootCategory = HttpClient.GET("/category/root/"+Env.getInstance().currentStore().getId(), Category.class);
+            TreeItem<Category> root = new TreeItem<Category>(rootCategory);
+            treeView.setRoot(root);
+            initTreeNodes(root);
+            //默认选中root
+            if(selectedCategory != null && selectedCategory.getId() == 0) {
+                treeView.getSelectionModel().select(root);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

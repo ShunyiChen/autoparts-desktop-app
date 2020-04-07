@@ -222,7 +222,7 @@
    <bottom>
       <FlowPane alignment="CENTER_RIGHT" prefHeight="54.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
-            <Button mnemonicParsing="false" text="取 消">
+            <Button mnemonicParsing="false" text="取 消" onAction="#cancel">
                <font>
                   <Font size="14.0" />
                </font>
@@ -230,7 +230,7 @@
                   <Insets right="10.0" />
                </FlowPane.margin>
             </Button>
-            <Button fx:id="btnSelectAndReturn" mnemonicParsing="false" text="选中返回">
+            <Button fx:id="btnSelectAndReturn" mnemonicParsing="false" text="选中返回" onAction="#selectAndReturn">
                <font>
                   <Font size="14.0" />
                </font>

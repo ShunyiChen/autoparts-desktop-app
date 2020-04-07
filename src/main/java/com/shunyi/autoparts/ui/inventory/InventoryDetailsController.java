@@ -1,6 +1,7 @@
 package com.shunyi.autoparts.ui.inventory;
 
 import com.shunyi.autoparts.ui.common.Constants;
+import com.shunyi.autoparts.ui.common.Env;
 import com.shunyi.autoparts.ui.common.GoogleJson;
 import com.shunyi.autoparts.ui.common.HttpClient;
 import com.shunyi.autoparts.ui.common.vo.*;
@@ -216,7 +217,7 @@ public class InventoryDetailsController {
      */
     private void initTreeNodes(TreeItem<Category> root) {
         try {
-            String path = "/categories/sorted";
+            String path = "/categories/store/"+ Env.getInstance().currentStore().getId();
             String data = HttpClient.GET(path);
             Category[] res = GoogleJson.GET().fromJson(data, Category[].class);
             getNodes(root, res);

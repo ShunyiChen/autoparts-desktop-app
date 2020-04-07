@@ -11,10 +11,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="549.0" fx:controller="com.shunyi.autoparts.ui.products.ProductEditorController" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="584.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.shunyi.autoparts.ui.products.ProductEditorController">
    <center>
-      <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+      <VBox prefHeight="547.0" prefWidth="604.0" BorderPane.alignment="CENTER">
          <children>
             <FlowPane alignment="CENTER_LEFT" prefHeight="38.0" prefWidth="600.0">
                <children>
@@ -23,17 +22,18 @@
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <TextField prefWidth="170.0">
+                  <TextField fx:id="txtCode" prefWidth="170.0">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </TextField>
-                  <Label alignment="CENTER_RIGHT" prefHeight="19.0" prefWidth="75.0" text="*单位:" textFill="RED">
+                  <Label alignment="CENTER_RIGHT" prefHeight="19.0" prefWidth="101.0" text="*单位:" textFill="RED">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <ComboBox prefHeight="29.0" prefWidth="170.0" />
+                  <ComboBox fx:id="comboBoxUnit" prefHeight="29.0" prefWidth="170.0" />
+                  <Button fx:id="btnUnitChooser" mnemonicParsing="false" onAction="#openUnitChooser" text="\@" />
                </children>
             </FlowPane>
             <FlowPane alignment="CENTER_LEFT" layoutX="10.0" layoutY="10.0" prefHeight="38.0" prefWidth="600.0">
@@ -43,22 +43,18 @@
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <TextField prefWidth="170.0">
+                  <TextField fx:id="txtName" prefWidth="170.0">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </TextField>
-                  <Label alignment="CENTER_RIGHT" prefHeight="19.0" prefWidth="75.0" text="分类:">
+                  <Label alignment="CENTER_RIGHT" prefHeight="19.0" prefWidth="101.0" text="分类:">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <TextField prefHeight="29.0" prefWidth="141.0">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </TextField>
-                  <Button mnemonicParsing="false" text="\@" />
+                  <ComboBox fx:id="comboBoxUnit1" prefHeight="29.0" prefWidth="170.0" />
+                  <Button fx:id="btnCategoryChooser" mnemonicParsing="false" onAction="#openCategoryChooser" text="\@" />
                </children>
             </FlowPane>
             <FlowPane alignment="CENTER_LEFT" layoutX="10.0" layoutY="48.0" prefHeight="38.0" prefWidth="600.0">
@@ -68,22 +64,18 @@
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <TextField prefWidth="170.0">
+                  <TextField fx:id="txtBarCode" prefWidth="170.0">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </TextField>
-                  <Label alignment="CENTER_RIGHT" layoutX="10.0" layoutY="22.0" prefHeight="19.0" prefWidth="75.0" text="车型:">
+                  <Label alignment="CENTER_RIGHT" layoutX="10.0" layoutY="22.0" prefHeight="19.0" prefWidth="101.0" text="车型:">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <TextField prefWidth="141.0">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </TextField>
-                  <Button mnemonicParsing="false" text="\@" />
+                  <ComboBox fx:id="comboBoxUnit11" prefHeight="29.0" prefWidth="170.0" />
+                  <Button mnemonicParsing="false" onAction="#openCarChooser" text="\@" />
                </children>
             </FlowPane>
             <FlowPane alignment="CENTER_LEFT" layoutX="10.0" layoutY="86.0" prefHeight="38.0" prefWidth="600.0">
@@ -93,18 +85,14 @@
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <TextField prefHeight="29.0" prefWidth="141.0">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </TextField>
+                  <ComboBox fx:id="comboBoxUnit111" prefHeight="29.0" prefWidth="170.0" />
                   <Button layoutX="482.0" layoutY="18.0" mnemonicParsing="false" text="\@" />
-                  <Label alignment="CENTER_RIGHT" layoutX="10.0" layoutY="22.0" prefHeight="19.0" prefWidth="75.0" text="通用车型:">
+                  <Label alignment="CENTER_RIGHT" layoutX="10.0" layoutY="22.0" prefHeight="19.0" prefWidth="72.0" text="通用车型:">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <TextField prefWidth="141.0">
+                  <TextField fx:id="txtCommonCar" prefHeight="29.0" prefWidth="170.0">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -119,18 +107,18 @@
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <TextField prefHeight="29.0" prefWidth="141.0">
+                  <TextField fx:id="txtBrand" prefHeight="29.0" prefWidth="170.0">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </TextField>
                   <Button layoutX="482.0" layoutY="18.0" mnemonicParsing="false" text="\@" />
-                  <Label alignment="CENTER_RIGHT" layoutX="10.0" layoutY="22.0" prefHeight="19.0" prefWidth="75.0" text="英文名:">
+                  <Label alignment="CENTER_RIGHT" layoutX="10.0" layoutY="22.0" prefHeight="19.0" prefWidth="72.0" text="英文名:">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <TextField prefWidth="170.0">
+                  <TextField fx:id="txtEnglishName" prefWidth="170.0">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -144,13 +132,13 @@
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <ComboBox prefHeight="29.0" prefWidth="170.0" />
-                  <Label alignment="CENTER_RIGHT" layoutX="10.0" layoutY="22.0" prefHeight="19.0" prefWidth="75.0" text="通用件号:">
+                  <ComboBox fx:id="comboBoxImport" prefHeight="29.0" prefWidth="170.0" />
+                  <Label alignment="CENTER_RIGHT" layoutX="10.0" layoutY="22.0" prefHeight="19.0" prefWidth="101.0" text="通用件号:">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <TextField prefWidth="170.0">
+                  <TextField fx:id="txtCommonNumber" prefWidth="170.0">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -164,17 +152,17 @@
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <TextField prefWidth="170.0">
+                  <TextField fx:id="txtMaterials" prefWidth="170.0">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </TextField>
-                  <Label alignment="CENTER_RIGHT" layoutX="10.0" layoutY="22.0" prefHeight="19.0" prefWidth="75.0" text="所属公司:">
+                  <Label alignment="CENTER_RIGHT" layoutX="10.0" layoutY="22.0" prefHeight="19.0" prefWidth="101.0" text="所属公司:">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <ComboBox prefHeight="29.0" prefWidth="170.0" />
+                  <ComboBox fx:id="comboBoxCompany" prefHeight="29.0" prefWidth="170.0" />
                </children>
             </FlowPane>
             <FlowPane alignment="CENTER_LEFT" layoutX="10.0" layoutY="162.0" prefHeight="38.0" prefWidth="600.0">
@@ -184,17 +172,17 @@
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <TextField prefHeight="29.0" prefWidth="170.0">
+                  <TextField fx:id="txtWeight" prefHeight="29.0" prefWidth="170.0">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </TextField>
-                  <Label alignment="CENTER_RIGHT" layoutX="10.0" layoutY="22.0" prefHeight="19.0" prefWidth="75.0" text="包装数量:">
+                  <Label alignment="CENTER_RIGHT" layoutX="10.0" layoutY="22.0" prefHeight="19.0" prefWidth="101.0" text="包装数量:">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <TextField prefWidth="170.0">
+                  <TextField fx:id="txtPackingQuantity" prefWidth="170.0">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -208,18 +196,18 @@
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <TextField prefHeight="29.0" prefWidth="141.0">
+                  <TextField fx:id="txtSupplier" prefHeight="29.0" prefWidth="170.0">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </TextField>
                   <Button mnemonicParsing="false" text="\@" />
-                  <Label alignment="CENTER_RIGHT" layoutX="10.0" layoutY="22.0" prefHeight="19.0" prefWidth="75.0" text="手册名称:">
+                  <Label alignment="CENTER_RIGHT" layoutX="10.0" layoutY="22.0" prefHeight="19.0" prefWidth="72.0" text="手册名称:">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <TextField prefWidth="170.0">
+                  <TextField fx:id="txtManual" prefWidth="170.0">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -233,17 +221,17 @@
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <TextField prefHeight="29.0" prefWidth="170.0">
+                  <TextField fx:id="txtPurchasingPrice1" prefHeight="29.0" prefWidth="170.0">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </TextField>
-                  <Label alignment="CENTER_RIGHT" layoutX="10.0" layoutY="22.0" prefHeight="19.0" prefWidth="75.0" text="一级销价:">
+                  <Label alignment="CENTER_RIGHT" layoutX="10.0" layoutY="22.0" prefHeight="19.0" prefWidth="101.0" text="一级销价:">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <TextField prefWidth="170.0">
+                  <TextField fx:id="txtSellingPrice1" prefWidth="170.0">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -257,17 +245,17 @@
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <TextField prefHeight="29.0" prefWidth="170.0">
+                  <TextField fx:id="txtPurchasingPrice2" prefHeight="29.0" prefWidth="170.0">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </TextField>
-                  <Label alignment="CENTER_RIGHT" layoutX="10.0" layoutY="22.0" prefHeight="19.0" prefWidth="75.0" text="二级销价:">
+                  <Label alignment="CENTER_RIGHT" layoutX="10.0" layoutY="22.0" prefHeight="19.0" prefWidth="101.0" text="二级销价:">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <TextField prefWidth="170.0">
+                  <TextField fx:id="txtSellingPrice2" prefWidth="170.0">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -281,17 +269,17 @@
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <TextField prefHeight="29.0" prefWidth="170.0">
+                  <TextField fx:id="txtPurchasingPrice3" prefHeight="29.0" prefWidth="170.0">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </TextField>
-                  <Label alignment="CENTER_RIGHT" layoutX="10.0" layoutY="22.0" prefHeight="19.0" prefWidth="75.0" text="三级销价:">
+                  <Label alignment="CENTER_RIGHT" layoutX="10.0" layoutY="22.0" prefHeight="19.0" prefWidth="101.0" text="三级销价:">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <TextField prefWidth="170.0">
+                  <TextField fx:id="txtSellingPrice3" prefWidth="170.0">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -305,17 +293,17 @@
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <TextField prefHeight="29.0" prefWidth="170.0">
+                  <TextField fx:id="txtForeignCurrencyUnit" prefHeight="29.0" prefWidth="170.0">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </TextField>
-                  <Label alignment="CENTER_RIGHT" layoutX="10.0" layoutY="22.0" prefHeight="19.0" prefWidth="75.0" text="最低销价:">
+                  <Label alignment="CENTER_RIGHT" layoutX="10.0" layoutY="22.0" prefHeight="19.0" prefWidth="101.0" text="最低销价:">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <TextField prefWidth="170.0">
+                  <TextField fx:id="txtBottomPrice" prefWidth="170.0">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -329,17 +317,17 @@
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <TextField prefHeight="29.0" prefWidth="170.0">
+                  <TextField fx:id="txtForeignCurrencyPrice" prefHeight="29.0" prefWidth="170.0">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </TextField>
-                  <Label alignment="CENTER_RIGHT" layoutX="10.0" layoutY="22.0" prefHeight="19.0" prefWidth="75.0" text="紧缺件:">
+                  <Label alignment="CENTER_RIGHT" layoutX="10.0" layoutY="22.0" prefHeight="19.0" prefWidth="99.0" text="紧缺件:">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <CheckBox alignment="CENTER" mnemonicParsing="false" prefHeight="16.0" prefWidth="25.0">
+                  <CheckBox fx:id="checkBoxShortage" alignment="CENTER" mnemonicParsing="false" prefHeight="16.0" prefWidth="25.0">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -357,7 +345,7 @@
          <right>
             <FlowPane alignment="CENTER_RIGHT" hgap="5.0" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                <children>
-                  <Button mnemonicParsing="false" text="取 消">
+                  <Button mnemonicParsing="false" onAction="#cancel" text="取 消">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -365,7 +353,7 @@
                         <Insets />
                      </FlowPane.margin>
                   </Button>
-                  <Button mnemonicParsing="false" text="保存退出">
+                  <Button fx:id="btnSaveAndQuit" mnemonicParsing="false" onAction="#saveAndQuit" text="保存退出">
                      <font>
                         <Font size="14.0" />
                      </font>

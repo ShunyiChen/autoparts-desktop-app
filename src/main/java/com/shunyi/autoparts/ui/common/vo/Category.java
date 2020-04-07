@@ -66,4 +66,9 @@ public class Category {
     public void setStore(Store store) {
         this.store = store;
     }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }

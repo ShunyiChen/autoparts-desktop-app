@@ -539,12 +539,11 @@ public class POEditorController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        ProductChooserController skuChooserController = loader.getController();
-        skuChooserController.initialize(this.dialog);
-
         Scene scene = new Scene(root);
         scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
         Stage dialog = new Stage();
+        ProductChooserController skuChooserController = loader.getController();
+        skuChooserController.initialize(dialog);
         dialog.setTitle("配件选择器");
         dialog.initOwner(this.dialog);
         dialog.setResizable(true);
