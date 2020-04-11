@@ -3,7 +3,7 @@ package com.shunyi.autoparts.ui.common.vo;
 /**
  * @description 供应商VO
  * @author Shunyi Chen
- * @date 2020/4/2
+ * @date 2020/4/11
  */
 public class Supplier implements SupplierIF {
     /** ID */
@@ -40,12 +40,16 @@ public class Supplier implements SupplierIF {
     private String taxFileNumber;
     /** 开票地址 */
     private String billingAddress;
+    /** 公司 */
+    private String company;
+    /** 手机号 */
+    private String tel;
     /** 备注 */
     private String notes;
 
     public Supplier() {}
 
-    public Supplier(Long id, String code, SupplierCategory supplierCategory, String name, String city, String contact, String phone, String email, String address, String postCode, String webSite, String fullName, String corp, String bank, String account, String taxFileNumber, String billingAddress, String notes) {
+    public Supplier(Long id, String code, SupplierCategory supplierCategory, String name, String city, String contact, String phone, String email, String address, String postCode, String webSite, String fullName, String corp, String bank, String account, String taxFileNumber, String billingAddress, String company, String tel, String notes) {
         this.id = id;
         this.code = code;
         this.supplierCategory = supplierCategory;
@@ -63,6 +67,8 @@ public class Supplier implements SupplierIF {
         this.account = account;
         this.taxFileNumber = taxFileNumber;
         this.billingAddress = billingAddress;
+        this.company = company;
+        this.tel = tel;
         this.notes = notes;
     }
 
@@ -201,6 +207,22 @@ public class Supplier implements SupplierIF {
 
     public void setBillingAddress(String billingAddress) {
         this.billingAddress = billingAddress;
+    }
+
+    public String getCompany() {
+        return company;
+    }
+
+    public void setCompany(String company) {
+        this.company = company;
+    }
+
+    public String getTel() {
+        return tel;
+    }
+
+    public void setTel(String tel) {
+        this.tel = tel;
     }
 
     public String getNotes() {

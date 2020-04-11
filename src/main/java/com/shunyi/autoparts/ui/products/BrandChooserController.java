@@ -2,7 +2,7 @@ package com.shunyi.autoparts.ui.products;
 
 import com.shunyi.autoparts.ui.common.GoogleJson;
 import com.shunyi.autoparts.ui.common.HttpClient;
-import com.shunyi.autoparts.ui.common.vo.Car;
+import com.shunyi.autoparts.ui.common.vo.Brand;
 import com.shunyi.autoparts.ui.common.vo.User;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -21,19 +21,22 @@ import javafx.util.Callback;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
-/** 车辆类目选择器Controller */
-public class CarChooserController {
+/**
+ * @description 品牌选择器Controller
+ *
+ * @author Shunyi Chen
+ * @date 2020/4/11
+ */
+public class BrandChooserController {
     private Stage dialog;
-    private Callback<List<Car>, String> callback;
-    private Car selectedCar;
-    private boolean multiSelect;
-    private ObservableList<Car> masterData = FXCollections.observableArrayList();
-    private ObservableList<Car> filteredData = FXCollections.observableArrayList();
+    private Callback<Brand, String> callback;
+    private Brand selectedCar;
+    private ObservableList<Brand> masterData = FXCollections.observableArrayList();
+    private ObservableList<Brand> filteredData = FXCollections.observableArrayList();
 
     @FXML
-    private TableView<Car> tableView;
+    private TableView<Brand> tableView;
     @FXML
     private TableColumn colCode;
     @FXML
@@ -50,13 +53,11 @@ public class CarChooserController {
      * @param dialog
      * @param callback
      * @param selectedCar
-     * @param multiSelect
      */
-    public void initialize(Stage dialog, Callback<List<Car>, String> callback, Car selectedCar, boolean multiSelect) {
+    public void initialize(Stage dialog, Callback<Brand, String> callback, Brand selectedCar) {
         this.dialog = dialog;
         this.callback = callback;
         this.selectedCar = selectedCar;
-        this.multiSelect = multiSelect;
         btnSelectAndReturn.setStyle(String.format("-fx-base: %s;", "rgb(63,81,181)"));
         initTable();
         initInputFields();
@@ -73,19 +74,19 @@ public class CarChooserController {
 
     @FXML
     private void selectAndReturn() {
-        List<Car> selectedCars = tableView.getSelectionModel().getSelectedItems();
-        callback.call(selectedCars);
+        Brand selectedCar = tableView.getSelectionModel().getSelectedItem();
+        callback.call(selectedCar);
         dialog.close();
     }
 
     @FXML
-    private void newCar() {
-        Callback<Car, String> callback = new Callback<Car, String>() {
+    private void newBrand() {
+        Callback<Brand, String> callback = new Callback<Brand, String>() {
             @Override
-            public String call(Car car) {
+            public String call(Brand car) {
                 String json = GoogleJson.GET().toJson(car);
                 try {
-                    String idStr = HttpClient.POST("/cars", json);
+                    String idStr = HttpClient.POST("/brands", json);
                     car.setId(Long.valueOf(idStr));
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -96,13 +97,15 @@ public class CarChooserController {
                 return null;
             }
         };
-        openCarEditor(callback,null);
+
+        openBrandEditor(callback,null);
     }
 
-    private void openCarEditor(Callback<Car, String> callback, Car selectedCar) {
+
+    private void openBrandEditor(Callback<Brand, String> callback, Brand selectedCar) {
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource(
-                        "/fxml/products/CarEditor.fxml"
+                        "/fxml/products/BrandEditor.fxml"
                 )
         );
         VBox root = null;
@@ -113,9 +116,9 @@ public class CarChooserController {
         }
         Scene scene = new Scene(root);
         Stage dialog = new Stage();
-        CarEditorController controller = loader.getController();
+        BrandEditorController controller = loader.getController();
         controller.initialize(dialog, callback);
-        dialog.setTitle("车型编辑器");
+        dialog.setTitle("品牌编辑器");
         dialog.setResizable(false);
         dialog.initOwner(this.dialog);
         dialog.initModality(Modality.APPLICATION_MODAL);
@@ -132,29 +135,24 @@ public class CarChooserController {
         colName.setCellValueFactory(new PropertyValueFactory<User, String>("name"));
         colNotes.setCellValueFactory(new PropertyValueFactory<User, String>("notes"));
         try {
-            Car[] cars = HttpClient.GET("/cars", Car[].class);
-            masterData.addAll(cars);
+            Brand[] brands = HttpClient.GET("/brands", Brand[].class);
+            masterData.addAll(brands);
             // Initially add all data to filtered data
             filteredData.addAll(masterData);
 
             // Add filtered data to the table
             tableView.setItems(filteredData);
-            if(multiSelect) {
-                tableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-            } else {
-                tableView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-            }
-
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         ContextMenu menu = new ContextMenu();
         MenuItem itemDel = new MenuItem("删 除");
         menu.getItems().add(itemDel);
         itemDel.setOnAction(e -> {
-            Car car = tableView.getSelectionModel().getSelectedItem();
+            Brand car = tableView.getSelectionModel().getSelectedItem();
             try {
-                HttpClient.DELETE("/cars/"+car.getId());
+                HttpClient.DELETE("/brands/"+car.getId());
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
@@ -192,7 +190,7 @@ public class CarChooserController {
      */
     private void updateFilteredData() {
         filteredData.clear();
-        for (Car p : masterData) {
+        for (Brand p : masterData) {
             if (matchesFilter(p)) {
                 filteredData.add(p);
             }
@@ -208,7 +206,7 @@ public class CarChooserController {
      *
      * @return
      */
-    private boolean matchesFilter(Car car) {
+    private boolean matchesFilter(Brand car) {
         String filterString = txtKeyword.getText();
         if (filterString == null || filterString.isEmpty()) {
             // No filter --> Add all.
@@ -223,7 +221,7 @@ public class CarChooserController {
     }
 
     private void reapplyTableSortOrder() {
-        ArrayList<TableColumn<Car, ?>> sortOrder = new ArrayList(tableView.getSortOrder());
+        ArrayList<TableColumn<Brand, ?>> sortOrder = new ArrayList(tableView.getSortOrder());
         tableView.getSortOrder().clear();
         tableView.getSortOrder().addAll(sortOrder);
         //默认选择第一行

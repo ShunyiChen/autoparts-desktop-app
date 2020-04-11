@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="406.0" prefWidth="515.0" fx:controller="com.shunyi.autoparts.ui.products.PlaceChooserController" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" >
+   <top>
+      <FlowPane alignment="CENTER_LEFT" prefHeight="56.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label alignment="CENTER" prefHeight="19.0" prefWidth="53.0" text="车型:">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <TextField fx:id="txtKeyword" prefHeight="29.0" prefWidth="359.0">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </TextField>
+            <Button mnemonicParsing="false" onAction="#clear" text="清除条件">
+               <font>
+                  <Font size="14.0" />
+               </font>
+               <FlowPane.margin>
+                  <Insets left="10.0" />
+               </FlowPane.margin>
+            </Button>
+         </children>
+      </FlowPane>
+   </top>
+   <center>
+      <TableView fx:id="tableView" prefHeight="104.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+        <columns>
+            <TableColumn fx:id="colCode" prefWidth="159.0" text="编码" />
+            <TableColumn fx:id="colName" minWidth="0.0" prefWidth="180.0" text="产地" />
+            <TableColumn fx:id="colNotes" prefWidth="155.0" text="备注" />
+        </columns>
+      </TableView>
+   </center>
+   <bottom>
+      <BorderPane prefHeight="56.0" prefWidth="515.0" BorderPane.alignment="CENTER">
+         <right>
+            <FlowPane alignment="CENTER_RIGHT" hgap="5.0" prefHeight="58.0" prefWidth="203.0" BorderPane.alignment="CENTER">
+               <children>
+                  <Button fx:id="btnSelectAndReturn" mnemonicParsing="false" onAction="#selectAndReturn" text="选中返回">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Button>
+                  <Button layoutX="475.0" layoutY="17.0" mnemonicParsing="false" text="取 消" onAction="#cancel">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                     <FlowPane.margin>
+                        <Insets right="10.0" />
+                     </FlowPane.margin>
+                  </Button>
+               </children>
+            </FlowPane>
+         </right>
+         <left>
+            <Button mnemonicParsing="false" text="新建产地" BorderPane.alignment="CENTER" onAction="#newPlace" >
+               <font>
+                  <Font size="14.0" />
+               </font>
+               <BorderPane.margin>
+                  <Insets left="10.0" />
+               </BorderPane.margin>
+            </Button>
+         </left>
+      </BorderPane>
+   </bottom>
+</BorderPane>

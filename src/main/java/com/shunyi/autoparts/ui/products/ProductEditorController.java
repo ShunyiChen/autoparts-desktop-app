@@ -16,6 +16,7 @@ import javafx.util.Callback;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -29,10 +30,13 @@ public class ProductEditorController {
     private Callback<Product, Object> callback;
     private Category category;
     private Car car;
+    private List<Car> commonCars;
+    private Place place;
+    private Brand brand;
+
 
 
     private Product updatedProduct;
-    private Car selectedCar;
     private Supplier selectedSupplier;
     @FXML
     private Button btnSaveAndQuit;
@@ -49,9 +53,9 @@ public class ProductEditorController {
     @FXML
     private TextField txtBarCode;
     @FXML
-    private ComboBox<String> txtCar;
+    private TextField txtCar;
     @FXML
-    private ComboBox<String> txtPlace;
+    private TextField txtPlace;
     @FXML
     private TextField txtCommonCar;
     @FXML
@@ -107,17 +111,87 @@ public class ProductEditorController {
         this.callback = callback;
         this.category = category;
         btnSaveAndQuit.setStyle(String.format("-fx-base: %s;", "rgb(63,81,181)"));
+        //初始化单位
         try {
             Unit[] units = HttpClient.GET("/units", Unit[].class);
             comboBoxUnit.getItems().addAll(Arrays.asList(units).stream().map(e -> e.getName()).collect(Collectors.toList()));
         } catch (IOException e) {
             e.printStackTrace();
         }
-        txtCategory.setText(category.getName());
         new AutoCompleteBox(comboBoxUnit);
-        new AutoCompleteBox(txtCar);
+        //初始化分类
+        txtCategory.setText(category.getName());
+        //初始化进口
+        try {
+            Import[] imports = HttpClient.GET("/imports", Import[].class);
+            comboBoxImport.getItems().addAll(Arrays.asList(imports).stream().map(e -> e.getName()).collect(Collectors.toList()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        new AutoCompleteBox(comboBoxImport);
+        //所属公司
+        try {
+            Company[] companies = HttpClient.GET("/imports", Company[].class);
+            comboBoxCompany.getItems().addAll(Arrays.asList(companies).stream().map(e -> e.getName()).collect(Collectors.toList()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        new AutoCompleteBox(comboBoxCompany);
     }
 
+    @FXML
+    private void cancel() {
+        dialog.close();
+    }
+
+    @FXML
+    private void saveAndQuit() {
+        if(validate()) {
+            //新建Product
+            Product product = new Product();
+            product.setCode(txtCode.getText());
+            product.setUnit(comboBoxUnit.getValue());
+            product.setName(txtName.getText());
+            product.setCategory(category);
+            product.setBarCode(txtBarCode.getText());
+            product.setCar(car);
+            product.setPlace(place);
+//            product.setProductCarMappingSet();
+
+
+            System.out.println(product);
+
+            //新建SKU
+//            SKU sku = new SKU();
+
+//            BigDecimal listPrice;
+//            listPrice = new BigDecimal(Double.valueOf(txtPrice.getText())).setScale(2, RoundingMode.HALF_UP);
+//            Product newProduct = new Product(0L, txtCode.getText(), txtBarCode.getText(), txtName.getText(), boxBrand.getValue(), selectedCar, selectedSupplier, txtUnit.getText(), listPrice, boxImported.getValue(), txtOrigin.getText(), txtNotes.getText(), null, Env.getInstance().getStringValue(Env.CURRENT_USER),null,null,null,null, Constants.DELETE_FLAG_FALSE,null);
+//            callback.call(newProduct);
+
+            dialog.close();
+        }
+    }
+
+    private boolean validate() {
+        if(txtCode.getText().trim().equals("")) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
+            alert.setHeaderText("编码不能为空");
+            alert.show();
+            return false;
+        } else if(txtName.getText().trim().equals("")) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
+            alert.setHeaderText("名称不能为空");
+            alert.show();
+            return false;
+        } else if(comboBoxUnit.getValue().trim().equals("")) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
+            alert.setHeaderText("单位不能为空");
+            alert.show();
+            return false;
+        }
+        return true;
+    }
 
     @FXML
     private void openCategoryChooser() {
@@ -155,12 +229,51 @@ public class ProductEditorController {
     }
 
     @FXML
-    private void openCarChooser() {
-        Callback<Car, String> callback = new Callback<Car, String>() {
+    private void openPlaceChooser() {
+        Callback<Place, String> callback = new Callback<Place, String>() {
             @Override
-            public String call(Car param) {
-                car = param;
-//                txtCar.setText(car.getName());
+            public String call(Place param) {
+                place = param;
+                txtPlace.setText(place.getName());
+                return null;
+            }
+        };
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource(
+                        "/fxml/products/PlaceChooser.fxml"
+                )
+        );
+        BorderPane root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Scene scene = new Scene(root);
+        Stage dialog = new Stage();
+        PlaceChooserController controller = loader.getController();
+        controller.initialize(dialog, callback, place);
+        dialog.setTitle("产地选择器");
+        dialog.initOwner(this.dialog);
+        dialog.setResizable(false);
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.setScene(scene);
+        // center stage on screen
+        dialog.centerOnScreen();
+        dialog.show();
+    }
+
+    @FXML
+    private void openCommonCarChooser() {
+        Callback<List<Car>, String> callback = new Callback<List<Car>, String>() {
+            @Override
+            public String call(List<Car> param) {
+                commonCars = param;
+                StringBuilder cars = new StringBuilder();
+                commonCars.forEach(e -> {
+                    cars.append(e.getName()+";");
+                });
+                txtCommonCar.setText(cars.toString());
                 return null;
             }
         };
@@ -178,8 +291,8 @@ public class ProductEditorController {
         Scene scene = new Scene(root);
         Stage dialog = new Stage();
         CarChooserController controller = loader.getController();
-        controller.initialize(dialog, callback, car);
-        dialog.setTitle("选择产品分类");
+        controller.initialize(dialog, callback, car, true);
+        dialog.setTitle("车型选择器");
         dialog.initOwner(this.dialog);
         dialog.setResizable(false);
         dialog.initModality(Modality.APPLICATION_MODAL);
@@ -189,73 +302,43 @@ public class ProductEditorController {
         dialog.show();
     }
 
-
     @FXML
-    private void openUnitChooser() {
-
-    }
-
-    @FXML
-    private void cancel() {
-        dialog.close();
-    }
-
-    @FXML
-    private void saveAndQuit() {
-        if(validate()) {
-            //新建Product
-            Product product = new Product();
-            product.setCode(txtCode.getText());
-            product.setUnit(comboBoxUnit.getValue());
-            product.setName(txtName.getText());
-
-
-            //新建SKU
-            SKU sku = new SKU();
-
-//            BigDecimal listPrice;
-//            listPrice = new BigDecimal(Double.valueOf(txtPrice.getText())).setScale(2, RoundingMode.HALF_UP);
-//            Product newProduct = new Product(0L, txtCode.getText(), txtBarCode.getText(), txtName.getText(), boxBrand.getValue(), selectedCar, selectedSupplier, txtUnit.getText(), listPrice, boxImported.getValue(), txtOrigin.getText(), txtNotes.getText(), null, Env.getInstance().getStringValue(Env.CURRENT_USER),null,null,null,null, Constants.DELETE_FLAG_FALSE,null);
-//            callback.call(newProduct);
-
-            dialog.close();
+    private void openBrandChooser() {
+        Callback<Brand, String> callback = new Callback<Brand, String>() {
+            @Override
+            public String call(Brand param) {
+                brand = param;
+                txtBrand.setText(brand.getName());
+                return null;
+            }
+        };
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource(
+                        "/fxml/products/BrandChooser.fxml"
+                )
+        );
+        BorderPane root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+        Scene scene = new Scene(root);
+        Stage dialog = new Stage();
+        BrandChooserController controller = loader.getController();
+        controller.initialize(dialog, callback, brand);
+        dialog.setTitle("品牌选择器");
+        dialog.initOwner(this.dialog);
+        dialog.setResizable(false);
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.setScene(scene);
+        // center stage on screen
+        dialog.centerOnScreen();
+        dialog.show();
     }
-
-    private boolean validate() {
-        if(txtCode.getText().trim().equals("")) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
-            alert.setHeaderText("编码不能为空");
-            alert.show();
-            return false;
-        } else if(txtName.getText().trim().equals("")) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
-            alert.setHeaderText("名称不能为空");
-            alert.show();
-            return false;
-        } else if(comboBoxUnit.getValue().trim().equals("")) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
-            alert.setHeaderText("单位不能为空");
-            alert.show();
-            return false;
-        }
-        return true;
-    }
-
-
-
-
-
-
-
-
-
-
-
-
 
     @FXML
-    private void supplierChooser() {
+    private void openSupplierChooser() {
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource(
                         "/fxml/supplier/SupplierChooser.fxml"
@@ -272,7 +355,7 @@ public class ProductEditorController {
         SupplierChooserController controller = loader.getController();
         Callback<Supplier, String> callback = supplier -> {
             selectedSupplier = supplier;
-//            txtSupplier.setText(selectedSupplier.getName());
+            txtSupplier.setText(selectedSupplier.getName());
             return null;
         };
         controller.prepare(subStage, selectedSupplier, callback);
@@ -287,72 +370,38 @@ public class ProductEditorController {
     }
 
     @FXML
-    private void carChooser() {
-//        FXMLLoader loader = new FXMLLoader(
-//                getClass().getResource(
-//                        "/fxml/products/CarChooser.fxml"
-//                )
-//        );
-//        VBox root = null;
-//        try {
-//            root = loader.load();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        Scene scene = new Scene(root);
-//        Stage subStage = new Stage();
-//        CarChooserController controller = loader.getController();
-//        Callback<Car, Void> cb = e -> {
-//            selectedCar = e;
-////            txtCar.setText(selectedCar.getModel());
-//            return null;
-//        };
-//        controller.initialize(subStage, selectedCar, cb);
-//        subStage.setTitle("选择车型");
-//        subStage.initOwner(dialog);
-//        subStage.setResizable(false);
-//        subStage.initModality(Modality.APPLICATION_MODAL);
-//        subStage.setScene(scene);
-//        // center stage on screen
-//        subStage.centerOnScreen();
-//        subStage.show();
+    private void openCarChooser() {
+        Callback<List<Car>, String> callback = new Callback<List<Car>, String>() {
+            @Override
+            public String call(List<Car> param) {
+                car = param.get(0);
+                txtCar.setText(car.getName());
+                return null;
+            }
+        };
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource(
+                        "/fxml/products/CarChooser.fxml"
+                )
+        );
+        BorderPane root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Scene scene = new Scene(root);
+        Stage dialog = new Stage();
+        CarChooserController controller = loader.getController();
+        controller.initialize(dialog, callback, car, false);
+        dialog.setTitle("车型选择器");
+        dialog.initOwner(this.dialog);
+        dialog.setResizable(false);
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.setScene(scene);
+        // center stage on screen
+        dialog.centerOnScreen();
+        dialog.show();
     }
-
-
-//    /**
-//     * 准备
-//     * @param dialog
-//     * @param updatedProduct
-//     * @param callback
-//     * @param selectedCategory
-//     * @param selectedBrand
-//     */
-//    public void prepare(Stage dialog, Product updatedProduct, Callback<Product, Object> callback, Category selectedCategory, BrandSeries selectedBrand) {
-//        this.dialog = dialog;
-//        this.updatedProduct = updatedProduct;
-//        this.callback = callback;
-//        this.selectedCategory = selectedCategory;
-//        this.selectedBrand = selectedBrand;
-//        initButton();
-//        initComboBox();
-//        if(updatedProduct != null) {
-//            txtCode.setText(updatedProduct.getCode());
-//            txtName.setText(updatedProduct.getName());
-//            txtBarCode.setText(updatedProduct.getBarCode());
-//            boxBrand.setValue(selectedBrand);
-//            txtPrice.setText(updatedProduct.getListPrice().doubleValue()+"");
-//            txtUnit.setText(updatedProduct.getUnit());
-//            boxImported.setValue(updatedProduct.getImported());
-//            txtCar.setText(updatedProduct.getCar().getModel());
-//            txtSupplier.setText(updatedProduct.getSupplier().getName());
-//            selectedCar = updatedProduct.getCar();
-//            selectedSupplier = updatedProduct.getSupplier();
-//            txtOrigin.setText(updatedProduct.getOrigin());
-//            txtNotes.setText(updatedProduct.getNotes());
-//            btnContinueAdd.setVisible(false);
-//        }
-//    }
-
-
 
 }

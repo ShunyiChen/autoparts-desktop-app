@@ -424,4 +424,47 @@ public class Product {
     public void setDeleter(String deleter) {
         this.deleter = deleter;
     }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", code='" + code + '\'' +
+                ", category=" + category +
+                ", name='" + name + '\'' +
+                ", unit='" + unit + '\'' +
+                ", barCode='" + barCode + '\'' +
+                ", car=" + car +
+                ", productCarMappingSet=" + productCarMappingSet +
+                ", place=" + place +
+                ", brand=" + brand +
+                ", englishName='" + englishName + '\'' +
+                ", imported='" + imported + '\'' +
+                ", commonNumber='" + commonNumber + '\'' +
+                ", materials='" + materials + '\'' +
+                ", company='" + company + '\'' +
+                ", packingQuantity=" + packingQuantity +
+                ", weight=" + weight +
+                ", manual='" + manual + '\'' +
+                ", supplier=" + supplier +
+                ", purchasingPrice1=" + purchasingPrice1 +
+                ", purchasingPrice2=" + purchasingPrice2 +
+                ", purchasingPrice3=" + purchasingPrice3 +
+                ", sellingPrice1=" + sellingPrice1 +
+                ", sellingPrice2=" + sellingPrice2 +
+                ", sellingPrice3=" + sellingPrice3 +
+                ", bottomPrice=" + bottomPrice +
+                ", foreignCurrencyUnit='" + foreignCurrencyUnit + '\'' +
+                ", foreignCurrencyPrice='" + foreignCurrencyPrice + '\'' +
+                ", shortage=" + shortage +
+                ", dateCreated=" + dateCreated +
+                ", creator='" + creator + '\'' +
+                ", dateUpdated=" + dateUpdated +
+                ", updater='" + updater + '\'' +
+                ", updatedCount=" + updatedCount +
+                ", dateDeleted=" + dateDeleted +
+                ", deleteFlag=" + deleteFlag +
+                ", deleter='" + deleter + '\'' +
+                '}';
+    }
 }
