@@ -354,7 +354,7 @@
    <bottom>
       <BorderPane prefHeight="53.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <right>
-            <FlowPane alignment="CENTER_RIGHT" hgap="5.0" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+            <FlowPane alignment="CENTER" hgap="10.0" prefHeight="54.0" prefWidth="164.0" BorderPane.alignment="CENTER">
                <children>
                   <Button mnemonicParsing="false" onAction="#cancel" text="取 消">
                      <font>

@@ -358,7 +358,7 @@ public class ProductEditorController {
             txtSupplier.setText(selectedSupplier.getName());
             return null;
         };
-        controller.prepare(subStage, selectedSupplier, callback);
+        controller.initialize(subStage, callback, selectedSupplier);
         subStage.setTitle("选择供应商");
         subStage.initOwner(dialog);
         subStage.setResizable(false);

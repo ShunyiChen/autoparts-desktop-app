@@ -3,9 +3,9 @@ package com.shunyi.autoparts.ui.common.vo;
 /**
  * @description 供应商分类VO
  * @author Shunyi Chen
- * @date 2020/3/23
+ * @date 2020/4/11
  */
-public class SupplierCategory implements SupplierIF {
+public class SupplierCategory {
     /** 自增ID */
     private Long id;
     /** 类目名称 */
@@ -24,7 +24,6 @@ public class SupplierCategory implements SupplierIF {
         this.parent = parent;
     }
 
-    @Override
     public Long getId() {
         return id;
     }
@@ -55,5 +54,10 @@ public class SupplierCategory implements SupplierIF {
 
     public void setParent(Boolean parent) {
         this.parent = parent;
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

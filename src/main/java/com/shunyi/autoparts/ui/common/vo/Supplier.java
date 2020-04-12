@@ -3,9 +3,9 @@ package com.shunyi.autoparts.ui.common.vo;
 /**
  * @description 供应商VO
  * @author Shunyi Chen
- * @date 2020/4/11
+ * @date 2020/4/12
  */
-public class Supplier implements SupplierIF {
+public class Supplier {
     /** ID */
     private Long id;
     /** 供应商编码 */
@@ -20,6 +20,8 @@ public class Supplier implements SupplierIF {
     private String contact;
     /** 电话 */
     private String phone;
+    /** 传真 */
+    private String fax;
     /** 电子邮件 */
     private String email;
     /** 地址 */
@@ -43,13 +45,13 @@ public class Supplier implements SupplierIF {
     /** 公司 */
     private String company;
     /** 手机号 */
-    private String tel;
+    private String mobile;
     /** 备注 */
     private String notes;
 
     public Supplier() {}
 
-    public Supplier(Long id, String code, SupplierCategory supplierCategory, String name, String city, String contact, String phone, String email, String address, String postCode, String webSite, String fullName, String corp, String bank, String account, String taxFileNumber, String billingAddress, String company, String tel, String notes) {
+    public Supplier(Long id, String code, SupplierCategory supplierCategory, String name, String city, String contact, String phone, String fax, String email, String address, String postCode, String webSite, String fullName, String corp, String bank, String account, String taxFileNumber, String billingAddress, String company, String mobile, String notes) {
         this.id = id;
         this.code = code;
         this.supplierCategory = supplierCategory;
@@ -57,6 +59,7 @@ public class Supplier implements SupplierIF {
         this.city = city;
         this.contact = contact;
         this.phone = phone;
+        this.fax = fax;
         this.email = email;
         this.address = address;
         this.postCode = postCode;
@@ -68,11 +71,10 @@ public class Supplier implements SupplierIF {
         this.taxFileNumber = taxFileNumber;
         this.billingAddress = billingAddress;
         this.company = company;
-        this.tel = tel;
+        this.mobile = mobile;
         this.notes = notes;
     }
 
-    @Override
     public Long getId() {
         return id;
     }
@@ -123,6 +125,14 @@ public class Supplier implements SupplierIF {
 
     public String getPhone() {
         return phone;
+    }
+
+    public String getFax() {
+        return fax;
+    }
+
+    public void setFax(String fax) {
+        this.fax = fax;
     }
 
     public void setPhone(String phone) {
@@ -217,12 +227,12 @@ public class Supplier implements SupplierIF {
         this.company = company;
     }
 
-    public String getTel() {
-        return tel;
+    public String getMobile() {
+        return mobile;
     }
 
-    public void setTel(String tel) {
-        this.tel = tel;
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
     }
 
     public String getNotes() {

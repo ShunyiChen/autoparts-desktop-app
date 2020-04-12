@@ -14,6 +14,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -62,7 +64,6 @@ public class PlaceChooserController {
         initTable();
         initInputFields();
     }
-
 
     @FXML
     private void clear() { txtKeyword.clear(); }
@@ -162,6 +163,11 @@ public class PlaceChooserController {
         //回车选中事件
         tableView.setOnKeyReleased(e -> {
             if(e.getCode() == KeyCode.ENTER) {
+                selectAndReturn();
+            }
+        });
+        tableView.setOnMouseClicked((MouseEvent event) -> {
+            if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2){
                 selectAndReturn();
             }
         });

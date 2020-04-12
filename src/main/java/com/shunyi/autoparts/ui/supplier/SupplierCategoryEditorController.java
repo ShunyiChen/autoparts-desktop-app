@@ -1,5 +1,6 @@
 package com.shunyi.autoparts.ui.supplier;
 
+import com.shunyi.autoparts.ui.common.vo.SupplierCategory;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -7,9 +8,12 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
-
-/** 编辑供应商类目名称Controller */
-public class EditCategoryController {
+/**
+ * @Description: 供应商分类编辑器Controller
+ * @Author: Shunyi Chen
+ * @CreateDate: 2020/4/12
+ */
+public class SupplierCategoryEditorController {
     @FXML
     private Button btnCancel;
     @FXML
@@ -24,8 +28,10 @@ public class EditCategoryController {
         dialog.close();
     }
     @FXML
-    private void ok(ActionEvent event) {
-        callback.call(txtName.getText());
+    private void ok() {
+        SupplierCategory supplierCategory = new SupplierCategory();
+        supplierCategory.setName(txtName.getText());
+        callback.call(supplierCategory);
         dialog.close();
     }
 

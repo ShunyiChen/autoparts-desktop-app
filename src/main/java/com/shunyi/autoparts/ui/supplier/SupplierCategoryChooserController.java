@@ -1,7 +1,5 @@
 package com.shunyi.autoparts.ui.supplier;
 
-import com.shunyi.autoparts.ui.common.Constants;
-import com.shunyi.autoparts.ui.common.Env;
 import com.shunyi.autoparts.ui.common.GoogleJson;
 import com.shunyi.autoparts.ui.common.HttpClient;
 import com.shunyi.autoparts.ui.common.vo.SupplierCategory;
@@ -13,20 +11,24 @@ import javafx.util.Callback;
 
 import java.io.IOException;
 
-/** 供应商类目选择器Controller */
+/**
+ * @Description: 供应商分类选择器Controller
+ * @Author: Shunyi Chen
+ * @CreateDate: 2020/4/12
+ */
 public class SupplierCategoryChooserController {
-
+    private Stage dialog;
+    private SupplierCategory supplierCategory;
+    private Callback callback;
     @FXML
     private Button btnChooser;
     @FXML
     private TreeView<SupplierCategory> treeView;
-    private Stage subStage;
-    private SupplierCategory selectedCategory;
-    private Callback callback;
+
 
     @FXML
     private void cancel() {
-        subStage.close();
+        dialog.close();
     }
 
     @FXML
@@ -38,7 +40,7 @@ public class SupplierCategoryChooserController {
             alert.show();
             return;
         }
-        subStage.close();
+        dialog.close();
         callback.call(selectedItem.getValue());
     }
 
@@ -70,7 +72,7 @@ public class SupplierCategoryChooserController {
                 parent.setExpanded(true);
                 getNodes(node, all);
                 //默认选中
-                if(selectedCategory != null && selectedCategory.getId() == sc.getId()) {
+                if(supplierCategory != null && supplierCategory.getId() == sc.getId()) {
                     // This line is the not-so-clearly documented magic.
                     int row = treeView.getRow(node);
                     // Now the row can be selected.
@@ -82,14 +84,14 @@ public class SupplierCategoryChooserController {
 
     /**
      *
-     * @param subStage
-     * @param selectedCategory
+     * @param dialog
      * @param callback
+     * @param supplierCategory
      */
-    public void prepare(Stage subStage, SupplierCategory selectedCategory, Callback callback) {
-        this.subStage = subStage;
-        this.selectedCategory = selectedCategory;
+    public void initialize(Stage dialog, Callback<SupplierCategory, String> callback, SupplierCategory supplierCategory) {
+        this.dialog = dialog;
         this.callback = callback;
+        this.supplierCategory = supplierCategory;
         final String css = getClass().getResource("/css/styles.css").toExternalForm();
         treeView.getStylesheets().add(css);
         treeView.setOnMouseClicked(event -> {
@@ -98,13 +100,18 @@ public class SupplierCategoryChooserController {
             }
         });
         btnChooser.setStyle(String.format("-fx-base: %s;", "rgb(63,81,181)"));
-        SupplierCategory sc = new SupplierCategory(0L, "所有供应商", -1L, Constants.PARENT_TRUE);
-        TreeItem<SupplierCategory> root = new TreeItem<SupplierCategory>(sc);
-        treeView.setRoot(root);
-        initTreeNodes(root);
-        //默认选中root
-        if(selectedCategory != null && selectedCategory.getId() == 0) {
-            treeView.getSelectionModel().select(root);
+        SupplierCategory sc = null;
+        try {
+            sc = HttpClient.GET("/supplier/categories/root", SupplierCategory.class);
+            TreeItem<SupplierCategory> root = new TreeItem<SupplierCategory>(sc);
+            treeView.setRoot(root);
+            initTreeNodes(root);
+            //默认选中root
+            if(supplierCategory != null && supplierCategory.getId() == 0) {
+                treeView.getSelectionModel().select(root);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
