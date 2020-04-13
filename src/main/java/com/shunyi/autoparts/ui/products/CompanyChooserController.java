@@ -2,7 +2,7 @@ package com.shunyi.autoparts.ui.products;
 
 import com.shunyi.autoparts.ui.common.GoogleJson;
 import com.shunyi.autoparts.ui.common.HttpClient;
-import com.shunyi.autoparts.ui.common.vo.Place;
+import com.shunyi.autoparts.ui.common.vo.Company;
 import com.shunyi.autoparts.ui.common.vo.User;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -25,20 +25,20 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * @description 产地选择器Controller
+ * @description 公司选择器Controller
  *
  * @author Shunyi Chen
- * @date 2020/4/11
+ * @date 2020/4/13
  */
-public class PlaceChooserController {
+public class CompanyChooserController {
     private Stage dialog;
-    private Callback<Place, String> callback;
-    private Place selectedCar;
-    private ObservableList<Place> masterData = FXCollections.observableArrayList();
-    private ObservableList<Place> filteredData = FXCollections.observableArrayList();
+    private Callback<Company, String> callback;
+    private Company company;
+    private ObservableList<Company> masterData = FXCollections.observableArrayList();
+    private ObservableList<Company> filteredData = FXCollections.observableArrayList();
 
     @FXML
-    private TableView<Place> tableView;
+    private TableView<Company> tableView;
     @FXML
     private TableColumn colCode;
     @FXML
@@ -54,12 +54,12 @@ public class PlaceChooserController {
      *
      * @param dialog
      * @param callback
-     * @param selectedCar
+     * @param company
      */
-    public void initialize(Stage dialog, Callback<Place, String> callback, Place selectedCar) {
+    public void initialize(Stage dialog, Callback<Company, String> callback, Company company) {
         this.dialog = dialog;
         this.callback = callback;
-        this.selectedCar = selectedCar;
+        this.company = company;
         btnSelectAndReturn.setStyle(String.format("-fx-base: %s;", "rgb(63,81,181)"));
         initTable();
         initInputFields();
@@ -75,37 +75,37 @@ public class PlaceChooserController {
 
     @FXML
     private void selectAndReturn() {
-        Place selectedCar = tableView.getSelectionModel().getSelectedItem();
-        callback.call(selectedCar);
+        Company selectedCom = tableView.getSelectionModel().getSelectedItem();
+        callback.call(selectedCom);
         dialog.close();
     }
 
     @FXML
-    private void newPlace() {
-        Callback<Place, String> callback = new Callback<Place, String>() {
+    private void newCompany() {
+        Callback<Company, String> callback = new Callback<Company, String>() {
             @Override
-            public String call(Place place) {
-                String json = GoogleJson.GET().toJson(place);
+            public String call(Company company) {
+                String json = GoogleJson.GET().toJson(company);
                 try {
-                    String idStr = HttpClient.POST("/places", json);
-                    place.setId(Long.valueOf(idStr));
+                    String idStr = HttpClient.POST("/companies", json);
+                    company.setId(Long.valueOf(idStr));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                masterData.add(place);
-                filteredData.add(place);
-                tableView.getSelectionModel().select(place);
+                masterData.add(company);
+                filteredData.add(company);
+                tableView.getSelectionModel().select(company);
                 return null;
             }
         };
-        openPlaceEditor(callback);
+        openCompanyEditor(callback);
     }
 
 
-    private void openPlaceEditor(Callback<Place, String> callback) {
+    private void openCompanyEditor(Callback<Company, String> callback) {
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource(
-                        "/fxml/products/PlaceEditor.fxml"
+                        "/fxml/products/CompanyEditor.fxml"
                 )
         );
         VBox root = null;
@@ -116,9 +116,9 @@ public class PlaceChooserController {
         }
         Scene scene = new Scene(root);
         Stage dialog = new Stage();
-        PlaceEditorController controller = loader.getController();
+        CompanyEditorController controller = loader.getController();
         controller.initialize(dialog, callback);
-        dialog.setTitle("产地编辑器");
+        dialog.setTitle("公司编辑器");
         dialog.setResizable(false);
         dialog.initOwner(this.dialog);
         dialog.initModality(Modality.APPLICATION_MODAL);
@@ -135,8 +135,8 @@ public class PlaceChooserController {
         colName.setCellValueFactory(new PropertyValueFactory<User, String>("name"));
         colNotes.setCellValueFactory(new PropertyValueFactory<User, String>("notes"));
         try {
-            Place[] places = HttpClient.GET("/places", Place[].class);
-            masterData.addAll(places);
+            Company[] companies = HttpClient.GET("/companies", Company[].class);
+            masterData.addAll(companies);
             // Initially add all data to filtered data
             filteredData.addAll(masterData);
 
@@ -150,13 +150,13 @@ public class PlaceChooserController {
         MenuItem itemDel = new MenuItem("删 除");
         menu.getItems().add(itemDel);
         itemDel.setOnAction(e -> {
-            Place place = tableView.getSelectionModel().getSelectedItem();
+            Company company = tableView.getSelectionModel().getSelectedItem();
             try {
-                HttpClient.DELETE("/places/"+place.getId());
+                HttpClient.DELETE("/companies/"+company.getId());
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
-            tableView.getItems().remove(place);
+            tableView.getItems().remove(company);
             tableView.refresh();
         });
         tableView.setContextMenu(menu);
@@ -195,7 +195,7 @@ public class PlaceChooserController {
      */
     private void updateFilteredData() {
         filteredData.clear();
-        for (Place p : masterData) {
+        for (Company p : masterData) {
             if (matchesFilter(p)) {
                 filteredData.add(p);
             }
@@ -211,22 +211,22 @@ public class PlaceChooserController {
      *
      * @return
      */
-    private boolean matchesFilter(Place place) {
+    private boolean matchesFilter(Company company) {
         String filterString = txtKeyword.getText();
         if (filterString == null || filterString.isEmpty()) {
             // No filter --> Add all.
             return true;
         }
-        if(place.getCode() != null && place.getCode().contains(filterString)) {
+        if(company.getCode() != null && company.getCode().contains(filterString)) {
             return true;
-        } else if(place.getName() != null && place.getName().contains(filterString)) {
+        } else if(company.getName() != null && company.getName().contains(filterString)) {
             return true;
         }
         return false;
     }
 
     private void reapplyTableSortOrder() {
-        ArrayList<TableColumn<Place, ?>> sortOrder = new ArrayList(tableView.getSortOrder());
+        ArrayList<TableColumn<Company, ?>> sortOrder = new ArrayList(tableView.getSortOrder());
         tableView.getSortOrder().clear();
         tableView.getSortOrder().addAll(sortOrder);
         //默认选择第一行

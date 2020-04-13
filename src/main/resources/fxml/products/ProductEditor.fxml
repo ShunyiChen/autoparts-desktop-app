@@ -33,7 +33,7 @@
                      </font>
                   </Label>
                   <ComboBox fx:id="comboBoxUnit" prefHeight="29.0" prefWidth="170.0" />
-                  <Button fx:id="btnCategoryChooser1" mnemonicParsing="false" onAction="#openCategoryChooser" text="\@">
+                  <Button fx:id="btnUnitChooser" mnemonicParsing="false" onAction="#openUnitChooser" text="\@">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -179,7 +179,7 @@
                      </font>
                   </Label>
                   <ComboBox fx:id="comboBoxCompany" prefHeight="29.0" prefWidth="170.0" />
-                  <Button fx:id="btn" mnemonicParsing="false" onAction="#openBrandChooser" text="\@">
+                  <Button fx:id="btnCompanyChooser" mnemonicParsing="false" onAction="#openCompanyChooser" text="\@">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -373,7 +373,7 @@
                         <Insets />
                      </FlowPane.margin>
                   </Button>
-                  <Button fx:id="btnContinueToAdd" mnemonicParsing="false" onAction="#saveAndQuit" text="继续添加">
+                  <Button fx:id="btnContinueToAdd" mnemonicParsing="false" onAction="#continueToAdd" text="继续添加">
                      <font>
                         <Font size="14.0" />
                      </font>

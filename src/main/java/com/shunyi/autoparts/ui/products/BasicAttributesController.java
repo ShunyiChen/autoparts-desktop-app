@@ -2,7 +2,6 @@ package com.shunyi.autoparts.ui.products;
 
 import com.shunyi.autoparts.ui.common.GoogleJson;
 import com.shunyi.autoparts.ui.common.HttpClient;
-import com.shunyi.autoparts.ui.common.Sort;
 import com.shunyi.autoparts.ui.common.vo.*;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;

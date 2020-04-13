@@ -255,7 +255,7 @@ public class AttributeManagementController {
     }
 
     private void initAttributesTree() {
-        AttributeName rootName = new AttributeName(0L, "所有属性", selectedCategory, false, false, false, false, false, false, false, false, false, "可用", Sort.ASC.getSort());
+        AttributeName rootName = new AttributeName(0L, "所有属性", selectedCategory, false, false, false, false, false, false, false, false, false, "可用", 1);
         TreeItem<AttributeIF> root = new TreeItem<>(rootName);
         try {
             String data = HttpClient.GET("/attributes/name/category/"+selectedCategory.getId());
@@ -298,7 +298,7 @@ public class AttributeManagementController {
                 alert.show();
                 return;
             }
-            AttributeName newName = new AttributeName(0L, "新建属性", selectedCategory, false, false, false, false, false, false, false, false, false, "可用", Sort.ASC.getSort());
+            AttributeName newName = new AttributeName(0L, "新建属性", selectedCategory, false, false, false, false, false, false, false, false, false, "可用", 1);
             String json = GoogleJson.GET().toJson(newName);
             try {
                 String idStr = HttpClient.POST("/attributes/name", json);
@@ -321,7 +321,7 @@ public class AttributeManagementController {
             TreeItem<AttributeIF> parent =  attributeTree.getSelectionModel().getSelectedItem();
             if(parent.getValue().getId() != 0L) {
                 if(parent.getValue() instanceof AttributeName) {
-                    AttributeValue newValue = new AttributeValue(0L, "新建属性值", "0,0,0", selectedCategory, (AttributeName)parent.getValue(), Status.AVAILABLE.getText(), Sort.ASC.getSort());
+                    AttributeValue newValue = new AttributeValue(0L, "新建属性值", "0,0,0", selectedCategory, (AttributeName)parent.getValue(), Constants.AVAILABLE, 1);
                     String json = GoogleJson.GET().toJson(newValue);
                     try {
                         String idStr = HttpClient.POST("/attributes/value", json);

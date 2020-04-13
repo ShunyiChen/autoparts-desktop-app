@@ -26,7 +26,7 @@ public class Product {
     /** 车型 */
     private Car car;
     /** 通用车型 */
-    private Set<ProductCarMapping> productCarMappingSet = new HashSet<>();
+    private String relevantModels;
     /** 产地 */
     private Place place;
     /** 品牌 */
@@ -34,17 +34,17 @@ public class Product {
     /** 英文名 */
     private String englishName;
     /** 进口 */
-    private String imported;
+    private Import imported;
     /** 通用件号 */
     private String commonNumber;
     /** 材料 */
     private String materials;
     /** 所属公司 */
-    private String company;
+    private Company company;
     /** 包装数量 */
     private Integer packingQuantity;
     /** 重量 */
-    private BigDecimal weight;
+    private String weight;
     /** 手册名称 */
     private String manual;
     /** 供应商 */
@@ -89,7 +89,7 @@ public class Product {
     public Product() {
     }
 
-    public Product(Long id, String code, Category category, String name, String unit, String barCode, Car car, Set<ProductCarMapping> productCarMappingSet, Place place, Brand brand, String englishName, String imported, String commonNumber, String materials, String company, Integer packingQuantity, BigDecimal weight, String manual, Supplier supplier, BigDecimal purchasingPrice1, BigDecimal purchasingPrice2, BigDecimal purchasingPrice3, BigDecimal sellingPrice1, BigDecimal sellingPrice2, BigDecimal sellingPrice3, BigDecimal bottomPrice, String foreignCurrencyUnit, String foreignCurrencyPrice, Boolean shortage, Date dateCreated, String creator, Date dateUpdated, String updater, Integer updatedCount, Date dateDeleted, Boolean deleteFlag, String deleter) {
+    public Product(Long id, String code, Category category, String name, String unit, String barCode, Car car, String relevantModels, Place place, Brand brand, String englishName, Import imported, String commonNumber, String materials, Company company, Integer packingQuantity, String weight, String manual, Supplier supplier, BigDecimal purchasingPrice1, BigDecimal purchasingPrice2, BigDecimal purchasingPrice3, BigDecimal sellingPrice1, BigDecimal sellingPrice2, BigDecimal sellingPrice3, BigDecimal bottomPrice, String foreignCurrencyUnit, String foreignCurrencyPrice, Boolean shortage, Date dateCreated, String creator, Date dateUpdated, String updater, Integer updatedCount, Date dateDeleted, Boolean deleteFlag, String deleter) {
         this.id = id;
         this.code = code;
         this.category = category;
@@ -97,7 +97,7 @@ public class Product {
         this.unit = unit;
         this.barCode = barCode;
         this.car = car;
-        this.productCarMappingSet = productCarMappingSet;
+        this.relevantModels = relevantModels;
         this.place = place;
         this.brand = brand;
         this.englishName = englishName;
@@ -185,12 +185,12 @@ public class Product {
         this.car = car;
     }
 
-    public Set<ProductCarMapping> getProductCarMappingSet() {
-        return productCarMappingSet;
+    public String getRelevantModels() {
+        return relevantModels;
     }
 
-    public void setProductCarMappingSet(Set<ProductCarMapping> productCarMappingSet) {
-        this.productCarMappingSet = productCarMappingSet;
+    public void setRelevantModels(String relevantModels) {
+        this.relevantModels = relevantModels;
     }
 
     public Place getPlace() {
@@ -217,11 +217,11 @@ public class Product {
         this.englishName = englishName;
     }
 
-    public String getImported() {
+    public Import getImported() {
         return imported;
     }
 
-    public void setImported(String imported) {
+    public void setImported(Import imported) {
         this.imported = imported;
     }
 
@@ -241,11 +241,11 @@ public class Product {
         this.materials = materials;
     }
 
-    public String getCompany() {
+    public Company getCompany() {
         return company;
     }
 
-    public void setCompany(String company) {
+    public void setCompany(Company company) {
         this.company = company;
     }
 
@@ -257,11 +257,11 @@ public class Product {
         this.packingQuantity = packingQuantity;
     }
 
-    public BigDecimal getWeight() {
+    public String getWeight() {
         return weight;
     }
 
-    public void setWeight(BigDecimal weight) {
+    public void setWeight(String weight) {
         this.weight = weight;
     }
 
@@ -435,7 +435,7 @@ public class Product {
                 ", unit='" + unit + '\'' +
                 ", barCode='" + barCode + '\'' +
                 ", car=" + car +
-                ", productCarMappingSet=" + productCarMappingSet +
+                ", relevantModels=" + relevantModels +
                 ", place=" + place +
                 ", brand=" + brand +
                 ", englishName='" + englishName + '\'' +

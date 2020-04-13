@@ -305,13 +305,13 @@ public class InventoryDetailsController {
 //                return new SimpleObjectProperty<>(param.getValue().getProduct().getListPrice().setScale(2, RoundingMode.HALF_UP).toString());
 //            }
 //        });
-        colImport.setCellValueFactory(param -> {
-            if(param.getValue().getProduct().getImported() == null) {
-                return new SimpleObjectProperty<>("");
-            } else {
-                return new SimpleObjectProperty<>(param.getValue().getProduct().getImported());
-            }
-        });
+//        colImport.setCellValueFactory(param -> {
+//            if(param.getValue().getProduct().getImported() == null) {
+//                return new SimpleObjectProperty<>("");
+//            } else {
+//                return new SimpleObjectProperty<>(param.getValue().getProduct().getImported());
+//            }
+//        });
 //        colOrigin.setCellValueFactory(param -> {
 //            if(param.getValue().getProduct().getImported() == null) {
 //                return new SimpleObjectProperty<>("");

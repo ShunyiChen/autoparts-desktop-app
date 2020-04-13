@@ -115,36 +115,21 @@ public class SupplierEditorController {
     }
 
     @FXML
-    private void saveAndQuit() {
-        Callback<Supplier, String> cb = new Callback<Supplier, String>() {
-            @Override
-            public String call(Supplier param) {
-                callback.call(param);
-                dialog.close();
-                return null;
-            }
-        };
-        save(cb);
-    }
-
-    @FXML
     private void cancel() {
         dialog.close();
     }
 
     @FXML
     private void continueAdding() {
-        Callback<Supplier, String> cb = new Callback<Supplier, String>() {
-            @Override
-            public String call(Supplier param) {
-                callback.call(param);
-                return null;
-            }
-        };
-        save(cb);
+        save(false);
     }
 
-    private void save(Callback<Supplier, String> callback) {
+    @FXML
+    private void saveAndQuit() {
+        save(true);
+    }
+
+    private void save(boolean closeDialog) {
         if(validate()) {
             Supplier supplier = new Supplier();
             supplier.setCode(txtCode.getText());
@@ -185,6 +170,9 @@ public class SupplierEditorController {
                 e.printStackTrace();
             }
             callback.call(supplier);
+            if(closeDialog) {
+                dialog.close();
+            }
         }
     }
 

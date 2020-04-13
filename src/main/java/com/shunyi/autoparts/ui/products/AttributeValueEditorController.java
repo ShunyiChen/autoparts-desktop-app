@@ -1,9 +1,8 @@
 package com.shunyi.autoparts.ui.products;
 
+import com.shunyi.autoparts.ui.common.Constants;
 import com.shunyi.autoparts.ui.common.GoogleJson;
 import com.shunyi.autoparts.ui.common.HttpClient;
-import com.shunyi.autoparts.ui.common.Sort;
-import com.shunyi.autoparts.ui.common.Status;
 import com.shunyi.autoparts.ui.common.vo.AttributeName;
 import com.shunyi.autoparts.ui.common.vo.AttributeValue;
 import javafx.fxml.FXML;
@@ -33,7 +32,7 @@ public class AttributeValueEditorController {
         this.updated = selectedAttributeValue;
         initComboBox();
         boxStatus.setValue(selectedAttributeValue.getStatus());
-        boxSort.setValue(selectedAttributeValue.getSort() == 1? Sort.ASC.getName():Sort.DESC.getName());
+        boxSort.setValue(selectedAttributeValue.getSort() == 1? Constants.ASC : Constants.DESC);
         String[] str = selectedAttributeValue.getRgb().split(",");
         colorPicker.setValue(new Color(Double.valueOf(str[0]), Double.valueOf(str[1]), Double.valueOf(str[2]), 1));
         initEvents();
@@ -46,8 +45,8 @@ public class AttributeValueEditorController {
     }
 
     private void initComboBox() {
-        boxStatus.getItems().addAll(Status.AVAILABLE.getText(), Status.DISABLED.getText());
-        boxSort.getItems().addAll(Sort.ASC.getName(), Sort.DESC.getName());
+        boxStatus.getItems().addAll(Constants.AVAILABLE, Constants.UNAVAILABLE);
+        boxSort.getItems().addAll(Constants.ASC, Constants.DESC);
         boxStatus.setStyle("-fx-font-size: 14px;");
         boxSort.setStyle("-fx-font-size: 14px;");
     }
@@ -62,7 +61,7 @@ public class AttributeValueEditorController {
             update();
         });
         boxSort.setOnAction(e -> {
-            updated.setSort(boxSort.getValue().equals(Sort.ASC.getName())?1:-1);
+            updated.setSort(boxSort.getValue().equals(Constants.ASC)? 1: -1);
             update();
         });
     }

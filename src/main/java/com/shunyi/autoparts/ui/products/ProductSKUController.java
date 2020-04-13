@@ -237,7 +237,7 @@ public class ProductSKUController {
 //            }
 //        });
 
-        ObservableList status = FXCollections.observableArrayList(Status.AVAILABLE.getText(), Status.DISABLED.getText());
+        ObservableList status = FXCollections.observableArrayList(Constants.AVAILABLE, Constants.UNAVAILABLE);
         colStatus.setCellValueFactory(
                 new PropertyValueFactory<String, String>("status")
         );

@@ -1,5 +1,7 @@
 package com.shunyi.autoparts.ui.common;
 
+import java.math.BigDecimal;
+
 /**
  * @Description:
  * @Author: 陈顺谊
@@ -18,23 +20,31 @@ public class Constants {
     public static final String PRICE_ADJUSTMENT_ORDER = "调价单";
     public static final String INVENTORY_DETAILS = "库存明细";
     public static final String SYSTEM_SETTINGS = "系统设置";
-
+    public static final String ROOT = "root";
+    public static final String EMPTY = "";
+    public static final String AVAILABLE = "可用";
+    public static final String UNAVAILABLE = "不可用";
+    /** 升序 */
+    public static final String ASC = "升序";
+    /** 降序 */
+    public static final String DESC = "降序";
     public static final Boolean DELETE_FLAG_TRUE = true;
     public static final Boolean DELETE_FLAG_FALSE = false;
-    public static final String ROOT = "root";
     public static final Boolean PARENT_TRUE = true;
     public static final Boolean PARENT_FALSE = false;
     public static final Boolean VFS_MASTER_TRUE = true;
     public static final Boolean VFS_MASTER_FALSE = false;
-    public static final String HOMEMADE = "国产";
-    public static final String ORIGINAL  = "原厂";
+    public static final BigDecimal AVG_PRICE = BigDecimal.ZERO;
+
+
 
     /** 值对象初始ID值 */
     public static final Long ID = 0L;
     /** 值对象初始父ID值 */
     public static final Long PARENT_ID = -1L;
     /** SKU初始库存数量 */
-    public static final Integer QUANTITY = 0;
+    public static final Integer ZERO = 0;
+
     /** 创建日期pattern */
     public static final String PATTERN = "yyyy-MM-dd HH:mm:ss";
 

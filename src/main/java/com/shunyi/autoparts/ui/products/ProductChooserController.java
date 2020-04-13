@@ -349,31 +349,14 @@ public class ProductChooserController {
 //    }
 
     @FXML
-    private void newProduct() {
-        Callback<Product, Object> callback = e -> {
-            String json = GoogleJson.GET().toJson(e);
-//            try {
-//                String idStr = HttpClient.POST("/products",json);
-//                e.setId(Long.valueOf(idStr));
-//            } catch (IOException ex) {
-//                ex.printStackTrace();
-//            }
-//            // 为新建配件创建一个默认的SKU
-//            SKU sku = new SKU(Constants.ID, e, "", e.getName(), e.getName(), e.getUnit(), Constants.QUANTITY, e.getListPrice(), e.getListPrice(), Status.AVAILABLE.getText(), "", "", new HashSet<SKUSlotMapping>(), new HashSet<Picture>(), null, null, null, null, null, null, null, null);
-//            json = GoogleJson.GET().toJson(sku);
-//            try {
-//                String idStr = HttpClient.POST("/sku",json);
-//                sku.setId(Long.valueOf(idStr));
-//            } catch (IOException ex) {
-//                ex.printStackTrace();
-//            }
+    private void newSKU() {
+        Callback<SKU, String> callback = sku -> {
             //刷新表格
-//            tableView.getItems().add(e);
-//            tableView.getSelectionModel().select(e);
+            tableView.getItems().add(sku);
+            tableView.refresh();
+            tableView.getSelectionModel().select(sku);
             return null;
         };
-        //初始品牌
-//        BrandSeries selectedBrand = listView.getSelectionModel().getSelectedItem();
         openProductEditor(callback, null);
     }
 
@@ -414,14 +397,8 @@ public class ProductChooserController {
 //        openProductEditor(callback, selected, selectedCategory, selectedBrand);
     }
 
-    private void openProductEditor(Callback<Product, Object> callback, Product updatedProduct) {
+    private void openProductEditor(Callback<SKU, String> callback, Product updatedProduct) {
         TreeItem<Category> selectedCategory = treeView.getSelectionModel().getSelectedItem();
-        if(selectedCategory == null) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
-            alert.setHeaderText("请选择产品分类");
-            alert.show();
-            return;
-        }
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource(
                         "/fxml/products/ProductEditor.fxml"

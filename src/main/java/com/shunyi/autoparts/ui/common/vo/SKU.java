@@ -258,4 +258,32 @@ public class SKU {
     public void setDeleter(String deleter) {
         this.deleter = deleter;
     }
+
+    @Override
+    public String toString() {
+        return "SKU{" +
+                "id=" + id +
+                ", product=" + product +
+                ", skuCode='" + skuCode + '\'' +
+                ", skuName='" + skuName + '\'' +
+                ", specification='" + specification + '\'' +
+                ", skuBarCode='" + skuBarCode + '\'' +
+                ", stockQty=" + stockQty +
+                ", properties='" + properties + '\'' +
+                ", discountPercentage='" + discountPercentage + '\'' +
+                ", status='" + status + '\'' +
+                ", notes='" + notes + '\'' +
+                ", avgPrice=" + avgPrice +
+                ", skuSlotMappingSet=" + skuSlotMappingSet +
+                ", photos=" + photos +
+                ", dateCreated=" + dateCreated +
+                ", creator='" + creator + '\'' +
+                ", dateUpdated=" + dateUpdated +
+                ", updater='" + updater + '\'' +
+                ", updatedCount=" + updatedCount +
+                ", dateDeleted=" + dateDeleted +
+                ", deleteFlag=" + deleteFlag +
+                ", deleter='" + deleter + '\'' +
+                '}';
+    }
 }
