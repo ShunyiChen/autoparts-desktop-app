@@ -21,27 +21,27 @@ import java.util.stream.Collectors;
 
 /**
  * @description 产品编辑器Controller
- *
  * @author Shunyi Chen
- * @date 2020/4/7
+ * @date 2020/4/13
  */
 public class ProductEditorController {
     private Stage dialog;
     private Callback<Product, Object> callback;
+    /** 单位 */
+    private Unit unit;
+    /** 分类 */
     private Category category;
+    /** 车型 */
     private Car car;
-    private List<Car> commonCars;
+    /** 产地 */
     private Place place;
+    private List<Car> commonCars;
     private Brand brand;
-
-
-
-    private Product updatedProduct;
-    private Supplier selectedSupplier;
+    private Supplier supplier;
+    @FXML
+    private Button btnContinueToAdd;
     @FXML
     private Button btnSaveAndQuit;
-
-
     @FXML
     private TextField txtCode;
     @FXML
@@ -49,17 +49,17 @@ public class ProductEditorController {
     @FXML
     private TextField txtName;
     @FXML
-    private TextField txtCategory;
+    private ComboBox<String> comboBoxCategory;
     @FXML
     private TextField txtBarCode;
     @FXML
-    private TextField txtCar;
+    private ComboBox<String> comboBoxCar;
     @FXML
-    private TextField txtPlace;
+    private ComboBox<String> comboBoxPlace;
     @FXML
-    private TextField txtCommonCar;
+    private ComboBox<String> comboBoxCommonCar;
     @FXML
-    private TextField txtBrand;
+    private ComboBox<String> comboBoxBrand;
     @FXML
     private TextField txtEnglishName;
     @FXML
@@ -75,7 +75,7 @@ public class ProductEditorController {
     @FXML
     private TextField txtPackingQuantity;
     @FXML
-    private TextField txtSupplier;
+    private ComboBox<String> comboBoxSupplier;
     @FXML
     private TextField txtManual;
     @FXML
@@ -99,7 +99,6 @@ public class ProductEditorController {
     @FXML
     private CheckBox checkBoxShortage;
 
-
     /**
      *
      * @param dialog
@@ -120,7 +119,13 @@ public class ProductEditorController {
         }
         new AutoCompleteBox(comboBoxUnit);
         //初始化分类
-        txtCategory.setText(category.getName());
+        try {
+            Category[] categories = HttpClient.GET("/categories", Category[].class);
+            comboBoxCategory.getItems().addAll(Arrays.asList(categories).stream().map(e -> e.getName()).collect(Collectors.toList()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        new AutoCompleteBox(comboBoxCategory);
         //初始化进口
         try {
             Import[] imports = HttpClient.GET("/imports", Import[].class);
@@ -131,12 +136,14 @@ public class ProductEditorController {
         new AutoCompleteBox(comboBoxImport);
         //所属公司
         try {
-            Company[] companies = HttpClient.GET("/imports", Company[].class);
+            Company[] companies = HttpClient.GET("/companies", Company[].class);
             comboBoxCompany.getItems().addAll(Arrays.asList(companies).stream().map(e -> e.getName()).collect(Collectors.toList()));
         } catch (IOException e) {
             e.printStackTrace();
         }
         new AutoCompleteBox(comboBoxCompany);
+        //
+
     }
 
     @FXML
@@ -156,6 +163,10 @@ public class ProductEditorController {
             product.setBarCode(txtBarCode.getText());
             product.setCar(car);
             product.setPlace(place);
+
+
+
+
 //            product.setProductCarMappingSet();
 
 
@@ -199,7 +210,7 @@ public class ProductEditorController {
             @Override
             public String call(Category param) {
                 category = param;
-                txtCategory.setText(category.getName());
+//                txtCategory.setText(category.getName());
                 return null;
             }
         };
@@ -234,7 +245,7 @@ public class ProductEditorController {
             @Override
             public String call(Place param) {
                 place = param;
-                txtPlace.setText(place.getName());
+//                txtPlace.setText(place.getName());
                 return null;
             }
         };
@@ -273,7 +284,7 @@ public class ProductEditorController {
                 commonCars.forEach(e -> {
                     cars.append(e.getName()+";");
                 });
-                txtCommonCar.setText(cars.toString());
+//                txtCommonCar.setText(cars.toString());
                 return null;
             }
         };
@@ -308,7 +319,7 @@ public class ProductEditorController {
             @Override
             public String call(Brand param) {
                 brand = param;
-                txtBrand.setText(brand.getName());
+//                txtBrand.setText(brand.getName());
                 return null;
             }
         };
@@ -338,6 +349,11 @@ public class ProductEditorController {
     }
 
     @FXML
+    private void openImportList() {
+
+    }
+
+    @FXML
     private void openSupplierChooser() {
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource(
@@ -353,12 +369,12 @@ public class ProductEditorController {
         Scene scene = new Scene(root);
         Stage subStage = new Stage();
         SupplierChooserController controller = loader.getController();
-        Callback<Supplier, String> callback = supplier -> {
-            selectedSupplier = supplier;
-            txtSupplier.setText(selectedSupplier.getName());
+        Callback<Supplier, String> callback = returnedSupplier -> {
+            supplier = returnedSupplier;
+//            txtSupplier.setText(selectedSupplier.getName());
             return null;
         };
-        controller.initialize(subStage, callback, selectedSupplier);
+        controller.initialize(subStage, callback, supplier);
         subStage.setTitle("选择供应商");
         subStage.initOwner(dialog);
         subStage.setResizable(false);
@@ -375,7 +391,7 @@ public class ProductEditorController {
             @Override
             public String call(List<Car> param) {
                 car = param.get(0);
-                txtCar.setText(car.getName());
+//                txtCar.setText(car.getName());
                 return null;
             }
         };
