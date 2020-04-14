@@ -41,4 +41,8 @@ public class NumberValidationUtils {
     public static boolean isRealNumber(String orginal){
         return isWholeNumber(orginal) || isDecimal(orginal);
     }
+
+    public static void main(String[] args) {
+        System.out.println(isRealNumber(""));
+    }
 }

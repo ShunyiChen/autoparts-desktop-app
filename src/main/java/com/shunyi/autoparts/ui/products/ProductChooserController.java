@@ -1,11 +1,16 @@
 package com.shunyi.autoparts.ui.products;
 
+import com.shunyi.autoparts.ui.common.Constants;
 import com.shunyi.autoparts.ui.common.Env;
 import com.shunyi.autoparts.ui.common.GoogleJson;
 import com.shunyi.autoparts.ui.common.HttpClient;
 import com.shunyi.autoparts.ui.common.vo.*;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -22,6 +27,7 @@ import javafx.util.StringConverter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 /** 配件管理Controller */
@@ -42,46 +48,47 @@ public class ProductChooserController {
     @FXML
     private TableColumn colSpec;
     @FXML
-    private TableColumn colUnit;
+    private TableColumn<SKU, String> colUnit;
     @FXML
     private TableColumn colBarCode;
     @FXML
     private TableColumn colStockQty;
     @FXML
-    private TableColumn colImport;
+    private TableColumn<SKU, String> colImported;
     @FXML
-    private TableColumn colPlace;
+    private TableColumn<SKU, String> colPlace;
     @FXML
-    private TableColumn colBrand;
+    private TableColumn<SKU, String> colBrand;
     @FXML
-    private TableColumn colCar;
+    private TableColumn<SKU, String> colCar;
     @FXML
     private TableColumn colDiscountPercentage;
     @FXML
     private TableColumn colAvgPrice;
     @FXML
-    private TableColumn colPurchasingPrice1;
+    private TableColumn<SKU, String> colPurchasingPrice1;
     @FXML
-    private TableColumn colPurchasingPrice2;
+    private TableColumn<SKU, String> colPurchasingPrice2;
     @FXML
-    private TableColumn colPurchasingPrice3;
+    private TableColumn<SKU, String> colPurchasingPrice3;
     @FXML
-    private TableColumn colSellingPrice1;
+    private TableColumn<SKU, String> colSellingPrice1;
     @FXML
-    private TableColumn colSellingPrice2;
+    private TableColumn<SKU, String> colSellingPrice2;
     @FXML
-    private TableColumn colSellingPrice3;
+    private TableColumn<SKU, String> colSellingPrice3;
     @FXML
-    private TableColumn colBottomPrice;
+    private TableColumn<SKU, String> colBottomPrice;
     @FXML
-    private TableColumn colShortage;
+    private TableColumn<SKU, String> colShortage;
     @FXML
     private TableColumn colStatus;
     @FXML
     private TableColumn colNotes;
     @FXML
-    private TableColumn colSlot;
-
+    private TableColumn<SKU, String> colSlot;
+    @FXML
+    private TableColumn<SKU, String> colPhotos;
 
     @FXML
     private void cancel() {
@@ -99,18 +106,260 @@ public class ProductChooserController {
      */
     public void initialize(Stage dialog) {
         this.dialog = dialog;
-//        comboImport.getItems().addAll("", Constants.ORIGINAL, Constants.HOMEMADE);
-        initComboBoxes();
+        //初始化分类树
         initTreeView();
+        //初始化SKU表格
         initTableView();
-
         btnSelectAndReturn.setStyle(String.format("-fx-base: %s;", "rgb(63,81,181)"));
         headerText.setStyle("-fx-text-fill: rgb(255,255,255);");
     }
 
-    private void initComboBoxes() {
-//        new AutoCompleteBox(comboImport);
+
+    /**
+     * 初始化分类树
+     */
+    private void initTreeView() {
+        Category rootCategory = null;
+        try {
+            rootCategory = HttpClient.GET("/category/root/"+Env.getInstance().currentStore().getId(), Category.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        TreeItem<Category> root = new TreeItem<>(rootCategory);
+        initTreeNodes(root);
+        treeView.setRoot(root);
+        treeView.setCellFactory(p -> new TextFieldTreeCell<>(new StringConverter<>(){
+
+            @Override
+            public String toString(Category object) {
+                return object.getName();
+            }
+
+            @Override
+            public Category fromString(String string) {
+                p.getEditingItem().getValue().setName(string);
+                return p.getEditingItem().getValue();
+            }
+        }));
+        treeView.setOnEditCommit(event -> {
+            if(event.getNewValue().getName().trim().equals("")) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
+                alert.setHeaderText("分类名称不能为空");
+                alert.show();
+                return;
+            } else {
+                String path = "/categories/"+event.getNewValue().getId();
+                String json = GoogleJson.GET().toJson(event.getNewValue());
+                try {
+                    HttpClient.PUT(path, json);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        ContextMenu menu = new ContextMenu();
+        MenuItem itemNew = new MenuItem("新建类目");
+        MenuItem itemRE = new MenuItem("刷 新");
+        MenuItem itemRM = new MenuItem("删 除");
+        MenuItem itemRN = new MenuItem("重命名");
+        MenuItem itemProperties = new MenuItem("分类属性");
+        treeView.setEditable(true);
+        treeView.setContextMenu(menu);
+        itemNew.setOnAction(event -> newCategory());
+        itemRE.setOnAction(event -> refreshCategory());
+        itemRM.setOnAction(event -> removeCategory());
+        itemRN.setOnAction(event -> treeView.edit(treeView.getSelectionModel().getSelectedItem()));
+        itemProperties.setOnAction(event -> openCustomAttributes());
+
+        treeView.setOnMouseClicked((MouseEvent event) -> {
+            if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 1){
+                tableView.getItems().clear();
+                try {
+                    TreeItem<Category> selectedItem = treeView.getSelectionModel().getSelectedItem();
+                    String data;
+                    if(selectedItem.getValue().getParentId().equals(Constants.ROOT_PARENT_ID)) {
+                        data = HttpClient.GET("/sku");
+                    } else {
+                        data = HttpClient.GET("/sku/category/"+selectedItem.getValue().getId());
+                    }
+                    SKU[] skuArray = GoogleJson.GET().fromJson(data, SKU[].class);
+                    tableView.getItems().addAll(skuArray);
+                    tableView.refresh();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else if (event.getButton().equals(MouseButton.SECONDARY) && event.getClickCount() == 1) {
+                Category selectedCategory = treeView.getSelectionModel().getSelectedItem().getValue();
+                if(selectedCategory.getParentId().equals(Constants.ROOT_PARENT_ID)) {
+                    menu.getItems().clear();
+                    menu.getItems().addAll(itemNew, new SeparatorMenuItem(), itemRE, itemRN, new SeparatorMenuItem(), itemProperties);
+                } else {
+                    menu.getItems().clear();
+                    menu.getItems().addAll(itemNew, new SeparatorMenuItem(), itemRM, itemRN, new SeparatorMenuItem(), itemProperties);
+                }
+            }
+        });
+
+        //默认选择根节点
+        treeView.getSelectionModel().select(root);
     }
+
+    private void initTableView() {
+        tableView.setId("my-table");
+        //初始化列
+        colCode.setCellValueFactory(new PropertyValueFactory<SKU, String>("skuCode"));
+        colName.setCellValueFactory(new PropertyValueFactory<SKU, String>("skuName"));
+        colSpec.setCellValueFactory(new PropertyValueFactory<SKU, String>("specification"));
+        colUnit.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getProduct().getUnit()));
+        colBarCode.setCellValueFactory(new PropertyValueFactory<SKU, String>("skuBarCode"));
+        colStockQty.setCellValueFactory(new PropertyValueFactory<SKU, String>("stockQty"));
+        colImported.setCellValueFactory(param -> new SimpleObjectProperty(param.getValue().getProduct().getImported()));
+        colPlace.setCellValueFactory(param -> new SimpleObjectProperty(param.getValue().getProduct().getPlace()));
+        colBrand.setCellValueFactory(param -> new SimpleObjectProperty(param.getValue().getProduct().getBrand()));
+        colCar.setCellValueFactory(param -> new SimpleObjectProperty(param.getValue().getProduct().getCar()));
+        colDiscountPercentage.setCellValueFactory(new PropertyValueFactory<SKU, String>("discountPercentage"));
+        colAvgPrice.setCellValueFactory(new PropertyValueFactory<SKU, String>("avgPrice"));
+        colPurchasingPrice1.setCellValueFactory(param -> new SimpleObjectProperty(param.getValue().getProduct().getPurchasingPrice1()));
+        colPurchasingPrice2.setCellValueFactory(param -> new SimpleObjectProperty(param.getValue().getProduct().getPurchasingPrice2()));
+        colPurchasingPrice3.setCellValueFactory(param -> new SimpleObjectProperty(param.getValue().getProduct().getPurchasingPrice3()));
+        colSellingPrice1.setCellValueFactory(param -> new SimpleObjectProperty(param.getValue().getProduct().getSellingPrice1()));
+        colSellingPrice2.setCellValueFactory(param -> new SimpleObjectProperty(param.getValue().getProduct().getSellingPrice2()));
+        colSellingPrice3.setCellValueFactory(param -> new SimpleObjectProperty(param.getValue().getProduct().getSellingPrice3()));
+        colBottomPrice.setCellValueFactory(param -> new SimpleObjectProperty(param.getValue().getProduct().getBottomPrice()));
+        colShortage.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getProduct().getShortage()?"是":"否"));
+        colStatus.setCellValueFactory(new PropertyValueFactory<SKU, String>("status"));
+        colNotes.setCellValueFactory(new PropertyValueFactory<SKU, String>("notes"));
+        colSlot.setCellValueFactory(param -> {
+            StringBuilder slots = new StringBuilder();
+            param.getValue().getSkuSlotMappingSet().stream().sorted(Comparator.comparingLong(e -> e.getSlot().getId())).forEach(e -> {
+                slots.append(e.getSlot().getName()+";");
+            });
+            return new SimpleObjectProperty<>(slots.toString());
+        });
+        colPhotos.setEditable(false);
+        colPhotos.setCellValueFactory(param -> {
+            StringBuilder photos = new StringBuilder();
+            param.getValue().getPhotos().stream().sorted(Comparator.comparingLong(e -> e.getId())).forEach(e -> {
+                photos.append("图片"+e.getId()+"; ");
+            });
+            return new SimpleObjectProperty<>(photos.toString());
+        });
+        tableView.setOnMouseClicked((MouseEvent event) -> {
+            if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2){
+                updateProductAndSKU();
+            }
+        });
+        ContextMenu menu = new ContextMenu();
+        MenuItem itemDuplicate = new MenuItem("复 制");
+        MenuItem itemProductSKU = new MenuItem("产品sku");
+        MenuItem itemDefineProperties = new MenuItem("产品属性");
+        itemDuplicate.setOnAction(e ->{
+            duplicate();
+        });
+        itemProductSKU.setOnAction(e ->{
+            openProductSKU();
+        });
+        itemDefineProperties.setOnAction(e ->{
+            openBasicAttributes();
+        });
+        menu.getItems().addAll(itemDuplicate, new SeparatorMenuItem(), itemProductSKU, new SeparatorMenuItem(), itemDefineProperties);
+        tableView.addEventHandler(MouseEvent.MOUSE_CLICKED, t -> {
+            if(t.getButton() == MouseButton.SECONDARY) {
+                menu.show(tableView, t.getScreenX(), t.getScreenY());
+            } else {
+                menu.hide();
+            }
+        });
+
+        try {
+            SKU[] skuArray = HttpClient.GET("/sku", SKU[].class);
+            tableView.getItems().addAll(skuArray);
+            tableView.refresh();
+
+            for(SKU s : skuArray) {
+                System.out.println(s.getProduct());
+            }
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void newProductAndSKU() {
+        Callback<SKU, String> callback = sku -> {
+            //刷新表格
+            tableView.getItems().add(sku);
+            tableView.refresh();
+            tableView.getSelectionModel().select(sku);
+            return null;
+        };
+        openProductEditor(callback, null);
+    }
+
+    @FXML
+    private void updateProductAndSKU() {
+        SKU selected = tableView.getSelectionModel().getSelectedItem();
+        if(selected == null) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
+            alert.setHeaderText("请选择一个配件");
+            alert.show();
+            return;
+        }
+        Callback<SKU, String> callback = sku -> {
+            //刷新表格
+            int index = tableView.getSelectionModel().getSelectedIndex();
+            tableView.getItems().remove(selected);
+            tableView.getItems().add(index, sku);
+            tableView.getSelectionModel().select(sku);
+            return null;
+        };
+        openProductEditor(callback, selected.getProduct());
+    }
+
+    @FXML
+    private void removeProductAndSKU() {
+        SKU selectedProduct = tableView.getSelectionModel().getSelectedItem();
+        if(selectedProduct == null) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
+            alert.setHeaderText("请选择一个配件删除");
+            alert.show();
+            return;
+        }
+        Alert alertConfirm = new Alert(Alert.AlertType.CONFIRMATION, "", ButtonType.NO, ButtonType.YES);
+        alertConfirm.setHeaderText("是否删除该商品？");
+        alertConfirm.setContentText("删除同时将删除配件SKU");
+        alertConfirm.showAndWait().filter(response -> response == ButtonType.YES).ifPresent(response -> {
+            try {
+                //删除商品所有SKU
+                SKU[] skuArray = HttpClient.GET("/sku/products/"+selectedProduct.getId(), SKU[].class);
+                Arrays.asList(skuArray).forEach(e -> {
+                    try {
+                        HttpClient.DELETE("/sku/"+e.getId());
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                });
+                //删除商品基本属性
+                BasicAttributes[] basicAttributes = HttpClient.GET("/basic/attributes/products/"+selectedProduct.getId(), BasicAttributes[].class);
+                Arrays.asList(basicAttributes).forEach(e -> {
+                    try {
+                        HttpClient.DELETE("/basic/attributes/"+e.getId());
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                });
+                //删除商品
+                HttpClient.DELETE("/products/"+selectedProduct.getId());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            tableView.getItems().remove(selectedProduct);
+        });
+    }
+
 
     @FXML
     private void search() {
@@ -156,7 +405,6 @@ public class ProductChooserController {
 //        txtCar.setText("");
     }
 
-    @FXML
     private void newCategory() {
         TreeItem<Category> parent = treeView.getSelectionModel().getSelectedItem();
         if(parent == null) {
@@ -268,8 +516,7 @@ public class ProductChooserController {
 
     @FXML
     private void refreshCategory() {
-//        initTreeView();
-//        listView.getItems().clear();
+        initTreeView();
     }
 
     @FXML
@@ -322,83 +569,7 @@ public class ProductChooserController {
         }
     }
 
-//    private void openBrandSeriesEditor(Callback<BrandSeries, Object> callback, BrandSeries updatedBrandSeries, Category selectedCategory) {
-//        FXMLLoader loader = new FXMLLoader(
-//                getClass().getResource(
-//                        "/fxml/products/brandseries_editor.fxml"
-//                )
-//        );
-//        HBox root = null;
-//        try {
-//            root = loader.load();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        Scene scene = new Scene(root);
-//        Stage dialog = new Stage();
-//        BrandSeriesEditorController controller = loader.getController();
-//        controller.prepare(dialog, updatedBrandSeries, callback, selectedCategory);
-//        dialog.setTitle(updatedBrandSeries != null?"更改品牌":"新建品牌");
-//        dialog.initOwner(application.getStage());
-//        dialog.setResizable(false);
-//        dialog.initModality(Modality.APPLICATION_MODAL);
-//        dialog.setScene(scene);
-//        // center stage on screen
-//        dialog.centerOnScreen();
-//        dialog.show();
-//    }
-
-    @FXML
-    private void newSKU() {
-        Callback<SKU, String> callback = sku -> {
-            //刷新表格
-            tableView.getItems().add(sku);
-            tableView.refresh();
-            tableView.getSelectionModel().select(sku);
-            return null;
-        };
-        openProductEditor(callback, null);
-    }
-
-    @FXML
-    private void updateProduct() {
-//        Product selected = tableView.getSelectionModel().getSelectedItem();
-//        if(selected == null) {
-//            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
-//            alert.setHeaderText("请选择一个配件");
-//            alert.show();
-//            return;
-//        }
-//        BrandSeries selectedBrand = selected.getBrandSeries();
-//        Category selectedCategory = selectedBrand.getCategory();
-//        String data = null;
-//        try {
-//            data = HttpClient.GET("/products/"+selected.getId());
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        Product selectedProduct = GoogleJson.GET().fromJson(data, Product.class);
-//        Callback<Product, Object> callback = e -> {
-//            e.setId(selectedProduct.getId());
-//            e.setDateCreated(selectedProduct.getDateCreated());
-//            String json = GoogleJson.GET().toJson(e);
-//            try {
-//                HttpClient.PUT("/products/"+selectedProduct.getId(),json);
-//            } catch (IOException ex) {
-//                ex.printStackTrace();
-//            }
-//            //刷新表格
-//            int index = tableView.getSelectionModel().getSelectedIndex();
-//            tableView.getItems().remove(selected);
-//            tableView.getItems().add(index, e);
-//            tableView.getSelectionModel().select(e);
-//            return null;
-//        };
-//        openProductEditor(callback, selected, selectedCategory, selectedBrand);
-    }
-
     private void openProductEditor(Callback<SKU, String> callback, Product updatedProduct) {
-        TreeItem<Category> selectedCategory = treeView.getSelectionModel().getSelectedItem();
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource(
                         "/fxml/products/ProductEditor.fxml"
@@ -413,7 +584,7 @@ public class ProductChooserController {
         Scene scene = new Scene(root);
         Stage dialog = new Stage();
         ProductEditorController controller = loader.getController();
-        controller.initialize(dialog, callback, selectedCategory.getValue());
+        controller.initialize(dialog, callback, updatedProduct);
         dialog.setTitle(updatedProduct != null?"更改配件":"新建配件");
         dialog.initOwner(this.dialog);
         dialog.setResizable(false);
@@ -422,48 +593,6 @@ public class ProductChooserController {
         // center stage on screen
         dialog.centerOnScreen();
         dialog.show();
-    }
-
-    @FXML
-    private void removeProduct() {
-        SKU selectedProduct = tableView.getSelectionModel().getSelectedItem();
-        if(selectedProduct == null) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
-            alert.setHeaderText("请选择一个配件删除");
-            alert.show();
-            return;
-        }
-        Alert alertConfirm = new Alert(Alert.AlertType.CONFIRMATION, "", ButtonType.NO, ButtonType.YES);
-        alertConfirm.setHeaderText("是否删除该商品？");
-        alertConfirm.setContentText("删除同时将删除配件SKU");
-        alertConfirm.showAndWait().filter(response -> response == ButtonType.YES).ifPresent(response -> {
-            try {
-                //删除商品所有SKU
-                SKU[] skuArray = HttpClient.GET("/sku/products/"+selectedProduct.getId(), SKU[].class);
-                Arrays.asList(skuArray).forEach(e -> {
-                    try {
-                        HttpClient.DELETE("/sku/"+e.getId());
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                    }
-                });
-                //删除商品基本属性
-                BasicAttributes[] basicAttributes = HttpClient.GET("/basic/attributes/products/"+selectedProduct.getId(), BasicAttributes[].class);
-                Arrays.asList(basicAttributes).forEach(e -> {
-                    try {
-                        HttpClient.DELETE("/basic/attributes/"+e.getId());
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                    }
-                });
-                //删除商品
-                HttpClient.DELETE("/products/"+selectedProduct.getId());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            tableView.getItems().remove(selectedProduct);
-        });
-
     }
 
     private void openCustomAttributes() {
@@ -569,70 +698,6 @@ public class ProductChooserController {
     }
 
 
-    private void initTableView() {
-        tableView.setId("my-table");
-        colCode.setCellValueFactory(new PropertyValueFactory<SKU, String>("skuCode"));
-        colName.setCellValueFactory(new PropertyValueFactory<SKU, String>("skuName"));
-        colSpec.setCellValueFactory(new PropertyValueFactory<SKU, String>("specification"));
-        colUnit.setCellValueFactory(new PropertyValueFactory<SKU, String>("unit"));
-        colBarCode.setCellValueFactory(new PropertyValueFactory<SKU, String>("barCode"));
-        colStockQty.setCellValueFactory(new PropertyValueFactory<SKU, String>("stockQty"));
-        colImport.setCellValueFactory(new PropertyValueFactory<SKU, String>("imported"));
-//        colPlace.setCellValueFactory(new PropertyValueFactory<SKU, String>("code"));
-//        colBrand.setCellValueFactory(new PropertyValueFactory<SKU, String>("code"));
-//        colCar.setCellValueFactory(new PropertyValueFactory<SKU, String>("code"));
-//        colDiscountPercentage.setCellValueFactory(new PropertyValueFactory<SKU, String>("code"));
-//        colAvgPrice.setCellValueFactory(new PropertyValueFactory<SKU, String>("code"));
-//        colPurchasingPrice1.setCellValueFactory(new PropertyValueFactory<SKU, String>("code"));
-//        colPurchasingPrice2.setCellValueFactory(new PropertyValueFactory<SKU, String>("code"));
-//        colPurchasingPrice3.setCellValueFactory(new PropertyValueFactory<SKU, String>("code"));
-//        colSellingPrice1.setCellValueFactory(new PropertyValueFactory<SKU, String>("code"));
-//        colSellingPrice2.setCellValueFactory(new PropertyValueFactory<SKU, String>("code"));
-//        colSellingPrice3.setCellValueFactory(new PropertyValueFactory<SKU, String>("code"));
-//        colBottomPrice.setCellValueFactory(new PropertyValueFactory<SKU, String>("code"));
-//        colShortage.setCellValueFactory(new PropertyValueFactory<SKU, String>("code"));
-//        colStatus.setCellValueFactory(new PropertyValueFactory<SKU, String>("code"));
-//        colNotes.setCellValueFactory(new PropertyValueFactory<SKU, String>("code"));
-//        colSlot.setCellValueFactory(new PropertyValueFactory<SKU, String>("code"));
-//        SimpleDateFormat format = new SimpleDateFormat(Constants.PATTERN);
-//        colDateCreated.setCellValueFactory(param -> {
-//            if(param.getValue().getDateCreated() == null) {
-//                return new SimpleObjectProperty<>("");
-//            } else {
-//                return new SimpleObjectProperty<>(format.format(param.getValue().getDateCreated()));
-//            }
-//        });
-//        colNotes.setCellValueFactory(new PropertyValueFactory<Product, String>("notes"));
-
-
-        tableView.setOnMouseClicked((MouseEvent event) -> {
-            if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2){
-                 updateProduct();
-            }
-        });
-        ContextMenu menu = new ContextMenu();
-        MenuItem itemDuplicate = new MenuItem("复 制");
-        MenuItem itemProductSKU = new MenuItem("产品sku");
-        MenuItem itemDefineProperties = new MenuItem("产品属性");
-        itemDuplicate.setOnAction(e ->{
-            duplicate();
-        });
-        itemProductSKU.setOnAction(e ->{
-            openProductSKU();
-        });
-        itemDefineProperties.setOnAction(e ->{
-            openBasicAttributes();
-        });
-        menu.getItems().addAll(itemDuplicate, new SeparatorMenuItem(), itemProductSKU, new SeparatorMenuItem(), itemDefineProperties);
-        tableView.addEventHandler(MouseEvent.MOUSE_CLICKED, t -> {
-            if(t.getButton() == MouseButton.SECONDARY) {
-                menu.show(tableView, t.getScreenX(), t.getScreenY());
-            } else {
-                menu.hide();
-            }
-        });
-    }
-
     private List<AttributeValue> getProductBasicAttributeValues(Product product) {
         String data;
         BasicAttributes[] basicAttributes = {};
@@ -685,90 +750,6 @@ public class ProductChooserController {
 //        } catch (IOException ex) {
 //            ex.printStackTrace();
 //        }
-    }
-
-    /**
-     * 初始化分类
-     */
-    private void initTreeView() {
-        Category rootCategory = null;
-        try {
-            rootCategory = HttpClient.GET("/category/root/"+Env.getInstance().currentStore().getId(), Category.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        TreeItem<Category> root = new TreeItem<>(rootCategory);
-        initTreeNodes(root);
-        treeView.setRoot(root);
-        treeView.setCellFactory(p -> new TextFieldTreeCell<>(new StringConverter<>(){
-
-            @Override
-            public String toString(Category object) {
-                return object.getName();
-            }
-
-            @Override
-            public Category fromString(String string) {
-                p.getEditingItem().getValue().setName(string);
-                return p.getEditingItem().getValue();
-            }
-        }));
-        treeView.setOnEditCommit(event -> {
-            if(event.getNewValue().getName().trim().equals("")) {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
-                alert.setHeaderText("分类名称不能为空");
-                alert.show();
-                return;
-            } else {
-                String path = "/categories/"+event.getNewValue().getId();
-                String json = GoogleJson.GET().toJson(event.getNewValue());
-                try {
-                    HttpClient.PUT(path, json);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-
-        ContextMenu menu = new ContextMenu();
-        MenuItem itemNew = new MenuItem("新建类目");
-        MenuItem itemRM = new MenuItem("删 除");
-        MenuItem itemRN = new MenuItem("重命名");
-        MenuItem itemProperties = new MenuItem("分类属性");
-        treeView.setEditable(true);
-        treeView.setContextMenu(menu);
-        itemNew.setOnAction(event -> newCategory());
-        itemRM.setOnAction(event -> removeCategory());
-        itemRN.setOnAction(event -> treeView.edit(treeView.getSelectionModel().getSelectedItem()));
-        itemProperties.setOnAction(event -> openCustomAttributes());
-
-        treeView.setOnMouseClicked((MouseEvent event) -> {
-            if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 1){
-//                TreeItem<Category> item = treeView.getSelectionModel().getSelectedItem();
-//                listView.getItems().clear();
-//                String json = null;
-//                try {
-//                    json = HttpClient.GET("/brandSeries/category/"+item.getValue().getId());
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//                BrandSeries[] brands = GoogleJson.GET().fromJson(json, BrandSeries[].class);
-//                listView.getItems().addAll(brands);
-
-            } else if (event.getButton().equals(MouseButton.SECONDARY) && event.getClickCount() == 1) {
-                Category selectedCategory = treeView.getSelectionModel().getSelectedItem().getValue();
-                if(selectedCategory.getId() == 0L) {
-                    menu.getItems().clear();
-                    menu.getItems().addAll(itemNew, new SeparatorMenuItem(), itemProperties);
-                } else {
-                    menu.getItems().clear();
-                    menu.getItems().addAll(itemNew, new SeparatorMenuItem(), itemRM, itemRN, new SeparatorMenuItem(), itemProperties);
-                }
-            }
-        });
-
-        //默认选择根节点
-        treeView.getSelectionModel().select(root);
     }
 
     private void initTreeNodes(TreeItem<Category> root) {

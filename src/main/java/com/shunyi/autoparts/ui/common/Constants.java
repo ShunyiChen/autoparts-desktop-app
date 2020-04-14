@@ -38,10 +38,10 @@ public class Constants {
 
 
 
-    /** 值对象初始ID值 */
+    /** 初始ID值 */
     public static final Long ID = 0L;
-    /** 值对象初始父ID值 */
-    public static final Long PARENT_ID = -1L;
+    /** 根节点父ID值 */
+    public static final Long ROOT_PARENT_ID = 0L;
     /** SKU初始库存数量 */
     public static final Integer ZERO = 0;
 

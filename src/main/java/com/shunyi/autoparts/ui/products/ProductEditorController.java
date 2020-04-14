@@ -32,6 +32,8 @@ public class ProductEditorController {
     private Stage dialog;
     /** SKU callback */
     private Callback<SKU, String> callback;
+    /** 更新的配件 */
+    private Product product;
     /** 单位 */
     private Unit unit;
     /** 分类 */
@@ -115,12 +117,11 @@ public class ProductEditorController {
      *
      * @param dialog
      * @param callback
-     * @param category
+     * @param product
      */
-    public void initialize(Stage dialog, Callback<SKU, String> callback, Category category) {
+    public void initialize(Stage dialog, Callback<SKU, String> callback, Product product) {
         this.dialog = dialog;
         this.callback = callback;
-        this.category = category;
         btnSaveAndQuit.setStyle(String.format("-fx-base: %s;", "rgb(63,81,181)"));
         comboBoxUnit.getItems().clear();
         comboBoxCategory.getItems().clear();
@@ -143,6 +144,11 @@ public class ProductEditorController {
         try {
             Category[] categories = HttpClient.GET("/categories", Category[].class);
             comboBoxCategory.getItems().addAll(Arrays.asList(categories).stream().map(e -> e.getName()).collect(Collectors.toList()));
+//            if(category == null) {
+//                comboBoxCategory.getSelectionModel().select(categories[0].getName());
+//            } else {
+//                comboBoxCategory.getSelectionModel().select(category.getName());
+//            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -203,6 +209,13 @@ public class ProductEditorController {
             e.printStackTrace();
         }
         new AutoCompleteBox(comboBoxSupplier);
+
+
+        //初始化选中的值
+        if(product != null) {
+            //TODO
+        }
+
     }
 
     @FXML
@@ -224,77 +237,90 @@ public class ProductEditorController {
         if(validate()) {
             //单位如果不存在则新建
             if(comboBoxUnit.getValue() != null && !comboBoxUnit.getValue().trim().equals("")) {
-                Unit newUnit = new Unit();
-                newUnit.setName(comboBoxUnit.getValue());
-                String json = GoogleJson.GET().toJson(newUnit);
+                unit = new Unit();
+                unit.setName(comboBoxUnit.getValue());
+                String json = GoogleJson.GET().toJson(unit);
                 try {
-                    HttpClient.POST("/units", json);
+                    String idStr = HttpClient.POST("/units", json);
+                    unit.setId(Long.valueOf(idStr));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
             //车型如果不存在则新建
             if(comboBoxCar.getValue() != null && !comboBoxCar.getValue().trim().equals("")) {
-                Car newCar = new Car();
-                newCar.setName(comboBoxCar.getValue());
-                String json = GoogleJson.GET().toJson(newCar);
+                car = new Car();
+                car.setName(comboBoxCar.getValue());
+                String json = GoogleJson.GET().toJson(car);
                 try {
-                    HttpClient.POST("/cars", json);
+                    String idStr = HttpClient.POST("/cars", json);
+                    car.setId(Long.valueOf(idStr));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
             //产地如果不存在则新建
             if(comboBoxPlace.getValue() != null && !comboBoxPlace.getValue().trim().equals("")) {
-                Place newPlace = new Place();
-                newPlace.setName(comboBoxPlace.getValue());
-                String json = GoogleJson.GET().toJson(newPlace);
+                place = new Place();
+                place.setName(comboBoxPlace.getValue());
+                String json = GoogleJson.GET().toJson(place);
                 try {
-                    HttpClient.POST("/places", json);
+                    String idStr = HttpClient.POST("/places", json);
+                    place.setId(Long.valueOf(idStr));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
             //通用车型如果不存在则新建
             if(comboBoxCommonCar.getValue() != null && !comboBoxCommonCar.getValue().trim().equals("")) {
-                Car newCar = new Car();
-                newCar.setName(comboBoxCommonCar.getValue());
-                String json = GoogleJson.GET().toJson(newCar);
-                try {
-                    HttpClient.POST("/cars", json);
-                } catch (IOException e) {
-                    e.printStackTrace();
+                StringBuilder stb = new StringBuilder();
+                String[] carNames = comboBoxCommonCar.getValue().split(";");
+                for(String name : carNames) {
+                    stb.append(name).append(";");
+                    car = new Car();
+                    car.setName(name);
+                    String json = GoogleJson.GET().toJson(car);
+                    try {
+                        String idStr = HttpClient.POST("/cars", json);
+                        car.setId(Long.valueOf(idStr));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
+                commonCars = stb.toString();
             }
             //品牌如果不存在则新建
             if(comboBoxBrand.getValue() != null && !comboBoxBrand.getValue().trim().equals("")) {
-                Brand newBrand = new Brand();
-                newBrand.setName(comboBoxBrand.getValue());
-                String json = GoogleJson.GET().toJson(newBrand);
+                brand = new Brand();
+                brand.setName(comboBoxBrand.getValue());
+                String json = GoogleJson.GET().toJson(brand);
                 try {
-                    HttpClient.POST("/brands", json);
+                    String idStr = HttpClient.POST("/brands", json);
+                    brand.setId(Long.valueOf(idStr));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
             //进口如果不存在则新建
             if(comboBoxImport.getValue() != null && !comboBoxImport.getValue().trim().equals("")) {
-                Import newImport = new Import();
-                newImport.setName(comboBoxImport.getValue());
-                String json = GoogleJson.GET().toJson(newImport);
+                imported = new Import();
+                imported.setName(comboBoxImport.getValue());
+                String json = GoogleJson.GET().toJson(imported);
                 try {
-                    HttpClient.POST("/imports", json);
+                    String idStr = HttpClient.POST("/imports", json);
+                    imported.setId(Long.valueOf(idStr));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
             //所属公司如果不存在则新建
             if(comboBoxCompany.getValue() != null && !comboBoxCompany.getValue().trim().equals("")) {
-                Company newCompany = new Company();
-                newCompany.setName(comboBoxCompany.getValue());
-                String json = GoogleJson.GET().toJson(newCompany);
+                company = new Company();
+                company.setName(comboBoxCompany.getValue());
+                String json = GoogleJson.GET().toJson(company);
                 try {
-                    HttpClient.POST("/companies", json);
+                    String idStr = HttpClient.POST("/companies", json);
+                    company.setId(Long.valueOf(idStr));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -319,13 +345,13 @@ public class ProductEditorController {
             product.setPackingQuantity(NumberValidationUtils.isRealNumber(txtPackingQuantity.getText())?Integer.valueOf(txtPackingQuantity.getText()):0);
             product.setSupplier(supplier);
             product.setManual(txtManual.getText());
-            product.setPurchasingPrice1(txtPurchasingPrice1.getText().equals("")? BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP) : new BigDecimal(txtPurchasingPrice1.getText()).setScale(2, RoundingMode.HALF_UP));
-            product.setPurchasingPrice2(new BigDecimal(txtPurchasingPrice2.getText()));
-            product.setPurchasingPrice3(new BigDecimal(txtPurchasingPrice3.getText()));
-            product.setSellingPrice1(new BigDecimal(txtSellingPrice1.getText()));
-            product.setSellingPrice2(new BigDecimal(txtSellingPrice2.getText()));
-            product.setSellingPrice3(new BigDecimal(txtSellingPrice3.getText()));
-            product.setBottomPrice(new BigDecimal(txtBottomPrice.getText()));
+            product.setPurchasingPrice1(NumberValidationUtils.isRealNumber(txtPurchasingPrice1.getText())? new BigDecimal(txtPurchasingPrice1.getText()).setScale(2, RoundingMode.HALF_UP) : BigDecimal.ZERO);
+            product.setPurchasingPrice2(NumberValidationUtils.isRealNumber(txtPurchasingPrice2.getText())? new BigDecimal(txtPurchasingPrice2.getText()).setScale(2, RoundingMode.HALF_UP) : BigDecimal.ZERO);
+            product.setPurchasingPrice3(NumberValidationUtils.isRealNumber(txtPurchasingPrice3.getText())? new BigDecimal(txtPurchasingPrice3.getText()).setScale(2, RoundingMode.HALF_UP) : BigDecimal.ZERO);
+            product.setSellingPrice1(NumberValidationUtils.isRealNumber(txtSellingPrice1.getText())? new BigDecimal(txtSellingPrice1.getText()).setScale(2, RoundingMode.HALF_UP) : BigDecimal.ZERO);
+            product.setSellingPrice2(NumberValidationUtils.isRealNumber(txtSellingPrice2.getText())? new BigDecimal(txtSellingPrice2.getText()).setScale(2, RoundingMode.HALF_UP) : BigDecimal.ZERO);
+            product.setSellingPrice3(NumberValidationUtils.isRealNumber(txtSellingPrice3.getText())? new BigDecimal(txtSellingPrice3.getText()).setScale(2, RoundingMode.HALF_UP) : BigDecimal.ZERO);
+            product.setBottomPrice(NumberValidationUtils.isRealNumber(txtBottomPrice.getText())? new BigDecimal(txtBottomPrice.getText()).setScale(2, RoundingMode.HALF_UP) : BigDecimal.ZERO);
             product.setForeignCurrencyUnit(txtForeignCurrencyUnit.getText());
             product.setForeignCurrencyPrice(txtForeignCurrencyPrice.getText());
             product.setShortage(checkBoxShortage.isSelected());
@@ -343,7 +369,7 @@ public class ProductEditorController {
             //新建SKU
             Set<SKUSlotMapping> skuSlotMappingSet = new HashSet<>();
             Set<SKUPhoto> photos = new HashSet<>();
-            SKU sku = new SKU(Constants.ID, product, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.ZERO, Constants.EMPTY, Constants.EMPTY, Constants.AVAILABLE, Constants.EMPTY, Constants.AVG_PRICE, skuSlotMappingSet, photos, null, Env.getInstance().currentUser(), null, null, null ,null, null, null);
+            SKU sku = new SKU(Constants.ID, product, product.getCode(), product.getName(), Constants.EMPTY, product.getBarCode(), Constants.ZERO, Constants.EMPTY, Constants.EMPTY, Constants.AVAILABLE, Constants.EMPTY, Constants.AVG_PRICE, skuSlotMappingSet, photos, null, Env.getInstance().currentUser(), null, null, null ,null, null, null);
             json = GoogleJson.GET().toJson(sku);
             try {
                 String idStr = HttpClient.POST("/sku", json);
@@ -385,8 +411,7 @@ public class ProductEditorController {
         Callback<Unit, String> callback = new Callback<Unit, String>() {
             @Override
             public String call(Unit param) {
-                unit = param;
-                comboBoxUnit.setValue(unit.getName());
+                comboBoxUnit.setValue(param.getName());
                 return null;
             }
         };
@@ -455,8 +480,9 @@ public class ProductEditorController {
         Callback<List<Car>, String> callback = new Callback<List<Car>, String>() {
             @Override
             public String call(List<Car> param) {
-                car = param.get(0);
-                comboBoxCar.setValue(car.getName());
+                if(param.size() > 0) {
+                    comboBoxCar.setValue(param.get(0).getName());
+                }
                 return null;
             }
         };

@@ -131,13 +131,13 @@
                <center>
                   <TableView fx:id="tableView" prefHeight="200.0" prefWidth="200.0" tableMenuButtonVisible="true" BorderPane.alignment="CENTER">
                     <columns>
-                        <TableColumn fx:id="colCode" prefWidth="75.0" text="编码" />
-                        <TableColumn fx:id="colName" prefWidth="75.0" text="名称" />
-                        <TableColumn fx:id="colSpec" prefWidth="75.0" text="规格" />
-                        <TableColumn fx:id="colUnit" prefWidth="75.0" text="单位" />
-                        <TableColumn fx:id="colBarCode" prefWidth="75.0" text="条形码" />
+                        <TableColumn fx:id="colCode" prefWidth="150.0" text="编码" />
+                        <TableColumn fx:id="colName" prefWidth="150.0" text="名称" />
+                        <TableColumn fx:id="colSpec" prefWidth="150.0" text="规格" />
+                        <TableColumn fx:id="colBarCode" prefWidth="150.0" text="条形码" />
                         <TableColumn fx:id="colStockQty" prefWidth="75.0" text="库存数量" />
-                        <TableColumn fx:id="colImport" prefWidth="75.0" text="进口" />
+                        <TableColumn fx:id="colUnit" prefWidth="75.0" text="单位" />
+                        <TableColumn fx:id="colImported" prefWidth="75.0" text="进口" />
                         <TableColumn fx:id="colPlace" prefWidth="75.0" text="产地" />
                         <TableColumn fx:id="colBrand" prefWidth="75.0" text="品牌" />
                         <TableColumn fx:id="colCar" prefWidth="75.0" text="车型" />
@@ -154,6 +154,7 @@
                         <TableColumn fx:id="colStatus" prefWidth="75.0" text="可用状态" />
                         <TableColumn fx:id="colNotes" prefWidth="75.0" text="备注" />
                         <TableColumn fx:id="colSlot" prefWidth="75.0" text="货位" />
+                        <TableColumn fx:id="colPhotos" prefWidth="75.0" text="图片" />
                     </columns>
                   </TableView>
                </center>
@@ -175,45 +176,24 @@
             </BorderPane>
             <ToolBar prefHeight="40.0" prefWidth="200.0">
               <items>
-                  <Button mnemonicParsing="false" onAction="#newSKU" text="新建配件">
+                  <Button mnemonicParsing="false" onAction="#newProductAndSKU" text="新建配件">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Button>
                   <Separator />
-                  <Button mnemonicParsing="false" onAction="#updateProduct" text="更改">
+                  <Button mnemonicParsing="false" onAction="#updateProductAndSKU" text="更 改">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Button>
-                  <Button mnemonicParsing="false" onAction="#removeProduct" text="删除">
+                  <Button mnemonicParsing="false" onAction="#removeProductAndSKU" text="删 除">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Button>
                   <Separator />
-                  <Button mnemonicParsing="false" onAction="#refreshCategory" text="刷新">
-                      <font>
-                          <Font size="14.0" />
-                      </font>
-                  </Button>
-                  <Separator />
-                  <Button mnemonicParsing="false" onAction="#duplicate" text="复 制">
-                      <font>
-                          <Font size="14.0" />
-                      </font>
-                  </Button>
-                  <Separator layoutX="246.0" layoutY="10.0" />
-                  <Button mnemonicParsing="false" onAction="#openBasicAttributes" text="配件属性">
-                      <font>
-                          <Font size="14.0" />
-                      </font>
-                  </Button>
-                  <Button mnemonicParsing="false" onAction="#openProductSKU" text="配件sku">
-                      <font>
-                          <Font size="14.0" />
-                      </font>
-                  </Button>
+
               </items>
             </ToolBar>
          </children>
