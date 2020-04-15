@@ -122,6 +122,7 @@ public class ProductEditorController {
     public void initialize(Stage dialog, Callback<SKU, String> callback, Product product) {
         this.dialog = dialog;
         this.callback = callback;
+        this.product = product;
         btnSaveAndQuit.setStyle(String.format("-fx-base: %s;", "rgb(63,81,181)"));
         comboBoxUnit.getItems().clear();
         comboBoxCategory.getItems().clear();
@@ -144,11 +145,6 @@ public class ProductEditorController {
         try {
             Category[] categories = HttpClient.GET("/categories", Category[].class);
             comboBoxCategory.getItems().addAll(Arrays.asList(categories).stream().map(e -> e.getName()).collect(Collectors.toList()));
-//            if(category == null) {
-//                comboBoxCategory.getSelectionModel().select(categories[0].getName());
-//            } else {
-//                comboBoxCategory.getSelectionModel().select(category.getName());
-//            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -213,7 +209,37 @@ public class ProductEditorController {
 
         //初始化选中的值
         if(product != null) {
-            //TODO
+            unit = product.getUnit();
+            category = product.getCategory();
+            car = product.getCar();
+
+            comboBoxCategory.getSelectionModel().select(product.getCategory() != null?product.getCategory().getName():"");
+            comboBoxUnit.getSelectionModel().select(product.getUnit() != null?product.getUnit().getName():"");
+            comboBoxCar.getSelectionModel().select(product.getCar() != null?product.getCar().getName():"");
+            comboBoxPlace.getSelectionModel().select(product.getPlace() != null?product.getPlace().getName():"");
+            comboBoxCommonCar.getSelectionModel().select(product.getRelevantModels());
+            comboBoxBrand.getSelectionModel().select(product.getBrand() != null?product.getBrand().getName():"");
+            comboBoxImport.getSelectionModel().select(product.getImported() != null?product.getImported().getName():"");
+            comboBoxCompany.getSelectionModel().select(product.getCompany() != null?product.getCompany().getName():"");
+            comboBoxSupplier.getSelectionModel().select(product.getSupplier() != null?product.getSupplier().getName():"");
+            txtCode.setText(product.getCode());
+            txtName.setText(product.getName());
+            txtBarCode.setText(product.getBarCode());
+            txtEnglishName.setText(product.getEnglishName());
+            txtCommonNumber.setText(product.getCommonNumber());
+            txtMaterials.setText(product.getMaterials());
+            txtWeight.setText(product.getWeight());
+            txtPackingQuantity.setText(product.getPackingQuantity()+"");
+            txtPurchasingPrice1.setText(product.getPurchasingPrice1().toString());
+            txtPurchasingPrice2.setText(product.getPurchasingPrice2().toString());
+            txtPurchasingPrice3.setText(product.getPurchasingPrice3().toString());
+            txtSellingPrice1.setText(product.getSellingPrice1().toString());
+            txtSellingPrice2.setText(product.getSellingPrice2().toString());
+            txtSellingPrice3.setText(product.getSellingPrice3().toString());
+            txtForeignCurrencyUnit.setText(product.getForeignCurrencyUnit());
+            txtForeignCurrencyPrice.setText(product.getForeignCurrencyPrice());
+            txtBottomPrice.setText(product.getBottomPrice().toString());
+            checkBoxShortage.setSelected(product.getShortage());
         }
 
     }
@@ -328,7 +354,7 @@ public class ProductEditorController {
             //新建Product
             Product product = new Product();
             product.setCode(txtCode.getText());
-            product.setUnit(comboBoxUnit.getValue());
+            product.setUnit(unit);
             product.setName(txtName.getText());
             product.setCategory(category);
             product.setBarCode(txtBarCode.getText());

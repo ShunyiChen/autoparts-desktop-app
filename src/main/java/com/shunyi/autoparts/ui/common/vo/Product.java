@@ -20,7 +20,7 @@ public class Product {
     /** 产品名称 */
     private String name;
     /** 单位 */
-    private String unit;
+    private Unit unit;
     /** 条形码 */
     private String barCode;
     /** 车型 */
@@ -89,7 +89,7 @@ public class Product {
     public Product() {
     }
 
-    public Product(Long id, String code, Category category, String name, String unit, String barCode, Car car, String relevantModels, Place place, Brand brand, String englishName, Import imported, String commonNumber, String materials, Company company, Integer packingQuantity, String weight, String manual, Supplier supplier, BigDecimal purchasingPrice1, BigDecimal purchasingPrice2, BigDecimal purchasingPrice3, BigDecimal sellingPrice1, BigDecimal sellingPrice2, BigDecimal sellingPrice3, BigDecimal bottomPrice, String foreignCurrencyUnit, String foreignCurrencyPrice, Boolean shortage, Date dateCreated, String creator, Date dateUpdated, String updater, Integer updatedCount, Date dateDeleted, Boolean deleteFlag, String deleter) {
+    public Product(Long id, String code, Category category, String name, Unit unit, String barCode, Car car, String relevantModels, Place place, Brand brand, String englishName, Import imported, String commonNumber, String materials, Company company, Integer packingQuantity, String weight, String manual, Supplier supplier, BigDecimal purchasingPrice1, BigDecimal purchasingPrice2, BigDecimal purchasingPrice3, BigDecimal sellingPrice1, BigDecimal sellingPrice2, BigDecimal sellingPrice3, BigDecimal bottomPrice, String foreignCurrencyUnit, String foreignCurrencyPrice, Boolean shortage, Date dateCreated, String creator, Date dateUpdated, String updater, Integer updatedCount, Date dateDeleted, Boolean deleteFlag, String deleter) {
         this.id = id;
         this.code = code;
         this.category = category;
@@ -161,11 +161,11 @@ public class Product {
         this.name = name;
     }
 
-    public String getUnit() {
+    public Unit getUnit() {
         return unit;
     }
 
-    public void setUnit(String unit) {
+    public void setUnit(Unit unit) {
         this.unit = unit;
     }
 
