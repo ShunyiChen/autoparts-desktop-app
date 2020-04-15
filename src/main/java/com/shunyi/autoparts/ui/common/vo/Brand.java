@@ -17,6 +17,10 @@ public class Brand {
 
     public Brand() {}
 
+    public Brand(String name) {
+        this.name = name;
+    }
+
     public Brand(Long id, String code, String name, String notes) {
         this.id = id;
         this.code = code;

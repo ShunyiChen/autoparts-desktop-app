@@ -17,6 +17,10 @@ public class Car {
 
     public Car() {}
 
+    public Car(String name) {
+        this.name = name;
+    }
+
     public Car(Long id, String code, String name, String notes) {
         this.id = id;
         this.code = code;

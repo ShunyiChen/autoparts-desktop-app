@@ -51,6 +51,10 @@ public class Supplier {
 
     public Supplier() {}
 
+    public Supplier(String name) {
+        this.name = name;
+    }
+
     public Supplier(Long id, String code, SupplierCategory supplierCategory, String name, String city, String contact, String phone, String fax, String email, String address, String postCode, String webSite, String fullName, String corp, String bank, String account, String taxFileNumber, String billingAddress, String company, String mobile, String notes) {
         this.id = id;
         this.code = code;

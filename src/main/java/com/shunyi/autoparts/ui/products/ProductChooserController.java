@@ -1,16 +1,10 @@
 package com.shunyi.autoparts.ui.products;
 
-import com.shunyi.autoparts.ui.common.Constants;
-import com.shunyi.autoparts.ui.common.Env;
-import com.shunyi.autoparts.ui.common.GoogleJson;
-import com.shunyi.autoparts.ui.common.HttpClient;
+import com.shunyi.autoparts.ui.common.*;
 import com.shunyi.autoparts.ui.common.vo.*;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -29,10 +23,30 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
-
-/** 配件管理Controller */
+/**
+ * @description 配件选择器Controller
+ * @author Shunyi Chen
+ * @date 2020/4/15
+ */
 public class ProductChooserController {
     private Stage dialog;
+
+    @FXML
+    private TextField txtCode;
+    @FXML
+    private TextField txtName;
+    @FXML
+    private ComboBox<String> comboBoxCar;
+    @FXML
+    private ComboBox<String> comboBoxCommonCars;
+    @FXML
+    private ComboBox<String> comboBoxPlace;
+    @FXML
+    private ComboBox<String> comboBoxSupplier;
+    @FXML
+    private ComboBox<String> comboBoxBrand;
+    @FXML
+    private ComboBox<String> comboBoxCompany;
     @FXML
     private Label headerText;
     @FXML
@@ -61,6 +75,8 @@ public class ProductChooserController {
     private TableColumn<SKU, String> colBrand;
     @FXML
     private TableColumn<SKU, String> colCar;
+    @FXML
+    private TableColumn<SKU, String> colSupplier;
     @FXML
     private TableColumn colDiscountPercentage;
     @FXML
@@ -106,6 +122,8 @@ public class ProductChooserController {
      */
     public void initialize(Stage dialog) {
         this.dialog = dialog;
+        //初始化查询栏
+        initSearchFields();
         //初始化分类树
         initTreeView();
         //初始化SKU表格
@@ -114,6 +132,17 @@ public class ProductChooserController {
         headerText.setStyle("-fx-text-fill: rgb(255,255,255);");
     }
 
+    /**
+     * 初始化查询栏
+     */
+    private void initSearchFields() {
+        new AutoCompleteBox(comboBoxCar);
+        new AutoCompleteBox(comboBoxCommonCars);
+        new AutoCompleteBox(comboBoxPlace);
+        new AutoCompleteBox(comboBoxSupplier);
+        new AutoCompleteBox(comboBoxBrand);
+        new AutoCompleteBox(comboBoxCompany);
+    }
 
     /**
      * 初始化分类树
@@ -205,13 +234,34 @@ public class ProductChooserController {
         treeView.getSelectionModel().select(root);
     }
 
+    private void initTreeNodes(TreeItem<Category> root) {
+        try {
+            String data = HttpClient.GET("/categories/store/"+Env.getInstance().currentStore().getId());
+            Category[] res = GoogleJson.GET().fromJson(data, Category[].class);
+            getNodes(root, res);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void getNodes(TreeItem<Category> parent, Category[] all) {
+        for(Category sc : all) {
+            if(sc.getParentId().equals(parent.getValue().getId())) {
+                TreeItem<Category> node = new TreeItem<>(sc);
+                parent.getChildren().add(node);
+                parent.setExpanded(true);
+                getNodes(node, all);
+            }
+        }
+    }
+
     private void initTableView() {
         tableView.setId("my-table");
         //初始化列
         colCode.setCellValueFactory(new PropertyValueFactory<SKU, String>("skuCode"));
         colName.setCellValueFactory(new PropertyValueFactory<SKU, String>("skuName"));
         colSpec.setCellValueFactory(new PropertyValueFactory<SKU, String>("specification"));
-        colUnit.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getProduct().getUnit()));
+        colUnit.setCellValueFactory(param -> new SimpleObjectProperty(param.getValue().getProduct().getUnit()));
         colBarCode.setCellValueFactory(new PropertyValueFactory<SKU, String>("skuBarCode"));
         colStockQty.setCellValueFactory(new PropertyValueFactory<SKU, String>("stockQty"));
         colImported.setCellValueFactory(param -> new SimpleObjectProperty(param.getValue().getProduct().getImported()));
@@ -319,6 +369,32 @@ public class ProductChooserController {
         openProductEditor(callback, selected.getProduct());
     }
 
+    private void openProductEditor(Callback<SKU, String> callback, Product updatedProduct) {
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource(
+                        "/fxml/products/ProductEditor.fxml"
+                )
+        );
+        BorderPane root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Scene scene = new Scene(root);
+        Stage dialog = new Stage();
+        ProductEditorController controller = loader.getController();
+        controller.initialize(dialog, callback, updatedProduct);
+        dialog.setTitle(updatedProduct != null?"更改配件":"新建配件");
+        dialog.initOwner(this.dialog);
+        dialog.setResizable(false);
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.setScene(scene);
+        // center stage on screen
+        dialog.centerOnScreen();
+        dialog.show();
+    }
+
     @FXML
     private void removeProductAndSKU() {
         SKU selectedProduct = tableView.getSelectionModel().getSelectedItem();
@@ -360,49 +436,42 @@ public class ProductChooserController {
         });
     }
 
-
     @FXML
     private void search() {
-//        Product condition = new Product();
-//        condition.setCode(txtCode.getText());
-//        condition.setName(txtName.getText());
-//        condition.setBarCode(txtBarCode.getText());
-//        if(txtPrice.getText() != null && !txtPrice.getText().equals("")) {
-//            if(NumberValidationUtils.isRealNumber(txtPrice.getText())) {
-//                condition.setListPrice(new BigDecimal(txtPrice.getText()));
-//            }
-//        }
-//        Car car = new Car();
-//        car.setModel(txtCar.getText());
-//        condition.setCar(car);
-//        condition.setImported(comboImport.getValue());
-//        condition.setOrigin(txtOrigin.getText());
-//        Supplier supplier = new Supplier();
-//        supplier.setName(txtSupplier.getText());
-//        condition.setSupplier(supplier);
-//
-//        String json = GoogleJson.GET().toJson(condition);
-//        String data = null;
-//        try {
-//            data = HttpClient.POST("/products/search", json);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        Product[] products = GoogleJson.GET().fromJson(data, Product[].class);
-//        tableView.getItems().clear();
-//        tableView.getItems().addAll(products);
+        Product product = new Product();
+        product.setCar(new Car(comboBoxCar.getValue()));
+        product.setRelevantModels(comboBoxCommonCars.getValue());
+        product.setPlace(new Place(comboBoxPlace.getValue()));
+        product.setSupplier(new Supplier(comboBoxSupplier.getValue()));
+        product.setBrand(new Brand(comboBoxBrand.getValue()));
+        product.setCompany(new Company(comboBoxCompany.getValue()));
+        SKU condition = new SKU();
+        condition.setSkuCode(txtCode.getText());
+        condition.setSkuName(txtName.getText());
+        condition.setProduct(product);
+        String json = GoogleJson.GET().toJson(condition);
+        String data = null;
+        try {
+            data = HttpClient.POST("/sku/search", json);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        SKU[] skuArray = GoogleJson.GET().fromJson(data, SKU[].class);
+        tableView.getItems().clear();
+        tableView.getItems().addAll(skuArray);
+        tableView.refresh();
     }
 
     @FXML
     private void clear() {
-//        txtCode.setText("");
-//        txtName.setText("");
-//        txtBarCode.setText("");
-//        txtPrice.setText("");
-//        txtSupplier.setText("");
-//        comboImport.setValue(null);
-//        txtOrigin.setText("");
-//        txtCar.setText("");
+        txtCode.setText("");
+        txtName.setText("");
+        comboBoxCar.setValue("");
+        comboBoxCommonCars.setValue("");
+        comboBoxPlace.setValue("");
+        comboBoxSupplier.setValue("");
+        comboBoxBrand.setValue("");
+        comboBoxCompany.setValue("");
     }
 
     private void newCategory() {
@@ -569,32 +638,6 @@ public class ProductChooserController {
         }
     }
 
-    private void openProductEditor(Callback<SKU, String> callback, Product updatedProduct) {
-        FXMLLoader loader = new FXMLLoader(
-                getClass().getResource(
-                        "/fxml/products/ProductEditor.fxml"
-                )
-        );
-        BorderPane root = null;
-        try {
-            root = loader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Scene scene = new Scene(root);
-        Stage dialog = new Stage();
-        ProductEditorController controller = loader.getController();
-        controller.initialize(dialog, callback, updatedProduct);
-        dialog.setTitle(updatedProduct != null?"更改配件":"新建配件");
-        dialog.initOwner(this.dialog);
-        dialog.setResizable(false);
-        dialog.initModality(Modality.APPLICATION_MODAL);
-        dialog.setScene(scene);
-        // center stage on screen
-        dialog.centerOnScreen();
-        dialog.show();
-    }
-
     private void openCustomAttributes() {
         TreeItem<Category> selectedItem = treeView.getSelectionModel().getSelectedItem();
         FXMLLoader loader = new FXMLLoader(
@@ -751,27 +794,5 @@ public class ProductChooserController {
 //            ex.printStackTrace();
 //        }
     }
-
-    private void initTreeNodes(TreeItem<Category> root) {
-        try {
-            String data = HttpClient.GET("/categories/store/"+Env.getInstance().currentStore().getId());
-            Category[] res = GoogleJson.GET().fromJson(data, Category[].class);
-            getNodes(root, res);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void getNodes(TreeItem<Category> parent, Category[] all) {
-        for(Category sc : all) {
-            if(sc.getParentId().equals(parent.getValue().getId())) {
-                TreeItem<Category> node = new TreeItem<>(sc);
-                parent.getChildren().add(node);
-                parent.setExpanded(true);
-                getNodes(node, all);
-            }
-        }
-    }
-
 
 }

@@ -2,8 +2,6 @@ package com.shunyi.autoparts.ui.common.vo;
 
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * @description 配件VO
