@@ -1,12 +1,14 @@
 # desktop-app
 
-It's a desktop application which can be wrote in javafx
+A desktop application for invoicing system
 
-## Software requirements:  
-1.OpenJDK12  
-2.JavaFX SDK11+     
-3.OkHttp3  
-4.Apache commons-lang3  
+## Main technologies:  
+1.OpenJDK13
+2.JavaFX SDK11+
+3.OkHttp3
+4.Json
+5.FXML
+
 
 ## run:
 .\gradle run
