@@ -8,6 +8,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -17,9 +18,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -33,7 +32,7 @@ public class ProductEditorController {
     /** SKU callback */
     private Callback<SKU, String> callback;
     /** 更新的配件 */
-    private Product product;
+    private SKU sku;
     /** 单位 */
     private Unit unit;
     /** 分类 */
@@ -52,6 +51,10 @@ public class ProductEditorController {
     private Company company;
     /** 供应商 */
     private Supplier supplier;
+    @FXML
+    private FlowPane buttonPanel;
+    @FXML
+    private Button btnCancel;
     @FXML
     private Button btnContinueToAdd;
     @FXML
@@ -111,18 +114,28 @@ public class ProductEditorController {
     @FXML
     private TextField txtForeignCurrencyPrice;
     @FXML
+    private TextField txtSpec;
+    @FXML
+    private TextField txtDiscountPercentage;
+    @FXML
+    private TextField txtAvgPrice;
+    @FXML
+    private TextField txtNotes;
+    @FXML
     private CheckBox checkBoxShortage;
+    @FXML
+    private CheckBox checkBoxAvailable;
 
     /**
      *
      * @param dialog
      * @param callback
-     * @param product
+     * @param sku
      */
-    public void initialize(Stage dialog, Callback<SKU, String> callback, Product product) {
+    public void initialize(Stage dialog, Callback<SKU, String> callback, SKU sku) {
         this.dialog = dialog;
         this.callback = callback;
-        this.product = product;
+        this.sku = sku;
         btnSaveAndQuit.setStyle(String.format("-fx-base: %s;", "rgb(63,81,181)"));
         comboBoxUnit.getItems().clear();
         comboBoxCategory.getItems().clear();
@@ -206,13 +219,15 @@ public class ProductEditorController {
         }
         new AutoCompleteBox(comboBoxSupplier);
 
-
         //初始化选中的值
-        if(product != null) {
+        if(sku != null) {
+            Product product = sku.getProduct();
+            buttonPanel.getChildren().clear();
+            buttonPanel.getChildren().addAll(btnCancel, btnSaveAndQuit);
+
             unit = product.getUnit();
             category = product.getCategory();
             car = product.getCar();
-
             comboBoxCategory.getSelectionModel().select(product.getCategory() != null?product.getCategory().getName():"");
             comboBoxUnit.getSelectionModel().select(product.getUnit() != null?product.getUnit().getName():"");
             comboBoxCar.getSelectionModel().select(product.getCar() != null?product.getCar().getName():"");
@@ -222,6 +237,7 @@ public class ProductEditorController {
             comboBoxImport.getSelectionModel().select(product.getImported() != null?product.getImported().getName():"");
             comboBoxCompany.getSelectionModel().select(product.getCompany() != null?product.getCompany().getName():"");
             comboBoxSupplier.getSelectionModel().select(product.getSupplier() != null?product.getSupplier().getName():"");
+            txtManual.setText(product.getManual());
             txtCode.setText(product.getCode());
             txtName.setText(product.getName());
             txtBarCode.setText(product.getBarCode());
@@ -239,9 +255,13 @@ public class ProductEditorController {
             txtForeignCurrencyUnit.setText(product.getForeignCurrencyUnit());
             txtForeignCurrencyPrice.setText(product.getForeignCurrencyPrice());
             txtBottomPrice.setText(product.getBottomPrice().toString());
+            txtSpec.setText(sku.getSpecification());
+            txtDiscountPercentage.setText(sku.getDiscountPercentage());
+            txtAvgPrice.setText(sku.getAvgPrice().toString());
+            txtNotes.setText(sku.getNotes());
+            checkBoxAvailable.setSelected(sku.getStatus().equals("可用"));
             checkBoxShortage.setSelected(product.getShortage());
         }
-
     }
 
     @FXML
@@ -256,102 +276,87 @@ public class ProductEditorController {
 
     @FXML
     private void saveAndQuit() {
-        save(true);
+        if(sku == null) {
+            save(true);
+        } else {
+            update(true);
+        }
+    }
+
+    private void update(boolean closeDialog) {
+        if(validate()) {
+            insertItemsIFNotExist();
+            //插入新Product
+            Product product = sku.getProduct();
+            product.setCode(txtCode.getText());
+            product.setUnit(unit);
+            product.setName(txtName.getText());
+            product.setCategory(category);
+            product.setBarCode(txtBarCode.getText());
+            product.setCar(car);
+            product.setPlace(place);
+            product.setRelevantModels(commonCars);
+            product.setBrand(brand);
+            product.setEnglishName(txtEnglishName.getText());
+            product.setImported(imported);
+            product.setCommonNumber(txtCommonNumber.getText());
+            product.setMaterials(txtMaterials.getText());
+            product.setCompany(company);
+            product.setWeight(txtWeight.getText());
+            product.setPackingQuantity(NumberValidationUtils.isRealNumber(txtPackingQuantity.getText())?Integer.valueOf(txtPackingQuantity.getText()):0);
+            product.setSupplier(supplier);
+            product.setManual(txtManual.getText());
+            product.setPurchasingPrice1(NumberValidationUtils.isRealNumber(txtPurchasingPrice1.getText())? new BigDecimal(txtPurchasingPrice1.getText()).setScale(2, RoundingMode.HALF_UP) : BigDecimal.ZERO);
+            product.setPurchasingPrice2(NumberValidationUtils.isRealNumber(txtPurchasingPrice2.getText())? new BigDecimal(txtPurchasingPrice2.getText()).setScale(2, RoundingMode.HALF_UP) : BigDecimal.ZERO);
+            product.setPurchasingPrice3(NumberValidationUtils.isRealNumber(txtPurchasingPrice3.getText())? new BigDecimal(txtPurchasingPrice3.getText()).setScale(2, RoundingMode.HALF_UP) : BigDecimal.ZERO);
+            product.setSellingPrice1(NumberValidationUtils.isRealNumber(txtSellingPrice1.getText())? new BigDecimal(txtSellingPrice1.getText()).setScale(2, RoundingMode.HALF_UP) : BigDecimal.ZERO);
+            product.setSellingPrice2(NumberValidationUtils.isRealNumber(txtSellingPrice2.getText())? new BigDecimal(txtSellingPrice2.getText()).setScale(2, RoundingMode.HALF_UP) : BigDecimal.ZERO);
+            product.setSellingPrice3(NumberValidationUtils.isRealNumber(txtSellingPrice3.getText())? new BigDecimal(txtSellingPrice3.getText()).setScale(2, RoundingMode.HALF_UP) : BigDecimal.ZERO);
+            product.setBottomPrice(NumberValidationUtils.isRealNumber(txtBottomPrice.getText())? new BigDecimal(txtBottomPrice.getText()).setScale(2, RoundingMode.HALF_UP) : BigDecimal.ZERO);
+            product.setForeignCurrencyUnit(txtForeignCurrencyUnit.getText());
+            product.setForeignCurrencyPrice(txtForeignCurrencyPrice.getText());
+            product.setShortage(checkBoxShortage.isSelected());
+            product.setUpdater(Env.getInstance().currentUser());
+            try {
+                String json = GoogleJson.GET().toJson(product);
+                HttpClient.PUT("/products/"+product.getId(), json);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            //更改SKU
+            try {
+                SKU sku = HttpClient.GET("/sku/"+this.sku.getId(), SKU.class);
+                sku.setProduct(product);
+                sku.setSkuCode(product.getCode());
+                sku.setSkuName(product.getName());
+                sku.setSkuBarCode(product.getBarCode());
+                sku.setSpecification(txtSpec.getText());
+                sku.setDiscountPercentage(txtDiscountPercentage.getText());
+                sku.setAvgPrice(NumberValidationUtils.isRealNumber(txtAvgPrice.getText())? new BigDecimal(txtAvgPrice.getText()).setScale(2, RoundingMode.HALF_UP): BigDecimal.ZERO);
+                sku.setNotes(txtNotes.getText());
+                sku.setStatus(checkBoxAvailable.isSelected()?"可用":"不可用");
+                sku.setUpdater(Env.getInstance().currentUser());
+                try {
+                    String json = GoogleJson.GET().toJson(sku);
+                    HttpClient.PUT("/sku/"+sku.getId(), json);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                callback.call(sku);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if(closeDialog) {
+                dialog.close();
+            }
+        }
     }
 
     private void save(boolean closeDialog) {
         if(validate()) {
-            //单位如果不存在则新建
-            if(comboBoxUnit.getValue() != null && !comboBoxUnit.getValue().trim().equals("")) {
-                unit = new Unit();
-                unit.setName(comboBoxUnit.getValue());
-                String json = GoogleJson.GET().toJson(unit);
-                try {
-                    String idStr = HttpClient.POST("/units", json);
-                    unit.setId(Long.valueOf(idStr));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            //车型如果不存在则新建
-            if(comboBoxCar.getValue() != null && !comboBoxCar.getValue().trim().equals("")) {
-                car = new Car();
-                car.setName(comboBoxCar.getValue());
-                String json = GoogleJson.GET().toJson(car);
-                try {
-                    String idStr = HttpClient.POST("/cars", json);
-                    car.setId(Long.valueOf(idStr));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            //产地如果不存在则新建
-            if(comboBoxPlace.getValue() != null && !comboBoxPlace.getValue().trim().equals("")) {
-                place = new Place();
-                place.setName(comboBoxPlace.getValue());
-                String json = GoogleJson.GET().toJson(place);
-                try {
-                    String idStr = HttpClient.POST("/places", json);
-                    place.setId(Long.valueOf(idStr));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            //通用车型如果不存在则新建
-            if(comboBoxCommonCar.getValue() != null && !comboBoxCommonCar.getValue().trim().equals("")) {
-                StringBuilder stb = new StringBuilder();
-                String[] carNames = comboBoxCommonCar.getValue().split(";");
-                for(String name : carNames) {
-                    stb.append(name).append(";");
-                    car = new Car();
-                    car.setName(name);
-                    String json = GoogleJson.GET().toJson(car);
-                    try {
-                        String idStr = HttpClient.POST("/cars", json);
-                        car.setId(Long.valueOf(idStr));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                commonCars = stb.toString();
-            }
-            //品牌如果不存在则新建
-            if(comboBoxBrand.getValue() != null && !comboBoxBrand.getValue().trim().equals("")) {
-                brand = new Brand();
-                brand.setName(comboBoxBrand.getValue());
-                String json = GoogleJson.GET().toJson(brand);
-                try {
-                    String idStr = HttpClient.POST("/brands", json);
-                    brand.setId(Long.valueOf(idStr));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            //进口如果不存在则新建
-            if(comboBoxImport.getValue() != null && !comboBoxImport.getValue().trim().equals("")) {
-                imported = new Import();
-                imported.setName(comboBoxImport.getValue());
-                String json = GoogleJson.GET().toJson(imported);
-                try {
-                    String idStr = HttpClient.POST("/imports", json);
-                    imported.setId(Long.valueOf(idStr));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            //所属公司如果不存在则新建
-            if(comboBoxCompany.getValue() != null && !comboBoxCompany.getValue().trim().equals("")) {
-                company = new Company();
-                company.setName(comboBoxCompany.getValue());
-                String json = GoogleJson.GET().toJson(company);
-                try {
-                    String idStr = HttpClient.POST("/companies", json);
-                    company.setId(Long.valueOf(idStr));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            //新建Product
+            insertItemsIFNotExist();
+            //插入新Product
             Product product = new Product();
             product.setCode(txtCode.getText());
             product.setUnit(unit);
@@ -381,7 +386,6 @@ public class ProductEditorController {
             product.setForeignCurrencyUnit(txtForeignCurrencyUnit.getText());
             product.setForeignCurrencyPrice(txtForeignCurrencyPrice.getText());
             product.setShortage(checkBoxShortage.isSelected());
-
             String json = GoogleJson.GET().toJson(product);
             try {
                 String idStr = HttpClient.POST("/products", json);
@@ -389,13 +393,19 @@ public class ProductEditorController {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-            System.out.println(product);
-
             //新建SKU
-            Set<SKUSlotMapping> skuSlotMappingSet = new HashSet<>();
-            Set<SKUPhoto> photos = new HashSet<>();
-            SKU sku = new SKU(Constants.ID, product, product.getCode(), product.getName(), Constants.EMPTY, product.getBarCode(), Constants.ZERO, Constants.EMPTY, Constants.EMPTY, Constants.AVAILABLE, Constants.EMPTY, Constants.AVG_PRICE, skuSlotMappingSet, photos, null, Env.getInstance().currentUser(), null, null, null ,null, null, null);
+            SKU sku = new SKU();
+            sku.setProduct(product);
+            sku.setSkuCode(product.getCode());
+            sku.setSkuName(product.getName());
+            sku.setSkuBarCode(product.getBarCode());
+            sku.setSpecification(txtSpec.getText());
+            sku.setStockQty(0); //默认库存数为0
+            sku.setDiscountPercentage(txtDiscountPercentage.getText());
+            sku.setAvgPrice(NumberValidationUtils.isRealNumber(txtAvgPrice.getText())? new BigDecimal(txtAvgPrice.getText()).setScale(2, RoundingMode.HALF_UP): BigDecimal.ZERO);
+            sku.setNotes(txtNotes.getText());
+            sku.setStatus(checkBoxAvailable.isSelected()?"可用":"不可用");
+            sku.setUpdater(Env.getInstance().currentUser());
             json = GoogleJson.GET().toJson(sku);
             try {
                 String idStr = HttpClient.POST("/sku", json);
@@ -403,11 +413,136 @@ public class ProductEditorController {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-            System.out.println(sku);
             callback.call(sku);
             if(closeDialog) {
                 dialog.close();
+            }
+        }
+    }
+
+    /**
+     * 插入新选项如果它不存在
+     */
+    private void insertItemsIFNotExist() {
+        //分类如果不存在则新建
+        if(comboBoxCategory.getValue() != null && !comboBoxCategory.getValue().trim().equals("")) {
+
+            try {
+                Category rootCategory = HttpClient.GET("/category/root/"+Env.getInstance().currentStore().getId(), Category.class);
+                category = new Category();
+                category.setName(comboBoxCategory.getValue());
+                category.setParent(false);
+                category.setParentId(rootCategory.getId());
+                category.setStore(Env.getInstance().currentStore());
+                String json = GoogleJson.GET().toJson(category);
+                String idStr = HttpClient.POST("/categories", json);
+                category.setId(Long.valueOf(idStr));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        //供应商如果不存在则新建
+        if(comboBoxSupplier.getValue() != null && !comboBoxSupplier.getValue().trim().equals("")) {
+            try {
+                SupplierCategory rootSupplierCategory = HttpClient.GET("/supplier/categories/root", SupplierCategory.class);
+                supplier = new Supplier();
+                supplier.setName(comboBoxSupplier.getValue());
+                supplier.setSupplierCategory(rootSupplierCategory);
+                String json = GoogleJson.GET().toJson(supplier);
+                String idStr = HttpClient.POST("/suppliers", json);
+                supplier.setId(Long.valueOf(idStr));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        //单位如果不存在则新建
+        if(comboBoxUnit.getValue() != null && !comboBoxUnit.getValue().trim().equals("")) {
+            unit = new Unit();
+            unit.setName(comboBoxUnit.getValue());
+            String json = GoogleJson.GET().toJson(unit);
+            try {
+                String idStr = HttpClient.POST("/units", json);
+                unit.setId(Long.valueOf(idStr));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        //车型如果不存在则新建
+        if(comboBoxCar.getValue() != null && !comboBoxCar.getValue().trim().equals("")) {
+            car = new Car();
+            car.setName(comboBoxCar.getValue());
+            String json = GoogleJson.GET().toJson(car);
+            try {
+                String idStr = HttpClient.POST("/cars", json);
+                car.setId(Long.valueOf(idStr));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        //产地如果不存在则新建
+        if(comboBoxPlace.getValue() != null && !comboBoxPlace.getValue().trim().equals("")) {
+            place = new Place();
+            place.setName(comboBoxPlace.getValue());
+            String json = GoogleJson.GET().toJson(place);
+            try {
+                String idStr = HttpClient.POST("/places", json);
+                place.setId(Long.valueOf(idStr));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        //通用车型如果不存在则新建
+        if(comboBoxCommonCar.getValue() != null && !comboBoxCommonCar.getValue().trim().equals("")) {
+            StringBuilder stb = new StringBuilder();
+            String[] carNames = comboBoxCommonCar.getValue().split(";");
+            for(String name : carNames) {
+                stb.append(name).append(";");
+                Car car = new Car();
+                car.setName(name);
+                String json = GoogleJson.GET().toJson(car);
+                try {
+                    String idStr = HttpClient.POST("/cars", json);
+                    car.setId(Long.valueOf(idStr));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            commonCars = stb.toString();
+        }
+        //品牌如果不存在则新建
+        if(comboBoxBrand.getValue() != null && !comboBoxBrand.getValue().trim().equals("")) {
+            brand = new Brand();
+            brand.setName(comboBoxBrand.getValue());
+            String json = GoogleJson.GET().toJson(brand);
+            try {
+                String idStr = HttpClient.POST("/brands", json);
+                brand.setId(Long.valueOf(idStr));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        //进口如果不存在则新建
+        if(comboBoxImport.getValue() != null && !comboBoxImport.getValue().trim().equals("")) {
+            imported = new Import();
+            imported.setName(comboBoxImport.getValue());
+            String json = GoogleJson.GET().toJson(imported);
+            try {
+                String idStr = HttpClient.POST("/imports", json);
+                imported.setId(Long.valueOf(idStr));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        //所属公司如果不存在则新建
+        if(comboBoxCompany.getValue() != null && !comboBoxCompany.getValue().trim().equals("")) {
+            company = new Company();
+            company.setName(comboBoxCompany.getValue());
+            String json = GoogleJson.GET().toJson(company);
+            try {
+                String idStr = HttpClient.POST("/companies", json);
+                company.setId(Long.valueOf(idStr));
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }
@@ -747,7 +882,4 @@ public class ProductEditorController {
         subStage.centerOnScreen();
         subStage.show();
     }
-
-
-
 }

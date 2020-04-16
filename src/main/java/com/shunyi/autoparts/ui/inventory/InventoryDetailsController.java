@@ -284,20 +284,20 @@ public class InventoryDetailsController {
 //                return new SimpleObjectProperty<>(param.getValue().getProduct().getCar().getModel());
 //            }
 //        });
-        colSupplier.setCellValueFactory(param -> {
-            if(param.getValue().getProduct().getSupplier() == null) {
-                return new SimpleObjectProperty<>("");
-            } else {
-                return new SimpleObjectProperty<>(param.getValue().getProduct().getSupplier().getName());
-            }
-        });
-        colUnit.setCellValueFactory(param -> {
-            if(param.getValue().getProduct().getUnit() == null) {
-                return new SimpleObjectProperty<>("");
-            } else {
-                return new SimpleObjectProperty<>(param.getValue().getProduct().getUnit());
-            }
-        });
+//        colSupplier.setCellValueFactory(param -> {
+//            if(param.getValue().getProduct().getSupplier() == null) {
+//                return new SimpleObjectProperty<>("");
+//            } else {
+//                return new SimpleObjectProperty<>(param.getValue().getProduct().getSupplier().getName());
+//            }
+//        });
+//        colUnit.setCellValueFactory(param -> {
+//            if(param.getValue().getProduct().getUnit() == null) {
+//                return new SimpleObjectProperty<>("");
+//            } else {
+//                return new SimpleObjectProperty<>(param.getValue().getProduct().getUnit());
+//            }
+//        });
 //        colListPrice.setCellValueFactory(param -> {
 //            if(param.getValue().getProduct().getListPrice() == null) {
 //                return new SimpleObjectProperty<>("");

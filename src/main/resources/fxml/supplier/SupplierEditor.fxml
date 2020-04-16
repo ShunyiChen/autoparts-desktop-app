@@ -9,11 +9,11 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="506.0" prefWidth="567.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.shunyi.autoparts.ui.supplier.SupplierEditorController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="468.0" prefWidth="540.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.shunyi.autoparts.ui.supplier.SupplierEditorController">
    <children>
       <FlowPane alignment="CENTER_LEFT" prefHeight="40.0" prefWidth="726.0">
          <children>
-            <Label alignment="CENTER_RIGHT" prefHeight="19.0" prefWidth="69.0" text="*编号:">
+            <Label alignment="CENTER_RIGHT" prefHeight="19.0" prefWidth="69.0" text="编号:" textFill="RED">
                <font>
                   <Font size="14.0" />
                </font>
@@ -23,16 +23,13 @@
                   <Font size="14.0" />
                </font>
             </TextField>
-            <Label alignment="CENTER_RIGHT" layoutX="10.0" layoutY="30.0" prefHeight="19.0" prefWidth="69.0" text="*类别:">
+            <Label alignment="CENTER_RIGHT" layoutX="10.0" layoutY="30.0" prefHeight="19.0" prefWidth="69.0" text="类别:" textFill="RED">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-            <TextField fx:id="txtCategory" editable="false" layoutX="80.0" layoutY="24.0" prefHeight="30.0">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </TextField>
+            <ComboBox fx:id="comboBoxCategory" editable="false" layoutX="80.0" layoutY="24.0" prefHeight="30.0" prefWidth="154.0">
+            </ComboBox>
             <Button mnemonicParsing="false" onAction="#openCategoryChooser" text="\@">
                <font>
                   <Font size="14.0" />
@@ -42,12 +39,22 @@
       </FlowPane>
       <FlowPane alignment="CENTER_LEFT" layoutX="10.0" layoutY="10.0" prefHeight="40.0" prefWidth="726.0">
          <children>
-            <Label alignment="CENTER_RIGHT" layoutX="10.0" layoutY="30.0" prefHeight="19.0" prefWidth="69.0" text="*名称:">
+            <Label alignment="CENTER_RIGHT" layoutX="10.0" layoutY="30.0" prefHeight="19.0" prefWidth="69.0" text="名称:" textFill="RED">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-            <TextField fx:id="txtName" layoutX="80.0" layoutY="24.0" prefHeight="30.0" prefWidth="448.0">
+            <TextField fx:id="txtName" layoutX="80.0" layoutY="24.0" prefHeight="30.0" prefWidth="189.0">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </TextField>
+            <Label alignment="CENTER_RIGHT" prefHeight="19.0" prefWidth="69.0" text="备注:">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <TextField fx:id="txtNotes" prefHeight="30.0" prefWidth="189.0">
                <font>
                   <Font size="14.0" />
                </font>
@@ -157,7 +164,7 @@
                   <Font size="14.0" />
                </font>
             </Label>
-            <TextField fx:id="txtCompanyFullName">
+            <TextField fx:id="txtFullName">
                <font>
                   <Font size="14.0" />
                </font>
@@ -229,7 +236,12 @@
                   <Font size="14.0" />
                </font>
             </Label>
-            <ComboBox fx:id="combBoxCompany" prefHeight="31.0" prefWidth="190.0" />
+            <ComboBox fx:id="comboBoxCompany" prefHeight="31.0" prefWidth="154.0" />
+            <Button mnemonicParsing="false" onAction="#openCompanyChooser" text="\@">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Button>
             <Label alignment="CENTER_RIGHT" layoutX="10.0" layoutY="30.0" prefHeight="19.0" prefWidth="69.0" text="手机号:">
                <font>
                   <Font size="14.0" />
@@ -242,35 +254,21 @@
             </TextField>
          </children>
       </FlowPane>
-      <FlowPane alignment="CENTER_LEFT" layoutX="10.0" layoutY="370.0" prefHeight="40.0" prefWidth="726.0">
-         <children>
-            <Label alignment="CENTER_RIGHT" prefHeight="19.0" prefWidth="69.0" text="备注:">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Label>
-            <TextField fx:id="txtNotes" prefHeight="30.0" prefWidth="449.0">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </TextField>
-         </children>
-      </FlowPane>
       <BorderPane prefHeight="58.0" prefWidth="567.0">
          <right>
-            <FlowPane alignment="BOTTOM_CENTER" hgap="10.0" prefHeight="46.0" prefWidth="248.0" BorderPane.alignment="CENTER">
+            <FlowPane fx:id="buttonPanel" alignment="BOTTOM_CENTER" hgap="10.0" prefHeight="46.0" prefWidth="248.0" BorderPane.alignment="CENTER">
                <children>
-                  <Button mnemonicParsing="false" onAction="#continueAdding" text="继续添加">
+                  <Button fx:id="btnCancel" layoutX="112.0" layoutY="18.0" mnemonicParsing="false" onAction="#cancel" text="取 消">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="btnAdd" mnemonicParsing="false" onAction="#continueAdding" text="继续添加">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Button>
                   <Button fx:id="btnSaveAndQuit" layoutX="42.0" layoutY="18.0" mnemonicParsing="false" onAction="#saveAndQuit" text="保存退出">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </Button>
-                  <Button layoutX="112.0" layoutY="18.0" mnemonicParsing="false" onAction="#cancel" text="取 消">
                      <font>
                         <Font size="14.0" />
                      </font>

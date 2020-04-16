@@ -109,6 +109,67 @@ public class SupplierChooserController {
         subStage.show();
     }
 
+    private void edit() {
+        Supplier selectedSupplier = tableView.getSelectionModel().getSelectedItem();
+        if(selectedSupplier == null) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
+            alert.setHeaderText("");
+            alert.show();
+            return;
+        }
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource(
+                        "/fxml/supplier/SupplierEditor.fxml"
+                )
+        );
+        VBox root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Scene scene = new Scene(root);
+        Stage subStage = new Stage();
+        SupplierEditorController controller = loader.getController();
+        Callback<Supplier, String> callback = new Callback<Supplier, String>() {
+            @Override
+            public String call(Supplier param) {
+                //刷新表格
+                int index = tableView.getSelectionModel().getSelectedIndex();
+                tableView.getItems().remove(selectedSupplier);
+                tableView.getItems().add(index, param);
+                tableView.getSelectionModel().select(param);
+                return null;
+            }
+        };
+        controller.initialize(subStage, callback, selectedSupplier);
+        subStage.setTitle("更改供应商");
+        subStage.initOwner(dialog);
+        subStage.setResizable(false);
+        subStage.initModality(Modality.APPLICATION_MODAL);
+        subStage.setScene(scene);
+        // center stage on screen
+        subStage.centerOnScreen();
+        subStage.show();
+    }
+
+    private void delete() {
+        Supplier selectedSupplier = tableView.getSelectionModel().getSelectedItem();
+        if(selectedSupplier == null) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
+            alert.setHeaderText("");
+            alert.show();
+            return;
+        }
+        try {
+            HttpClient.DELETE("/suppliers/"+selectedSupplier.getId());
+            tableView.getItems().remove(selectedSupplier);
+            tableView.refresh();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     @FXML
     private void search() {
         Supplier supplier = new Supplier();
@@ -434,5 +495,23 @@ public class SupplierChooserController {
         colPostcode.setCellValueFactory(
                 new PropertyValueFactory<Supplier, String>("postCode")
         );
+        ContextMenu menu = new ContextMenu();
+        MenuItem itemEdit = new MenuItem("编 辑");
+        MenuItem itemDel = new MenuItem("删 除");
+        itemEdit.setOnAction(e ->{
+            edit();
+        });
+        itemDel.setOnAction(e ->{
+            delete();
+        });
+        menu.getItems().addAll(itemEdit, new SeparatorMenuItem(), itemDel);
+        tableView.addEventHandler(MouseEvent.MOUSE_CLICKED, t -> {
+            if(t.getButton() == MouseButton.SECONDARY) {
+                menu.show(tableView, t.getScreenX(), t.getScreenY());
+            } else {
+                menu.hide();
+            }
+        });
     }
+
 }

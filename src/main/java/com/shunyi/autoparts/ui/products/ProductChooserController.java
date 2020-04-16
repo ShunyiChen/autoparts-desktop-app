@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * @description 配件选择器Controller
  * @author Shunyi Chen
@@ -77,6 +79,8 @@ public class ProductChooserController {
     private TableColumn<SKU, String> colCar;
     @FXML
     private TableColumn<SKU, String> colSupplier;
+    @FXML
+    private TableColumn<SKU, String> colCompany;
     @FXML
     private TableColumn colDiscountPercentage;
     @FXML
@@ -136,6 +140,37 @@ public class ProductChooserController {
      * 初始化查询栏
      */
     private void initSearchFields() {
+        try {
+            Car[] cars = HttpClient.GET("/cars", Car[].class);
+            comboBoxCar.getItems().addAll(Arrays.asList(cars).stream().map(e ->e.getName()).collect(Collectors.toList()));
+            comboBoxCommonCars.getItems().addAll(Arrays.asList(cars).stream().map(e ->e.getName()).collect(Collectors.toList()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            Place[] places = HttpClient.GET("/places", Place[].class);
+            comboBoxPlace.getItems().addAll(Arrays.asList(places).stream().map(e ->e.getName()).collect(Collectors.toList()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            Supplier[] suppliers = HttpClient.GET("/suppliers", Supplier[].class);
+            comboBoxSupplier.getItems().addAll(Arrays.asList(suppliers).stream().map(e ->e.getName()).collect(Collectors.toList()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            Brand[] brands = HttpClient.GET("/brands", Brand[].class);
+            comboBoxBrand.getItems().addAll(Arrays.asList(brands).stream().map(e ->e.getName()).collect(Collectors.toList()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            Company[] companies = HttpClient.GET("/companies", Company[].class);
+            comboBoxCompany.getItems().addAll(Arrays.asList(companies).stream().map(e ->e.getName()).collect(Collectors.toList()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         new AutoCompleteBox(comboBoxCar);
         new AutoCompleteBox(comboBoxCommonCars);
         new AutoCompleteBox(comboBoxPlace);
@@ -268,6 +303,8 @@ public class ProductChooserController {
         colPlace.setCellValueFactory(param -> new SimpleObjectProperty(param.getValue().getProduct().getPlace()));
         colBrand.setCellValueFactory(param -> new SimpleObjectProperty(param.getValue().getProduct().getBrand()));
         colCar.setCellValueFactory(param -> new SimpleObjectProperty(param.getValue().getProduct().getCar()));
+        colSupplier.setCellValueFactory(param -> new SimpleObjectProperty(param.getValue().getProduct().getSupplier()));
+        colCompany.setCellValueFactory(param -> new SimpleObjectProperty(param.getValue().getProduct().getCompany()));
         colDiscountPercentage.setCellValueFactory(new PropertyValueFactory<SKU, String>("discountPercentage"));
         colAvgPrice.setCellValueFactory(new PropertyValueFactory<SKU, String>("avgPrice"));
         colPurchasingPrice1.setCellValueFactory(param -> new SimpleObjectProperty(param.getValue().getProduct().getPurchasingPrice1()));
@@ -326,12 +363,6 @@ public class ProductChooserController {
             SKU[] skuArray = HttpClient.GET("/sku", SKU[].class);
             tableView.getItems().addAll(skuArray);
             tableView.refresh();
-
-            for(SKU s : skuArray) {
-                System.out.println(s.getProduct());
-            }
-
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -351,8 +382,8 @@ public class ProductChooserController {
 
     @FXML
     private void updateProductAndSKU() {
-        SKU selected = tableView.getSelectionModel().getSelectedItem();
-        if(selected == null) {
+        SKU selectedSku = tableView.getSelectionModel().getSelectedItem();
+        if(selectedSku == null) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
             alert.setHeaderText("请选择一个配件");
             alert.show();
@@ -361,15 +392,15 @@ public class ProductChooserController {
         Callback<SKU, String> callback = sku -> {
             //刷新表格
             int index = tableView.getSelectionModel().getSelectedIndex();
-            tableView.getItems().remove(selected);
+            tableView.getItems().remove(selectedSku);
             tableView.getItems().add(index, sku);
             tableView.getSelectionModel().select(sku);
             return null;
         };
-        openProductEditor(callback, selected.getProduct());
+        openProductEditor(callback, selectedSku);
     }
 
-    private void openProductEditor(Callback<SKU, String> callback, Product updatedProduct) {
+    private void openProductEditor(Callback<SKU, String> callback, SKU selectedSku) {
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource(
                         "/fxml/products/ProductEditor.fxml"
@@ -384,8 +415,8 @@ public class ProductChooserController {
         Scene scene = new Scene(root);
         Stage dialog = new Stage();
         ProductEditorController controller = loader.getController();
-        controller.initialize(dialog, callback, updatedProduct);
-        dialog.setTitle(updatedProduct != null?"更改配件":"新建配件");
+        controller.initialize(dialog, callback, selectedSku);
+        dialog.setTitle(selectedSku != null?"更改配件":"新建配件");
         dialog.initOwner(this.dialog);
         dialog.setResizable(false);
         dialog.initModality(Modality.APPLICATION_MODAL);
@@ -405,8 +436,7 @@ public class ProductChooserController {
             return;
         }
         Alert alertConfirm = new Alert(Alert.AlertType.CONFIRMATION, "", ButtonType.NO, ButtonType.YES);
-        alertConfirm.setHeaderText("是否删除该商品？");
-        alertConfirm.setContentText("删除同时将删除配件SKU");
+        alertConfirm.setHeaderText("请确认是否要删除配件？");
         alertConfirm.showAndWait().filter(response -> response == ButtonType.YES).ifPresent(response -> {
             try {
                 //删除商品所有SKU
@@ -445,10 +475,13 @@ public class ProductChooserController {
         product.setSupplier(new Supplier(comboBoxSupplier.getValue()));
         product.setBrand(new Brand(comboBoxBrand.getValue()));
         product.setCompany(new Company(comboBoxCompany.getValue()));
+
+
         SKU condition = new SKU();
         condition.setSkuCode(txtCode.getText());
         condition.setSkuName(txtName.getText());
         condition.setProduct(product);
+        System.out.println(condition);
         String json = GoogleJson.GET().toJson(condition);
         String data = null;
         try {

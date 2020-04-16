@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="584.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.shunyi.autoparts.ui.products.ProductEditorController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="666.0" prefWidth="584.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.shunyi.autoparts.ui.products.ProductEditorController">
    <center>
       <VBox prefHeight="547.0" prefWidth="604.0" BorderPane.alignment="CENTER">
          <children>
@@ -342,7 +342,59 @@
                         <Font size="14.0" />
                      </font>
                   </TextField>
-                  <Label alignment="CENTER_RIGHT" layoutX="10.0" layoutY="22.0" prefHeight="19.0" prefWidth="104.0" text="紧缺件:">
+                  <Label alignment="CENTER_RIGHT" prefHeight="19.0" prefWidth="108.0" text="配件规格:">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="txtSpec" prefHeight="29.0" prefWidth="170.0">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </TextField>
+               </children>
+            </FlowPane>
+            <FlowPane alignment="CENTER_LEFT" layoutX="10.0" layoutY="504.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="38.0" prefWidth="600.0">
+               <children>
+                  <Label alignment="CENTER_RIGHT" prefHeight="19.0" prefWidth="75.0" text="折扣%:">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="txtDiscountPercentage" prefHeight="29.0" prefWidth="170.0">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </TextField>
+                  <Label alignment="CENTER_RIGHT" layoutX="10.0" layoutY="20.0" prefHeight="19.0" prefWidth="108.0" text="进货平均价:">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="txtAvgPrice" layoutX="85.0" layoutY="15.0" prefHeight="29.0" prefWidth="170.0">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </TextField>
+               </children>
+            </FlowPane>
+            <FlowPane alignment="CENTER_LEFT" layoutX="10.0" layoutY="504.0" prefHeight="38.0" prefWidth="600.0">
+               <children>
+                  <Label alignment="CENTER_RIGHT" prefHeight="19.0" prefWidth="75.0" text="备 注:">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="txtNotes" prefHeight="29.0" prefWidth="448.0">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </TextField>
+               </children>
+            </FlowPane>
+            <FlowPane alignment="CENTER_LEFT" layoutX="10.0" layoutY="574.0" prefHeight="38.0" prefWidth="600.0">
+               <children>
+                  <Label alignment="CENTER_RIGHT" prefHeight="19.0" prefWidth="70.0" text="紧缺件:">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -355,6 +407,16 @@
                         <Insets left="5.0" />
                      </FlowPane.margin>
                   </CheckBox>
+                  <Label alignment="CENTER_RIGHT" layoutX="10.0" layoutY="19.0" prefHeight="19.0" prefWidth="70.0" text="可用:">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <CheckBox fx:id="checkBoxAvailable" alignment="CENTER" layoutX="85.0" layoutY="19.0" mnemonicParsing="false" prefHeight="16.0" prefWidth="25.0" selected="true">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </CheckBox>
                </children>
             </FlowPane>
          </children>
@@ -363,9 +425,9 @@
    <bottom>
       <BorderPane prefHeight="53.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <right>
-            <FlowPane alignment="CENTER" hgap="10.0" prefHeight="59.0" prefWidth="245.0" BorderPane.alignment="CENTER">
+            <FlowPane fx:id="buttonPanel" alignment="CENTER" hgap="10.0" prefHeight="59.0" prefWidth="245.0" BorderPane.alignment="CENTER">
                <children>
-                  <Button mnemonicParsing="false" onAction="#cancel" text="取 消">
+                  <Button fx:id="btnCancel" mnemonicParsing="false" onAction="#cancel" text="取 消">
                      <font>
                         <Font size="14.0" />
                      </font>
