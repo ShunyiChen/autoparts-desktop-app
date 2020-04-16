@@ -60,6 +60,11 @@
                      </font>
                   </Label>
                   <ComboBox fx:id="comboboxSupplierCode" editable="true" prefHeight="29.0" prefWidth="170.0" />
+                  <Button mnemonicParsing="false" onAction="#removeItem" prefHeight="29.0" prefWidth="30.0" text="\@">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Button>
                   <Label alignment="CENTER" layoutX="10.0" layoutY="25.0" prefHeight="19.0" prefWidth="69.0" text="供应商名:">
                      <font>
                         <Font size="14.0" />
@@ -70,7 +75,7 @@
                         <Font size="14.0" />
                      </font>
                   </TextField>
-                  <Label alignment="CENTER" layoutX="234.0" layoutY="25.0" prefHeight="19.0" prefWidth="72.0" text="联系人:">
+                  <Label alignment="CENTER_RIGHT" layoutX="234.0" layoutY="25.0" prefHeight="19.0" prefWidth="72.0" text="联系人:">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -80,7 +85,7 @@
                         <Font size="14.0" />
                      </font>
                   </TextField>
-                  <Label alignment="CENTER" layoutX="444.0" layoutY="25.0" prefHeight="19.0" prefWidth="51.0" text="电话:">
+                  <Label alignment="CENTER_RIGHT" layoutX="444.0" layoutY="25.0" prefHeight="19.0" prefWidth="51.0" text="电话:">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -94,13 +99,13 @@
             </FlowPane>
             <FlowPane alignment="CENTER_LEFT" layoutX="10.0" layoutY="70.0" prefHeight="38.0" prefWidth="1164.0">
                <children>
-                  <Label prefHeight="19.0" prefWidth="74.0" text="发票类型:">
+                  <Label alignment="CENTER_RIGHT" prefHeight="19.0" prefWidth="74.0" text="发票类型:">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
                   <ComboBox fx:id="comboboxInvoiceType" prefHeight="29.0" prefWidth="170.0" />
-                  <Label alignment="CENTER" layoutX="10.0" layoutY="25.0" prefHeight="19.0" prefWidth="69.0" text="发票No:">
+                  <Label alignment="CENTER_RIGHT" layoutX="10.0" layoutY="25.0" prefHeight="19.0" prefWidth="99.0" text="发票No:">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -110,7 +115,7 @@
                         <Font size="14.0" />
                      </font>
                   </TextField>
-                  <Label alignment="CENTER" layoutX="234.0" layoutY="25.0" prefHeight="19.0" prefWidth="72.0" text="运费:">
+                  <Label alignment="CENTER_RIGHT" layoutX="234.0" layoutY="25.0" prefHeight="19.0" prefWidth="73.0" text="运费:">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -120,7 +125,7 @@
                         <Font size="14.0" />
                      </font>
                   </TextField>
-                  <Label alignment="CENTER" layoutX="444.0" layoutY="25.0" prefHeight="19.0" prefWidth="51.0" text="备注:">
+                  <Label alignment="CENTER_RIGHT" layoutX="444.0" layoutY="25.0" prefHeight="19.0" prefWidth="51.0" text="备注:">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -168,8 +173,6 @@
            <TableColumn fx:id="colSkuBarCode" prefWidth="125.0" text="条形码" />
            <!-- 库存数量 -->
            <TableColumn fx:id="colStockQty" prefWidth="125.0" text="库存数量" />
-           <!-- 属性字符串(可隐藏) -->
-           <TableColumn fx:id="colProperties" prefWidth="125.0" text="属性字符串" />
            <!-- 折扣% -->
            <TableColumn fx:id="colDiscountPercentage" prefWidth="125.0" text="折扣%" />
            <!-- 税率% -->
