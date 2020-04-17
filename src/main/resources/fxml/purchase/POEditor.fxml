@@ -54,27 +54,17 @@
             </BorderPane>
             <FlowPane alignment="CENTER_LEFT" layoutX="10.0" layoutY="56.0" prefHeight="38.0" prefWidth="1164.0">
                <children>
-                  <Label text="供应商编码:">
+                  <Label alignment="CENTER_RIGHT" prefWidth="90.0" text="供应商编码:">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <ComboBox fx:id="comboboxSupplierCode" editable="true" prefHeight="29.0" prefWidth="170.0" />
-                  <Button mnemonicParsing="false" onAction="#removeItem" prefHeight="29.0" prefWidth="30.0" text="\@">
+                  <ComboBox fx:id="comboBoxSupplierCode" editable="true" prefHeight="29.0" prefWidth="170.0" />
+                  <Button mnemonicParsing="false" onAction="#openSupplierChooser" prefHeight="29.0" prefWidth="30.0" text="\@">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Button>
-                  <Label alignment="CENTER" layoutX="10.0" layoutY="25.0" prefHeight="19.0" prefWidth="69.0" text="供应商名:">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </Label>
-                  <TextField fx:id="txtSupplierName" layoutX="84.0" layoutY="20.0" prefHeight="29.0" prefWidth="170.0">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </TextField>
                   <Label alignment="CENTER_RIGHT" layoutX="234.0" layoutY="25.0" prefHeight="19.0" prefWidth="72.0" text="联系人:">
                      <font>
                         <Font size="14.0" />
@@ -85,12 +75,23 @@
                         <Font size="14.0" />
                      </font>
                   </TextField>
-                  <Label alignment="CENTER_RIGHT" layoutX="444.0" layoutY="25.0" prefHeight="19.0" prefWidth="51.0" text="电话:">
+                  <Label alignment="CENTER_RIGHT" prefHeight="19.0" prefWidth="74.0" text="发票类型:">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="txtPhone" layoutX="490.0" layoutY="20.0" prefHeight="29.0" prefWidth="170.0">
+                  <ComboBox fx:id="comboBoxInvoiceType" prefHeight="29.0" prefWidth="170.0" />
+                  <Button layoutX="271.0" layoutY="13.0" mnemonicParsing="false" onAction="#openSupplierChooser" prefHeight="29.0" prefWidth="30.0" text="\@">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Button>
+                  <Label alignment="CENTER_RIGHT" prefHeight="19.0" prefWidth="78.0" text="发票No:">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="txtInvoiceNo" prefHeight="29.0" prefWidth="170.0">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -99,23 +100,27 @@
             </FlowPane>
             <FlowPane alignment="CENTER_LEFT" layoutX="10.0" layoutY="70.0" prefHeight="38.0" prefWidth="1164.0">
                <children>
-                  <Label alignment="CENTER_RIGHT" prefHeight="19.0" prefWidth="74.0" text="发票类型:">
+                  <Label alignment="CENTER_RIGHT" prefHeight="19.0" prefWidth="90.0" text="供应商名:">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <ComboBox fx:id="comboboxInvoiceType" prefHeight="29.0" prefWidth="170.0" />
-                  <Label alignment="CENTER_RIGHT" layoutX="10.0" layoutY="25.0" prefHeight="19.0" prefWidth="99.0" text="发票No:">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </Label>
-                  <TextField fx:id="txtInvoiceNo" layoutX="84.0" layoutY="20.0" prefHeight="29.0" prefWidth="170.0">
+                  <TextField fx:id="txtSupplierName" prefHeight="29.0" prefWidth="170.0">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </TextField>
-                  <Label alignment="CENTER_RIGHT" layoutX="234.0" layoutY="25.0" prefHeight="19.0" prefWidth="73.0" text="运费:">
+                  <Label alignment="CENTER_RIGHT" prefHeight="19.0" prefWidth="102.0" text="电话:">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="txtPhone" prefHeight="29.0" prefWidth="170.0">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </TextField>
+                  <Label alignment="CENTER_RIGHT" layoutX="234.0" layoutY="25.0" prefHeight="19.0" prefWidth="74.0" text="运费:">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -125,7 +130,7 @@
                         <Font size="14.0" />
                      </font>
                   </TextField>
-                  <Label alignment="CENTER_RIGHT" layoutX="444.0" layoutY="25.0" prefHeight="19.0" prefWidth="51.0" text="备注:">
+                  <Label alignment="CENTER_RIGHT" layoutX="444.0" layoutY="25.0" prefHeight="19.0" prefWidth="109.0" text="备注:">
                      <font>
                         <Font size="14.0" />
                      </font>
