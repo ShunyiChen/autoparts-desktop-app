@@ -6,7 +6,7 @@ import java.util.Date;
 /**
  * @description 采购订单VO
  * @author Shunyi Chen
- * @date 2020/4/4
+ * @date 2020/4/18
  */
 public class PurchaseOrder {
     /** ID */
@@ -27,28 +27,24 @@ public class PurchaseOrder {
     private BigDecimal freight;
     /** 备注 */
     private String notes;
-    /** 结算方式 */
-    private String payment;
-    /** 应付账号 */
-    private String account;
-    /** 合计数量 */
-    private Integer totalQty;
-    /** 折后金额 */
-    private BigDecimal discountedAmount;
-    /** 合计金额 */
-    private BigDecimal totalAmount;
-    /** 付款金额 */
-    private BigDecimal paidAmount;
-    /** 含税金额 */
-    private BigDecimal taxIncludedAmount;
-    /** 优惠 */
-    private BigDecimal discount;
-    /** 优惠后金额 */
-    private BigDecimal discountedAmount2;
-    /** 应付款 */
-    private BigDecimal due;
     /** 经办人 */
     private String operator;
+    /** 结算方式 */
+    private String payment;
+    /** 货款金额 */
+    private BigDecimal purchaseAmount;
+    /** 垫付费用 */
+    private BigDecimal disbursement;
+    /** 本次优惠 */
+    private BigDecimal discountAmount;
+    /** 应付总额 */
+    private BigDecimal amountPayable;
+    /** 本次付款 */
+    private BigDecimal paymentAmount;
+    /** 账号 */
+    private String account;
+    /** 还款日期 */
+    private Date repaymentDate;
     /** 订单状态 */
     private String status;
     /** 创建时间 */
@@ -64,7 +60,7 @@ public class PurchaseOrder {
 
     public PurchaseOrder() {}
 
-    public PurchaseOrder(Long id, String orderNo, Date orderDate, Warehouse warehouse, Supplier supplier, String invoiceType, String invoiceNo, BigDecimal freight, String notes, String payment, String account, Integer totalQty, BigDecimal discountedAmount, BigDecimal totalAmount, BigDecimal paidAmount, BigDecimal taxIncludedAmount, BigDecimal discount, BigDecimal discountedAmount2, BigDecimal due, String operator, String status, Date dateCreated, String creator, Date dateDeleted, Boolean deleteFlag, String deleter) {
+    public PurchaseOrder(Long id, String orderNo, Date orderDate, Warehouse warehouse, Supplier supplier, String invoiceType, String invoiceNo, BigDecimal freight, String notes, String operator, String payment, BigDecimal purchaseAmount, BigDecimal disbursement, BigDecimal discountAmount, BigDecimal amountPayable, BigDecimal paymentAmount, String account, Date repaymentDate, String status, Date dateCreated, String creator, Date dateDeleted, Boolean deleteFlag, String deleter) {
         this.id = id;
         this.orderNo = orderNo;
         this.orderDate = orderDate;
@@ -74,17 +70,15 @@ public class PurchaseOrder {
         this.invoiceNo = invoiceNo;
         this.freight = freight;
         this.notes = notes;
-        this.payment = payment;
-        this.account = account;
-        this.totalQty = totalQty;
-        this.discountedAmount = discountedAmount;
-        this.totalAmount = totalAmount;
-        this.paidAmount = paidAmount;
-        this.taxIncludedAmount = taxIncludedAmount;
-        this.discount = discount;
-        this.discountedAmount2 = discountedAmount2;
-        this.due = due;
         this.operator = operator;
+        this.payment = payment;
+        this.purchaseAmount = purchaseAmount;
+        this.disbursement = disbursement;
+        this.discountAmount = discountAmount;
+        this.amountPayable = amountPayable;
+        this.paymentAmount = paymentAmount;
+        this.account = account;
+        this.repaymentDate = repaymentDate;
         this.status = status;
         this.dateCreated = dateCreated;
         this.creator = creator;
@@ -165,12 +159,60 @@ public class PurchaseOrder {
         this.notes = notes;
     }
 
+    public String getOperator() {
+        return operator;
+    }
+
+    public void setOperator(String operator) {
+        this.operator = operator;
+    }
+
     public String getPayment() {
         return payment;
     }
 
     public void setPayment(String payment) {
         this.payment = payment;
+    }
+
+    public BigDecimal getPurchaseAmount() {
+        return purchaseAmount;
+    }
+
+    public void setPurchaseAmount(BigDecimal purchaseAmount) {
+        this.purchaseAmount = purchaseAmount;
+    }
+
+    public BigDecimal getDisbursement() {
+        return disbursement;
+    }
+
+    public void setDisbursement(BigDecimal disbursement) {
+        this.disbursement = disbursement;
+    }
+
+    public BigDecimal getDiscountAmount() {
+        return discountAmount;
+    }
+
+    public void setDiscountAmount(BigDecimal discountAmount) {
+        this.discountAmount = discountAmount;
+    }
+
+    public BigDecimal getAmountPayable() {
+        return amountPayable;
+    }
+
+    public void setAmountPayable(BigDecimal amountPayable) {
+        this.amountPayable = amountPayable;
+    }
+
+    public BigDecimal getPaymentAmount() {
+        return paymentAmount;
+    }
+
+    public void setPaymentAmount(BigDecimal paymentAmount) {
+        this.paymentAmount = paymentAmount;
     }
 
     public String getAccount() {
@@ -181,76 +223,12 @@ public class PurchaseOrder {
         this.account = account;
     }
 
-    public Integer getTotalQty() {
-        return totalQty;
+    public Date getRepaymentDate() {
+        return repaymentDate;
     }
 
-    public void setTotalQty(Integer totalQty) {
-        this.totalQty = totalQty;
-    }
-
-    public BigDecimal getDiscountedAmount() {
-        return discountedAmount;
-    }
-
-    public void setDiscountedAmount(BigDecimal discountedAmount) {
-        this.discountedAmount = discountedAmount;
-    }
-
-    public BigDecimal getTotalAmount() {
-        return totalAmount;
-    }
-
-    public void setTotalAmount(BigDecimal totalAmount) {
-        this.totalAmount = totalAmount;
-    }
-
-    public BigDecimal getPaidAmount() {
-        return paidAmount;
-    }
-
-    public void setPaidAmount(BigDecimal paidAmount) {
-        this.paidAmount = paidAmount;
-    }
-
-    public BigDecimal getTaxIncludedAmount() {
-        return taxIncludedAmount;
-    }
-
-    public void setTaxIncludedAmount(BigDecimal taxIncludedAmount) {
-        this.taxIncludedAmount = taxIncludedAmount;
-    }
-
-    public BigDecimal getDiscount() {
-        return discount;
-    }
-
-    public void setDiscount(BigDecimal discount) {
-        this.discount = discount;
-    }
-
-    public BigDecimal getDiscountedAmount2() {
-        return discountedAmount2;
-    }
-
-    public void setDiscountedAmount2(BigDecimal discountedAmount2) {
-        this.discountedAmount2 = discountedAmount2;
-    }
-
-    public BigDecimal getDue() {
-        return due;
-    }
-
-    public void setDue(BigDecimal due) {
-        this.due = due;
-    }
-
-    public String getOperator() {
-        return operator;
-    }
-
-    public void setOperator(String operator) {
-        this.operator = operator;
+    public void setRepaymentDate(Date repaymentDate) {
+        this.repaymentDate = repaymentDate;
     }
 
     public String getStatus() {

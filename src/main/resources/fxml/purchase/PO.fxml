@@ -26,6 +26,7 @@
                         <Font size="14.0" />
                      </font>
                   </Button>
+                  <Separator />
                   <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#update" text="更 改">
                      <font>
                         <Font size="14.0" />
@@ -36,7 +37,6 @@
                         <Font size="14.0" />
                      </font>
                   </Button>
-                  <Separator />
                   <Button layoutX="62.0" layoutY="11.0" mnemonicParsing="false" onAction="#refresh" text="刷 新">
                       <font>
                           <Font size="14.0" />
@@ -78,7 +78,7 @@
                                <Font size="14.0" />
                            </font>
                        </TextField>
-                       <Button mnemonicParsing="false" onAction="#search" text="查  询">
+                       <Button mnemonicParsing="false" onAction="#search" text="查 询">
                            <font>
                                <Font size="14.0" />
                            </font>
@@ -86,7 +86,7 @@
                         <Insets left="15.0" right="10.0" />
                      </FlowPane.margin>
                        </Button>
-                       <Button mnemonicParsing="false" onAction="#clearQueryConditions" text="清  空">
+                       <Button mnemonicParsing="false" onAction="#clearQueryConditions" text="清 空">
                            <font>
                                <Font size="14.0" />
                            </font>

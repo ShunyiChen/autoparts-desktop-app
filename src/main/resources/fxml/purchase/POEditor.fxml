@@ -60,7 +60,7 @@
                      </font>
                   </Label>
                   <ComboBox fx:id="comboBoxSupplierCode" editable="true" prefHeight="29.0" prefWidth="170.0" />
-                  <Button mnemonicParsing="false" onAction="#openSupplierChooser" prefHeight="29.0" prefWidth="30.0" text="\@">
+                  <Button mnemonicParsing="false" onAction="#openSupplierChooser" prefHeight="25.0" prefWidth="28.0" text="...">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -262,8 +262,6 @@
            <TableColumn fx:id="colDateCreated" prefWidth="125.0" text="创建时间" />
            <!-- 创建者 -->
            <TableColumn fx:id="colCreator" prefWidth="125.0" text="创建者" />
-           <!-- 更新时间 -->
-           <TableColumn fx:id="colDateUpdated" prefWidth="125.0" text="更新时间" />
            <!-- 更新者 -->
            <TableColumn fx:id="colUpdator" prefWidth="125.0" text="更新者" />
            <!-- 更新次数 -->
@@ -278,27 +276,12 @@
       </TableView>
    </center>
    <bottom>
-      <VBox prefHeight="155.0" prefWidth="1164.0" BorderPane.alignment="CENTER">
+      <VBox prefHeight="155.0" BorderPane.alignment="CENTER">
          <children>
-            <FlowPane alignment="CENTER_RIGHT" prefHeight="38.0" prefWidth="1164.0">
+            <FlowPane prefHeight="24.0" prefWidth="1164.0" style="-fx-background-color: lightGrey;" />
+            <FlowPane alignment="CENTER_RIGHT" prefHeight="38.0">
                <children>
-                  <Label alignment="CENTER" layoutX="10.0" layoutY="20.0" prefHeight="19.0" prefWidth="87.0" text="结算方式:">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </Label>
-                  <ComboBox fx:id="comboboxPayments" prefHeight="29.0" prefWidth="150.0" />
-                  <Label alignment="CENTER" layoutX="219.0" layoutY="20.0" prefHeight="19.0" prefWidth="87.0" text="应付账户:">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </Label>
-                  <ComboBox fx:id="comboboxAccount" layoutX="306.0" layoutY="15.0" prefHeight="29.0" prefWidth="150.0">
-                     <FlowPane.margin>
-                        <Insets right="5.0" />
-                     </FlowPane.margin>
-                  </ComboBox>
-                  <Label alignment="CENTER" prefHeight="19.0" prefWidth="82.0" text="经办人:">
+                  <Label alignment="CENTER_RIGHT" prefHeight="19.0" prefWidth="88.0" text="经办人:">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -308,49 +291,22 @@
                         <Font size="14.0" />
                      </font>
                      <FlowPane.margin>
-                        <Insets right="5.0" />
+                        <Insets />
                      </FlowPane.margin>
                   </TextField>
-               </children>
-            </FlowPane>
-            <FlowPane alignment="CENTER_RIGHT" layoutX="10.0" layoutY="10.0" prefHeight="38.0" prefWidth="1164.0">
-               <children>
-                  <Label alignment="CENTER" prefHeight="19.0" prefWidth="81.0" text="合计数量:">
+                  <Label alignment="CENTER_RIGHT" layoutX="10.0" layoutY="20.0" prefHeight="19.0" prefWidth="75.0" text="结算方式:">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="txtTotalQty" prefHeight="29.0" prefWidth="150.0">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </TextField>
-                  <Label alignment="CENTER" layoutX="10.0" layoutY="20.0" prefHeight="19.0" prefWidth="87.0" text="折后金额:">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </Label>
-                  <TextField fx:id="txtDiscountedAmount" layoutX="463.0" layoutY="15.0" prefHeight="29.0" prefWidth="150.0">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </TextField>
-                  <Label alignment="CENTER" layoutX="219.0" layoutY="20.0" prefHeight="19.0" prefWidth="87.0" text="合计金额:">
+                  <ComboBox fx:id="comboBoxPayments" prefHeight="29.0" prefWidth="150.0" />
+                  <Button mnemonicParsing="false" prefHeight="28.0" prefWidth="29.0" text="..." />
+                  <Label alignment="CENTER_RIGHT" layoutX="219.0" layoutY="20.0" prefHeight="19.0" prefWidth="75.0" text="系统账号:">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="txtTotalAmount" layoutX="463.0" layoutY="15.0" prefHeight="29.0" prefWidth="150.0">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </TextField>
-                  <Label alignment="CENTER" prefHeight="19.0" prefWidth="87.0" text="付款金额:">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </Label>
-                  <TextField fx:id="txtAmountPaid" prefHeight="29.0" prefWidth="150.0">
+                  <TextField fx:id="txtLoginAccount" editable="false" layoutX="1019.0" layoutY="13.0" prefHeight="29.0" prefWidth="150.0">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -360,44 +316,44 @@
                   </TextField>
                </children>
             </FlowPane>
-            <FlowPane alignment="CENTER_RIGHT" layoutX="10.0" layoutY="48.0" prefHeight="38.0" prefWidth="1164.0">
+            <FlowPane alignment="CENTER_RIGHT" layoutX="10.0" layoutY="10.0" prefHeight="38.0">
                <children>
-                  <Label alignment="CENTER" prefHeight="19.0" prefWidth="74.0" text="含税金额:">
+                  <Label alignment="CENTER_RIGHT" prefHeight="19.0" prefWidth="81.0" text="货款金额:">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="txtAmountIncludingTax" prefHeight="29.0" prefWidth="150.0">
+                  <TextField fx:id="txtPurchaseAmount" prefHeight="29.0" prefWidth="110.0">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </TextField>
-                  <Label alignment="CENTER" prefHeight="19.0" prefWidth="88.0" text="优 惠:">
+                  <Label alignment="CENTER_RIGHT" layoutX="10.0" layoutY="20.0" prefHeight="19.0" prefWidth="71.0" text="代垫费用:">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="txtDiscounts" prefHeight="29.0" prefWidth="150.0">
+                  <TextField fx:id="txtDisbursement" layoutX="463.0" layoutY="15.0" prefHeight="29.0" prefWidth="110.0">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </TextField>
-                  <Label alignment="CENTER" layoutX="10.0" layoutY="20.0" prefHeight="19.0" prefWidth="87.0" text="优惠后金额:">
+                  <Label alignment="CENTER_RIGHT" layoutX="219.0" layoutY="20.0" prefHeight="19.0" prefWidth="67.0" text="本次优惠:">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="txtDiscountedAmount2" layoutX="463.0" layoutY="15.0" prefHeight="29.0" prefWidth="150.0">
+                  <TextField fx:id="txtDiscountAmount" layoutX="463.0" layoutY="15.0" prefHeight="29.0" prefWidth="110.0">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </TextField>
-                  <Label alignment="CENTER" layoutX="219.0" layoutY="20.0" prefHeight="19.0" prefWidth="87.0" text="当前应付款:">
+                  <Label alignment="CENTER_RIGHT" prefHeight="19.0" prefWidth="64.0" text="应付总额:">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="txtDue" layoutX="463.0" layoutY="15.0" prefHeight="29.0" prefWidth="150.0">
+                  <TextField fx:id="txtAmountPayable" prefHeight="29.0" prefWidth="110.0">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -405,6 +361,31 @@
                         <Insets right="5.0" />
                      </FlowPane.margin>
                   </TextField>
+                  <Label alignment="CENTER_RIGHT" prefHeight="19.0" prefWidth="60.0" text="本次付款:">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="txtPaymentAmount" layoutX="623.0" layoutY="15.0" prefHeight="29.0" prefWidth="110.0">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </TextField>
+                  <Label alignment="CENTER_RIGHT" layoutX="738.0" layoutY="20.0" prefHeight="19.0" prefWidth="46.0" text="账号:">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <ComboBox fx:id="comboBoxAccount" layoutX="804.0" layoutY="15.0" prefHeight="29.0" prefWidth="150.0">
+                     <FlowPane.margin>
+                        <Insets />
+                     </FlowPane.margin>
+                  </ComboBox>
+                  <Button mnemonicParsing="false" prefHeight="28.0" prefWidth="29.0" text="...">
+                     <FlowPane.margin>
+                        <Insets right="5.0" />
+                     </FlowPane.margin>
+                  </Button>
                </children>
             </FlowPane>
             <FlowPane alignment="CENTER_RIGHT" hgap="10.0" layoutX="10.0" layoutY="86.0" prefHeight="54.0" prefWidth="1164.0" style="-fx-border-color: lightgrey;">

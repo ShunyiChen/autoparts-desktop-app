@@ -3,6 +3,7 @@ package com.shunyi.autoparts.ui.purchase;
 import com.shunyi.autoparts.ui.common.*;
 import com.shunyi.autoparts.ui.common.vo.*;
 import com.shunyi.autoparts.ui.products.ProductChooserController;
+import com.shunyi.autoparts.ui.supplier.SupplierChooserController;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
@@ -15,6 +16,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -35,54 +37,61 @@ public class POEditorController {
     /** 采购订单 */
     private PurchaseOrder order;
     private boolean readOnly;
+    private Supplier supplier;
     private Callback<TableColumn<PurchaseOrderItem, String>, TableCell<PurchaseOrderItem, String>> cellFactory;
-
     @FXML
     private Button btnSubmit;
     @FXML
     private DatePicker orderDate;
     @FXML
     private TextField txtOrderNo;
+    /** 供应商编码 */
     @FXML
-    private ComboBox<Supplier> comboboxSupplierCode;
+    private ComboBox<String> comboBoxSupplierCode;
+    /** 供应商名称 */
     @FXML
     private TextField txtSupplierName;
+    /** 联系人 */
     @FXML
     private TextField txtContact;
+    /** 电话 */
     @FXML
     private TextField txtPhone;
+    /** 发票类型 */
     @FXML
-    private ComboBox comboboxInvoiceType;
+    private ComboBox<String> comboBoxInvoiceType;
+    /** 发票号 */
     @FXML
     private TextField txtInvoiceNo;
+    /** 运费 */
     @FXML
     private TextField txtFreight;
+    /** 备注 */
     @FXML
     private TextField txtNotes;
+    /** 结算方式 */
     @FXML
-    private ComboBox comboboxPayments;
+    private ComboBox comboBoxPayments;
     @FXML
-    private ComboBox comboboxAccount;
-    @FXML
-    private TextField txtAmountPaid;
-    @FXML
-    private TextField txtAmountIncludingTax;
+    private ComboBox comboBoxAccount;
+//    @FXML
+//    private TextField txtAmountPaid;
+//    @FXML
+//    private TextField txtAmountIncludingTax;
     @FXML
     private TextField txtTotalQty;
     @FXML
     private TextField txtDiscountedAmount;
     @FXML
     private TextField txtTotalAmount;
-    @FXML
-    private TextField txtDiscounts;
-    @FXML
-    private TextField txtDiscountedAmount2;
-    @FXML
-    private TextField txtDue;
+//    @FXML
+//    private TextField txtDiscounts;
+//    @FXML
+//    private TextField txtDiscountedAmount2;
+//    @FXML
+//    private TextField txtDue;
     @FXML
     private TextField txtOperator;
-
-
     /** 采购订单明细表 */
     @FXML
     private TableView<PurchaseOrderItem> tableView;
@@ -283,34 +292,34 @@ public class POEditorController {
 
     private void initInputFields() {
         orderDate.setValue(LocalDate.now());
-        comboboxSupplierCode.setStyle("-fx-font-size: 14;");
-        comboboxInvoiceType.setStyle("-fx-font-size: 14;");
-        comboboxInvoiceType.getItems().add("普通发票");
-        comboboxInvoiceType.getSelectionModel().select(0);
-        comboboxPayments.getItems().add("现金");
-        comboboxPayments.getSelectionModel().select(0);
-        comboboxAccount.getItems().add("00000000");
-        comboboxAccount.getSelectionModel().select(0);
-        txtOperator.setText(Env.getInstance().currentUser());
-        txtOperator.setEditable(false);
-        txtFreight.setText("0.00");
-        txtAmountPaid.setText("0.00");
-        txtAmountIncludingTax.setText("0.00");
-        txtTotalQty.setText("0.00");
-        txtDiscountedAmount.setText("0.00");
-        txtTotalAmount.setText("0.00");
-        txtDiscounts.setText("0.00");
-        txtDiscountedAmount2.setText("0.00");
-        txtDue.setText("0.00");
-        txtFreight.setEditable(false);
-        txtAmountPaid.setEditable(false);
-        txtTotalQty.setEditable(false);
-        txtDiscountedAmount.setEditable(false);
-        txtTotalAmount.setEditable(false);
-        txtDiscounts.setEditable(false);
-        txtDiscountedAmount2.setEditable(false);
-        txtDue.setEditable(false);
-        txtAmountIncludingTax.setEditable(false);
+        comboBoxSupplierCode.setStyle("-fx-font-size: 14;");
+        comboBoxInvoiceType.setStyle("-fx-font-size: 14;");
+        comboBoxInvoiceType.getItems().add("普通发票");
+        comboBoxInvoiceType.getSelectionModel().select(0);
+        comboBoxPayments.getItems().add("现金");
+        comboBoxPayments.getSelectionModel().select(0);
+//        comboBoxAccount.getItems().add("00000000");
+//        comboBoxAccount.getSelectionModel().select(0);
+//        txtOperator.setText(Env.getInstance().currentUser());
+//        txtOperator.setEditable(false);
+//        txtFreight.setText("0.00");
+//        txtAmountPaid.setText("0.00");
+//        txtAmountIncludingTax.setText("0.00");
+//        txtTotalQty.setText("0.00");
+//        txtDiscountedAmount.setText("0.00");
+//        txtTotalAmount.setText("0.00");
+//        txtDiscounts.setText("0.00");
+//        txtDiscountedAmount2.setText("0.00");
+//        txtDue.setText("0.00");
+//        txtFreight.setEditable(false);
+//        txtAmountPaid.setEditable(false);
+//        txtTotalQty.setEditable(false);
+//        txtDiscountedAmount.setEditable(false);
+//        txtTotalAmount.setEditable(false);
+//        txtDiscounts.setEditable(false);
+//        txtDiscountedAmount2.setEditable(false);
+//        txtDue.setEditable(false);
+//        txtAmountIncludingTax.setEditable(false);
         btnSubmit.setStyle(String.format("-fx-base: %s;", "rgb(63,81,181)"));
 
         try {
@@ -320,27 +329,27 @@ public class POEditorController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        comboboxSupplierCode.setOnKeyReleased(e -> {
+        comboBoxSupplierCode.setOnKeyReleased(e -> {
             if(!e.getCode().isArrowKey()) {
-                comboboxSupplierCode.getItems().clear();
-                Supplier supplier = new Supplier();
-                supplier.setName(comboboxSupplierCode.getEditor().getText());
-                String json = GoogleJson.GET().toJson(supplier);
-                String data;
-                try {
-                    data = HttpClient.POST("/suppliers/search", json);
-                    Supplier[] suppliers = GoogleJson.GET().fromJson(data, Supplier[].class);
-                    comboboxSupplierCode.getItems().addAll(suppliers);
-                    comboboxSupplierCode.show();
-
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
+//                comboBoxSupplierCode.getItems().clear();
+//                Supplier supplier = new Supplier();
+//                supplier.setName(comboBoxSupplierCode.getEditor().getText());
+//                String json = GoogleJson.GET().toJson(supplier);
+//                String data;
+//                try {
+//                    data = HttpClient.POST("/suppliers/search", json);
+//                    Supplier[] suppliers = GoogleJson.GET().fromJson(data, Supplier[].class);
+//                    comboBoxSupplierCode.getItems().addAll(suppliers);
+//                    comboBoxSupplierCode.show();
+//
+//                } catch (IOException ex) {
+//                    ex.printStackTrace();
+//                }
             }
 
         });
 
-        comboboxSupplierCode.setOnAction(e -> {
+        comboBoxSupplierCode.setOnAction(e -> {
 //            if(comboboxSupplierCode.getValue() instanceof Supplier) {
 //                Supplier supplier = comboboxSupplierCode.getValue();
 //                txtSupplierName.setText(supplier.getName());
@@ -479,6 +488,39 @@ public class POEditorController {
 //                return new SimpleObjectProperty<>(param.getValue().getSku().getPrice().toString());
 //            }
 //        });
+    }
+
+    @FXML
+    private void openSupplierChooser() {
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource(
+                        "/fxml/supplier/SupplierChooser.fxml"
+                )
+        );
+        VBox root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Scene scene = new Scene(root);
+        Stage subStage = new Stage();
+        SupplierChooserController controller = loader.getController();
+        Callback<Supplier, String> callback = returnedSupplier -> {
+            supplier = returnedSupplier;
+            comboBoxSupplierCode.setValue(supplier.getCode());
+            txtSupplierName.setText(supplier.getName());
+            return null;
+        };
+        controller.initialize(subStage, callback, supplier);
+        subStage.setTitle("选择供应商");
+        subStage.initOwner(dialog);
+        subStage.setResizable(false);
+        subStage.initModality(Modality.APPLICATION_MODAL);
+        subStage.setScene(scene);
+        // center stage on screen
+        subStage.centerOnScreen();
+        subStage.show();
     }
 
     @FXML
