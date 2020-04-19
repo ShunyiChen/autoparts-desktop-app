@@ -41,8 +41,10 @@ public class POEditorController {
     private Callback<TableColumn<PurchaseOrderItem, String>, TableCell<PurchaseOrderItem, String>> cellFactory;
     @FXML
     private Button btnSubmit;
+    /** 单据日期 */
     @FXML
     private DatePicker orderDate;
+    /** 单号 */
     @FXML
     private TextField txtOrderNo;
     /** 供应商编码 */
@@ -74,22 +76,14 @@ public class POEditorController {
     private ComboBox comboBoxPayments;
     @FXML
     private ComboBox comboBoxAccount;
-//    @FXML
-//    private TextField txtAmountPaid;
-//    @FXML
-//    private TextField txtAmountIncludingTax;
     @FXML
     private TextField txtTotalQty;
     @FXML
     private TextField txtDiscountedAmount;
     @FXML
     private TextField txtTotalAmount;
-//    @FXML
-//    private TextField txtDiscounts;
-//    @FXML
-//    private TextField txtDiscountedAmount2;
-//    @FXML
-//    private TextField txtDue;
+    @FXML
+    private TextField txtDiscounts;
     @FXML
     private TextField txtOperator;
     /** 采购订单明细表 */
@@ -298,28 +292,6 @@ public class POEditorController {
         comboBoxInvoiceType.getSelectionModel().select(0);
         comboBoxPayments.getItems().add("现金");
         comboBoxPayments.getSelectionModel().select(0);
-//        comboBoxAccount.getItems().add("00000000");
-//        comboBoxAccount.getSelectionModel().select(0);
-//        txtOperator.setText(Env.getInstance().currentUser());
-//        txtOperator.setEditable(false);
-//        txtFreight.setText("0.00");
-//        txtAmountPaid.setText("0.00");
-//        txtAmountIncludingTax.setText("0.00");
-//        txtTotalQty.setText("0.00");
-//        txtDiscountedAmount.setText("0.00");
-//        txtTotalAmount.setText("0.00");
-//        txtDiscounts.setText("0.00");
-//        txtDiscountedAmount2.setText("0.00");
-//        txtDue.setText("0.00");
-//        txtFreight.setEditable(false);
-//        txtAmountPaid.setEditable(false);
-//        txtTotalQty.setEditable(false);
-//        txtDiscountedAmount.setEditable(false);
-//        txtTotalAmount.setEditable(false);
-//        txtDiscounts.setEditable(false);
-//        txtDiscountedAmount2.setEditable(false);
-//        txtDue.setEditable(false);
-//        txtAmountIncludingTax.setEditable(false);
         btnSubmit.setStyle(String.format("-fx-base: %s;", "rgb(63,81,181)"));
 
         try {
@@ -521,6 +493,11 @@ public class POEditorController {
         // center stage on screen
         subStage.centerOnScreen();
         subStage.show();
+    }
+
+    @FXML
+    private void openInvoiceTypeChooser() {
+
     }
 
     @FXML

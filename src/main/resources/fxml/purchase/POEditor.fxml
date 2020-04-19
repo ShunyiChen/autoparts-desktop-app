@@ -81,7 +81,7 @@
                      </font>
                   </Label>
                   <ComboBox fx:id="comboBoxInvoiceType" prefHeight="29.0" prefWidth="170.0" />
-                  <Button layoutX="271.0" layoutY="13.0" mnemonicParsing="false" onAction="#openSupplierChooser" prefHeight="29.0" prefWidth="30.0" text="\@">
+                  <Button layoutX="271.0" layoutY="13.0" mnemonicParsing="false" onAction="#openInvoiceTypeChooser" prefHeight="29.0" prefWidth="30.0" text="\@">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -278,7 +278,14 @@
    <bottom>
       <VBox prefHeight="155.0" BorderPane.alignment="CENTER">
          <children>
-            <FlowPane prefHeight="24.0" prefWidth="1164.0" style="-fx-background-color: lightGrey;" />
+            <FlowPane alignment="CENTER_LEFT" prefHeight="24.0" prefWidth="1164.0" style="-fx-background-color: lightGrey;">
+               <children>
+                  <Label alignment="CENTER_RIGHT" prefHeight="15.0" prefWidth="70.0" text="合计:">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+               </children></FlowPane>
             <FlowPane alignment="CENTER_RIGHT" prefHeight="38.0">
                <children>
                   <Label alignment="CENTER_RIGHT" prefHeight="19.0" prefWidth="88.0" text="经办人:">
@@ -395,7 +402,7 @@
                         <Font size="14.0" />
                      </font>
                   </Button>
-                  <Button layoutX="1121.0" layoutY="15.0" mnemonicParsing="false" onAction="#save" text="保 存">
+                  <Button fx:id="btnSave" layoutX="1121.0" layoutY="15.0" mnemonicParsing="false" onAction="#save" text="保 存">
                      <font>
                         <Font size="14.0" />
                      </font>
