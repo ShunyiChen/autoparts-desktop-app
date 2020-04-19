@@ -59,7 +59,7 @@
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <ComboBox fx:id="comboBoxSupplierCode" editable="true" prefHeight="29.0" prefWidth="170.0" />
+                  <ComboBox fx:id="comboBoxSupplierCode" prefHeight="29.0" prefWidth="170.0" />
                   <Button mnemonicParsing="false" onAction="#openSupplierChooser" prefHeight="25.0" prefWidth="28.0" text="...">
                      <font>
                         <Font size="14.0" />
@@ -70,7 +70,7 @@
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="txtContact" layoutX="294.0" layoutY="20.0" prefHeight="29.0" prefWidth="170.0">
+                  <TextField fx:id="txtContact" editable="false" layoutX="294.0" layoutY="20.0" prefHeight="29.0" prefWidth="170.0">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -105,7 +105,7 @@
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="txtSupplierName" prefHeight="29.0" prefWidth="170.0">
+                  <TextField fx:id="txtSupplierName" editable="false" prefHeight="29.0" prefWidth="170.0">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -115,7 +115,7 @@
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="txtPhone" prefHeight="29.0" prefWidth="170.0">
+                  <TextField fx:id="txtPhone" editable="false" prefHeight="29.0" prefWidth="170.0">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -171,47 +171,35 @@
            <!-- SKU名称 -->
            <TableColumn fx:id="colSkuName" prefWidth="125.0" text="SKU名称" />
            <!-- 规格 -->
-           <TableColumn fx:id="colSpecification" prefWidth="125.0" text="规格" />
+           <TableColumn fx:id="colUnt" prefWidth="125.0" text="单位" />
            <!-- 数量 -->
            <TableColumn fx:id="colQty" prefWidth="125.0" text="数量" />
            <!-- 条形码 -->
-           <TableColumn fx:id="colSkuBarCode" prefWidth="125.0" text="条形码" />
-           <!-- 库存数量 -->
-           <TableColumn fx:id="colStockQty" prefWidth="125.0" text="库存数量" />
-           <!-- 折扣% -->
-           <TableColumn fx:id="colDiscountPercentage" prefWidth="125.0" text="折扣%" />
-           <!-- 税率% -->
-           <TableColumn fx:id="colTaxRate" prefWidth="125.0" text="税率%" />
-           <!-- 税额 -->
-           <TableColumn fx:id="colTaxAmount" prefWidth="125.0" text="税额" />
-           <!-- 含税单价 -->
-           <TableColumn fx:id="colPriceIncludingTax" prefWidth="125.0" text="含税单价" />
-           <!-- 含税金额 -->
-           <TableColumn fx:id="colAmountIncludingTax" prefWidth="125.0" text="含税金额" />
-           <!-- 不含税单价 -->
            <TableColumn fx:id="colPriceExcludingTax" prefWidth="125.0" text="不含税单价" />
-           <!-- 不含税金额 -->
+           <!-- 库存数量 -->
            <TableColumn fx:id="colAmountExcludingTax" prefWidth="125.0" text="不含税金额" />
-           <!-- 可用状态 -->
-           <TableColumn fx:id="colStatus" prefWidth="125.0" text="可用状态" />
+           <!-- 折扣% -->
+           <TableColumn fx:id="colWarehouse" prefWidth="125.0" text="仓库" />
+           <!-- 税率% -->
+           <TableColumn fx:id="colStock" prefWidth="125.0" text="本库现库存数" />
            <!-- 备注 -->
            <TableColumn fx:id="colNotes" prefWidth="125.0" text="备注" />
+           <!-- 产品条形码 -->
+           <TableColumn fx:id="colSkuBarCode" prefWidth="125.0" text="SKU条形码" />
+           <!-- 可用状态 -->
+           <TableColumn fx:id="colStatus" prefWidth="125.0" text="可用状态" />
            <!-- 进货平均价 -->
            <TableColumn fx:id="colAvgPrice" prefWidth="125.0" text="进货平均价" />
            <!-- 所有货位 -->
-           <TableColumn fx:id="colSlots" prefWidth="125.0" text="所有货位" />
+           <TableColumn fx:id="colSlots" prefWidth="125.0" text="货位" />
            <!-- 所有图片 -->
-           <TableColumn fx:id="colPhotos" prefWidth="125.0" text="所有图片" />
-           <!-- 产品编码 -->
-           <TableColumn fx:id="colCode" prefWidth="125.0" text="产品编码" />
+           <TableColumn fx:id="colPhotos" prefWidth="125.0" text="图片" />
            <!-- 类别 -->
            <TableColumn fx:id="colCategory" prefWidth="125.0" text="类别" />
+           <!-- 产品编码 -->
+           <TableColumn fx:id="colCode" prefWidth="125.0" text="产品编码" />
            <!-- 产品名称 -->
            <TableColumn fx:id="colName" prefWidth="125.0" text="产品名称" />
-           <!-- 单位 -->
-           <TableColumn fx:id="colUnit" prefWidth="125.0" text="单位" />
-           <!-- 产品条形码 -->
-           <TableColumn fx:id="colBarCode" prefWidth="125.0" text="条形码" />
            <!-- 车型 -->
            <TableColumn fx:id="colCar" prefWidth="125.0" text="车型" />
            <!-- 通用车型 -->
@@ -272,15 +260,46 @@
            <TableColumn fx:id="colDeleteFlag" prefWidth="125.0" text="删除标记" />
            <!-- 删除者 -->
            <TableColumn fx:id="colDeleter" prefWidth="125.0" text="删除者" />
+            <TableColumn fx:id="colSpecification" prefWidth="125.0" text="规格" />
         </columns>
       </TableView>
    </center>
    <bottom>
       <VBox prefHeight="155.0" BorderPane.alignment="CENTER">
          <children>
-            <FlowPane alignment="CENTER_LEFT" prefHeight="24.0" prefWidth="1164.0" style="-fx-background-color: lightGrey;">
+            <FlowPane alignment="CENTER_LEFT" prefHeight="24.0" prefWidth="1164.0">
                <children>
-                  <Label alignment="CENTER_RIGHT" prefHeight="15.0" prefWidth="70.0" text="合计:">
+                  <Label alignment="CENTER_RIGHT" prefHeight="15.0" prefWidth="70.0" text="合计:" textFill="#3f51b5">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <Label alignment="CENTER_RIGHT" layoutX="10.0" layoutY="13.0" prefHeight="19.0" prefWidth="142.0" text="记录数:" textFill="#3f51b5">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="10.0" layoutY="13.0" prefHeight="19.0" prefWidth="91.0" text="1" textFill="#3f51b5">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <Label alignment="CENTER_RIGHT" layoutX="10.0" layoutY="13.0" prefHeight="15.0" prefWidth="70.0" text="总数量:" textFill="#3f51b5">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="222.0" layoutY="13.0" prefHeight="19.0" prefWidth="91.0" text="1" textFill="#3f51b5">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <Label alignment="CENTER_RIGHT" layoutX="313.0" layoutY="13.0" prefHeight="15.0" prefWidth="70.0" text="总金额:" textFill="#3f51b5">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="383.0" layoutY="13.0" prefHeight="19.0" prefWidth="91.0" text="111.02" textFill="#3f51b5">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -307,7 +326,7 @@
                      </font>
                   </Label>
                   <ComboBox fx:id="comboBoxPayments" prefHeight="29.0" prefWidth="150.0" />
-                  <Button mnemonicParsing="false" prefHeight="28.0" prefWidth="29.0" text="..." />
+                  <Button mnemonicParsing="false" onAction="#openPaymentChooser" prefHeight="28.0" prefWidth="29.0" text="..." />
                   <Label alignment="CENTER_RIGHT" layoutX="219.0" layoutY="20.0" prefHeight="19.0" prefWidth="75.0" text="系统账号:">
                      <font>
                         <Font size="14.0" />
@@ -388,7 +407,7 @@
                         <Insets />
                      </FlowPane.margin>
                   </ComboBox>
-                  <Button mnemonicParsing="false" prefHeight="28.0" prefWidth="29.0" text="...">
+                  <Button mnemonicParsing="false" onAction="#openAccountChooser" prefHeight="28.0" prefWidth="29.0" text="...">
                      <FlowPane.margin>
                         <Insets right="5.0" />
                      </FlowPane.margin>

@@ -8,13 +8,13 @@ import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
@@ -24,21 +24,30 @@ import javafx.util.Callback;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 /**
  * @Description: 采购订单编辑器Controller
  * @Author: 陈顺谊
- * @CreateDate: 2020/4/1 4:37
- * @Version: 1.0
+ * @CreateDate: 2020/4/19
  */
 public class POEditorController {
+    /** 表单内容只读 */
+    private boolean readOnly;
     private Stage dialog;
     private Callback<PurchaseOrder, String> callback;
-    /** 采购订单 */
-    private PurchaseOrder order;
-    private boolean readOnly;
-    private Supplier supplier;
     private Callback<TableColumn<PurchaseOrderItem, String>, TableCell<PurchaseOrderItem, String>> cellFactory;
+    /** 采购订单 */
+    private PurchaseOrder po;
+    /** 供应商 */
+    private Supplier supplier;
+    /** 发票类型 */
+    private InvoiceType invoiceType;
+    /** 结算方式 */
+    private Payment payment;
+    /** 账号 */
+    private Account account;
     @FXML
     private Button btnSubmit;
     /** 单据日期 */
@@ -73,19 +82,25 @@ public class POEditorController {
     private TextField txtNotes;
     /** 结算方式 */
     @FXML
-    private ComboBox comboBoxPayments;
+    private ComboBox<String> comboBoxPayments;
+    /** 账号 */
     @FXML
-    private ComboBox comboBoxAccount;
+    private ComboBox<String> comboBoxAccount;
+    /** 货款金额 */
     @FXML
-    private TextField txtTotalQty;
+    private TextField txtPurchaseAmount;
+    /** 代垫费用 */
     @FXML
-    private TextField txtDiscountedAmount;
+    private TextField txtDisbursement;
+    /** 本次优惠 */
     @FXML
-    private TextField txtTotalAmount;
+    private TextField txtDiscountAmount;
+    /** 应付总额 */
     @FXML
-    private TextField txtDiscounts;
+    private TextField txtAmountPayable;
+    /** 本次付款 */
     @FXML
-    private TextField txtOperator;
+    private TextField txtPaymentAmount;
     /** 采购订单明细表 */
     @FXML
     private TableView<PurchaseOrderItem> tableView;
@@ -259,20 +274,19 @@ public class POEditorController {
     private TableColumn colDeleter;
 
 
+
     /**
      * Constructor
      *
      * @param dialog
      * @param callback
-     * @param order
+     * @param po
      * @param readOnly
      */
-    public void initialize(Stage dialog, Callback<PurchaseOrder, String> callback, PurchaseOrder order, boolean readOnly) {
+    public void initialize(Stage dialog, Callback<PurchaseOrder, String> callback, PurchaseOrder po, boolean readOnly) {
         this.dialog = dialog;
         this.callback = callback;
-        if(order == null) {
-            this.order = new PurchaseOrder();
-        }
+        this.po = po;
         this.readOnly = readOnly;
         initCellFactory();
         initInputFields();
@@ -284,15 +298,64 @@ public class POEditorController {
         cellFactory = p -> new EditingCell();
     }
 
+    private void initSupplier() {
+        Supplier supplier = new Supplier();
+        supplier.setCode(comboBoxSupplierCode.getValue());
+        String json = GoogleJson.GET().toJson(supplier);
+        String data;
+        try {
+            data = HttpClient.POST("/suppliers/search", json);
+            Supplier[] suppliers = GoogleJson.GET().fromJson(data, Supplier[].class);
+            if(suppliers.length > 0) {
+                supplier = suppliers[0];
+                txtSupplierName.setText(supplier.getName());
+                txtContact.setText(supplier.getContact());
+                txtPhone.setText(supplier.getPhone());
+            } else {
+                txtSupplierName.setText("");
+                txtContact.setText("");
+                txtPhone.setText("");
+            }
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
     private void initInputFields() {
         orderDate.setValue(LocalDate.now());
-        comboBoxSupplierCode.setStyle("-fx-font-size: 14;");
-        comboBoxInvoiceType.setStyle("-fx-font-size: 14;");
-        comboBoxInvoiceType.getItems().add("普通发票");
-        comboBoxInvoiceType.getSelectionModel().select(0);
-        comboBoxPayments.getItems().add("现金");
-        comboBoxPayments.getSelectionModel().select(0);
-        btnSubmit.setStyle(String.format("-fx-base: %s;", "rgb(63,81,181)"));
+        try {
+            comboBoxSupplierCode.getItems().clear();
+            Supplier[] suppliers = HttpClient.GET("/suppliers", Supplier[].class);
+            comboBoxSupplierCode.getItems().addAll(Arrays.asList(suppliers).stream().map(e -> e.getCode()).collect(Collectors.toList()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        comboBoxSupplierCode.setOnKeyReleased(e -> {
+            if(e.getCode() == KeyCode.ENTER) {
+                initSupplier();
+            }
+        });
+        comboBoxSupplierCode.setOnAction(e -> {
+            initSupplier();
+        });
+
+        try {
+            InvoiceType[] invoiceTypes = HttpClient.GET("/invoiceTypes", InvoiceType[].class);
+            comboBoxInvoiceType.getItems().addAll(Arrays.asList(invoiceTypes).stream().map(e -> e.getName()).collect(Collectors.toList()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        new AutoCompleteBox(comboBoxSupplierCode);
+        new AutoCompleteBox(comboBoxInvoiceType);
+        new AutoCompleteBox(comboBoxPayments);
+        new AutoCompleteBox(comboBoxAccount);
+
+//        comboBoxPayments.getItems().add("现金");
+//        comboBoxPayments.getSelectionModel().select(0);
+//        btnSubmit.setStyle(String.format("-fx-base: %s;", "rgb(63,81,181)"));
+
 
         try {
             User user = HttpClient.GET("/users/username/"+Env.getInstance().currentUser(), User.class);
@@ -301,35 +364,7 @@ public class POEditorController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        comboBoxSupplierCode.setOnKeyReleased(e -> {
-            if(!e.getCode().isArrowKey()) {
-//                comboBoxSupplierCode.getItems().clear();
-//                Supplier supplier = new Supplier();
-//                supplier.setName(comboBoxSupplierCode.getEditor().getText());
-//                String json = GoogleJson.GET().toJson(supplier);
-//                String data;
-//                try {
-//                    data = HttpClient.POST("/suppliers/search", json);
-//                    Supplier[] suppliers = GoogleJson.GET().fromJson(data, Supplier[].class);
-//                    comboBoxSupplierCode.getItems().addAll(suppliers);
-//                    comboBoxSupplierCode.show();
-//
-//                } catch (IOException ex) {
-//                    ex.printStackTrace();
-//                }
-            }
 
-        });
-
-        comboBoxSupplierCode.setOnAction(e -> {
-//            if(comboboxSupplierCode.getValue() instanceof Supplier) {
-//                Supplier supplier = comboboxSupplierCode.getValue();
-//                txtSupplierName.setText(supplier.getName());
-//                txtContact.setText(supplier.getContact());
-//                txtPhone.setText(supplier.getPhone1()+","+supplier.getPhone2());
-//            }
-
-        });
     }
 
     private void initTable() {
@@ -482,6 +517,8 @@ public class POEditorController {
             supplier = returnedSupplier;
             comboBoxSupplierCode.setValue(supplier.getCode());
             txtSupplierName.setText(supplier.getName());
+            txtContact.setText(supplier.getContact());
+            txtPhone.setText(supplier.getPhone());
             return null;
         };
         controller.initialize(subStage, callback, supplier);
@@ -497,7 +534,107 @@ public class POEditorController {
 
     @FXML
     private void openInvoiceTypeChooser() {
+        Callback<InvoiceType, String> callback = new Callback<InvoiceType, String>() {
+            @Override
+            public String call(InvoiceType param) {
+                invoiceType = param;
+                comboBoxInvoiceType.setValue(invoiceType.getName());
+                return null;
+            }
+        };
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource(
+                        "/fxml/purchase/InvoiceTypeChooser.fxml"
+                )
+        );
+        BorderPane root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Scene scene = new Scene(root);
+        Stage dialog = new Stage();
+        InvoiceTypeChooserController controller = loader.getController();
+        controller.initialize(dialog, callback, invoiceType);
+        dialog.setTitle("发票类型选择器");
+        dialog.initOwner(this.dialog);
+        dialog.setResizable(false);
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.setScene(scene);
+        // center stage on screen
+        dialog.centerOnScreen();
+        dialog.show();
+    }
 
+    @FXML
+    private void openPaymentChooser() {
+        Callback<Payment, String> callback = new Callback<Payment, String>() {
+            @Override
+            public String call(Payment param) {
+                payment = param;
+                comboBoxPayments.setValue(payment.getName());
+                return null;
+            }
+        };
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource(
+                        "/fxml/purchase/PaymentChooser.fxml"
+                )
+        );
+        BorderPane root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Scene scene = new Scene(root);
+        Stage dialog = new Stage();
+        PaymentChooserController controller = loader.getController();
+        controller.initialize(dialog, callback);
+        dialog.setTitle("结算方式选择器");
+        dialog.initOwner(this.dialog);
+        dialog.setResizable(false);
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.setScene(scene);
+        // center stage on screen
+        dialog.centerOnScreen();
+        dialog.show();
+    }
+
+    @FXML
+    private void openAccountChooser() {
+        Callback<Account, String> callback = new Callback<Account, String>() {
+            @Override
+            public String call(Account param) {
+                account = param;
+                comboBoxAccount.setValue(account.getName());
+                return null;
+            }
+        };
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource(
+                        "/fxml/purchase/AccountChooser.fxml"
+                )
+        );
+        BorderPane root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Scene scene = new Scene(root);
+        Stage dialog = new Stage();
+        AccountChooserController controller = loader.getController();
+        controller.initialize(dialog, callback);
+        dialog.setTitle("账号选择器");
+        dialog.initOwner(this.dialog);
+        dialog.setResizable(false);
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.setScene(scene);
+        // center stage on screen
+        dialog.centerOnScreen();
+        dialog.show();
     }
 
     @FXML
@@ -508,7 +645,7 @@ public class POEditorController {
         sku.setSpecification("");
 
         //初始化第一行空行
-        PurchaseOrderItem item = new PurchaseOrderItem(Constants.ID, order, sku,0, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO,"");
+        PurchaseOrderItem item = new PurchaseOrderItem(Constants.ID, po, sku,0, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO,"");
         tableView.getItems().add(item);
         tableView.refresh();
         tableView.getSelectionModel().select(item);
@@ -537,7 +674,6 @@ public class POEditorController {
     private void submit() {
         dialog.close();
     }
-
 
     private void openProductChooser() {
         //Open product chooser

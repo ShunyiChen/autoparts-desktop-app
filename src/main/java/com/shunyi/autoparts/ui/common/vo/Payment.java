@@ -1,7 +1,7 @@
 package com.shunyi.autoparts.ui.common.vo;
 
 /**
- * @description 结算方式实体类
+ * @description 结算方式VO
  * @author Shunyi Chen
  * @date 2020/4/18
  */
@@ -10,7 +10,7 @@ public class Payment {
     private Long id;
     /** 结算方式编号 */
     private String code;
-    /** 结算方式名称 */
+    /** 名称 */
     private String name;
     /** 备注 */
     private String notes;
