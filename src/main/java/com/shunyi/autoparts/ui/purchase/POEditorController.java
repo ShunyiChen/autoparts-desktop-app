@@ -23,8 +23,11 @@ import javafx.util.Callback;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.stream.Collectors;
 
 /**
@@ -33,6 +36,7 @@ import java.util.stream.Collectors;
  * @CreateDate: 2020/4/19
  */
 public class POEditorController {
+    private SimpleDateFormat format = new SimpleDateFormat(Constants.PATTERN);
     /** 表单内容只读 */
     private boolean readOnly;
     private Stage dialog;
@@ -116,164 +120,174 @@ public class POEditorController {
     /** 规格 */
     @FXML
     private TableColumn<PurchaseOrderItem, String> colSpecification;
+    /** 单位 */
+    @FXML
+    private TableColumn<PurchaseOrderItem, String> colUnit;
     /** 数量 */
     @FXML
     private TableColumn<PurchaseOrderItem, String> colQty;
-    /** 条形码 */
-    @FXML
-    private TableColumn colSkuBarCode;
-    /** 库存数量 */
-    @FXML
-    private TableColumn colStockQty;
-    /** 属性字符串(可隐藏) */
-    @FXML
-    private TableColumn colProperties;
-    /** 折扣% */
-    @FXML
-    private TableColumn colDiscountPercentage;
-    /** 税率%  */
-    @FXML
-    private TableColumn colTaxRate;
-    /** 税额 */
-    @FXML
-    private TableColumn colTaxAmount;
-    /** 含税单价 */
-    @FXML
-    private TableColumn colPriceIncludingTax;
-    /** 含税金额 */
-    @FXML
-    private TableColumn colAmountIncludingTax;
     /** 不含税单价 */
     @FXML
-    private TableColumn colPriceExcludingTax;
+    private TableColumn<PurchaseOrderItem, String> colPriceExcludingTax;
     /** 不含税金额 */
     @FXML
-    private TableColumn colAmountExcludingTax;
-    /** 可用状态 */
+    private TableColumn<PurchaseOrderItem, String> colAmountExcludingTax;
+    /** 仓库 */
     @FXML
-    private TableColumn colStatus;
+    private TableColumn<PurchaseOrderItem, String> colWarehouse;
+    /** 本库现库存数 */
+    @FXML
+    private TableColumn<PurchaseOrderItem, String> colStockQty;
     /** 备注 */
     @FXML
-    private TableColumn colNotes;
+    private TableColumn<PurchaseOrderItem, String> colNotes;
+    /** SKU条形码 */
+    @FXML
+    private TableColumn<PurchaseOrderItem, String> colSkuBarCode;
     /** 进货平均价 */
     @FXML
-    private TableColumn colAvgPrice;
-    /** 所有货位 */
+    private TableColumn<PurchaseOrderItem, String> colAvgPrice;
+    /** 货位 */
     @FXML
-    private TableColumn colSlots;
-    /** 所有图片 */
+    private TableColumn<PurchaseOrderItem, String> colSlots;
+    /** 图片 */
     @FXML
-    private TableColumn colPhotos;
-    /** 产品编码 */
-    @FXML
-    private TableColumn colCode;
+    private TableColumn<PurchaseOrderItem, String> colPhotos;
     /** 类别 */
     @FXML
-    private TableColumn colCategory;
-    /** 产品名称 */
-    @FXML
-    private TableColumn colName;
-    /** 单位 */
-    @FXML
-    private TableColumn colUnit;
+    private TableColumn<PurchaseOrderItem, String> colCategory;
     /** 产品条形码 */
     @FXML
-    private TableColumn colBarCode;
+    private TableColumn<PurchaseOrderItem, String> colBarCode;
+    /** 产品编码 */
+    @FXML
+    private TableColumn<PurchaseOrderItem, String> colCode;
+    /** 产品名称 */
+    @FXML
+    private TableColumn<PurchaseOrderItem, String> colName;
     /** 车型 */
     @FXML
-    private TableColumn colCar;
+    private TableColumn<PurchaseOrderItem, String> colCar;
     /** 通用车型 */
     @FXML
-    private TableColumn colCars;
+    private TableColumn<PurchaseOrderItem, String> colCars;
     /** 产地 */
     @FXML
-    private TableColumn colPlace;
+    private TableColumn<PurchaseOrderItem, String> colPlace;
     /** 品牌 */
     @FXML
-    private TableColumn colBrand;
+    private TableColumn<PurchaseOrderItem, String> colBrand;
     /** 英文名 */
     @FXML
-    private TableColumn colEnglishName;
+    private TableColumn<PurchaseOrderItem, String> colEnglishName;
     /** 进口 */
     @FXML
-    private TableColumn colImported;
+    private TableColumn<PurchaseOrderItem, String> colImported;
     /** 通用件号 */
     @FXML
-    private TableColumn colCommonNumber;
+    private TableColumn<PurchaseOrderItem, String> colCommonNumber;
     /** 材料 */
     @FXML
-    private TableColumn colMaterials;
+    private TableColumn<PurchaseOrderItem, String> colMaterials;
     /** 所属公司 */
     @FXML
-    private TableColumn colCompany;
+    private TableColumn<PurchaseOrderItem, String> colCompany;
     /** 包装数量 */
     @FXML
-    private TableColumn colPackingQuantity;
+    private TableColumn<PurchaseOrderItem, String> colPackingQuantity;
     /** 重量 */
     @FXML
-    private TableColumn colWeight;
+    private TableColumn<PurchaseOrderItem, String> colWeight;
     /** 手册名称 */
     @FXML
-    private TableColumn colManual;
+    private TableColumn<PurchaseOrderItem, String> colManual;
     /** 供应商 */
     @FXML
-    private TableColumn colSupplier;
+    private TableColumn<PurchaseOrderItem, String> colSupplier;
     /** 一级进价 */
     @FXML
-    private TableColumn colPurchasingPrice1;
+    private TableColumn<PurchaseOrderItem, String> colPurchasingPrice1;
     /** 二级进价 */
     @FXML
-    private TableColumn colPurchasingPrice2;
+    private TableColumn<PurchaseOrderItem, String> colPurchasingPrice2;
     /** 三级进价 */
     @FXML
-    private TableColumn colPurchasingPrice3;
+    private TableColumn<PurchaseOrderItem, String> colPurchasingPrice3;
     /** 一级销价 */
     @FXML
-    private TableColumn colSellingPrice1;
+    private TableColumn<PurchaseOrderItem, String> colSellingPrice1;
     /** 二级销价 */
     @FXML
-    private TableColumn colSellingPrice2;
+    private TableColumn<PurchaseOrderItem, String> colSellingPrice2;
     /** 三级销价 */
     @FXML
-    private TableColumn colSellingPrice3;
+    private TableColumn<PurchaseOrderItem, String> colSellingPrice3;
     /** 最低销价 */
     @FXML
-    private TableColumn colBottomPrice;
+    private TableColumn<PurchaseOrderItem, String> colBottomPrice;
     /** 外币单位 */
     @FXML
-    private TableColumn colForeignCurrencyUnit;
+    private TableColumn<PurchaseOrderItem, String> colForeignCurrencyUnit;
     /** 外币价格 */
     @FXML
-    private TableColumn colForeignCurrencyPrice;
+    private TableColumn<PurchaseOrderItem, String> colForeignCurrencyPrice;
     /** 紧缺件 */
     @FXML
-    private TableColumn colShortage;
+    private TableColumn<PurchaseOrderItem, String> colShortage;
+    /** 可用状态 */
+    @FXML
+    private TableColumn<PurchaseOrderItem, String> colStatus;
+    /** 属性字符串(可隐藏) */
+    @FXML
+    private TableColumn<PurchaseOrderItem, String> colProperties;
+    /** 折扣% */
+    @FXML
+    private TableColumn<PurchaseOrderItem, String> colDiscountPercentage;
+    /** 税率%  */
+    @FXML
+    private TableColumn<PurchaseOrderItem, String> colTaxRate;
+    /** 税额 */
+    @FXML
+    private TableColumn<PurchaseOrderItem, String> colTaxAmount;
+    /** 含税单价 */
+    @FXML
+    private TableColumn<PurchaseOrderItem, String> colPriceIncludingTax;
+    /** 含税金额 */
+    @FXML
+    private TableColumn<PurchaseOrderItem, String> colAmountIncludingTax;
     /** 创建时间 */
     @FXML
-    private TableColumn colDateCreated;
+    private TableColumn<PurchaseOrderItem, String> colDateCreated;
     /** 创建者 */
     @FXML
-    private TableColumn colCreator;
+    private TableColumn<PurchaseOrderItem, String> colCreator;
     /** 更新时间 */
     @FXML
-    private TableColumn colDateUpdated;
+    private TableColumn<PurchaseOrderItem, String> colDateUpdated;
     /** 更新者 */
     @FXML
-    private TableColumn colUpdator;
+    private TableColumn<PurchaseOrderItem, String> colUpdator;
     /** 更新次数 */
     @FXML
-    private TableColumn colUpdateCount;
+    private TableColumn<PurchaseOrderItem, String> colUpdateCount;
     /** 删除时间 */
     @FXML
-    private TableColumn colDateDeleted;
+    private TableColumn<PurchaseOrderItem, String> colDateDeleted;
     /** 删除标记 */
     @FXML
-    private TableColumn colDeleteFlag;
+    private TableColumn<PurchaseOrderItem, String> colDeleteFlag;
     /** 删除者 */
     @FXML
-    private TableColumn colDeleter;
-
-
+    private TableColumn<PurchaseOrderItem, String> colDeleter;
+    /** 总记录数 */
+    @FXML
+    private Label labelRecords;
+    /** 总数量 */
+    @FXML
+    private Label labelTotalQty;
+    /** 总金额 */
+    @FXML
+    private Label labelTotalAmount;
 
     /**
      * Constructor
@@ -372,30 +386,12 @@ public class POEditorController {
         tableView.getStylesheets().add(css);
         tableView.setId("my-table");
         tableView.setEditable(true);
-
-//        colBarCode.setCellFactory(cellFactory);
-//        colBarCode.setCellValueFactory(
-//                new PropertyValueFactory<SKU, String>("barCode")
-//        );
-//        colBarCode.setOnEditCommit((EventHandler<TableColumn.CellEditEvent<SKU, String>>) t -> {
-//            ObservableList<SKU> data = t.getTableView().getItems();
-//            if(data != null) {
-//                if(t.getTablePosition().getRow() < data.size()) {
-//                    SKU selected = data.get( t.getTablePosition().getRow());
-//                    if(selected != null) {
-//                        selected.setSkuBarCode(t.getNewValue());
-//                        data.set(t.getTablePosition().getRow(), selected);
-//                    }
-//                }
-//            }
-//        });
-
+        //行号
         colRowNumber.setCellFactory(new RowNumberTableCell<>());
-
-//        colSkuCode.setCellFactory(cellFactory);
+        //SKU编码
         colSkuCode.setCellFactory(TextFieldTableCell.forTableColumn());
         colSkuCode.setCellValueFactory(param -> {
-            if(param.getValue().getSku().getSkuCode() == null) {
+            if(param.getValue().getSku() == null) {
                 return new SimpleObjectProperty<>("");
             } else {
                 return new SimpleObjectProperty<>(param.getValue().getSku().getSkuCode() );
@@ -407,15 +403,17 @@ public class POEditorController {
                 if(t.getTablePosition().getRow() < data.size()) {
                     PurchaseOrderItem selected = data.get( t.getTablePosition().getRow());
                     if(selected != null) {
-//                        selected.getSku().setSkuCode(t.getNewValue());
-//                        data.set(t.getTablePosition().getRow(), selected);
-
                         String skuCode = t.getNewValue();
                         try {
                             String json = HttpClient.GET("/sku/code/"+skuCode);
                             SKU sku = GoogleJson.GET().fromJson(json, SKU.class);
                             if(sku.getId() != null) {
-                                selected.getSku().setSkuCode(sku.getSkuCode());
+                                selected.setSku(sku);
+                                selected.setQuantity(0);
+                                selected.setPriceExcludingTax(sku.getAvgPrice());
+                                selected.setAmountExcludingTax(BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP));
+                                data.set(t.getTablePosition().getRow(), selected);
+                                updateSummary();
                             } else {
                                 Platform.runLater(() -> {
                                     openProductChooser();
@@ -428,20 +426,31 @@ public class POEditorController {
                 }
             }
         });
+        //SKU名称
         colSkuName.setCellValueFactory(param -> {
-            if(param.getValue().getSku().getSkuName() == null) {
+            if(param.getValue().getSku() == null) {
                 return new SimpleObjectProperty<>("");
             } else {
                 return new SimpleObjectProperty<>(param.getValue().getSku().getSkuName() );
             }
         });
+        //规格
         colSpecification.setCellValueFactory(param -> {
-            if(param.getValue().getSku().getSpecification() == null) {
+            if(param.getValue().getSku() == null) {
                 return new SimpleObjectProperty<>("");
             } else {
                 return new SimpleObjectProperty<>(param.getValue().getSku().getSpecification() );
             }
         });
+        //规格
+        colUnit.setCellValueFactory(param -> {
+            if(param.getValue().getSku() == null) {
+                return new SimpleObjectProperty<>("");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getSku().getProduct().getUnit().getName());
+            }
+        });
+        //数量
         colQty.setCellFactory(cellFactory);
         colQty.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         colQty.setOnEditCommit(t -> {
@@ -453,48 +462,417 @@ public class POEditorController {
                         String newValue = t.getNewValue();
                         if(NumberValidationUtils.isPositiveInteger(newValue)) {
                             selected.setQuantity(Integer.parseInt(newValue));
+                            selected.setAmountExcludingTax(new BigDecimal(selected.getQuantity()).multiply(selected.getPriceExcludingTax()).setScale(2, RoundingMode.HALF_UP));
                             data.set(t.getTablePosition().getRow(), selected);
+                            updateSummary();
                         }
                     }
                 }
             }
         });
+        //不含税单价
+        colPriceExcludingTax.setCellValueFactory(param -> {
+            if(param.getValue().getSku() == null) {
+                return new SimpleObjectProperty<>("");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getSku().getAvgPrice().toString());
+            }
+        });
+        //不含税金额
+        colAmountExcludingTax.setCellValueFactory(param -> {
+            if(param.getValue().getSku() == null) {
+                return new SimpleObjectProperty<>("");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getSku().getAvgPrice().multiply(new BigDecimal(param.getValue().getQuantity())).setScale(2, RoundingMode.HALF_UP).toString());
+            }
+        });
+        //仓库
+        colWarehouse.setCellValueFactory(param -> {
+            return new SimpleObjectProperty<>(Env.getInstance().currentStore().getWarehouse().getName());
+        });
+        //本库现库存数
+        colStockQty.setCellValueFactory(param -> {
+            if(param.getValue().getSku() == null) {
+                return new SimpleObjectProperty<>("");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getSku().getStockQty().toString());
+            }
+        });
+        //SKU条形码
+        colSkuBarCode.setCellValueFactory(param -> {
+            if(param.getValue().getSku() == null) {
+                return new SimpleObjectProperty<>("");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getSku().getSkuCode());
+            }
+        });
+        //备注
+        colNotes.setCellFactory(cellFactory);
+        colNotes.setCellValueFactory(new PropertyValueFactory<>("notes"));
+        colNotes.setOnEditCommit(t -> {
+            ObservableList<PurchaseOrderItem> data = t.getTableView().getItems();
+            if(data != null) {
+                if(t.getTablePosition().getRow() < data.size()) {
+                    PurchaseOrderItem selected = data.get( t.getTablePosition().getRow());
+                    if(selected != null) {
+                        String newValue = t.getNewValue();
+                        selected.setNotes(newValue);
+                        data.set(t.getTablePosition().getRow(), selected);
+                    }
+                }
+            }
+        });
+        //进货平均价
+        colAvgPrice.setCellValueFactory(param -> {
+            if(param.getValue().getSku() == null) {
+                return new SimpleObjectProperty<>("");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getSku().getAvgPrice().toString());
+            }
+        });
+        //货位
+        colSlots.setCellValueFactory(param -> {
+            if(param.getValue().getSku() == null) {
+                return new SimpleObjectProperty<>("");
+            } else {
+                StringBuilder stb = new StringBuilder();
+                param.getValue().getSku().getSkuSlotMappingSet().stream().sorted(Comparator.comparingLong(e -> e.getSlot().getId())).forEach(e -> {
+                    stb.append(e.getSlot().getName());
+                });
+                return new SimpleObjectProperty<>(stb.toString());
+            }
+        });
+        //图片
+        colPhotos.setCellValueFactory(param -> {
+            if(param.getValue().getSku() == null) {
+                return new SimpleObjectProperty<>("");
+            } else {
+                StringBuilder stb = new StringBuilder();
+                param.getValue().getSku().getPhotos().stream().sorted(Comparator.comparingLong(e -> e.getId())).forEach(e -> {
+                    stb.append(e.getName());
+                });
+                return new SimpleObjectProperty<>(stb.toString());
+            }
+        });
+        //类别
+        colCategory.setCellValueFactory(param -> {
+            if(param.getValue().getSku() == null || param.getValue().getSku().getProduct().getCategory() == null) {
+                return new SimpleObjectProperty<>("");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getSku().getProduct().getCategory().getName());
+            }
+        });
+        //产品编码
+        colCode.setCellValueFactory(param -> {
+            if(param.getValue().getSku() == null) {
+                return new SimpleObjectProperty<>("");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getSku().getProduct().getCode());
+            }
+        });
+        //产品名称
+        colName.setCellValueFactory(param -> {
+            if(param.getValue().getSku() == null) {
+                return new SimpleObjectProperty<>("");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getSku().getProduct().getName());
+            }
+        });
+        //车型
+        colCar.setCellValueFactory(param -> {
+            if(param.getValue().getSku() == null || param.getValue().getSku().getProduct().getCar() == null) {
+                return new SimpleObjectProperty<>("");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getSku().getProduct().getCar().getName());
+            }
+        });
+        //通用车型
+        colCars.setCellValueFactory(param -> {
+            if(param.getValue().getSku() == null) {
+                return new SimpleObjectProperty<>("");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getSku().getProduct().getRelevantModels());
+            }
+        });
+        //产地
+        colPlace.setCellValueFactory(param -> {
+            if(param.getValue().getSku() == null || param.getValue().getSku().getProduct().getPlace() == null) {
+                return new SimpleObjectProperty<>("");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getSku().getProduct().getPlace().getName());
+            }
+        });
+        //品牌
+        colBrand.setCellValueFactory(param -> {
+            if(param.getValue().getSku() == null || param.getValue().getSku().getProduct().getBrand() == null) {
+                return new SimpleObjectProperty<>("");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getSku().getProduct().getBrand().getName());
+            }
+        });
+        //英文名
+        colEnglishName.setCellValueFactory(param -> {
+            if(param.getValue().getSku() == null) {
+                return new SimpleObjectProperty<>("");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getSku().getProduct().getEnglishName());
+            }
+        });
+        //进口
+        colImported.setCellValueFactory(param -> {
+            if(param.getValue().getSku() == null || param.getValue().getSku().getProduct().getImported() == null) {
+                return new SimpleObjectProperty<>("");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getSku().getProduct().getImported().getName());
+            }
+        });
+        //通用件号
+        colCommonNumber.setCellValueFactory(param -> {
+            if(param.getValue().getSku() == null) {
+                return new SimpleObjectProperty<>("");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getSku().getProduct().getCommonNumber());
+            }
+        });
+        //材料
+        colMaterials.setCellValueFactory(param -> {
+            if(param.getValue().getSku() == null) {
+                return new SimpleObjectProperty<>("");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getSku().getProduct().getMaterials());
+            }
+        });
+        //所属公司
+        colCompany.setCellValueFactory(param -> {
+            if(param.getValue().getSku() == null || param.getValue().getSku().getProduct().getCompany() == null) {
+                return new SimpleObjectProperty<>("");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getSku().getProduct().getCompany().getName());
+            }
+        });
+        //包装数量
+        colPackingQuantity.setCellValueFactory(param -> {
+            if(param.getValue().getSku() == null) {
+                return new SimpleObjectProperty<>("");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getSku().getProduct().getPackingQuantity().toString());
+            }
+        });
+        //重量
+        colWeight.setCellValueFactory(param -> {
+            if(param.getValue().getSku() == null) {
+                return new SimpleObjectProperty<>("");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getSku().getProduct().getWeight());
+            }
+        });
+        //手册
+        colManual.setCellValueFactory(param -> {
+            if(param.getValue().getSku() == null) {
+                return new SimpleObjectProperty<>("");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getSku().getProduct().getMaterials());
+            }
+        });
+        //供应商
+        colSupplier.setCellValueFactory(param -> {
+            if(param.getValue().getSku() == null || param.getValue().getSku().getProduct().getSupplier() == null) {
+                return new SimpleObjectProperty<>("");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getSku().getProduct().getSupplier().getName());
+            }
+        });
+        //一级进价
+        colPurchasingPrice1.setCellValueFactory(param -> {
+            if(param.getValue().getSku() == null) {
+                return new SimpleObjectProperty<>("");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getSku().getProduct().getPurchasingPrice1().toString());
+            }
+        });
+        //二级进价
+        colPurchasingPrice2.setCellValueFactory(param -> {
+            if(param.getValue().getSku() == null) {
+                return new SimpleObjectProperty<>("");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getSku().getProduct().getPurchasingPrice2().toString());
+            }
+        });
+        //三级进价
+        colPurchasingPrice3.setCellValueFactory(param -> {
+            if(param.getValue().getSku() == null) {
+                return new SimpleObjectProperty<>("");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getSku().getProduct().getPurchasingPrice3().toString());
+            }
+        });
+        //一级销价
+        colSellingPrice1.setCellValueFactory(param -> {
+            if(param.getValue().getSku() == null) {
+                return new SimpleObjectProperty<>("");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getSku().getProduct().getSellingPrice1().toString());
+            }
+        });
+        //二级销价
+        colSellingPrice2.setCellValueFactory(param -> {
+            if(param.getValue().getSku() == null) {
+                return new SimpleObjectProperty<>("");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getSku().getProduct().getSellingPrice2().toString());
+            }
+        });
+        //三级销价
+        colSellingPrice3.setCellValueFactory(param -> {
+            if(param.getValue().getSku() == null) {
+                return new SimpleObjectProperty<>("");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getSku().getProduct().getSellingPrice3().toString());
+            }
+        });
+        //底价
+        colBottomPrice.setCellValueFactory(param -> {
+            if(param.getValue().getSku() == null) {
+                return new SimpleObjectProperty<>("");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getSku().getProduct().getBottomPrice().toString());
+            }
+        });
+        //外币单位
+        colForeignCurrencyUnit.setCellValueFactory(param -> {
+            if(param.getValue().getSku() == null) {
+                return new SimpleObjectProperty<>("");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getSku().getProduct().getForeignCurrencyUnit());
+            }
+        });
+        //外币价格
+        colForeignCurrencyPrice.setCellValueFactory(param -> {
+            if(param.getValue().getSku() == null) {
+                return new SimpleObjectProperty<>("");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getSku().getProduct().getForeignCurrencyPrice());
+            }
+        });
+        //紧缺件
+        colShortage.setCellValueFactory(param -> {
+            if(param.getValue().getSku() == null) {
+                return new SimpleObjectProperty<>("");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getSku().getProduct().getShortage()?"紧缺":"");
+            }
+        });
+        //状态
+        colStatus.setCellValueFactory(param -> {
+            if(param.getValue().getSku() == null) {
+                return new SimpleObjectProperty<>("");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getSku().getStatus());
+            }
+        });
+        //SKU属性
+        colProperties.setCellValueFactory(param -> {
+            if(param.getValue().getSku() == null) {
+                return new SimpleObjectProperty<>("");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getSku().getProperties());
+            }
+        });
+        //折扣%
+        colDiscountPercentage.setCellValueFactory(param -> {
+            if(param.getValue().getSku() == null) {
+                return new SimpleObjectProperty<>("");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getSku().getDiscountPercentage());
+            }
+        });
+        //税率
+        colTaxRate.setCellValueFactory(param -> {
+            if(param.getValue().getSku() == null) {
+                return new SimpleObjectProperty<>("");
+            } else {
+                return new SimpleObjectProperty<>("");
+            }
+        });
+        //税额
+        colTaxAmount.setCellValueFactory(param -> {
+            if(param.getValue().getSku() == null) {
+                return new SimpleObjectProperty<>("");
+            } else {
+                return new SimpleObjectProperty<>("");
+            }
+        });
+        //含税单价
+        colPriceIncludingTax.setCellValueFactory(param -> {
+            if(param.getValue().getSku() == null) {
+                return new SimpleObjectProperty<>("");
+            } else {
+                return new SimpleObjectProperty<>("");
+            }
+        });
+        //含税金额
+        colAmountIncludingTax.setCellValueFactory(param -> {
+            if(param.getValue().getSku() == null) {
+                return new SimpleObjectProperty<>("");
+            } else {
+                return new SimpleObjectProperty<>("");
+            }
+        });
+        //创建日期
+        colDateCreated.setCellValueFactory(param -> {
+            if(param.getValue().getSku() == null) {
+                return new SimpleObjectProperty<>("");
+            } else {
+                return new SimpleObjectProperty<>(format.format(param.getValue().getSku().getDateCreated()));
+            }
+        });
+        //创建者
+        colCreator.setCellValueFactory(param -> {
+            if(param.getValue().getSku() == null) {
+                return new SimpleObjectProperty<>("");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getSku().getCreator());
+            }
+        });
+        //更新时间
+        colDateUpdated.setCellValueFactory(param -> {
+            if(param.getValue().getSku() == null) {
+                return new SimpleObjectProperty<>("");
+            } else {
+                return new SimpleObjectProperty<>(format.format(param.getValue().getSku().getDateUpdated()));
+            }
+        });
+        //更新者
+        colUpdator.setCellValueFactory(param -> {
+            if(param.getValue().getSku() == null) {
+                return new SimpleObjectProperty<>("");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getSku().getUpdater());
+            }
+        });
+        //更新次数
+        colUpdateCount.setCellValueFactory(param -> {
+            if(param.getValue().getSku() == null) {
+                return new SimpleObjectProperty<>("");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getSku().getUpdatedCount()+"");
+            }
+        });
+    }
 
-//        colBrand.setCellValueFactory(param -> {
-//            if(param.getValue().getSku().getProduct().getBrandSeries() == null) {
-//                return new SimpleObjectProperty<>("");
-//            } else {
-//                return new SimpleObjectProperty<>(param.getValue().getSku().getProduct().getBrandSeries().getChineseName());
-//            }
-//        });
-//        colBarCode.setCellValueFactory(param -> {
-//            if(param.getValue().getSku().getBarCode() == null) {
-//                return new SimpleObjectProperty<>("");
-//            } else {
-//                return new SimpleObjectProperty<>(param.getValue().getSku().getBarCode());
-//            }
-//        });
-//        colUnit.setCellValueFactory(param -> {
-//            if(param.getValue().getSku().getUnit() == null) {
-//                return new SimpleObjectProperty<>("");
-//            } else {
-//                return new SimpleObjectProperty<>(param.getValue().getSku().getUnit());
-//            }
-//        });
-//        colQty.setCellValueFactory(param -> {
-//            if(param.getValue().getSku().getQuantity() == null) {
-//                return new SimpleObjectProperty<>("");
-//            } else {
-//                return new SimpleObjectProperty<>(param.getValue().getSku().getQuantity().toString());
-//            }
-//        });
-//        colPrice.setCellValueFactory(param -> {
-//            if(param.getValue().getSku().getPrice() == null) {
-//                return new SimpleObjectProperty<>("");
-//            } else {
-//                return new SimpleObjectProperty<>(param.getValue().getSku().getPrice().toString());
-//            }
-//        });
+    private void updateSummary() {
+        int totalRecords = 0;
+        BigDecimal totalQty = BigDecimal.ZERO;
+        BigDecimal totalAmount = BigDecimal.ZERO;
+        ObservableList<PurchaseOrderItem> list = tableView.getItems();
+        for(PurchaseOrderItem item : list) {
+            totalRecords++;
+            totalQty = totalQty.add(new BigDecimal(item.getQuantity()));
+            totalAmount = totalAmount.add(item.getAmountExcludingTax());
+        }
+        labelRecords.setText(totalRecords+"");
+        labelTotalQty.setText(totalQty.toString());
+        labelTotalAmount.setText(totalAmount.toString());
     }
 
     @FXML
@@ -639,13 +1017,9 @@ public class POEditorController {
 
     @FXML
     private void addItem() {
-        SKU sku = new SKU();
-        sku.setSkuCode("");
-        sku.setSkuName("");
-        sku.setSpecification("");
 
-        //初始化第一行空行
-        PurchaseOrderItem item = new PurchaseOrderItem(Constants.ID, po, sku,0, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO,"");
+
+        PurchaseOrderItem item = new PurchaseOrderItem(Constants.ID, null, null, Constants.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO,"");
         tableView.getItems().add(item);
         tableView.refresh();
         tableView.getSelectionModel().select(item);
@@ -666,7 +1040,6 @@ public class POEditorController {
     @FXML
     private void save() {
 
-
         dialog.close();
     }
 
@@ -676,10 +1049,19 @@ public class POEditorController {
     }
 
     private void openProductChooser() {
-        //Open product chooser
-        Callback<PO, String> callback = new Callback<PO, String>() {
+        Callback<SKU, String> callback = new Callback<SKU, String>() {
+
             @Override
-            public String call(PO param) {
+            public String call(SKU sku) {
+                PurchaseOrderItem item = tableView.getSelectionModel().getSelectedItem();
+                item.setSku(sku);
+                item.setQuantity(0);
+                item.setPriceExcludingTax(sku.getAvgPrice());
+                item.setAmountExcludingTax(BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP));
+
+                tableView.refresh();
+                tableView.getSelectionModel().select(item);
+                updateSummary();
                 return null;
             }
         };
@@ -698,7 +1080,7 @@ public class POEditorController {
         scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
         Stage dialog = new Stage();
         ProductChooserController skuChooserController = loader.getController();
-        skuChooserController.initialize(dialog);
+        skuChooserController.initialize(dialog, callback);
         dialog.setTitle("配件选择器");
         dialog.initOwner(this.dialog);
         dialog.setResizable(true);

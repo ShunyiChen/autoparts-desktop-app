@@ -171,30 +171,30 @@
            <!-- SKU名称 -->
            <TableColumn fx:id="colSkuName" prefWidth="125.0" text="SKU名称" />
            <!-- 规格 -->
-           <TableColumn fx:id="colUnt" prefWidth="125.0" text="单位" />
+           <TableColumn fx:id="colSpecification" prefWidth="125.0" text="规格" />
+           <!-- 单位 -->
+           <TableColumn fx:id="colUnit" prefWidth="125.0" text="单位" />
            <!-- 数量 -->
            <TableColumn fx:id="colQty" prefWidth="125.0" text="数量" />
-           <!-- 条形码 -->
+           <!-- 不含税单价 -->
            <TableColumn fx:id="colPriceExcludingTax" prefWidth="125.0" text="不含税单价" />
-           <!-- 库存数量 -->
+           <!-- 不含税金额 -->
            <TableColumn fx:id="colAmountExcludingTax" prefWidth="125.0" text="不含税金额" />
-           <!-- 折扣% -->
+           <!-- 仓库 -->
            <TableColumn fx:id="colWarehouse" prefWidth="125.0" text="仓库" />
-           <!-- 税率% -->
-           <TableColumn fx:id="colStock" prefWidth="125.0" text="本库现库存数" />
+           <!-- 本库现库存数 -->
+           <TableColumn fx:id="colStockQty" prefWidth="125.0" text="本库现库存数" />
            <!-- 备注 -->
            <TableColumn fx:id="colNotes" prefWidth="125.0" text="备注" />
-           <!-- 产品条形码 -->
+           <!-- SKU条形码 -->
            <TableColumn fx:id="colSkuBarCode" prefWidth="125.0" text="SKU条形码" />
-           <!-- 可用状态 -->
-           <TableColumn fx:id="colStatus" prefWidth="125.0" text="可用状态" />
            <!-- 进货平均价 -->
            <TableColumn fx:id="colAvgPrice" prefWidth="125.0" text="进货平均价" />
-           <!-- 所有货位 -->
+           <!-- 货位 -->
            <TableColumn fx:id="colSlots" prefWidth="125.0" text="货位" />
-           <!-- 所有图片 -->
+           <!-- 图片 -->
            <TableColumn fx:id="colPhotos" prefWidth="125.0" text="图片" />
-           <!-- 类别 -->
+           <!-- 产品类别 -->
            <TableColumn fx:id="colCategory" prefWidth="125.0" text="类别" />
            <!-- 产品编码 -->
            <TableColumn fx:id="colCode" prefWidth="125.0" text="产品编码" />
@@ -246,10 +246,26 @@
            <TableColumn fx:id="colForeignCurrencyPrice" prefWidth="125.0" text="外币价格" />
            <!-- 紧缺件 -->
            <TableColumn fx:id="colShortage" prefWidth="125.0" text="紧缺件" />
+           <!-- 可用状态 -->
+           <TableColumn fx:id="colStatus" prefWidth="125.0" text="可用状态" />
+           <!-- 属性字符串 -->
+           <TableColumn fx:id="colProperties" prefWidth="125.0" text="属性字符串" />
+           <!-- 折扣% -->
+           <TableColumn fx:id="colDiscountPercentage" prefWidth="125.0" text="折扣%" />
+           <!-- 税率 -->
+           <TableColumn fx:id="colTaxRate" prefWidth="125.0" text="税率" />
+           <!-- 税额 -->
+           <TableColumn fx:id="colTaxAmount" prefWidth="125.0" text="税额" />
+           <!-- 含税单价 -->
+           <TableColumn fx:id="colPriceIncludingTax" prefWidth="125.0" text="含税单价" />
+           <!-- 含税金额 -->
+           <TableColumn fx:id="colAmountIncludingTax" prefWidth="125.0" text="含税金额" />
            <!-- 创建时间 -->
            <TableColumn fx:id="colDateCreated" prefWidth="125.0" text="创建时间" />
            <!-- 创建者 -->
            <TableColumn fx:id="colCreator" prefWidth="125.0" text="创建者" />
+           <!-- 更新时间 -->
+           <TableColumn fx:id="colDateUpdated" prefWidth="125.0" text="更新时间" />
            <!-- 更新者 -->
            <TableColumn fx:id="colUpdator" prefWidth="125.0" text="更新者" />
            <!-- 更新次数 -->
@@ -260,7 +276,6 @@
            <TableColumn fx:id="colDeleteFlag" prefWidth="125.0" text="删除标记" />
            <!-- 删除者 -->
            <TableColumn fx:id="colDeleter" prefWidth="125.0" text="删除者" />
-            <TableColumn fx:id="colSpecification" prefWidth="125.0" text="规格" />
         </columns>
       </TableView>
    </center>
@@ -278,8 +293,11 @@
                      <font>
                         <Font size="14.0" />
                      </font>
+                     <FlowPane.margin>
+                        <Insets right="5.0" />
+                     </FlowPane.margin>
                   </Label>
-                  <Label layoutX="10.0" layoutY="13.0" prefHeight="19.0" prefWidth="91.0" text="1" textFill="#3f51b5">
+                  <Label fx:id="labelRecords" layoutX="10.0" layoutY="13.0" prefHeight="19.0" prefWidth="91.0" text="1" textFill="#3f51b5">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -288,8 +306,11 @@
                      <font>
                         <Font size="14.0" />
                      </font>
+                     <FlowPane.margin>
+                        <Insets right="5.0" />
+                     </FlowPane.margin>
                   </Label>
-                  <Label layoutX="222.0" layoutY="13.0" prefHeight="19.0" prefWidth="91.0" text="1" textFill="#3f51b5">
+                  <Label fx:id="labelTotalQty" layoutX="222.0" layoutY="13.0" prefHeight="19.0" prefWidth="91.0" text="1" textFill="#3f51b5">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -298,8 +319,11 @@
                      <font>
                         <Font size="14.0" />
                      </font>
+                     <FlowPane.margin>
+                        <Insets right="5.0" />
+                     </FlowPane.margin>
                   </Label>
-                  <Label layoutX="383.0" layoutY="13.0" prefHeight="19.0" prefWidth="91.0" text="111.02" textFill="#3f51b5">
+                  <Label fx:id="labelTotalAmount" layoutX="383.0" layoutY="13.0" prefHeight="19.0" prefWidth="91.0" text="111.02" textFill="#3f51b5">
                      <font>
                         <Font size="14.0" />
                      </font>

@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 /**
  * @Description: 采购订单明细VO
  * @Author: Shunyi Chen
- * @CreateDate: 2020/4/4
+ * @CreateDate: 2020/4/21
  */
 public class PurchaseOrderItem {
     /** 自增ID */
@@ -16,6 +16,8 @@ public class PurchaseOrderItem {
     private SKU sku;
     /** 数量 */
     private Integer quantity;
+    /** 金额 */
+    private BigDecimal amount;
     /** 折扣 */
     private BigDecimal discount;
     /** 折后金额 */
@@ -37,11 +39,12 @@ public class PurchaseOrderItem {
 
     public PurchaseOrderItem() {}
 
-    public PurchaseOrderItem(Long id, PurchaseOrder purchaseOrder, SKU sku, Integer quantity, BigDecimal discount, BigDecimal discountedAmount, BigDecimal taxRate, BigDecimal taxAmount, BigDecimal priceIncludingTax, BigDecimal amountIncludingTax, BigDecimal priceExcludingTax, BigDecimal amountExcludingTax, String notes) {
+    public PurchaseOrderItem(Long id, PurchaseOrder purchaseOrder, SKU sku, Integer quantity, BigDecimal amount, BigDecimal discount, BigDecimal discountedAmount, BigDecimal taxRate, BigDecimal taxAmount, BigDecimal priceIncludingTax, BigDecimal amountIncludingTax, BigDecimal priceExcludingTax, BigDecimal amountExcludingTax, String notes) {
         this.id = id;
         this.purchaseOrder = purchaseOrder;
         this.sku = sku;
         this.quantity = quantity;
+        this.amount = amount;
         this.discount = discount;
         this.discountedAmount = discountedAmount;
         this.taxRate = taxRate;
@@ -83,6 +86,14 @@ public class PurchaseOrderItem {
 
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
+    }
+
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
     }
 
     public BigDecimal getDiscount() {

@@ -32,6 +32,7 @@ import java.util.stream.Collectors;
  */
 public class ProductChooserController {
     private Stage dialog;
+    private Callback<SKU, String> callback;
 
     @FXML
     private TextField txtCode;
@@ -117,6 +118,19 @@ public class ProductChooserController {
 
     @FXML
     private void selectAndReturn() {
+        SKU selectedSku = tableView.getSelectionModel().getSelectedItem();
+        if(selectedSku == null) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
+            alert.setHeaderText("请选择一个配件");
+            alert.show();
+            return;
+        }
+        try {
+            SKU sku = HttpClient.GET("/sku/"+selectedSku.getId(), SKU.class);
+            callback.call(sku);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         dialog.close();
     }
 
@@ -124,8 +138,9 @@ public class ProductChooserController {
      *
      * @param dialog
      */
-    public void initialize(Stage dialog) {
+    public void initialize(Stage dialog, Callback<SKU, String> callback) {
         this.dialog = dialog;
+        this.callback = callback;
         //初始化查询栏
         initSearchFields();
         //初始化分类树

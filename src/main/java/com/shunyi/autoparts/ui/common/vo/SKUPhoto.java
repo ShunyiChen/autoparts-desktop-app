@@ -8,6 +8,8 @@ package com.shunyi.autoparts.ui.common.vo;
 public class SKUPhoto {
     /** 自增长ID */
     private Long id;
+    /** 图片名称 */
+    private String name;
     /** 图片路径 */
     private String path;
     /** 图片所在VFS文件系统 */
@@ -15,8 +17,10 @@ public class SKUPhoto {
 
     public SKUPhoto() {}
 
-    public SKUPhoto(Long id, VFS vfs) {
+    public SKUPhoto(Long id, String name, String path, VFS vfs) {
         this.id = id;
+        this.name = name;
+        this.path = path;
         this.vfs = vfs;
     }
 
@@ -26,6 +30,14 @@ public class SKUPhoto {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getPath() {
