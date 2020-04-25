@@ -89,7 +89,6 @@ public class POController {
 
     @FXML
     private void create() {
-
         Callback<PurchaseOrder, String> callback = new Callback<PurchaseOrder, String>() {
             @Override
             public String call(PurchaseOrder param) {

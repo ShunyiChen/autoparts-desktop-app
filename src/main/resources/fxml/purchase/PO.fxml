@@ -21,23 +21,18 @@
            <children>
             <ToolBar prefHeight="40.0" prefWidth="200.0">
               <items>
-                <Button mnemonicParsing="false" onAction="#create" text="新 建">
+                <Button mnemonicParsing="false"  text="新 建" onAction="#create">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Button>
                   <Separator />
-                  <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#update" text="更 改">
+                  <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false"  text="更 改" onAction="#update">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Button>
-                  <Button layoutX="62.0" layoutY="11.0" mnemonicParsing="false" onAction="#delete" text="删 除">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </Button>
-                  <Button layoutX="62.0" layoutY="11.0" mnemonicParsing="false" onAction="#refresh" text="刷 新">
+                  <Button layoutX="62.0" layoutY="11.0" mnemonicParsing="false" text="刷 新" onAction="#refresh">
                       <font>
                           <Font size="14.0" />
                       </font>

@@ -29,6 +29,8 @@ public class PurchaseOrder {
     private String notes;
     /** 经办人 */
     private String operator;
+    /** 系统账号 */
+    private String userName;
     /** 结算方式 */
     private String payment;
     /** 货款金额 */
@@ -60,7 +62,7 @@ public class PurchaseOrder {
 
     public PurchaseOrder() {}
 
-    public PurchaseOrder(Long id, String orderNo, Date orderDate, Warehouse warehouse, Supplier supplier, String invoiceType, String invoiceNo, BigDecimal freight, String notes, String operator, String payment, BigDecimal purchaseAmount, BigDecimal disbursement, BigDecimal discountAmount, BigDecimal amountPayable, BigDecimal paymentAmount, String account, Date repaymentDate, String status, Date dateCreated, String creator, Date dateDeleted, Boolean deleteFlag, String deleter) {
+    public PurchaseOrder(Long id, String orderNo, Date orderDate, Warehouse warehouse, Supplier supplier, String invoiceType, String invoiceNo, BigDecimal freight, String notes, String operator, String userName, String payment, BigDecimal purchaseAmount, BigDecimal disbursement, BigDecimal discountAmount, BigDecimal amountPayable, BigDecimal paymentAmount, String account, Date repaymentDate, String status, Date dateCreated, String creator, Date dateDeleted, Boolean deleteFlag, String deleter) {
         this.id = id;
         this.orderNo = orderNo;
         this.orderDate = orderDate;
@@ -71,6 +73,7 @@ public class PurchaseOrder {
         this.freight = freight;
         this.notes = notes;
         this.operator = operator;
+        this.userName = userName;
         this.payment = payment;
         this.purchaseAmount = purchaseAmount;
         this.disbursement = disbursement;
@@ -165,6 +168,14 @@ public class PurchaseOrder {
 
     public void setOperator(String operator) {
         this.operator = operator;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getPayment() {
@@ -277,5 +288,36 @@ public class PurchaseOrder {
 
     public void setDeleter(String deleter) {
         this.deleter = deleter;
+    }
+
+    @Override
+    public String toString() {
+        return "PurchaseOrder{" +
+                "id=" + id +
+                ", orderNo='" + orderNo + '\'' +
+                ", orderDate=" + orderDate +
+                ", warehouse=" + warehouse +
+                ", supplier=" + supplier +
+                ", invoiceType='" + invoiceType + '\'' +
+                ", invoiceNo='" + invoiceNo + '\'' +
+                ", freight=" + freight +
+                ", notes='" + notes + '\'' +
+                ", operator='" + operator + '\'' +
+                ", userName='" + userName + '\'' +
+                ", payment='" + payment + '\'' +
+                ", purchaseAmount=" + purchaseAmount +
+                ", disbursement=" + disbursement +
+                ", discountAmount=" + discountAmount +
+                ", amountPayable=" + amountPayable +
+                ", paymentAmount=" + paymentAmount +
+                ", account='" + account + '\'' +
+                ", repaymentDate=" + repaymentDate +
+                ", status='" + status + '\'' +
+                ", dateCreated=" + dateCreated +
+                ", creator='" + creator + '\'' +
+                ", dateDeleted=" + dateDeleted +
+                ", deleteFlag=" + deleteFlag +
+                ", deleter='" + deleter + '\'' +
+                '}';
     }
 }

@@ -310,7 +310,7 @@
                         <Insets right="5.0" />
                      </FlowPane.margin>
                   </Label>
-                  <Label fx:id="labelTotalQty" layoutX="222.0" layoutY="13.0" prefHeight="19.0" prefWidth="91.0" text="1" textFill="#3f51b5">
+                  <Label fx:id="labelTotalQty" layoutX="222.0" layoutY="13.0" prefHeight="19.0" prefWidth="91.0" text="0" textFill="#3f51b5">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -323,7 +323,7 @@
                         <Insets right="5.0" />
                      </FlowPane.margin>
                   </Label>
-                  <Label fx:id="labelTotalAmount" layoutX="383.0" layoutY="13.0" prefHeight="19.0" prefWidth="91.0" text="111.02" textFill="#3f51b5">
+                  <Label fx:id="labelTotalAmount" layoutX="383.0" layoutY="13.0" prefHeight="19.0" prefWidth="91.0" text="0.00" textFill="#3f51b5">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -373,7 +373,7 @@
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="txtPurchaseAmount" prefHeight="29.0" prefWidth="110.0">
+                  <TextField fx:id="txtPurchaseAmount" editable="false" prefHeight="29.0" prefWidth="110.0" text="0.00">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -383,7 +383,7 @@
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="txtDisbursement" layoutX="463.0" layoutY="15.0" prefHeight="29.0" prefWidth="110.0">
+                  <TextField fx:id="txtDisbursement" layoutX="463.0" layoutY="15.0" prefHeight="29.0" prefWidth="110.0" text="0.00">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -393,7 +393,7 @@
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="txtDiscountAmount" layoutX="463.0" layoutY="15.0" prefHeight="29.0" prefWidth="110.0">
+                  <TextField fx:id="txtDiscountAmount" layoutX="463.0" layoutY="15.0" prefHeight="29.0" prefWidth="110.0" text="0.00">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -403,7 +403,7 @@
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="txtAmountPayable" prefHeight="29.0" prefWidth="110.0">
+                  <TextField fx:id="txtAmountPayable" editable="false" prefHeight="29.0" prefWidth="110.0" text="0.00">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -416,7 +416,7 @@
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="txtPaymentAmount" layoutX="623.0" layoutY="15.0" prefHeight="29.0" prefWidth="110.0">
+                  <TextField fx:id="txtPaymentAmount" layoutX="623.0" layoutY="15.0" prefHeight="29.0" prefWidth="110.0" text="0.00">
                      <font>
                         <Font size="14.0" />
                      </font>

@@ -26,8 +26,10 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.stream.Collectors;
 
 /**
@@ -87,6 +89,9 @@ public class POEditorController {
     /** 结算方式 */
     @FXML
     private ComboBox<String> comboBoxPayments;
+    /** 系统账号 */
+    @FXML
+    private TextField txtLoginAccount;
     /** 账号 */
     @FXML
     private ComboBox<String> comboBoxAccount;
@@ -105,6 +110,9 @@ public class POEditorController {
     /** 本次付款 */
     @FXML
     private TextField txtPaymentAmount;
+    /**经办人 */
+    @FXML
+    private TextField txtOperator;
     /** 采购订单明细表 */
     @FXML
     private TableView<PurchaseOrderItem> tableView;
@@ -302,6 +310,7 @@ public class POEditorController {
         this.callback = callback;
         this.po = po;
         this.readOnly = readOnly;
+        btnSubmit.setStyle(String.format("-fx-base: %s;", "rgb(63,81,181)"));
         initCellFactory();
         initInputFields();
         initTable();
@@ -337,9 +346,18 @@ public class POEditorController {
     }
 
     private void initInputFields() {
+        //订单日期
         orderDate.setValue(LocalDate.now());
+        //单号
         try {
-            comboBoxSupplierCode.getItems().clear();
+            User user = HttpClient.GET("/users/username/"+Env.getInstance().currentUser(), User.class);
+            String generatedOrderNo = HttpClient.GET("/purchaseOrders/orderNo/"+user.getId());
+            txtOrderNo.setText(generatedOrderNo);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        //获取供应商列表
+        try {
             Supplier[] suppliers = HttpClient.GET("/suppliers", Supplier[].class);
             comboBoxSupplierCode.getItems().addAll(Arrays.asList(suppliers).stream().map(e -> e.getCode()).collect(Collectors.toList()));
         } catch (IOException e) {
@@ -353,32 +371,33 @@ public class POEditorController {
         comboBoxSupplierCode.setOnAction(e -> {
             initSupplier();
         });
-
+        //获取发票类型列表
         try {
             InvoiceType[] invoiceTypes = HttpClient.GET("/invoiceTypes", InvoiceType[].class);
             comboBoxInvoiceType.getItems().addAll(Arrays.asList(invoiceTypes).stream().map(e -> e.getName()).collect(Collectors.toList()));
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        //获取结算方式列表
+        try {
+            Payment[] payments = HttpClient.GET("/payments", Payment[].class);
+            comboBoxPayments.getItems().addAll(Arrays.asList(payments).stream().map(e -> e.getName()).collect(Collectors.toList()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        //获取账号列表
+        try {
+            Account[] accounts = HttpClient.GET("/accounts", Account[].class);
+            comboBoxAccount.getItems().addAll(Arrays.asList(accounts).stream().map(e -> e.getName()).collect(Collectors.toList()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         new AutoCompleteBox(comboBoxSupplierCode);
         new AutoCompleteBox(comboBoxInvoiceType);
         new AutoCompleteBox(comboBoxPayments);
         new AutoCompleteBox(comboBoxAccount);
 
-//        comboBoxPayments.getItems().add("现金");
-//        comboBoxPayments.getSelectionModel().select(0);
-//        btnSubmit.setStyle(String.format("-fx-base: %s;", "rgb(63,81,181)"));
-
-
-        try {
-            User user = HttpClient.GET("/users/username/"+Env.getInstance().currentUser(), User.class);
-            String generatedOrderNo = HttpClient.GET("/purchaseOrders/orderNo/"+user.getId());
-            txtOrderNo.setText(generatedOrderNo);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+        txtLoginAccount.setText(Env.getInstance().currentUser());
     }
 
     private void initTable() {
@@ -873,6 +892,11 @@ public class POEditorController {
         labelRecords.setText(totalRecords+"");
         labelTotalQty.setText(totalQty.toString());
         labelTotalAmount.setText(totalAmount.toString());
+        //货款金额
+        txtPurchaseAmount.setText(totalAmount.toString());
+        //应付总额
+        txtAmountPayable.setText(totalAmount.toString());
+
     }
 
     @FXML
@@ -1017,8 +1041,6 @@ public class POEditorController {
 
     @FXML
     private void addItem() {
-
-
         PurchaseOrderItem item = new PurchaseOrderItem(Constants.ID, null, null, Constants.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO,"");
         tableView.getItems().add(item);
         tableView.refresh();
@@ -1037,14 +1059,52 @@ public class POEditorController {
         dialog.close();
     }
 
+
+    private void saveOrUpdate() {
+        if(po == null) {
+            po = new PurchaseOrder();
+            LocalDate localDate = orderDate.getValue();
+            Date date = Date.from(localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+            po.setOrderDate(date);
+            po.setOrderNo(txtOrderNo.getText());
+            po.setSupplier(supplier);
+            po.setInvoiceType(comboBoxInvoiceType.getValue());
+            po.setInvoiceNo(txtInvoiceNo.getText());
+            po.setFreight(new BigDecimal(txtFreight.getText()));
+            po.setNotes(txtNotes.getText());
+            po.setOperator(txtOperator.getText());
+            po.setPayment(comboBoxPayments.getValue());
+            //货款金额
+            po.setPurchaseAmount(new BigDecimal(txtPurchaseAmount.getText()));
+            //代垫费用
+            po.setDisbursement(new BigDecimal(txtDisbursement.getText()));
+            //本次优惠
+            po.setDiscountAmount(new BigDecimal(txtDiscountAmount.getText()));
+            //应付总额
+            po.setAmountPayable(new BigDecimal(txtAmountPayable.getText()));
+            //本次付款
+            po.setPaymentAmount(new BigDecimal(txtPaymentAmount.getText()));
+            //账号
+            po.setAccount(comboBoxAccount.getValue());
+            //系统登录账号
+            po.setUserName(txtLoginAccount.getText());
+
+            System.out.println(po);
+
+        } else {
+
+        }
+    }
+
     @FXML
     private void save() {
-
+        saveOrUpdate();
         dialog.close();
     }
 
     @FXML
     private void submit() {
+        saveOrUpdate();
         dialog.close();
     }
 
