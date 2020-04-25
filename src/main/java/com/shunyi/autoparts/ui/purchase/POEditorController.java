@@ -27,9 +27,7 @@ import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Date;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -44,6 +42,7 @@ public class POEditorController {
     private Stage dialog;
     private Callback<PurchaseOrder, String> callback;
     private Callback<TableColumn<PurchaseOrderItem, String>, TableCell<PurchaseOrderItem, String>> cellFactory;
+    private List<Long> deletedIds = new ArrayList<>();
     /** 采购订单 */
     private PurchaseOrder po;
     /** 供应商 */
@@ -317,14 +316,20 @@ public class POEditorController {
         addItem();
     }
 
+    /**
+     *
+     */
     private void initCellFactory() {
         cellFactory = p -> new EditingCell();
     }
 
+    /**
+     * 初始化供应商
+     */
     private void initSupplier() {
-        Supplier supplier = new Supplier();
-        supplier.setCode(comboBoxSupplierCode.getValue());
-        String json = GoogleJson.GET().toJson(supplier);
+        Supplier condition = new Supplier();
+        condition.setCode(comboBoxSupplierCode.getValue());
+        String json = GoogleJson.GET().toJson(condition);
         String data;
         try {
             data = HttpClient.POST("/suppliers/search", json);
@@ -339,7 +344,6 @@ public class POEditorController {
                 txtContact.setText("");
                 txtPhone.setText("");
             }
-
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -480,8 +484,12 @@ public class POEditorController {
                     if(selected != null) {
                         String newValue = t.getNewValue();
                         if(NumberValidationUtils.isPositiveInteger(newValue)) {
+                            //Item数量
                             selected.setQuantity(Integer.parseInt(newValue));
+                            //Item不含税金额
                             selected.setAmountExcludingTax(new BigDecimal(selected.getQuantity()).multiply(selected.getPriceExcludingTax()).setScale(2, RoundingMode.HALF_UP));
+                            //Item金额
+                            selected.setAmount(selected.getAmountExcludingTax());
                             data.set(t.getTablePosition().getRow(), selected);
                             updateSummary();
                         }
@@ -1052,6 +1060,8 @@ public class POEditorController {
         PurchaseOrderItem selectedItem = tableView.getSelectionModel().getSelectedItem();
         tableView.getItems().remove(selectedItem);
         tableView.refresh();
+        //记录删除ID,用于保存更新
+        deletedIds.add(selectedItem.getId());
     }
 
     @FXML
@@ -1060,8 +1070,9 @@ public class POEditorController {
     }
 
 
-    private void saveOrUpdate() {
+    private void saveOrUpdate(String status) {
         if(po == null) {
+            //插入新记录
             po = new PurchaseOrder();
             LocalDate localDate = orderDate.getValue();
             Date date = Date.from(localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
@@ -1070,41 +1081,137 @@ public class POEditorController {
             po.setSupplier(supplier);
             po.setInvoiceType(comboBoxInvoiceType.getValue());
             po.setInvoiceNo(txtInvoiceNo.getText());
-            po.setFreight(new BigDecimal(txtFreight.getText()));
+            po.setFreight(NumberValidationUtils.isRealNumber(txtFreight.getText())?new BigDecimal(txtFreight.getText()):BigDecimal.ZERO);
             po.setNotes(txtNotes.getText());
             po.setOperator(txtOperator.getText());
             po.setPayment(comboBoxPayments.getValue());
             //货款金额
-            po.setPurchaseAmount(new BigDecimal(txtPurchaseAmount.getText()));
+            po.setPurchaseAmount(NumberValidationUtils.isRealNumber(txtPurchaseAmount.getText())?new BigDecimal(txtPurchaseAmount.getText()):BigDecimal.ZERO);
             //代垫费用
-            po.setDisbursement(new BigDecimal(txtDisbursement.getText()));
+            po.setDisbursement(NumberValidationUtils.isRealNumber(txtDisbursement.getText())?new BigDecimal(txtDisbursement.getText()):BigDecimal.ZERO);
             //本次优惠
-            po.setDiscountAmount(new BigDecimal(txtDiscountAmount.getText()));
+            po.setDiscountAmount(NumberValidationUtils.isRealNumber(txtDiscountAmount.getText())?new BigDecimal(txtDiscountAmount.getText()):BigDecimal.ZERO);
             //应付总额
-            po.setAmountPayable(new BigDecimal(txtAmountPayable.getText()));
+            po.setAmountPayable(NumberValidationUtils.isRealNumber(txtAmountPayable.getText())?new BigDecimal(txtAmountPayable.getText()):BigDecimal.ZERO);
             //本次付款
-            po.setPaymentAmount(new BigDecimal(txtPaymentAmount.getText()));
+            po.setPaymentAmount(NumberValidationUtils.isRealNumber(txtAmountPayable.getText())?new BigDecimal(txtPaymentAmount.getText()):BigDecimal.ZERO);
             //账号
             po.setAccount(comboBoxAccount.getValue());
             //系统登录账号
             po.setUserName(txtLoginAccount.getText());
-
-            System.out.println(po);
-
+            //仓库
+            po.setWarehouse(Env.getInstance().currentStore().getWarehouse());
+            //状态
+            po.setStatus(status);
+            //创建人
+            po.setCreator(Env.getInstance().currentUser());
+            //创建采购订单对象
+            String json = GoogleJson.GET().toJson(po);
+            try {
+                String idStr = HttpClient.POST("/purchaseOrders", json);
+                po.setId(Long.valueOf(idStr));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            //创建采购订单明细
+            ObservableList<PurchaseOrderItem> items = tableView.getItems();
+            items.forEach(e -> {
+                if(e.getSku() != null) {
+                    e.setPurchaseOrder(po);
+                    String data = GoogleJson.GET().toJson(e);
+                    try {
+                        String idStr = HttpClient.POST("/purchaseOrderItems", data);
+                        e.setId(Long.valueOf(idStr));
+                    } catch (IOException e2) {
+                        e2.printStackTrace();
+                    }
+                }
+            });
+            callback.call(po);
         } else {
-
+            //更新原有记录
+            PurchaseOrder po = new PurchaseOrder();
+            po.setId(this.po.getId());
+            LocalDate localDate = orderDate.getValue();
+            Date date = Date.from(localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+            po.setOrderDate(date);
+            po.setOrderNo(txtOrderNo.getText());
+            po.setSupplier(supplier);
+            po.setInvoiceType(comboBoxInvoiceType.getValue());
+            po.setInvoiceNo(txtInvoiceNo.getText());
+            po.setFreight(NumberValidationUtils.isRealNumber(txtFreight.getText())?new BigDecimal(txtFreight.getText()):BigDecimal.ZERO);
+            po.setNotes(txtNotes.getText());
+            po.setOperator(txtOperator.getText());
+            po.setPayment(comboBoxPayments.getValue());
+            //货款金额
+            po.setPurchaseAmount(NumberValidationUtils.isRealNumber(txtPurchaseAmount.getText())?new BigDecimal(txtPurchaseAmount.getText()):BigDecimal.ZERO);
+            //代垫费用
+            po.setDisbursement(NumberValidationUtils.isRealNumber(txtDisbursement.getText())?new BigDecimal(txtDisbursement.getText()):BigDecimal.ZERO);
+            //本次优惠
+            po.setDiscountAmount(NumberValidationUtils.isRealNumber(txtDiscountAmount.getText())?new BigDecimal(txtDiscountAmount.getText()):BigDecimal.ZERO);
+            //应付总额
+            po.setAmountPayable(NumberValidationUtils.isRealNumber(txtAmountPayable.getText())?new BigDecimal(txtAmountPayable.getText()):BigDecimal.ZERO);
+            //本次付款
+            po.setPaymentAmount(NumberValidationUtils.isRealNumber(txtAmountPayable.getText())?new BigDecimal(txtPaymentAmount.getText()):BigDecimal.ZERO);
+            //账号
+            po.setAccount(comboBoxAccount.getValue());
+            //系统登录账号
+            po.setUserName(txtLoginAccount.getText());
+            //仓库
+            po.setWarehouse(Env.getInstance().currentStore().getWarehouse());
+            //状态
+            po.setStatus(status);
+            //创建人
+            po.setCreator(Env.getInstance().currentUser());
+            String json = GoogleJson.GET().toJson(po);
+            try {
+                HttpClient.PUT("/purchaseOrders/"+po.getId(), json);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            //更新或创建采购订单明细
+            ObservableList<PurchaseOrderItem> items = tableView.getItems();
+            items.forEach(e -> {
+                if(e.getSku() != null) {
+                    e.setPurchaseOrder(po);
+                    String data = GoogleJson.GET().toJson(e);
+                    if(e.getId() == 0L) {
+                        try {
+                            String idStr = HttpClient.POST("/purchaseOrderItems", data);
+                            e.setId(Long.valueOf(idStr));
+                        } catch (IOException e2) {
+                            e2.printStackTrace();
+                        }
+                    } else {
+                        try {
+                            HttpClient.PUT("/purchaseOrderItems/"+po.getId(), data);
+                        } catch (IOException e2) {
+                            e2.printStackTrace();
+                        }
+                    }
+                }
+            });
+            //删除已经移除的行
+            deletedIds.forEach(PurchaseOrderItemId -> {
+                try {
+                    HttpClient.DELETE("/purchaseOrderItems/"+PurchaseOrderItemId);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+            callback.call(po);
         }
     }
 
     @FXML
     private void save() {
-        saveOrUpdate();
+        saveOrUpdate(Constants.UNCLOSED);
         dialog.close();
     }
 
     @FXML
     private void submit() {
-        saveOrUpdate();
+        saveOrUpdate(Constants.CLOSED);
         dialog.close();
     }
 

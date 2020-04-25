@@ -45,6 +45,8 @@ public class PurchaseOrder {
     private BigDecimal paymentAmount;
     /** 账号 */
     private String account;
+    /** 还款金额 */
+    private BigDecimal repaymentAmount;
     /** 还款日期 */
     private Date repaymentDate;
     /** 订单状态 */
@@ -62,7 +64,7 @@ public class PurchaseOrder {
 
     public PurchaseOrder() {}
 
-    public PurchaseOrder(Long id, String orderNo, Date orderDate, Warehouse warehouse, Supplier supplier, String invoiceType, String invoiceNo, BigDecimal freight, String notes, String operator, String userName, String payment, BigDecimal purchaseAmount, BigDecimal disbursement, BigDecimal discountAmount, BigDecimal amountPayable, BigDecimal paymentAmount, String account, Date repaymentDate, String status, Date dateCreated, String creator, Date dateDeleted, Boolean deleteFlag, String deleter) {
+    public PurchaseOrder(Long id, String orderNo, Date orderDate, Warehouse warehouse, Supplier supplier, String invoiceType, String invoiceNo, BigDecimal freight, String notes, String operator, String userName, String payment, BigDecimal purchaseAmount, BigDecimal disbursement, BigDecimal discountAmount, BigDecimal amountPayable, BigDecimal paymentAmount, String account, BigDecimal repaymentAmount, Date repaymentDate, String status, Date dateCreated, String creator, Date dateDeleted, Boolean deleteFlag, String deleter) {
         this.id = id;
         this.orderNo = orderNo;
         this.orderDate = orderDate;
@@ -81,6 +83,7 @@ public class PurchaseOrder {
         this.amountPayable = amountPayable;
         this.paymentAmount = paymentAmount;
         this.account = account;
+        this.repaymentAmount = repaymentAmount;
         this.repaymentDate = repaymentDate;
         this.status = status;
         this.dateCreated = dateCreated;
@@ -232,6 +235,14 @@ public class PurchaseOrder {
 
     public void setAccount(String account) {
         this.account = account;
+    }
+
+    public BigDecimal getRepaymentAmount() {
+        return repaymentAmount;
+    }
+
+    public void setRepaymentAmount(BigDecimal repaymentAmount) {
+        this.repaymentAmount = repaymentAmount;
     }
 
     public Date getRepaymentDate() {

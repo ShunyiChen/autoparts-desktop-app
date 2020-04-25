@@ -24,6 +24,11 @@ public class Constants {
     public static final String EMPTY = "";
     public static final String AVAILABLE = "可用";
     public static final String UNAVAILABLE = "不可用";
+    /** 采购订单状态 */
+    public static final String CLOSED = "已结订单";
+    /** 采购订单状态 */
+    public static final String UNCLOSED = "未结订单";
+
     /** 升序 */
     public static final String ASC = "升序";
     /** 降序 */
@@ -38,6 +43,8 @@ public class Constants {
 
 
 
+
+
     /** 初始ID值 */
     public static final Long ID = 0L;
     /** 根节点父ID值 */
@@ -47,9 +54,4 @@ public class Constants {
 
     /** 创建日期pattern */
     public static final String PATTERN = "yyyy-MM-dd HH:mm:ss";
-
-    /** 采购订单状态-未结算 */
-    public static final String UNCLOSED = "未结算";
-    /** 采购订单状态-已结算 */
-    public static final String CLOSED = "已结算";
 }

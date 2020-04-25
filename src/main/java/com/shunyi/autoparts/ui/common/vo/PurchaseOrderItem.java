@@ -167,4 +167,24 @@ public class PurchaseOrderItem {
     public void setNotes(String notes) {
         this.notes = notes;
     }
+
+    @Override
+    public String toString() {
+        return "PurchaseOrderItem{" +
+                "id=" + id +
+                ", purchaseOrder=" + purchaseOrder +
+//                ", sku=" + sku +
+                ", quantity=" + quantity +
+                ", amount=" + amount +
+                ", discount=" + discount +
+                ", discountedAmount=" + discountedAmount +
+                ", taxRate=" + taxRate +
+                ", taxAmount=" + taxAmount +
+                ", priceIncludingTax=" + priceIncludingTax +
+                ", amountIncludingTax=" + amountIncludingTax +
+                ", priceExcludingTax=" + priceExcludingTax +
+                ", amountExcludingTax=" + amountExcludingTax +
+                ", notes='" + notes + '\'' +
+                '}';
+    }
 }
