@@ -33,10 +33,16 @@ public class PurchaseOrder {
     private String userName;
     /** 结算方式 */
     private String payment;
+    /** 进货数量 */
+    private Integer purchaseQty;
+    /** 已入库数量 */
+    private Integer warehouseQty;
+    /** 退货数量合计 */
+    private Integer returnedTotalQty;
     /** 货款金额 */
     private BigDecimal purchaseAmount;
     /** 垫付费用 */
-    private BigDecimal disbursement;
+    private BigDecimal disbursementAmount;
     /** 本次优惠 */
     private BigDecimal discountAmount;
     /** 应付总额 */
@@ -64,7 +70,7 @@ public class PurchaseOrder {
 
     public PurchaseOrder() {}
 
-    public PurchaseOrder(Long id, String orderNo, Date orderDate, Warehouse warehouse, Supplier supplier, String invoiceType, String invoiceNo, BigDecimal freight, String notes, String operator, String userName, String payment, BigDecimal purchaseAmount, BigDecimal disbursement, BigDecimal discountAmount, BigDecimal amountPayable, BigDecimal paymentAmount, String account, BigDecimal repaymentAmount, Date repaymentDate, String status, Date dateCreated, String creator, Date dateDeleted, Boolean deleteFlag, String deleter) {
+    public PurchaseOrder(Long id, String orderNo, Date orderDate, Warehouse warehouse, Supplier supplier, String invoiceType, String invoiceNo, BigDecimal freight, String notes, String operator, String userName, String payment, Integer purchaseQty, Integer warehouseQty, Integer returnedTotalQty, BigDecimal purchaseAmount, BigDecimal disbursement, BigDecimal discountAmount, BigDecimal amountPayable, BigDecimal paymentAmount, String account, BigDecimal repaymentAmount, Date repaymentDate, String status, Date dateCreated, String creator, Date dateDeleted, Boolean deleteFlag, String deleter) {
         this.id = id;
         this.orderNo = orderNo;
         this.orderDate = orderDate;
@@ -77,8 +83,11 @@ public class PurchaseOrder {
         this.operator = operator;
         this.userName = userName;
         this.payment = payment;
+        this.purchaseQty = purchaseQty;
+        this.warehouseQty = warehouseQty;
+        this.returnedTotalQty = returnedTotalQty;
         this.purchaseAmount = purchaseAmount;
-        this.disbursement = disbursement;
+        this.disbursementAmount = disbursementAmount;
         this.discountAmount = discountAmount;
         this.amountPayable = amountPayable;
         this.paymentAmount = paymentAmount;
@@ -189,6 +198,14 @@ public class PurchaseOrder {
         this.payment = payment;
     }
 
+    public Integer getPurchaseQty() {
+        return purchaseQty;
+    }
+
+    public void setPurchaseQty(Integer purchaseQty) {
+        this.purchaseQty = purchaseQty;
+    }
+
     public BigDecimal getPurchaseAmount() {
         return purchaseAmount;
     }
@@ -197,12 +214,12 @@ public class PurchaseOrder {
         this.purchaseAmount = purchaseAmount;
     }
 
-    public BigDecimal getDisbursement() {
-        return disbursement;
+    public BigDecimal getDisbursementAmount() {
+        return disbursementAmount;
     }
 
-    public void setDisbursement(BigDecimal disbursement) {
-        this.disbursement = disbursement;
+    public void setDisbursementAmount(BigDecimal disbursementAmount) {
+        this.disbursementAmount = disbursementAmount;
     }
 
     public BigDecimal getDiscountAmount() {
@@ -301,6 +318,22 @@ public class PurchaseOrder {
         this.deleter = deleter;
     }
 
+    public Integer getWarehouseQty() {
+        return warehouseQty;
+    }
+
+    public void setWarehouseQty(Integer warehouseQty) {
+        this.warehouseQty = warehouseQty;
+    }
+
+    public Integer getReturnedTotalQty() {
+        return returnedTotalQty;
+    }
+
+    public void setReturnedTotalQty(Integer returnedTotalQty) {
+        this.returnedTotalQty = returnedTotalQty;
+    }
+
     @Override
     public String toString() {
         return "PurchaseOrder{" +
@@ -316,12 +349,16 @@ public class PurchaseOrder {
                 ", operator='" + operator + '\'' +
                 ", userName='" + userName + '\'' +
                 ", payment='" + payment + '\'' +
+                ", purchaseQty=" + purchaseQty +
+                ", warehouseQty=" + warehouseQty +
+                ", returnedTotalQty=" + returnedTotalQty +
                 ", purchaseAmount=" + purchaseAmount +
-                ", disbursement=" + disbursement +
+                ", disbursementAmount=" + disbursementAmount +
                 ", discountAmount=" + discountAmount +
                 ", amountPayable=" + amountPayable +
                 ", paymentAmount=" + paymentAmount +
                 ", account='" + account + '\'' +
+                ", repaymentAmount=" + repaymentAmount +
                 ", repaymentDate=" + repaymentDate +
                 ", status='" + status + '\'' +
                 ", dateCreated=" + dateCreated +
