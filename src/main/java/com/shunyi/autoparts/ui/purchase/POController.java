@@ -15,6 +15,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -24,6 +26,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
@@ -45,6 +48,8 @@ public class POController {
     private ComboBox<String> comboBoxSupplier;
     @FXML
     private TextField txtNo;
+    @FXML
+    private TextField txtWarehouse;
     @FXML
     private TextField txtOperator;
     @FXML
@@ -200,16 +205,24 @@ public class POController {
 
     @FXML
     private void search() {
+        PurchaseOrder confition = new PurchaseOrder();
+//        confition.setSupplier();
 
     }
 
     @FXML
     private void clearQueryConditions() {
-        txtNo.setText("");
+        comboBoxSupplier.setValue(null);
         comboBoxInvoiceType.setValue(null);
-        txtNotes.setText("");
         comboBoxStatus.setValue(null);
+        txtNo.setText("");
+        txtWarehouse.setText("");
+        radioBtnOrderDate.setSelected(true);
+        txtOperator.setText("");
+        comboBoxPayment.setValue("");
         fromDate.setValue(null);
+        txtUserName.setText("");
+        txtNotes.setText("");
         toDate.setValue(null);
     }
 
@@ -219,9 +232,7 @@ public class POController {
 
     public void initialize(MainApp application) {
         this.application = application;
-
         initSearchFields();
-
         initTable();
     }
 
@@ -268,6 +279,11 @@ public class POController {
     private void initTable() {
         tableView.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
         tableView.setId("my-table");
+        tableView.setOnMouseClicked((MouseEvent event) -> {
+            if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2){
+                update();
+            }
+        });
         //订单号
         colOrderNo.setCellValueFactory(param -> {
             if(param.getValue().getOrderNo() == null) {

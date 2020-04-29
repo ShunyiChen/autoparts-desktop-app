@@ -171,7 +171,7 @@
        </VBox>
    </top>
    <center>
-      <TableView fx:id="tableView" prefHeight="454.0" prefWidth="1832.0" BorderPane.alignment="CENTER">
+      <TableView fx:id="tableView" prefHeight="454.0" prefWidth="1832.0" tableMenuButtonVisible="true" BorderPane.alignment="CENTER">
         <columns>
             <TableColumn fx:id="colOrderNo" prefWidth="220.0" text="进货单号" />
             <TableColumn fx:id="colOrderDate" prefWidth="120.0" text="进货日期" />
