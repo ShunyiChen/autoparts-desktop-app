@@ -1,33 +1,35 @@
 package com.shunyi.autoparts.ui.purchase;
 
 import com.shunyi.autoparts.ui.MainApp;
-import com.shunyi.autoparts.ui.common.AutoCompleteBox;
-import com.shunyi.autoparts.ui.common.Constants;
-import com.shunyi.autoparts.ui.common.HttpClient;
+import com.shunyi.autoparts.ui.common.*;
 import com.shunyi.autoparts.ui.common.vo.InvoiceType;
 import com.shunyi.autoparts.ui.common.vo.Payment;
 import com.shunyi.autoparts.ui.common.vo.PurchaseOrder;
 import com.shunyi.autoparts.ui.common.vo.Supplier;
+import com.shunyi.autoparts.ui.supplier.SupplierChooserController;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.print.*;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.transform.Scale;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.stream.Collectors;
 
 /**
@@ -39,7 +41,6 @@ import java.util.stream.Collectors;
 public class POController {
     private MainApp application;
     private POEditorController poEditorController;
-
     @FXML
     private RadioButton radioBtnOrderDate;
     @FXML
@@ -49,7 +50,7 @@ public class POController {
     @FXML
     private TextField txtNo;
     @FXML
-    private TextField txtWarehouse;
+    private ComboBox<String> comboBoxWarehouse;
     @FXML
     private TextField txtOperator;
     @FXML
@@ -154,6 +155,7 @@ public class POController {
             alert.show();
             return;
         }
+        boolean readOnly = po.getStatus().equals(Constants.CLOSED);
         Callback<PurchaseOrder, String> callback = new Callback<PurchaseOrder, String>() {
             @Override
             public String call(PurchaseOrder updated) {
@@ -179,7 +181,7 @@ public class POController {
         Scene scene = new Scene(root);
         Stage dialog = new Stage();
         poEditorController = loader.getController();
-        poEditorController.initialize(dialog, callback, po,false);
+        poEditorController.initialize(dialog, callback, po,readOnly);
         dialog.setTitle("更新采购订单");
         dialog.initOwner(application.getStage());
         dialog.setResizable(true);
@@ -204,10 +206,56 @@ public class POController {
     }
 
     @FXML
+    private void print() {
+        HBox node = new HBox();
+        Label s = new Label("dsdsddsds");
+        node.getChildren().add(s);
+
+        Printer printer = Printer.getDefaultPrinter();
+        PageLayout pageLayout = printer.createPageLayout(Paper.NA_LETTER, PageOrientation.PORTRAIT, Printer.MarginType.DEFAULT);
+        double scaleX = pageLayout.getPrintableWidth() / node.getBoundsInParent().getWidth();
+        double scaleY = pageLayout.getPrintableHeight() / node.getBoundsInParent().getHeight();
+        node.getTransforms().add(new Scale(scaleX, scaleY));
+
+        PrinterJob job = PrinterJob.createPrinterJob();
+        if (job != null) {
+            boolean success = job.printPage(node);
+            if (success) {
+                job.endJob();
+            }
+        }
+    }
+
+    @FXML
     private void search() {
         PurchaseOrder confition = new PurchaseOrder();
-//        confition.setSupplier();
-
+        Supplier supplier = new Supplier();
+        supplier.setCode(comboBoxSupplier.getValue());
+        confition.setSupplier(supplier);
+        confition.setOrderNo(txtNo.getText());
+        confition.setOperator(txtOperator.getText());
+        confition.setUserName(txtUserName.getText());
+        confition.setInvoiceType(comboBoxInvoiceType.getValue());
+        confition.setWarehouse(Env.getInstance().currentStore().getWarehouse());
+        confition.setPayment(comboBoxPayment.getValue());
+        confition.setNotes(txtNotes.getText());
+        confition.setStatus(comboBoxStatus.getValue());
+        confition.setDateType(radioBtnOrderDate.isSelected()?"单据日期":"还款日期");
+        if(fromDate.getValue() != null && toDate.getValue() != null) {
+            confition.setFromDate(Date.from(fromDate.getValue().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
+            confition.setToDate(Date.from(toDate.getValue().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
+        }
+        String json = GoogleJson.GET().toJson(confition);
+        String data = null;
+        try {
+            data = HttpClient.POST("/purchaseOrders/search", json);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        PurchaseOrder[] results = GoogleJson.GET().fromJson(data, PurchaseOrder[].class);
+        tableView.getItems().clear();
+        tableView.getItems().addAll(results);
+        tableView.refresh();
     }
 
     @FXML
@@ -216,7 +264,7 @@ public class POController {
         comboBoxInvoiceType.setValue(null);
         comboBoxStatus.setValue(null);
         txtNo.setText("");
-        txtWarehouse.setText("");
+        comboBoxWarehouse.setValue(null);
         radioBtnOrderDate.setSelected(true);
         txtOperator.setText("");
         comboBoxPayment.setValue("");
@@ -225,6 +273,121 @@ public class POController {
         txtNotes.setText("");
         toDate.setValue(null);
     }
+
+    @FXML
+    private void openSupplierChooser() {
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource(
+                        "/fxml/supplier/SupplierChooser.fxml"
+                )
+        );
+        VBox root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Scene scene = new Scene(root);
+        Stage subStage = new Stage();
+        SupplierChooserController controller = loader.getController();
+        Callback<Supplier, String> callback = returnedSupplier -> {
+            if(returnedSupplier != null) {
+                if(!comboBoxSupplier.getItems().contains(returnedSupplier.getCode())) {
+                    comboBoxSupplier.getItems().add(0, returnedSupplier.getCode());
+                }
+                comboBoxSupplier.setValue(returnedSupplier.getCode());
+            }
+            return null;
+        };
+        controller.initialize(subStage, callback, null);
+        subStage.setTitle("选择供应商");
+        subStage.initOwner(application.getStage());
+        subStage.setResizable(false);
+        subStage.initModality(Modality.APPLICATION_MODAL);
+        subStage.setScene(scene);
+        // center stage on screen
+        subStage.centerOnScreen();
+        subStage.show();
+    }
+
+    @FXML
+    private void openInvoiceTypeChooser() {
+        Callback<InvoiceType, String> callback = new Callback<InvoiceType, String>() {
+            @Override
+            public String call(InvoiceType param) {
+                if(param != null) {
+                    if(!comboBoxInvoiceType.getItems().contains(param.getName())) {
+                        comboBoxInvoiceType.getItems().add(0, param.getName());
+                    }
+                    comboBoxInvoiceType.setValue(param.getName());
+                }
+                return null;
+            }
+        };
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource(
+                        "/fxml/purchase/InvoiceTypeChooser.fxml"
+                )
+        );
+        BorderPane root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Scene scene = new Scene(root);
+        Stage dialog = new Stage();
+        InvoiceTypeChooserController controller = loader.getController();
+        controller.initialize(dialog, callback, null);
+        dialog.setTitle("发票类型选择器");
+        dialog.initOwner(application.getStage());
+        dialog.setResizable(false);
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.setScene(scene);
+        // center stage on screen
+        dialog.centerOnScreen();
+        dialog.show();
+    }
+
+    @FXML
+    private void openPaymentChooser() {
+        Callback<Payment, String> callback = new Callback<Payment, String>() {
+            @Override
+            public String call(Payment param) {
+                if(param != null) {
+                    if(!comboBoxPayment.getItems().contains(param.getName())) {
+                        comboBoxPayment.getItems().add(0, param.getName());
+                    }
+                    comboBoxPayment.setValue(param.getName());
+                }
+                return null;
+            }
+        };
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource(
+                        "/fxml/purchase/PaymentChooser.fxml"
+                )
+        );
+        BorderPane root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Scene scene = new Scene(root);
+        Stage dialog = new Stage();
+        PaymentChooserController controller = loader.getController();
+        controller.initialize(dialog, callback);
+        dialog.setTitle("结算方式选择器");
+        dialog.initOwner(application.getStage());
+        dialog.setResizable(false);
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.setScene(scene);
+        // center stage on screen
+        dialog.centerOnScreen();
+        dialog.show();
+    }
+
 
     public void clean() {
         tableView.getItems().clear();
@@ -274,6 +437,8 @@ public class POController {
         comboBoxStatus.getItems().addAll(Constants.CLOSED, Constants.UNCLOSED);
         new AutoCompleteBox(comboBoxStatus);
 
+        //仓库
+        comboBoxWarehouse.getItems().add(Env.getInstance().currentStore().getWarehouse().getName());
     }
 
     private void initTable() {

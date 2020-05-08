@@ -54,6 +54,8 @@ public class POEditorController {
     /** 账号 */
     private Account account;
     @FXML
+    private Button btnSave;
+    @FXML
     private Button btnSubmit;
     /** 单据日期 */
     @FXML
@@ -360,6 +362,11 @@ public class POEditorController {
 
             initSupplier();
             updateSummary();
+        }
+        if(readOnly) {
+            btnSave.setDisable(true);
+            btnSubmit.setDisable(true);
+            tableView.setEditable(false);
         }
     }
 
@@ -1131,7 +1138,22 @@ public class POEditorController {
      * 确认提交
      */
     private void confirmAndSubmit() {
+        String header = "采购单: "+txtOrderNo.getText()+"\n请谨慎确定以下数据:\n";
+        StringBuilder content = new StringBuilder();
+        content.append("============================================\n");
+        content.append("\n应付货款金额: "+txtPurchaseAmount.getText()+" 元 \n");
+        content.append("\n代垫费用金额: "+txtDisbursement.getText()+" 元 \n");
+        content.append("\n本次优惠金额: "+txtDiscountAmount.getText()+" 元 \n");
+        content.append("\n总计应付金额: "+txtAmountPayable.getText()+" 元 \n");
+        content.append("\n本次实付金额: "+txtPaymentAmount.getText()+" 元 \n\n");
 
+        Alert alertConfirm = new Alert(Alert.AlertType.CONFIRMATION, "", ButtonType.NO, ButtonType.YES);
+        alertConfirm.setHeaderText(header);
+        alertConfirm.setContentText(content.toString());
+        alertConfirm.showAndWait().filter(response -> response == ButtonType.YES).ifPresent(response -> {
+            saveOrUpdate(Constants.CLOSED);
+            dialog.close();
+        });
     }
 
     /**
@@ -1200,6 +1222,15 @@ public class POEditorController {
                     } catch (IOException e2) {
                         e2.printStackTrace();
                     }
+                    //如果结算，则处理入库数量
+                    if(status.equals(Constants.CLOSED)) {
+                        String json2 = GoogleJson.GET().toJson(e.getQuantity());
+                        try {
+                            HttpClient.PUT("/sku/stockQty/"+e.getSku().getId(), json2);
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
                 }
             });
             callback.call(po);
@@ -1265,9 +1296,18 @@ public class POEditorController {
                         }
                     } else {
                         try {
-                            HttpClient.PUT("/purchaseOrderItems/"+po.getId(), data);
+                            HttpClient.PUT("/purchaseOrderItems/"+e.getId(), data);
                         } catch (IOException e2) {
                             e2.printStackTrace();
+                        }
+                    }
+                    //如果结算，则处理入库数量
+                    if(status.equals(Constants.CLOSED)) {
+                        String json2 = GoogleJson.GET().toJson(e.getQuantity());
+                        try {
+                            HttpClient.PUT("/sku/stockQty/"+e.getSku().getId(), json2);
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
                         }
                     }
                 }
@@ -1293,8 +1333,6 @@ public class POEditorController {
     @FXML
     private void submit() {
         confirmAndSubmit();
-//        saveOrUpdate(Constants.CLOSED);
-        dialog.close();
     }
 
     private void openProductChooser() {

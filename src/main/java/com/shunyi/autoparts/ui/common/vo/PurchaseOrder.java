@@ -67,6 +67,12 @@ public class PurchaseOrder {
     private Boolean deleteFlag;
     /** 删除者 */
     private String deleter;
+    /** 搜索日期类型 */
+    private String dateType;
+    /** 起始日期 */
+    private Date fromDate;
+    /** 结束日期 */
+    private Date toDate;
 
     public PurchaseOrder() {}
 
@@ -334,6 +340,30 @@ public class PurchaseOrder {
         this.returnedTotalQty = returnedTotalQty;
     }
 
+    public String getDateType() {
+        return dateType;
+    }
+
+    public void setDateType(String dateType) {
+        this.dateType = dateType;
+    }
+
+    public Date getFromDate() {
+        return fromDate;
+    }
+
+    public void setFromDate(Date fromDate) {
+        this.fromDate = fromDate;
+    }
+
+    public Date getToDate() {
+        return toDate;
+    }
+
+    public void setToDate(Date toDate) {
+        this.toDate = toDate;
+    }
+
     @Override
     public String toString() {
         return "PurchaseOrder{" +
@@ -366,6 +396,9 @@ public class PurchaseOrder {
                 ", dateDeleted=" + dateDeleted +
                 ", deleteFlag=" + deleteFlag +
                 ", deleter='" + deleter + '\'' +
+                ", dateType='" + dateType + '\'' +
+                ", fromDate=" + fromDate +
+                ", toDate=" + toDate +
                 '}';
     }
 }

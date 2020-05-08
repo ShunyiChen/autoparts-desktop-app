@@ -38,6 +38,12 @@
                           <Font size="14.0" />
                       </font>
                   </Button>
+                  <Separator />
+                  <Button layoutX="62.0" layoutY="11.0" mnemonicParsing="false" onAction="#print" text="打 印">
+                      <font>
+                          <Font size="14.0" />
+                      </font>
+                  </Button>
               </items>
             </ToolBar>
                <FlowPane alignment="CENTER_LEFT" prefHeight="38.0" prefWidth="511.0">
@@ -48,17 +54,17 @@
                            </font>
                        </Label>
                   <ComboBox fx:id="comboBoxSupplier" prefHeight="30.0" prefWidth="170.0" />
-                  <Button mnemonicParsing="false" text="..." />
-                       <Label alignment="CENTER_RIGHT" layoutX="10.0" layoutY="21.0" prefHeight="19.0" prefWidth="60.0" text="单 号:">
-                           <font>
-                               <Font size="14.0" />
-                           </font>
-                       </Label>
-                       <TextField fx:id="txtNo" layoutX="140.0" layoutY="16.0" prefWidth="170.0">
-                           <font>
-                               <Font size="14.0" />
-                           </font>
-                       </TextField>
+                  <Button mnemonicParsing="false" text="..." onAction="#openSupplierChooser"/>
+                   <Label alignment="CENTER_RIGHT" layoutX="10.0" layoutY="21.0" prefHeight="19.0" prefWidth="60.0" text="单 号:">
+                       <font>
+                           <Font size="14.0" />
+                       </font>
+                   </Label>
+                   <TextField fx:id="txtNo" layoutX="140.0" layoutY="16.0" prefWidth="170.0">
+                       <font>
+                           <Font size="14.0" />
+                       </font>
+                   </TextField>
                   <Label alignment="CENTER_RIGHT" prefHeight="19.0" prefWidth="65.0" text="经办人:">
                      <font>
                         <Font size="14.0" />
@@ -102,24 +108,20 @@
                            </font>
                        </Label>
                   <ComboBox fx:id="comboBoxInvoiceType" prefHeight="30.0" prefWidth="170.0" />
-                  <Button mnemonicParsing="false" text="..." />
-                       <Label alignment="CENTER_RIGHT" prefHeight="19.0" prefWidth="60.0" text="仓 库:">
-                           <font>
-                               <Font size="14.0" />
-                           </font>
-                       </Label>
-                       <TextField fx:id="txtWarehouse" prefWidth="170.0">
-                           <font>
-                               <Font size="14.0" />
-                           </font>
-                       </TextField>
+                  <Button mnemonicParsing="false" text="..." onAction="#openInvoiceTypeChooser"/>
+                   <Label alignment="CENTER_RIGHT" prefHeight="19.0" prefWidth="60.0" text="仓 库:">
+                       <font>
+                           <Font size="14.0" />
+                       </font>
+                   </Label>
+                  <ComboBox fx:id="comboBoxWarehouse" prefHeight="30.0" prefWidth="170.0" />
                   <Label alignment="CENTER_RIGHT" layoutX="232.0" layoutY="20.0" prefHeight="19.0" prefWidth="65.0" text="结算方式:">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
                   <ComboBox fx:id="comboBoxPayment" layoutX="82.0" layoutY="14.0" prefHeight="30.0" prefWidth="170.0" />
-                  <Button layoutX="232.0" layoutY="18.0" mnemonicParsing="false" text="..." />
+                  <Button layoutX="232.0" layoutY="18.0" mnemonicParsing="false" text="..." onAction="#openPaymentChooser"/>
                   <Label alignment="CENTER_RIGHT" prefHeight="19.0" prefWidth="47.0" text="备注:">
                      <font>
                         <Font size="14.0" />
