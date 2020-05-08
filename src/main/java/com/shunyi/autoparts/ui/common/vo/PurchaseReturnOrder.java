@@ -4,11 +4,11 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 /**
- * @description 采购订单VO
+ * @description 采购退货单VO
  * @author Shunyi Chen
- * @date 2020/4/18
+ * @date 2020/5/9
  */
-public class PurchaseOrder {
+public class PurchaseReturnOrder {
     /** ID */
     private Long id;
     /** 业务单号 */
@@ -74,9 +74,9 @@ public class PurchaseOrder {
     /** 结束日期 */
     private Date toDate;
 
-    public PurchaseOrder() {}
+    public PurchaseReturnOrder() {}
 
-    public PurchaseOrder(Long id, String orderNo, Date orderDate, Warehouse warehouse, Supplier supplier, String invoiceType, String invoiceNo, BigDecimal freight, String notes, String operator, String userName, String payment, Integer purchaseQty, Integer warehouseQty, Integer returnedTotalQty, BigDecimal purchaseAmount, BigDecimal disbursementAmount, BigDecimal discountAmount, BigDecimal amountPayable, BigDecimal paymentAmount, String account, BigDecimal repaymentAmount, Date repaymentDate, String status, Date dateCreated, String creator, Date dateDeleted, Boolean deleteFlag, String deleter) {
+    public PurchaseReturnOrder(Long id, String orderNo, Date orderDate, Warehouse warehouse, Supplier supplier, String invoiceType, String invoiceNo, BigDecimal freight, String notes, String operator, String userName, String payment, Integer purchaseQty, Integer warehouseQty, Integer returnedTotalQty, BigDecimal purchaseAmount, BigDecimal disbursementAmount, BigDecimal discountAmount, BigDecimal amountPayable, BigDecimal paymentAmount, String account, BigDecimal repaymentAmount, Date repaymentDate, String status, Date dateCreated, String creator, Date dateDeleted, Boolean deleteFlag, String deleter) {
         this.id = id;
         this.orderNo = orderNo;
         this.orderDate = orderDate;

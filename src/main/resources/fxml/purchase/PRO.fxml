@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="635.0" prefWidth="1156.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.shunyi.autoparts.ui.purchase.PROController">
+   <top>
+       <VBox prefHeight="142.0" prefWidth="1832.0" BorderPane.alignment="CENTER">
+           <children>
+            <ToolBar prefHeight="40.0" prefWidth="200.0">
+              <items>
+                <Button mnemonicParsing="false" onAction="#create" text="新 建">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Button>
+                  <Separator />
+                  <Button layoutX="10.0" layoutY="11.0" mnemonicParsing="false" onAction="#update" text="更 改">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Button>
+                  <Button layoutX="62.0" layoutY="11.0" mnemonicParsing="false" onAction="#refresh" text="刷 新">
+                      <font>
+                          <Font size="14.0" />
+                      </font>
+                  </Button>
+                  <Separator />
+                  <Button layoutX="62.0" layoutY="11.0" mnemonicParsing="false" onAction="#print" text="打 印">
+                      <font>
+                          <Font size="14.0" />
+                      </font>
+                  </Button>
+              </items>
+            </ToolBar>
+               <FlowPane alignment="CENTER_LEFT" prefHeight="38.0" prefWidth="511.0">
+                   <children>
+                       <Label alignment="CENTER_RIGHT" prefWidth="72.0" text="供应商:">
+                           <font>
+                               <Font size="14.0" />
+                           </font>
+                       </Label>
+                  <ComboBox fx:id="comboBoxSupplier" prefHeight="30.0" prefWidth="170.0" />
+                  <Button mnemonicParsing="false" text="..." onAction="#openSupplierChooser"/>
+                   <Label alignment="CENTER_RIGHT" layoutX="10.0" layoutY="21.0" prefHeight="19.0" prefWidth="60.0" text="单 号:">
+                       <font>
+                           <Font size="14.0" />
+                       </font>
+                   </Label>
+                   <TextField fx:id="txtNo" layoutX="140.0" layoutY="16.0" prefWidth="170.0">
+                       <font>
+                           <Font size="14.0" />
+                       </font>
+                   </TextField>
+                  <Label alignment="CENTER_RIGHT" prefHeight="19.0" prefWidth="65.0" text="经办人:">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="txtOperator" prefWidth="170.0">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </TextField>
+                  <Label alignment="CENTER_RIGHT" prefHeight="19.0" prefWidth="72.0" text="操作员:">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="txtUserName" prefHeight="29.0" prefWidth="170.0">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </TextField>
+                       <Button mnemonicParsing="false" onAction="#search" text="查 询">
+                           <font>
+                               <Font size="14.0" />
+                           </font>
+                     <FlowPane.margin>
+                        <Insets left="15.0" right="10.0" />
+                     </FlowPane.margin>
+                       </Button>
+                       <Button mnemonicParsing="false" onAction="#clearQueryConditions" text="清 空">
+                           <font>
+                               <Font size="14.0" />
+                           </font>
+                       </Button>
+                   </children>
+               </FlowPane>
+               <FlowPane alignment="CENTER_LEFT" prefHeight="38.0" prefWidth="200.0">
+                   <children>
+                       <Label alignment="CENTER_RIGHT" prefHeight="19.0" prefWidth="72.0" text="发票类型:">
+                           <font>
+                               <Font size="14.0" />
+                           </font>
+                       </Label>
+                  <ComboBox fx:id="comboBoxInvoiceType" prefHeight="30.0" prefWidth="170.0" />
+                  <Button mnemonicParsing="false" text="..." onAction="#openInvoiceTypeChooser"/>
+                   <Label alignment="CENTER_RIGHT" prefHeight="19.0" prefWidth="60.0" text="仓 库:">
+                       <font>
+                           <Font size="14.0" />
+                       </font>
+                   </Label>
+                  <ComboBox fx:id="comboBoxWarehouse" prefHeight="30.0" prefWidth="170.0" />
+                  <Label alignment="CENTER_RIGHT" layoutX="232.0" layoutY="20.0" prefHeight="19.0" prefWidth="65.0" text="结算方式:">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <ComboBox fx:id="comboBoxPayment" layoutX="82.0" layoutY="14.0" prefHeight="30.0" prefWidth="170.0" />
+                  <Button layoutX="232.0" layoutY="18.0" mnemonicParsing="false" text="..." onAction="#openPaymentChooser"/>
+                  <Label alignment="CENTER_RIGHT" prefHeight="19.0" prefWidth="47.0" text="备注:">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="txtNotes" prefHeight="29.0" prefWidth="170.0">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </TextField>
+                   </children>
+               </FlowPane>
+            <FlowPane alignment="CENTER_LEFT" layoutX="10.0" layoutY="50.0" prefHeight="38.0" prefWidth="511.0">
+               <children>
+                       <Label alignment="CENTER_RIGHT" prefHeight="19.0" prefWidth="72.0" text="状态:">
+                           <font>
+                               <Font size="14.0" />
+                           </font>
+                       </Label>
+                  <ComboBox fx:id="comboBoxStatus" prefHeight="30.0" prefWidth="170.0">
+                     <FlowPane.margin>
+                        <Insets right="50.0" />
+                     </FlowPane.margin></ComboBox>
+                  <RadioButton fx:id="radioBtnOrderDate" mnemonicParsing="false" prefHeight="19.0" prefWidth="89.0" selected="true" text="单据日期">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </RadioButton>
+                  <RadioButton fx:id="radioBtnRepaymentDate" mnemonicParsing="false" prefHeight="19.0" prefWidth="85.0" text="还款日期">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </RadioButton>
+                  <Label alignment="CENTER_RIGHT" prefHeight="19.0" prefWidth="96.0" text="时间段从:">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <DatePicker fx:id="fromDate" prefHeight="28.0" prefWidth="170.0" />
+                  <Label alignment="CENTER_RIGHT" prefHeight="19.0" prefWidth="72.0" text="到:">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <DatePicker fx:id="toDate" layoutX="312.0" layoutY="15.0" prefHeight="28.0" prefWidth="170.0" />
+               </children>
+            </FlowPane>
+           </children>
+       </VBox>
+   </top>
+   <center>
+      <TableView fx:id="tableView" prefHeight="454.0" prefWidth="1832.0" tableMenuButtonVisible="true" BorderPane.alignment="CENTER">
+        <columns>
+            <TableColumn fx:id="colOrderNo" prefWidth="220.0" text="进货单号" />
+            <TableColumn fx:id="colOrderDate" prefWidth="120.0" text="进货日期" />
+            <TableColumn fx:id="colSupplierName" prefWidth="120.0" text="供应商名称" />
+            <TableColumn fx:id="colWarehouse" prefWidth="120.0" text="仓库名称" />
+            <TableColumn fx:id="colOperator" prefWidth="120.0" text="经办人" />
+            <TableColumn fx:id="colUserName" prefWidth="120.0" text="操作员" />
+            <TableColumn fx:id="colPurchaseQty" prefWidth="120.0" text="进货数量" />
+            <TableColumn fx:id="colWarehouseQty" prefWidth="120.0" text="已入库数量" />
+            <TableColumn fx:id="colReturnedTotalQty" prefWidth="120.0" text="退货数量合计" />
+            <TableColumn fx:id="colAmountExcludingTax" prefWidth="120.0" text="未税金额" />
+            <TableColumn fx:id="colAmountIncludingTax" prefWidth="75.0" text="含税金额" />
+            <TableColumn fx:id="colPayment" prefWidth="90.0" text="结算方式" />
+            <TableColumn fx:id="colInvoiceType" prefWidth="75.0" text="发票类型" />
+            <TableColumn fx:id="colNotes" prefWidth="88.0" text="备注" />
+            <TableColumn fx:id="colStatus" prefWidth="75.0" text="状态" />
+            <TableColumn fx:id="colRepaymentDate" prefWidth="75.0" text="还款日期" />
+            <TableColumn fx:id="colDisbursementAmount" prefWidth="75.0" text="代垫金额" />
+            <TableColumn fx:id="colRepaymentAmount" prefWidth="75.0" text="已还金额" />
+            <TableColumn fx:id="colDiscountAmount" prefWidth="75.0" text="优惠金额" />
+            <TableColumn fx:id="colAccount" prefWidth="90.0" text="账号" />
+        </columns>
+         <BorderPane.margin>
+            <Insets bottom="30.0" />
+         </BorderPane.margin>
+      </TableView>
+   </center>
+</BorderPane>

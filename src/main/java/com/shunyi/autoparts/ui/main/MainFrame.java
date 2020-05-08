@@ -7,7 +7,7 @@ import com.shunyi.autoparts.ui.inventory.InventoryDetails;
 import com.shunyi.autoparts.ui.inventory.InventoryingOrder;
 import com.shunyi.autoparts.ui.inventory.PriceAdjustmentOrder;
 import com.shunyi.autoparts.ui.purchase.PO;
-import com.shunyi.autoparts.ui.purchase.PurchaseReturnOrder;
+import com.shunyi.autoparts.ui.purchase.PRO;
 import com.shunyi.autoparts.ui.purchase.PurchaseView;
 import com.shunyi.autoparts.ui.sale.SalesOrder;
 import com.shunyi.autoparts.ui.sale.SalesReturnOrder;
@@ -103,7 +103,7 @@ public class MainFrame extends BorderPane {
             public Object call(Object param) {
                 toolbar.setTitle(Constants.PURCHASE_RETURN_ORDER);
                 if(purchaseReturnOrderTab == null) {
-                    purchaseReturnOrderTab = new NewTab(Constants.PURCHASE_RETURN_ORDER, new PurchaseReturnOrder());
+                    purchaseReturnOrderTab = new NewTab(Constants.PURCHASE_RETURN_ORDER, new PRO(application));
                 }
                 contentPane.addNewTab(purchaseReturnOrderTab);
                 return null;

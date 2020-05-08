@@ -9,16 +9,16 @@ import javafx.scene.layout.BorderPane;
 import java.io.IOException;
 
 /**
- * @Description: 采购单
+ * @Description: 采购退货单
  * @Author: Shunyi Chen
- * @CreateDate: 2020/3/23 23:00
- * @Version: 1.0
+ * @CreateDate: 2020/5/9
  */
-public class PO extends TabContent {
-    private MainApp application;
-    private POController poController;
+public class PRO extends TabContent {
 
-    public PO(MainApp application) {
+    private MainApp application;
+    private PROController proController;
+
+    public PRO(MainApp application) {
         this.application = application;
         initComponents();
     }
@@ -26,7 +26,7 @@ public class PO extends TabContent {
     private void initComponents() {
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource(
-                        "/fxml/purchase/PO.fxml"
+                        "/fxml/purchase/PRO.fxml"
                 )
         );
         BorderPane root = null;
@@ -35,8 +35,8 @@ public class PO extends TabContent {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        poController = loader.getController();
-        poController.initialize(application);
+        proController = loader.getController();
+        proController.initialize(application);
 
         //主面板右侧宽度
         DoubleBinding wBinding = application.getStage().widthProperty().subtract(application.getMainFrame().getNavigation().widthProperty().add(35));
@@ -48,8 +48,8 @@ public class PO extends TabContent {
 
     @Override
     protected void reload() {
-        poController.clean();
-        poController.initialize(application);
+        proController.clean();
+        proController.initialize(application);
     }
 
     @Override
