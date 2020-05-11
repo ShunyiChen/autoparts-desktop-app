@@ -4,11 +4,11 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 /**
- * @description 采购退货单VO
- * @author Shunyi Chen
- * @date 2020/5/9
+ * @description 销售单VO
+ * @author Shunyi
+ * @date 2020/5/11
  */
-public class PurchaseReturnOrder {
+public class SalesOrder {
     /** ID */
     private Long id;
     /** 业务单号 */
@@ -33,9 +33,9 @@ public class PurchaseReturnOrder {
     private String userName;
     /** 结算方式 */
     private String payment;
-    /** 退货数量 */
-    private Integer returnQty;
-    /** 可退货数量 */
+    /** 进货数量 */
+    private Integer purchaseQty;
+    /** 已入库数量 */
     private Integer warehouseQty;
     /** 退货数量合计 */
     private Integer returnedTotalQty;
@@ -74,9 +74,9 @@ public class PurchaseReturnOrder {
     /** 结束日期 */
     private Date toDate;
 
-    public PurchaseReturnOrder() {}
+    public SalesOrder() {}
 
-    public PurchaseReturnOrder(Long id, String orderNo, Date orderDate, Warehouse warehouse, Supplier supplier, String invoiceType, String invoiceNo, BigDecimal freight, String notes, String operator, String userName, String payment, Integer returnQty, Integer warehouseQty, Integer returnedTotalQty, BigDecimal purchaseAmount, BigDecimal disbursementAmount, BigDecimal discountAmount, BigDecimal amountPayable, BigDecimal paymentAmount, String account, BigDecimal repaymentAmount, Date repaymentDate, String status, Date dateCreated, String creator, Date dateDeleted, Boolean deleteFlag, String deleter) {
+    public SalesOrder(Long id, String orderNo, Date orderDate, Warehouse warehouse, Supplier supplier, String invoiceType, String invoiceNo, BigDecimal freight, String notes, String operator, String userName, String payment, Integer purchaseQty, Integer warehouseQty, Integer returnedTotalQty, BigDecimal purchaseAmount, BigDecimal disbursementAmount, BigDecimal discountAmount, BigDecimal amountPayable, BigDecimal paymentAmount, String account, BigDecimal repaymentAmount, Date repaymentDate, String status, Date dateCreated, String creator, Date dateDeleted, Boolean deleteFlag, String deleter) {
         this.id = id;
         this.orderNo = orderNo;
         this.orderDate = orderDate;
@@ -89,7 +89,7 @@ public class PurchaseReturnOrder {
         this.operator = operator;
         this.userName = userName;
         this.payment = payment;
-        this.returnQty = returnQty;
+        this.purchaseQty = purchaseQty;
         this.warehouseQty = warehouseQty;
         this.returnedTotalQty = returnedTotalQty;
         this.purchaseAmount = purchaseAmount;
@@ -204,12 +204,12 @@ public class PurchaseReturnOrder {
         this.payment = payment;
     }
 
-    public Integer getReturnQty() {
-        return returnQty;
+    public Integer getPurchaseQty() {
+        return purchaseQty;
     }
 
-    public void setReturnQty(Integer returnQty) {
-        this.returnQty = returnQty;
+    public void setPurchaseQty(Integer purchaseQty) {
+        this.purchaseQty = purchaseQty;
     }
 
     public BigDecimal getPurchaseAmount() {
@@ -366,7 +366,7 @@ public class PurchaseReturnOrder {
 
     @Override
     public String toString() {
-        return "PurchaseReturnOrder{" +
+        return "PurchaseOrder{" +
                 "id=" + id +
                 ", orderNo='" + orderNo + '\'' +
                 ", orderDate=" + orderDate +
@@ -379,7 +379,7 @@ public class PurchaseReturnOrder {
                 ", operator='" + operator + '\'' +
                 ", userName='" + userName + '\'' +
                 ", payment='" + payment + '\'' +
-                ", returnQty=" + returnQty +
+                ", purchaseQty=" + purchaseQty +
                 ", warehouseQty=" + warehouseQty +
                 ", returnedTotalQty=" + returnedTotalQty +
                 ", purchaseAmount=" + purchaseAmount +

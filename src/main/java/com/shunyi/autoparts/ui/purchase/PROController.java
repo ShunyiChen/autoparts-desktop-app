@@ -41,10 +41,6 @@ public class PROController {
     private MainApp application;
     private PROEditorController proEditorController;
     @FXML
-    private RadioButton radioBtnOrderDate;
-    @FXML
-    private RadioButton radioBtnRepaymentDate;
-    @FXML
     private ComboBox<String> comboBoxSupplier;
     @FXML
     private TextField txtNo;
@@ -73,6 +69,8 @@ public class PROController {
     @FXML
     private TableColumn<PurchaseReturnOrder, String> colOrderDate;
     @FXML
+    private TableColumn<PurchaseReturnOrder, String> colSupplierCode;
+    @FXML
     private TableColumn<PurchaseReturnOrder, String> colSupplierName;
     @FXML
     private TableColumn<PurchaseReturnOrder, String> colWarehouse;
@@ -81,9 +79,7 @@ public class PROController {
     @FXML
     private TableColumn<PurchaseReturnOrder, String> colUserName;
     @FXML
-    private TableColumn<PurchaseReturnOrder, String> colPurchaseQty;
-    @FXML
-    private TableColumn<PurchaseReturnOrder, String> colWarehouseQty;
+    private TableColumn<PurchaseReturnOrder, String> colReturnQty;
     @FXML
     private TableColumn<PurchaseReturnOrder, String> colReturnedTotalQty;
     @FXML
@@ -132,8 +128,8 @@ public class PROController {
         }
         Scene scene = new Scene(root);
         Stage dialog = new Stage();
-//        proEditorController = loader.getController();
-//        proEditorController.initialize(dialog, callback, null,false);
+        proEditorController = loader.getController();
+        proEditorController.initialize(dialog, callback, null,false);
         dialog.setTitle("新建采购退货订单");
         dialog.initOwner(application.getStage());
         dialog.setResizable(true);
@@ -179,9 +175,9 @@ public class PROController {
         }
         Scene scene = new Scene(root);
         Stage dialog = new Stage();
-//        proEditorController = loader.getController();
-//        proEditorController.initialize(dialog, callback, po, readOnly);
-        dialog.setTitle("更新采购退货单");
+        proEditorController = loader.getController();
+        proEditorController.initialize(dialog, callback, po, readOnly);
+        dialog.setTitle("更改采购退货单");
         dialog.initOwner(application.getStage());
         dialog.setResizable(true);
         dialog.setMaximized(true);
@@ -190,6 +186,38 @@ public class PROController {
         // center stage on screen
         dialog.centerOnScreen();
         dialog.show();
+    }
+
+    @FXML
+    private void delete() {
+        PurchaseReturnOrder selected = tableView.getSelectionModel().getSelectedItem();
+        if(selected != null) {
+            if(selected.getStatus().equals(Constants.CLOSED)) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
+                alert.setHeaderText("无法删除已结算的订单");
+                alert.show();
+                return;
+            }
+            Alert alertConfirm = new Alert(Alert.AlertType.CONFIRMATION, "", ButtonType.NO, ButtonType.YES);
+            alertConfirm.setHeaderText("请确认是否要删除退货单？");
+            alertConfirm.showAndWait().filter(response -> response == ButtonType.YES).ifPresent(response -> {
+
+                //删除订单明细
+                try {
+                    HttpClient.DELETE("/purchaseReturnOrderItems/order/"+selected.getId());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                //删除订单
+                try {
+                    HttpClient.DELETE("/purchaseReturnOrders/"+selected.getId());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                tableView.getItems().remove(selected);
+                tableView.refresh();
+            });
+        }
     }
 
     @FXML
@@ -239,7 +267,6 @@ public class PROController {
         confition.setPayment(comboBoxPayment.getValue());
         confition.setNotes(txtNotes.getText());
         confition.setStatus(comboBoxStatus.getValue());
-        confition.setDateType(radioBtnOrderDate.isSelected()?"单据日期":"还款日期");
         if(fromDate.getValue() != null && toDate.getValue() != null) {
             confition.setFromDate(Date.from(fromDate.getValue().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
             confition.setToDate(Date.from(toDate.getValue().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
@@ -264,7 +291,6 @@ public class PROController {
         comboBoxStatus.setValue(null);
         txtNo.setText("");
         comboBoxWarehouse.setValue(null);
-        radioBtnOrderDate.setSelected(true);
         txtOperator.setText("");
         comboBoxPayment.setValue("");
         fromDate.setValue(null);
@@ -399,9 +425,6 @@ public class PROController {
     }
 
     private void initSearchFields() {
-        ToggleGroup tg = new ToggleGroup();
-        radioBtnOrderDate.setToggleGroup(tg);
-        radioBtnRepaymentDate.setToggleGroup(tg);
         //获取供应商列表
         try {
             Supplier[] suppliers = HttpClient.GET("/suppliers", Supplier[].class);
@@ -438,6 +461,9 @@ public class PROController {
 
         //仓库
         comboBoxWarehouse.getItems().add(Env.getInstance().currentStore().getWarehouse().getName());
+
+        //账号
+
     }
 
     private void initTable() {
@@ -463,6 +489,14 @@ public class PROController {
                 return new SimpleObjectProperty<>("");
             } else {
                 return new SimpleObjectProperty<>(format.format(param.getValue().getOrderDate()));
+            }
+        });
+        //供应商编码
+        colSupplierCode.setCellValueFactory(param -> {
+            if(param.getValue().getSupplier() == null) {
+                return new SimpleObjectProperty<>("");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getSupplier().getCode());
             }
         });
         //供应商名称
@@ -498,21 +532,21 @@ public class PROController {
             }
         });
         //进货数量
-        colPurchaseQty.setCellValueFactory(param -> {
-            if(param.getValue().getPurchaseQty() == null) {
+        colReturnQty.setCellValueFactory(param -> {
+            if(param.getValue().getReturnQty() == null) {
                 return new SimpleObjectProperty<>("");
             } else {
-                return new SimpleObjectProperty<>(param.getValue().getPurchaseQty().intValue()+"");
+                return new SimpleObjectProperty<>(param.getValue().getReturnQty().intValue()+"");
             }
         });
-        //入库数量
-        colWarehouseQty.setCellValueFactory(param -> {
-            if(param.getValue().getWarehouseQty() == null) {
-                return new SimpleObjectProperty<>("");
-            } else {
-                return new SimpleObjectProperty<>(param.getValue().getWarehouseQty().intValue()+"");
-            }
-        });
+//        //入库数量
+//        colWarehouseQty.setCellValueFactory(param -> {
+//            if(param.getValue().getWarehouseQty() == null) {
+//                return new SimpleObjectProperty<>("");
+//            } else {
+//                return new SimpleObjectProperty<>(param.getValue().getWarehouseQty().intValue()+"");
+//            }
+//        });
         //退货数量合计
         colReturnedTotalQty.setCellValueFactory(param -> {
             if(param.getValue().getReturnedTotalQty() == null) {

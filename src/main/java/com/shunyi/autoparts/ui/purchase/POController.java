@@ -194,6 +194,37 @@ public class POController {
     }
 
     @FXML
+    private void delete() {
+        PurchaseOrder selected = tableView.getSelectionModel().getSelectedItem();
+        if(selected != null) {
+            if(selected.getStatus().equals(Constants.CLOSED)) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
+                alert.setHeaderText("无法删除已结算的订单");
+                alert.show();
+                return;
+            }
+            Alert alertConfirm = new Alert(Alert.AlertType.CONFIRMATION, "", ButtonType.NO, ButtonType.YES);
+            alertConfirm.setHeaderText("请确认是否要删除采购单？");
+            alertConfirm.showAndWait().filter(response -> response == ButtonType.YES).ifPresent(response -> {
+                //删除订单明细
+                try {
+                    HttpClient.DELETE("/purchaseOrderItems/order/"+selected.getId());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                //删除订单
+                try {
+                    HttpClient.DELETE("/purchaseOrders/"+selected.getId());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                tableView.getItems().remove(selected);
+                tableView.refresh();
+            });
+        }
+    }
+
+    @FXML
     private void refresh() {
         tableView.getItems().clear();
         try {

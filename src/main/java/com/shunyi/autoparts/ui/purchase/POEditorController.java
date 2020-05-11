@@ -409,7 +409,7 @@ public class POEditorController {
         //单号
         try {
             User user = HttpClient.GET("/users/username/"+Env.getInstance().currentUser(), User.class);
-            String generatedOrderNo = HttpClient.GET("/purchaseOrders/orderNo/"+user.getId());
+            String generatedOrderNo = HttpClient.GET("/purchaseOrders/generation/orderNo/"+user.getId());
             txtOrderNo.setText(generatedOrderNo);
         } catch (IOException e) {
             e.printStackTrace();
