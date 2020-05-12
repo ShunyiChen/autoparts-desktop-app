@@ -47,11 +47,13 @@ public class SOEditorController {
     private Callback<TableColumn<SalesOrderItem, String>, TableCell<SalesOrderItem, String>> cellFactory;
     private List<Long> deletedIds = new ArrayList<>();
     /** 采购订单 */
-    private SalesOrder po;
+    private SalesOrder so;
     /** 客户 */
     private Consumer consumer;
     /** 发票类型 */
     private InvoiceType invoiceType;
+    /** 发货方式 */
+    private Delivery delivery;
     /** 结算方式 */
     private Payment payment;
     /** 账号 */
@@ -78,18 +80,39 @@ public class SOEditorController {
     /** 电话 */
     @FXML
     private TextField txtPhone;
+    /** 备注 */
+    @FXML
+    private TextField txtNotes;
     /** 发票类型 */
     @FXML
     private ComboBox<String> comboBoxInvoiceType;
+    /** 发货方式 */
+    @FXML
+    private ComboBox<String> comboBoxDelivery;
+    /** 到货地点 */
+    @FXML
+    private TextField txtDeliveryAddress;
+    /** 货运编码 */
+    @FXML
+    private TextField txtFreightCode;
+    /** 货运名称 */
+    @FXML
+    private TextField txtFreightName;
+    /** 收货人 */
+    @FXML
+    private TextField txtConsignee;
+    /** 收货人电话 */
+    @FXML
+    private TextField txtTel;
     /** 发票号 */
     @FXML
     private TextField txtInvoiceNo;
     /** 运费 */
     @FXML
     private TextField txtFreight;
-    /** 备注 */
+    /** 是否货运站收款 */
     @FXML
-    private TextField txtNotes;
+    private CheckBox checkboxStationCollection;
     /** 结算方式 */
     @FXML
     private ComboBox<String> comboBoxPayments;
@@ -108,12 +131,15 @@ public class SOEditorController {
     /** 本次优惠 */
     @FXML
     private TextField txtDiscountAmount;
-    /** 应付总额 */
+    /** 应收总额 */
     @FXML
-    private TextField txtAmountPayable;
-    /** 本次付款 */
+    private TextField txtAmountReceivable;
+    /** 本次收款 */
     @FXML
-    private TextField txtPaymentAmount;
+    private TextField txtPayeeAmount;
+    /** 本次欠款 */
+    @FXML
+    private TextField txtAmountOwed;
     /**经办人 */
     @FXML
     private TextField txtOperator;
@@ -215,7 +241,7 @@ public class SOEditorController {
     private TableColumn<SalesOrderItem, String> colManual;
     /** 客户 */
     @FXML
-    private TableColumn<SalesOrderItem, String> colConsumer;
+    private TableColumn<SalesOrderItem, String> colSupplier;
     /** 一级进价 */
     @FXML
     private TableColumn<SalesOrderItem, String> colPurchasingPrice1;
@@ -306,65 +332,77 @@ public class SOEditorController {
      *
      * @param dialog
      * @param callback
-     * @param po
+     * @param so
      * @param readOnly
      */
-    public void initialize(Stage dialog, Callback<SalesOrder, String> callback, SalesOrder po, boolean readOnly) {
+    public void initialize(Stage dialog, Callback<SalesOrder, String> callback, SalesOrder so, boolean readOnly) {
         this.dialog = dialog;
         this.callback = callback;
-        this.po = po;
+        this.so = so;
         this.readOnly = readOnly;
         btnSubmit.setStyle(String.format("-fx-base: %s;", "rgb(63,81,181)"));
         initCellFactory();
         initInputFields();
         initTable();
-        if(po == null) {
+        if(so == null) {
             addItem();
         } else {
             //单据日期
-            LocalDate localDate = po.getOrderDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            LocalDate localDate = so.getOrderDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             orderDate.setValue(localDate);
             //单号
-            txtOrderNo.setText(po.getOrderNo());
-//            //客户编码
-//            comboBoxConsumerCode.setValue(po.getConsumer().getCode());
+            txtOrderNo.setText(so.getOrderNo());
+            //客户编码
+            comboBoxConsumerCode.setValue(so.getConsumer().getCode());
+            //发货方式
+            comboBoxDelivery.setValue(so.getDelivery().getName());
+            //到货地点
+            txtDeliveryAddress.setText(so.getDeliveryAddress());
             //发票类型
-            comboBoxInvoiceType.setValue(po.getInvoiceType());
+            comboBoxInvoiceType.setValue(so.getInvoiceType());
             //发票No
-            txtInvoiceNo.setText(po.getInvoiceNo());
+            txtInvoiceNo.setText(so.getInvoiceNo());
             //运费
-            txtFreight.setText(po.getFreight()+"");
+            txtFreight.setText(so.getFreight()+"");
             //备注
-            txtNotes.setText(po.getNotes());
+            txtNotes.setText(so.getNotes());
             //经办人
-            txtOperator.setText(po.getOperator());
+            txtOperator.setText(so.getOperator());
             //结算方式
-            comboBoxPayments.setValue(po.getPayment());
+            comboBoxPayments.setValue(so.getPayment());
             //系统账号
-            txtLoginAccount.setText(po.getUserName());
+            txtLoginAccount.setText(so.getUserName());
             //货款金额
-            txtPurchaseAmount.setText(po.getPurchaseAmount().toString());
+            txtPurchaseAmount.setText(so.getPurchaseAmount().toString());
             //代垫费用
-            txtDisbursement.setText(po.getDisbursementAmount().toString());
+            txtDisbursement.setText(so.getDisbursementAmount().toString());
             //本次优惠
-            txtDiscountAmount.setText(po.getDiscountAmount().toString());
-//            //应付总额
-//            txtAmountPayable.setText(po.getAmountPayable().toString());
-//            //本次付款
-//            txtPaymentAmount.setText(po.getPaymentAmount().toString());
+            txtDiscountAmount.setText(so.getDiscountAmount().toString());
+            //应收总额
+            txtAmountReceivable.setText(so.getAmountReceivable().toString());
+            //本次收款
+            txtPayeeAmount.setText(so.getPayeeAmount().toString());
+            //本次欠款
+            txtAmountOwed.setText(so.getAmountOwed().toString());
             //账号
-            comboBoxAccount.setValue(po.getAccount());
+            comboBoxAccount.setValue(so.getAccount());
+            //货运站收款
+            checkboxStationCollection.setSelected(so.isFreightStationCollection());
+
             try {
-                SalesOrderItem[] items = HttpClient.GET("/purchaseOrderItems/order/"+po.getId(), SalesOrderItem[].class);
+                SalesOrderItem[] items = HttpClient.GET("/salesOrderItems/order/"+so.getId(), SalesOrderItem[].class);
                 for(SalesOrderItem item : items) {
                     addItem(item);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
             initConsumer();
+            initDelivery();
             updateSummary();
+
+            txtTel.setText(so.getTel());
+            txtConsignee.setText(so.getConsignee());
         }
         if(readOnly) {
             btnSave.setDisable(true);
@@ -396,10 +434,36 @@ public class SOEditorController {
                 txtConsumerName.setText(consumer.getName());
                 txtContact.setText(consumer.getContact());
                 txtPhone.setText(consumer.getPhone());
+                txtConsignee.setText(consumer.getContact());
+                txtTel.setText(consumer.getPhone());
             } else {
                 txtConsumerName.setText("");
                 txtContact.setText("");
                 txtPhone.setText("");
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    /**
+     * 初始化发货方式
+     */
+    private void initDelivery() {
+        Delivery condition = new Delivery();
+        condition.setName(comboBoxDelivery.getValue());
+        String json = GoogleJson.GET().toJson(condition);
+        String data;
+        try {
+            data = HttpClient.POST("/deliveries/search", json);
+            Delivery[] deliveries = GoogleJson.GET().fromJson(data, Delivery[].class);
+            if(deliveries.length > 0) {
+                delivery = deliveries[0];
+                txtFreightCode.setText(delivery.getFreightCode());
+                txtFreightName.setText(delivery.getFreightName());
+            } else {
+                txtFreightCode.setText("");
+                txtFreightName.setText("");
             }
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -412,7 +476,7 @@ public class SOEditorController {
         //单号
         try {
             User user = HttpClient.GET("/users/username/"+Env.getInstance().currentUser(), User.class);
-            String generatedOrderNo = HttpClient.GET("/purchaseOrders/generation/orderNo/"+user.getId());
+            String generatedOrderNo = HttpClient.GET("/salesOrders/generation/orderNo/"+user.getId());
             txtOrderNo.setText(generatedOrderNo);
         } catch (IOException e) {
             e.printStackTrace();
@@ -439,6 +503,22 @@ public class SOEditorController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        //获取发货方式列表
+        try {
+            Delivery[] deliveries = HttpClient.GET("/deliveries", Delivery[].class);
+            comboBoxDelivery.getItems().addAll(Arrays.asList(deliveries).stream().map(e -> e.getName()).collect(Collectors.toList()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        comboBoxDelivery.setOnKeyReleased(e -> {
+            if(e.getCode() == KeyCode.ENTER) {
+                initDelivery();
+            }
+        });
+        comboBoxDelivery.setOnAction(e -> {
+            initDelivery();
+        });
+
         //获取结算方式列表
         try {
             Payment[] payments = HttpClient.GET("/payments", Payment[].class);
@@ -457,7 +537,7 @@ public class SOEditorController {
         new AutoCompleteBox(comboBoxInvoiceType);
         new AutoCompleteBox(comboBoxPayments);
         new AutoCompleteBox(comboBoxAccount);
-
+        new AutoCompleteBox(comboBoxDelivery);
         txtLoginAccount.setText(Env.getInstance().currentUser());
     }
 
@@ -759,14 +839,14 @@ public class SOEditorController {
                 return new SimpleObjectProperty<>(param.getValue().getSku().getProduct().getMaterials());
             }
         });
-//        //客户
-//        colConsumer.setCellValueFactory(param -> {
-//            if(param.getValue().getSku() == null || param.getValue().getSku().getProduct().getConsumer() == null) {
-//                return new SimpleObjectProperty<>("");
-//            } else {
-//                return new SimpleObjectProperty<>(param.getValue().getSku().getProduct().getConsumer().getName());
-//            }
-//        });
+        //供应商
+        colSupplier.setCellValueFactory(param -> {
+            if(param.getValue().getSku() == null || param.getValue().getSku().getProduct().getSupplier() == null) {
+                return new SimpleObjectProperty<>("");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getSku().getProduct().getSupplier().getName());
+            }
+        });
         //一级进价
         colPurchasingPrice1.setCellValueFactory(param -> {
             if(param.getValue().getSku() == null) {
@@ -960,9 +1040,10 @@ public class SOEditorController {
         labelTotalAmount.setText(totalAmount.toString());
         //货款金额
         txtPurchaseAmount.setText(totalAmount.toString());
-        //应付总额
-        txtAmountPayable.setText(totalAmount.toString());
-
+        //应收总额
+        txtAmountReceivable.setText(totalAmount.toString());
+        //本次收款
+        txtPayeeAmount.setText(totalAmount.toString());
     }
 
     @FXML
@@ -982,11 +1063,15 @@ public class SOEditorController {
         Stage subStage = new Stage();
         ConsumerChooserController controller = loader.getController();
         Callback<Consumer, String> callback = returnedConsumer -> {
-            consumer = returnedConsumer;
-            comboBoxConsumerCode.setValue(consumer.getCode());
-            txtConsumerName.setText(consumer.getName());
-            txtContact.setText(consumer.getContact());
-            txtPhone.setText(consumer.getPhone());
+            if(returnedConsumer != null) {
+                consumer = returnedConsumer;
+                comboBoxConsumerCode.setValue(consumer.getCode());
+                txtConsumerName.setText(consumer.getName());
+                txtContact.setText(consumer.getContact());
+                txtPhone.setText(consumer.getPhone());
+                txtConsignee.setText(consumer.getContact());
+                txtTel.setText(consumer.getPhone());
+            }
             return null;
         };
         controller.initialize(subStage, callback, consumer);
@@ -1026,6 +1111,43 @@ public class SOEditorController {
         InvoiceTypeChooserController controller = loader.getController();
         controller.initialize(dialog, callback, invoiceType);
         dialog.setTitle("发票类型选择器");
+        dialog.initOwner(this.dialog);
+        dialog.setResizable(false);
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.setScene(scene);
+        // center stage on screen
+        dialog.centerOnScreen();
+        dialog.show();
+    }
+
+    @FXML
+    private void openDeliveryChooser() {
+        Callback<Delivery, String> callback = new Callback<Delivery, String>() {
+            @Override
+            public String call(Delivery param) {
+                delivery = param;
+                comboBoxDelivery.setValue(delivery.getName());
+                txtFreightCode.setText(delivery.getFreightCode());
+                txtFreightName.setText(delivery.getFreightName());
+                return null;
+            }
+        };
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource(
+                        "/fxml/sales/DeliveryChooser.fxml"
+                )
+        );
+        BorderPane root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Scene scene = new Scene(root);
+        Stage dialog = new Stage();
+        DeliveryChooserController controller = loader.getController();
+        controller.initialize(dialog, callback, delivery);
+        dialog.setTitle("发货方式选择器");
         dialog.initOwner(this.dialog);
         dialog.setResizable(false);
         dialog.initModality(Modality.APPLICATION_MODAL);
@@ -1141,14 +1263,14 @@ public class SOEditorController {
      * 确认提交
      */
     private void confirmAndSubmit() {
-        String header = "采购单: "+txtOrderNo.getText()+"\n请谨慎确定以下数据:\n";
+        String header = "销售单: "+txtOrderNo.getText()+"\n请谨慎确定以下数据:\n";
         StringBuilder content = new StringBuilder();
         content.append("============================================\n");
         content.append("\n应付货款金额: "+txtPurchaseAmount.getText()+" 元 \n");
         content.append("\n代垫费用金额: "+txtDisbursement.getText()+" 元 \n");
         content.append("\n本次优惠金额: "+txtDiscountAmount.getText()+" 元 \n");
-        content.append("\n总计应付金额: "+txtAmountPayable.getText()+" 元 \n");
-        content.append("\n本次实付金额: "+txtPaymentAmount.getText()+" 元 \n\n");
+        content.append("\n总计应收金额: "+txtAmountReceivable.getText()+" 元 \n");
+        content.append("\n本次实收金额: "+txtPayeeAmount.getText()+" 元 \n\n");
 
         Alert alertConfirm = new Alert(Alert.AlertType.CONFIRMATION, "", ButtonType.NO, ButtonType.YES);
         alertConfirm.setHeaderText(header);
@@ -1165,51 +1287,58 @@ public class SOEditorController {
      * @param status
      */
     private void saveOrUpdate(String status) {
-        if(po == null) {
+        if(so == null) {
             //插入新记录
-            po = new SalesOrder();
+            so = new SalesOrder();
             LocalDate localDate = orderDate.getValue();
             Date date = Date.from(localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
-            po.setOrderDate(date);
-            po.setOrderNo(txtOrderNo.getText());
-//            po.setConsumer(consumer);
-            po.setInvoiceType(comboBoxInvoiceType.getValue());
-            po.setInvoiceNo(txtInvoiceNo.getText());
-            po.setFreight(NumberValidationUtils.isRealNumber(txtFreight.getText())?new BigDecimal(txtFreight.getText()):BigDecimal.ZERO);
-            po.setNotes(txtNotes.getText());
-            po.setOperator(txtOperator.getText());
-            po.setPayment(comboBoxPayments.getValue());
-//            //进货数量
-//            po.setPurchaseQty(Integer.parseInt(labelTotalQty.getText()));
-//            //已入库数量
-//            po.setWarehouseQty(po.getPurchaseQty());
+            so.setOrderDate(date);
+            so.setOrderNo(txtOrderNo.getText());
+            so.setConsumer(consumer);
+            so.setInvoiceType(comboBoxInvoiceType.getValue());
+            so.setInvoiceNo(txtInvoiceNo.getText());
+            so.setDelivery(delivery);
+            so.setDeliveryAddress(txtDeliveryAddress.getText());
+            so.setFreight(NumberValidationUtils.isRealNumber(txtFreight.getText())?new BigDecimal(txtFreight.getText()):BigDecimal.ZERO);
+            so.setConsignee(txtConsignee.getText());
+            so.setTel(txtTel.getText());
+            so.setFreightStationCollection(checkboxStationCollection.isSelected());
+            so.setNotes(txtNotes.getText());
+            so.setOperator(txtOperator.getText());
+            so.setPayment(comboBoxPayments.getValue());
+            //销售数量
+            so.setSalesQty(Integer.parseInt(labelTotalQty.getText()));
+            //已出库数量
+            so.setWarehouseQty(status.equals(Constants.CLOSED)?so.getSalesQty():0);
             //退货数量合计
-            po.setReturnedTotalQty(0);
+            so.setReturnedTotalQty(0);
             //货款金额
-            po.setPurchaseAmount(NumberValidationUtils.isRealNumber(txtPurchaseAmount.getText())?new BigDecimal(txtPurchaseAmount.getText()):BigDecimal.ZERO);
+            so.setPurchaseAmount(NumberValidationUtils.isRealNumber(txtPurchaseAmount.getText())?new BigDecimal(txtPurchaseAmount.getText()):BigDecimal.ZERO);
             //代垫费用
-            po.setDisbursementAmount(NumberValidationUtils.isRealNumber(txtDisbursement.getText())?new BigDecimal(txtDisbursement.getText()):BigDecimal.ZERO);
+            so.setDisbursementAmount(NumberValidationUtils.isRealNumber(txtDisbursement.getText())?new BigDecimal(txtDisbursement.getText()):BigDecimal.ZERO);
             //本次优惠
-            po.setDiscountAmount(NumberValidationUtils.isRealNumber(txtDiscountAmount.getText())?new BigDecimal(txtDiscountAmount.getText()):BigDecimal.ZERO);
-//            //应付总额
-//            po.setAmountPayable(NumberValidationUtils.isRealNumber(txtAmountPayable.getText())?new BigDecimal(txtAmountPayable.getText()):BigDecimal.ZERO);
-//            //本次付款
-//            po.setPaymentAmount(NumberValidationUtils.isRealNumber(txtAmountPayable.getText())?new BigDecimal(txtPaymentAmount.getText()):BigDecimal.ZERO);
+            so.setDiscountAmount(NumberValidationUtils.isRealNumber(txtDiscountAmount.getText())?new BigDecimal(txtDiscountAmount.getText()):BigDecimal.ZERO);
+            //应收总额
+            so.setAmountReceivable(NumberValidationUtils.isRealNumber(txtAmountReceivable.getText())?new BigDecimal(txtAmountReceivable.getText()):BigDecimal.ZERO);
+            //本次收款
+            so.setPayeeAmount(NumberValidationUtils.isRealNumber(txtPayeeAmount.getText())?new BigDecimal(txtPayeeAmount.getText()):BigDecimal.ZERO);
+            //本次欠款
+            so.setAmountOwed(NumberValidationUtils.isRealNumber(txtAmountOwed.getText())?new BigDecimal(txtAmountOwed.getText()):BigDecimal.ZERO);
             //账号
-            po.setAccount(comboBoxAccount.getValue());
+            so.setAccount(comboBoxAccount.getValue());
             //系统登录账号
-            po.setUserName(txtLoginAccount.getText());
+            so.setUserName(txtLoginAccount.getText());
             //仓库
-            po.setWarehouse(Env.getInstance().currentStore().getWarehouse());
+            so.setWarehouse(Env.getInstance().currentStore().getWarehouse());
             //状态
-            po.setStatus(status);
+            so.setStatus(status);
             //创建人
-            po.setCreator(Env.getInstance().currentUser());
+            so.setCreator(Env.getInstance().currentUser());
             //创建采购订单对象
-            String json = GoogleJson.GET().toJson(po);
+            String json = GoogleJson.GET().toJson(so);
             try {
-                String idStr = HttpClient.POST("/purchaseOrders", json);
-                po.setId(Long.valueOf(idStr));
+                String idStr = HttpClient.POST("/salesOrders", json);
+                so.setId(Long.valueOf(idStr));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -1217,70 +1346,69 @@ public class SOEditorController {
             ObservableList<SalesOrderItem> items = tableView.getItems();
             items.forEach(e -> {
                 if(e.getSku() != null) {
-                    e.setSalesOrder(po);
+                    e.setSalesOrder(so);
                     String data = GoogleJson.GET().toJson(e);
                     try {
-                        String idStr = HttpClient.POST("/purchaseOrderItems", data);
+                        String idStr = HttpClient.POST("/salesOrderItems", data);
                         e.setId(Long.valueOf(idStr));
                     } catch (IOException e2) {
                         e2.printStackTrace();
                     }
-                    //如果结算，则处理入库数量
-                    if(status.equals(Constants.CLOSED)) {
-                        String json2 = GoogleJson.GET().toJson(e.getQuantity());
-                        try {
-                            HttpClient.PUT("/sku/stockQty/"+e.getSku().getId(), json2);
-                        } catch (IOException ex) {
-                            ex.printStackTrace();
-                        }
-                    }
+                    updateStockQty(status, e);
                 }
             });
-            callback.call(po);
+            callback.call(so);
         } else {
             //更新原有记录
-            SalesOrder po = new SalesOrder();
-            po.setId(this.po.getId());
+            SalesOrder so = new SalesOrder();
+            so.setId(this.so.getId());
             LocalDate localDate = orderDate.getValue();
             Date date = Date.from(localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
-            po.setOrderDate(date);
-            po.setOrderNo(txtOrderNo.getText());
-//            po.setConsumer(consumer);
-            po.setInvoiceType(comboBoxInvoiceType.getValue());
-            po.setInvoiceNo(txtInvoiceNo.getText());
-            po.setFreight(NumberValidationUtils.isRealNumber(txtFreight.getText())?new BigDecimal(txtFreight.getText()):BigDecimal.ZERO);
-            po.setNotes(txtNotes.getText());
-            po.setOperator(txtOperator.getText());
-            po.setPayment(comboBoxPayments.getValue());
-//            //进货数量
-//            po.setPurchaseQty(Integer.parseInt(labelTotalQty.getText()));
-//            //已入库数量
-//            po.setWarehouseQty(po.getPurchaseQty());
+            so.setOrderDate(date);
+            so.setOrderNo(txtOrderNo.getText());
+            so.setConsumer(consumer);
+            so.setInvoiceType(comboBoxInvoiceType.getValue());
+            so.setInvoiceNo(txtInvoiceNo.getText());
+            so.setDelivery(delivery);
+            so.setDeliveryAddress(txtDeliveryAddress.getText());
+            so.setFreight(NumberValidationUtils.isRealNumber(txtFreight.getText())?new BigDecimal(txtFreight.getText()):BigDecimal.ZERO);
+            so.setConsignee(txtConsignee.getText());
+            so.setTel(txtTel.getText());
+            so.setFreightStationCollection(checkboxStationCollection.isSelected());
+            so.setNotes(txtNotes.getText());
+            so.setOperator(txtOperator.getText());
+            so.setPayment(comboBoxPayments.getValue());
+            //销售数量
+            so.setSalesQty(Integer.parseInt(labelTotalQty.getText()));
+            //已出库数量
+            so.setWarehouseQty(status.equals(Constants.CLOSED)?so.getSalesQty():0);
             //退货数量合计
-            po.setReturnedTotalQty(0);
+            so.setReturnedTotalQty(0);
             //货款金额
-            po.setPurchaseAmount(NumberValidationUtils.isRealNumber(txtPurchaseAmount.getText())?new BigDecimal(txtPurchaseAmount.getText()):BigDecimal.ZERO);
+            so.setPurchaseAmount(NumberValidationUtils.isRealNumber(txtPurchaseAmount.getText())?new BigDecimal(txtPurchaseAmount.getText()):BigDecimal.ZERO);
             //代垫费用
-            po.setDisbursementAmount(NumberValidationUtils.isRealNumber(txtDisbursement.getText())?new BigDecimal(txtDisbursement.getText()):BigDecimal.ZERO);
+            so.setDisbursementAmount(NumberValidationUtils.isRealNumber(txtDisbursement.getText())?new BigDecimal(txtDisbursement.getText()):BigDecimal.ZERO);
             //本次优惠
-            po.setDiscountAmount(NumberValidationUtils.isRealNumber(txtDiscountAmount.getText())?new BigDecimal(txtDiscountAmount.getText()):BigDecimal.ZERO);
-//            //应付总额
-//            po.setAmountPayable(NumberValidationUtils.isRealNumber(txtAmountPayable.getText())?new BigDecimal(txtAmountPayable.getText()):BigDecimal.ZERO);
-//            //本次付款
-//            po.setPaymentAmount(NumberValidationUtils.isRealNumber(txtAmountPayable.getText())?new BigDecimal(txtPaymentAmount.getText()):BigDecimal.ZERO);
-//            //账号
-            po.setAccount(comboBoxAccount.getValue());
+            so.setDiscountAmount(NumberValidationUtils.isRealNumber(txtDiscountAmount.getText())?new BigDecimal(txtDiscountAmount.getText()):BigDecimal.ZERO);
+            //应收总额
+            so.setAmountReceivable(NumberValidationUtils.isRealNumber(txtAmountReceivable.getText())?new BigDecimal(txtAmountReceivable.getText()):BigDecimal.ZERO);
+            //本次收款
+            so.setPayeeAmount(NumberValidationUtils.isRealNumber(txtPayeeAmount.getText())?new BigDecimal(txtPayeeAmount.getText()):BigDecimal.ZERO);
+            //本次欠款
+            so.setAmountOwed(NumberValidationUtils.isRealNumber(txtAmountOwed.getText())?new BigDecimal(txtAmountOwed.getText()):BigDecimal.ZERO);
+            //账号
+            so.setAccount(comboBoxAccount.getValue());
             //系统登录账号
-            po.setUserName(txtLoginAccount.getText());
+            so.setUserName(txtLoginAccount.getText());
             //仓库
-            po.setWarehouse(Env.getInstance().currentStore().getWarehouse());
+            so.setWarehouse(Env.getInstance().currentStore().getWarehouse());
             //状态
-            po.setStatus(status);
+            so.setStatus(status);
             //创建人
-            po.setCreator(Env.getInstance().currentUser());
-            String json = GoogleJson.GET().toJson(po);
+            so.setCreator(Env.getInstance().currentUser());
+            String json = GoogleJson.GET().toJson(so);
             try {
-                HttpClient.PUT("/purchaseOrders/"+po.getId(), json);
+                HttpClient.PUT("/salesOrders/"+so.getId(), json);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -1288,42 +1416,52 @@ public class SOEditorController {
             ObservableList<SalesOrderItem> items = tableView.getItems();
             items.forEach(e -> {
                 if(e.getSku() != null) {
-                    e.setSalesOrder(po);
+                    e.setSalesOrder(so);
                     String data = GoogleJson.GET().toJson(e);
                     if(e.getId() == 0L) {
                         try {
-                            String idStr = HttpClient.POST("/purchaseOrderItems", data);
+                            String idStr = HttpClient.POST("/salesOrderItems", data);
                             e.setId(Long.valueOf(idStr));
                         } catch (IOException e2) {
                             e2.printStackTrace();
                         }
                     } else {
                         try {
-                            HttpClient.PUT("/purchaseOrderItems/"+e.getId(), data);
+                            HttpClient.PUT("/salesOrderItems/"+e.getId(), data);
                         } catch (IOException e2) {
                             e2.printStackTrace();
                         }
                     }
-                    //如果结算，则处理入库数量
-                    if(status.equals(Constants.CLOSED)) {
-                        String json2 = GoogleJson.GET().toJson(e.getQuantity());
-                        try {
-                            HttpClient.PUT("/sku/stockQty/"+e.getSku().getId(), json2);
-                        } catch (IOException ex) {
-                            ex.printStackTrace();
-                        }
-                    }
+                    updateStockQty(status, e);
                 }
             });
             //删除已经移除的行
             deletedIds.forEach(SalesOrderItemId -> {
                 try {
-                    HttpClient.DELETE("/purchaseOrderItems/"+SalesOrderItemId);
+                    HttpClient.DELETE("/salesOrderItems/"+SalesOrderItemId);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             });
-            callback.call(po);
+            callback.call(so);
+        }
+    }
+
+    /**
+     * 更改库存数量
+     *
+     * @param status
+     * @param item
+     */
+    private void updateStockQty(String status, SalesOrderItem item) {
+        //如果结算，则处理入库数量
+        if(status.equals(Constants.CLOSED)) {
+            String json2 = GoogleJson.GET().toJson(0 - item.getQuantity());
+            try {
+                HttpClient.PUT("/sku/stockQty/"+item.getSku().getId(), json2);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
         }
     }
 

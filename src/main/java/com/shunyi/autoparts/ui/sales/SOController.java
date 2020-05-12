@@ -8,7 +8,6 @@ import com.shunyi.autoparts.ui.common.vo.SalesOrder;
 import com.shunyi.autoparts.ui.common.vo.Consumer;
 import com.shunyi.autoparts.ui.purchase.InvoiceTypeChooserController;
 import com.shunyi.autoparts.ui.purchase.PaymentChooserController;
-import com.shunyi.autoparts.ui.sales.SOEditorController;
 import com.shunyi.autoparts.ui.consumer.ConsumerChooserController;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
@@ -83,14 +82,14 @@ public class SOController {
     private TableColumn<SalesOrder, String> colOperator;
     @FXML
     private TableColumn<SalesOrder, String> colUserName;
-//    @FXML
-//    private TableColumn<SalesOrder, String> colPurchaseQty;
+    @FXML
+    private TableColumn<SalesOrder, String> colSalesQty;
     @FXML
     private TableColumn<SalesOrder, String> colWarehouseQty;
     @FXML
     private TableColumn<SalesOrder, String> colReturnedTotalQty;
-//    @FXML
-//    private TableColumn<SalesOrder, String> colAmountExcludingTax;
+    @FXML
+    private TableColumn<SalesOrder, String> colAmountExcludingTax;
 //    @FXML
 //    private TableColumn<SalesOrder, String> colAmountIncludingTax;
     @FXML
@@ -359,7 +358,7 @@ public class SOController {
         };
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource(
-                        "/fxml/sales/InvoiceTypeChooser.fxml"
+                        "/fxml/purchase/InvoiceTypeChooser.fxml"
                 )
         );
         BorderPane root = null;
@@ -398,7 +397,7 @@ public class SOController {
         };
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource(
-                        "/fxml/sales/PaymentChooser.fxml"
+                        "/fxml/purchase/PaymentChooser.fxml"
                 )
         );
         BorderPane root = null;
@@ -531,14 +530,14 @@ public class SOController {
                 return new SimpleObjectProperty<>(param.getValue().getUserName());
             }
         });
-//        //进货数量
-//        colPurchaseQty.setCellValueFactory(param -> {
-//            if(param.getValue().getPurchaseQty() == null) {
-//                return new SimpleObjectProperty<>("");
-//            } else {
-//                return new SimpleObjectProperty<>(param.getValue().getPurchaseQty().intValue()+"");
-//            }
-//        });
+        //销售数量
+        colSalesQty.setCellValueFactory(param -> {
+            if(param.getValue().getSalesQty() == null) {
+                return new SimpleObjectProperty<>("");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getSalesQty().intValue()+"");
+            }
+        });
         //入库数量
         colWarehouseQty.setCellValueFactory(param -> {
             if(param.getValue().getWarehouseQty() == null) {
@@ -555,14 +554,14 @@ public class SOController {
                 return new SimpleObjectProperty<>(param.getValue().getReturnedTotalQty().intValue()+"");
             }
         });
-//        //未税金额
-//        colAmountExcludingTax.setCellValueFactory(param -> {
-//            if(param.getValue().getAmountPayable() == null) {
-//                return new SimpleObjectProperty<>("");
-//            } else {
-//                return new SimpleObjectProperty<>(param.getValue().getAmountPayable().setScale(2, RoundingMode.HALF_UP).toString());
-//            }
-//        });
+        //未税金额
+        colAmountExcludingTax.setCellValueFactory(param -> {
+            if(param.getValue().getAmountReceivable() == null) {
+                return new SimpleObjectProperty<>("");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getAmountReceivable().setScale(2, RoundingMode.HALF_UP).toString());
+            }
+        });
 //        //含税金额
 //        colAmountIncludingTax.setCellValueFactory(param -> {
 //            if(param.getValue().getAmountPayable() == null) {

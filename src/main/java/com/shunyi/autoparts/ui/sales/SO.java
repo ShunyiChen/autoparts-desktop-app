@@ -2,7 +2,6 @@ package com.shunyi.autoparts.ui.sales;
 
 import com.shunyi.autoparts.ui.MainApp;
 import com.shunyi.autoparts.ui.main.TabContent;
-import com.shunyi.autoparts.ui.purchase.POController;
 import javafx.beans.binding.DoubleBinding;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.BorderPane;
