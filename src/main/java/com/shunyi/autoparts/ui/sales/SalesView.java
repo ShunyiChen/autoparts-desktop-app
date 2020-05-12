@@ -1,4 +1,4 @@
-package com.shunyi.autoparts.ui.sale;
+package com.shunyi.autoparts.ui.sales;
 
 import com.shunyi.autoparts.ui.MainApp;
 import com.shunyi.autoparts.ui.main.TabContent;

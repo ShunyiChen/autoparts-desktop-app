@@ -4,9 +4,9 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 /**
- * @description 销售单VO
- * @author Shunyi
- * @date 2020/5/11
+ * @Description: 销售单VO
+ * @Author: Shunyi
+ * @CreateDate: 2020/5/12
  */
 public class SalesOrder {
     /** ID */
@@ -17,24 +17,34 @@ public class SalesOrder {
     private Date orderDate;
     /** 仓库 */
     private Warehouse warehouse;
-    /** 供应商 */
-    private Supplier supplier;
+    /** 客户 */
+    private Consumer consumer;
     /** 发票类型 */
     private String invoiceType;
     /** 发票号 */
     private String invoiceNo;
-    /** 运费 */
+    /** 发货方式 */
+    private Delivery delivery;
+    /** 货运费 */
     private BigDecimal freight;
+    /** 到货地点 */
+    private String deliveryAddress;
+    /** 收货人 */
+    private String consignee;
+    /** 收货人电话 */
+    private String tel;
+    /** 货运站收款 */
+    private boolean freightStationCollection;
     /** 备注 */
     private String notes;
     /** 经办人 */
     private String operator;
-    /** 系统账号 */
+    /** 系统登录账号 */
     private String userName;
     /** 结算方式 */
     private String payment;
-    /** 进货数量 */
-    private Integer purchaseQty;
+    /** 销售数量 */
+    private Integer salesQty;
     /** 已入库数量 */
     private Integer warehouseQty;
     /** 退货数量合计 */
@@ -45,10 +55,12 @@ public class SalesOrder {
     private BigDecimal disbursementAmount;
     /** 本次优惠 */
     private BigDecimal discountAmount;
-    /** 应付总额 */
-    private BigDecimal amountPayable;
-    /** 本次付款 */
-    private BigDecimal paymentAmount;
+    /** 应收总额 */
+    private BigDecimal amountReceivable;
+    /** 本次收款 */
+    private BigDecimal payeeAmount;
+    /** 本次欠款 */
+    private BigDecimal amountOwed;
     /** 账号 */
     private String account;
     /** 还款金额 */
@@ -76,27 +88,33 @@ public class SalesOrder {
 
     public SalesOrder() {}
 
-    public SalesOrder(Long id, String orderNo, Date orderDate, Warehouse warehouse, Supplier supplier, String invoiceType, String invoiceNo, BigDecimal freight, String notes, String operator, String userName, String payment, Integer purchaseQty, Integer warehouseQty, Integer returnedTotalQty, BigDecimal purchaseAmount, BigDecimal disbursementAmount, BigDecimal discountAmount, BigDecimal amountPayable, BigDecimal paymentAmount, String account, BigDecimal repaymentAmount, Date repaymentDate, String status, Date dateCreated, String creator, Date dateDeleted, Boolean deleteFlag, String deleter) {
+    public SalesOrder(Long id, String orderNo, Date orderDate, Warehouse warehouse, Consumer consumer, String invoiceType, String invoiceNo, Delivery delivery, BigDecimal freight, String deliveryAddress, String consignee, String tel, boolean freightStationCollection, String notes, String operator, String userName, String payment, Integer salesQty, Integer warehouseQty, Integer returnedTotalQty, BigDecimal purchaseAmount, BigDecimal disbursementAmount, BigDecimal discountAmount, BigDecimal amountReceivable, BigDecimal payeeAmount, BigDecimal amountOwed, String account, BigDecimal repaymentAmount, Date repaymentDate, String status, Date dateCreated, String creator, Date dateDeleted, Boolean deleteFlag, String deleter, String dateType, Date fromDate, Date toDate) {
         this.id = id;
         this.orderNo = orderNo;
         this.orderDate = orderDate;
         this.warehouse = warehouse;
-        this.supplier = supplier;
+        this.consumer = consumer;
         this.invoiceType = invoiceType;
         this.invoiceNo = invoiceNo;
+        this.delivery = delivery;
         this.freight = freight;
+        this.deliveryAddress = deliveryAddress;
+        this.consignee = consignee;
+        this.tel = tel;
+        this.freightStationCollection = freightStationCollection;
         this.notes = notes;
         this.operator = operator;
         this.userName = userName;
         this.payment = payment;
-        this.purchaseQty = purchaseQty;
+        this.salesQty = salesQty;
         this.warehouseQty = warehouseQty;
         this.returnedTotalQty = returnedTotalQty;
         this.purchaseAmount = purchaseAmount;
         this.disbursementAmount = disbursementAmount;
         this.discountAmount = discountAmount;
-        this.amountPayable = amountPayable;
-        this.paymentAmount = paymentAmount;
+        this.amountReceivable = amountReceivable;
+        this.payeeAmount = payeeAmount;
+        this.amountOwed = amountOwed;
         this.account = account;
         this.repaymentAmount = repaymentAmount;
         this.repaymentDate = repaymentDate;
@@ -106,6 +124,9 @@ public class SalesOrder {
         this.dateDeleted = dateDeleted;
         this.deleteFlag = deleteFlag;
         this.deleter = deleter;
+        this.dateType = dateType;
+        this.fromDate = fromDate;
+        this.toDate = toDate;
     }
 
     public Long getId() {
@@ -140,12 +161,12 @@ public class SalesOrder {
         this.warehouse = warehouse;
     }
 
-    public Supplier getSupplier() {
-        return supplier;
+    public Consumer getConsumer() {
+        return consumer;
     }
 
-    public void setSupplier(Supplier supplier) {
-        this.supplier = supplier;
+    public void setConsumer(Consumer consumer) {
+        this.consumer = consumer;
     }
 
     public String getInvoiceType() {
@@ -164,12 +185,52 @@ public class SalesOrder {
         this.invoiceNo = invoiceNo;
     }
 
+    public Delivery getDelivery() {
+        return delivery;
+    }
+
+    public void setDelivery(Delivery delivery) {
+        this.delivery = delivery;
+    }
+
     public BigDecimal getFreight() {
         return freight;
     }
 
     public void setFreight(BigDecimal freight) {
         this.freight = freight;
+    }
+
+    public String getDeliveryAddress() {
+        return deliveryAddress;
+    }
+
+    public void setDeliveryAddress(String deliveryAddress) {
+        this.deliveryAddress = deliveryAddress;
+    }
+
+    public String getConsignee() {
+        return consignee;
+    }
+
+    public void setConsignee(String consignee) {
+        this.consignee = consignee;
+    }
+
+    public String getTel() {
+        return tel;
+    }
+
+    public void setTel(String tel) {
+        this.tel = tel;
+    }
+
+    public boolean isFreightStationCollection() {
+        return freightStationCollection;
+    }
+
+    public void setFreightStationCollection(boolean freightStationCollection) {
+        this.freightStationCollection = freightStationCollection;
     }
 
     public String getNotes() {
@@ -204,12 +265,28 @@ public class SalesOrder {
         this.payment = payment;
     }
 
-    public Integer getPurchaseQty() {
-        return purchaseQty;
+    public Integer getSalesQty() {
+        return salesQty;
     }
 
-    public void setPurchaseQty(Integer purchaseQty) {
-        this.purchaseQty = purchaseQty;
+    public void setSalesQty(Integer salesQty) {
+        this.salesQty = salesQty;
+    }
+
+    public Integer getWarehouseQty() {
+        return warehouseQty;
+    }
+
+    public void setWarehouseQty(Integer warehouseQty) {
+        this.warehouseQty = warehouseQty;
+    }
+
+    public Integer getReturnedTotalQty() {
+        return returnedTotalQty;
+    }
+
+    public void setReturnedTotalQty(Integer returnedTotalQty) {
+        this.returnedTotalQty = returnedTotalQty;
     }
 
     public BigDecimal getPurchaseAmount() {
@@ -236,20 +313,28 @@ public class SalesOrder {
         this.discountAmount = discountAmount;
     }
 
-    public BigDecimal getAmountPayable() {
-        return amountPayable;
+    public BigDecimal getAmountReceivable() {
+        return amountReceivable;
     }
 
-    public void setAmountPayable(BigDecimal amountPayable) {
-        this.amountPayable = amountPayable;
+    public void setAmountReceivable(BigDecimal amountReceivable) {
+        this.amountReceivable = amountReceivable;
     }
 
-    public BigDecimal getPaymentAmount() {
-        return paymentAmount;
+    public BigDecimal getPayeeAmount() {
+        return payeeAmount;
     }
 
-    public void setPaymentAmount(BigDecimal paymentAmount) {
-        this.paymentAmount = paymentAmount;
+    public void setPayeeAmount(BigDecimal payeeAmount) {
+        this.payeeAmount = payeeAmount;
+    }
+
+    public BigDecimal getAmountOwed() {
+        return amountOwed;
+    }
+
+    public void setAmountOwed(BigDecimal amountOwed) {
+        this.amountOwed = amountOwed;
     }
 
     public String getAccount() {
@@ -324,22 +409,6 @@ public class SalesOrder {
         this.deleter = deleter;
     }
 
-    public Integer getWarehouseQty() {
-        return warehouseQty;
-    }
-
-    public void setWarehouseQty(Integer warehouseQty) {
-        this.warehouseQty = warehouseQty;
-    }
-
-    public Integer getReturnedTotalQty() {
-        return returnedTotalQty;
-    }
-
-    public void setReturnedTotalQty(Integer returnedTotalQty) {
-        this.returnedTotalQty = returnedTotalQty;
-    }
-
     public String getDateType() {
         return dateType;
     }
@@ -362,43 +431,5 @@ public class SalesOrder {
 
     public void setToDate(Date toDate) {
         this.toDate = toDate;
-    }
-
-    @Override
-    public String toString() {
-        return "PurchaseOrder{" +
-                "id=" + id +
-                ", orderNo='" + orderNo + '\'' +
-                ", orderDate=" + orderDate +
-                ", warehouse=" + warehouse +
-                ", supplier=" + supplier +
-                ", invoiceType='" + invoiceType + '\'' +
-                ", invoiceNo='" + invoiceNo + '\'' +
-                ", freight=" + freight +
-                ", notes='" + notes + '\'' +
-                ", operator='" + operator + '\'' +
-                ", userName='" + userName + '\'' +
-                ", payment='" + payment + '\'' +
-                ", purchaseQty=" + purchaseQty +
-                ", warehouseQty=" + warehouseQty +
-                ", returnedTotalQty=" + returnedTotalQty +
-                ", purchaseAmount=" + purchaseAmount +
-                ", disbursementAmount=" + disbursementAmount +
-                ", discountAmount=" + discountAmount +
-                ", amountPayable=" + amountPayable +
-                ", paymentAmount=" + paymentAmount +
-                ", account='" + account + '\'' +
-                ", repaymentAmount=" + repaymentAmount +
-                ", repaymentDate=" + repaymentDate +
-                ", status='" + status + '\'' +
-                ", dateCreated=" + dateCreated +
-                ", creator='" + creator + '\'' +
-                ", dateDeleted=" + dateDeleted +
-                ", deleteFlag=" + deleteFlag +
-                ", deleter='" + deleter + '\'' +
-                ", dateType='" + dateType + '\'' +
-                ", fromDate=" + fromDate +
-                ", toDate=" + toDate +
-                '}';
     }
 }

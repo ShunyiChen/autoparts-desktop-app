@@ -1,10 +1,10 @@
-package com.shunyi.autoparts.ui.supplier;
+package com.shunyi.autoparts.ui.consumer;
 
 import com.shunyi.autoparts.ui.common.Constants;
 import com.shunyi.autoparts.ui.common.GoogleJson;
 import com.shunyi.autoparts.ui.common.HttpClient;
-import com.shunyi.autoparts.ui.common.vo.Supplier;
-import com.shunyi.autoparts.ui.common.vo.SupplierCategory;
+import com.shunyi.autoparts.ui.common.vo.Consumer;
+import com.shunyi.autoparts.ui.common.vo.ConsumerCategory;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -24,17 +24,17 @@ import javafx.util.StringConverter;
 import java.io.IOException;
 
 /**
- * @Description: 供应商选择器Controller
- * @Author: Shunyi Chen
- * @CreateDate: 2020/4/12
+ * @Description: 客户选择器Controller
+ * @Author: Shunyi
+ * @CreateDate: 2020/5/12
  */
-public class SupplierChooserController {
+public class ConsumerChooserController {
     private Stage dialog;
-    private Supplier selectedSupplier;
-    private Callback<Supplier, String> callback;
+    private Consumer selectedConsumer;
+    private Callback<Consumer, String> callback;
 
     @FXML
-    private TreeView<SupplierCategory> treeView;
+    private TreeView<ConsumerCategory> treeView;
     @FXML
     private Button btnSaveAndQuit;
     @FXML
@@ -48,7 +48,7 @@ public class SupplierChooserController {
     @FXML
     private TextField txtContact;
     @FXML
-    private TableView<Supplier> tableView;
+    private TableView<Consumer> tableView;
     @FXML
     private TableColumn colCode;
     @FXML
@@ -58,9 +58,21 @@ public class SupplierChooserController {
     @FXML
     private TableColumn colPhone;
     @FXML
-    private TableColumn colFax;
+    private TableColumn colLicensePlate;
     @FXML
-    private TableColumn colPostcode;
+    private TableColumn colAddress;
+    @FXML
+    private TableColumn colEmail;
+    @FXML
+    private TableColumn colLineOfCredit;
+    @FXML
+    private TableColumn colTotalAmountReceived;
+    @FXML
+    private TableColumn colAmountOwing;
+    @FXML
+    private TableColumn colCompany;
+    @FXML
+    private TableColumn colNotes;
 
     @FXML
     private void cancel() {
@@ -74,10 +86,10 @@ public class SupplierChooserController {
     }
 
     @FXML
-    private void newSupplier() {
+    private void newConsumer() {
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource(
-                        "/fxml/supplier/SupplierEditor.fxml"
+                        "/fxml/consumer/ConsumerEditor.fxml"
                 )
         );
         VBox root = null;
@@ -88,10 +100,10 @@ public class SupplierChooserController {
         }
         Scene scene = new Scene(root);
         Stage subStage = new Stage();
-        SupplierEditorController controller = loader.getController();
-        Callback<Supplier, String> callback = new Callback<Supplier, String>() {
+        ConsumerEditorController controller = loader.getController();
+        Callback<Consumer, String> callback = new Callback<Consumer, String>() {
             @Override
-            public String call(Supplier param) {
+            public String call(Consumer param) {
                 tableView.getItems().add(param);
                 tableView.refresh();
                 tableView.getSelectionModel().select(param);
@@ -99,7 +111,7 @@ public class SupplierChooserController {
             }
         };
         controller.initialize(subStage, callback, null);
-        subStage.setTitle("新建供应商");
+        subStage.setTitle("新建客户");
         subStage.initOwner(dialog);
         subStage.setResizable(false);
         subStage.initModality(Modality.APPLICATION_MODAL);
@@ -110,8 +122,8 @@ public class SupplierChooserController {
     }
 
     private void edit() {
-        Supplier selectedSupplier = tableView.getSelectionModel().getSelectedItem();
-        if(selectedSupplier == null) {
+        Consumer selectedConsumer = tableView.getSelectionModel().getSelectedItem();
+        if(selectedConsumer == null) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
             alert.setHeaderText("");
             alert.show();
@@ -119,7 +131,7 @@ public class SupplierChooserController {
         }
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource(
-                        "/fxml/supplier/SupplierEditor.fxml"
+                        "/fxml/consumer/ConsumerEditor.fxml"
                 )
         );
         VBox root = null;
@@ -130,20 +142,20 @@ public class SupplierChooserController {
         }
         Scene scene = new Scene(root);
         Stage subStage = new Stage();
-        SupplierEditorController controller = loader.getController();
-        Callback<Supplier, String> callback = new Callback<Supplier, String>() {
+        ConsumerEditorController controller = loader.getController();
+        Callback<Consumer, String> callback = new Callback<Consumer, String>() {
             @Override
-            public String call(Supplier param) {
+            public String call(Consumer param) {
                 //刷新表格
                 int index = tableView.getSelectionModel().getSelectedIndex();
-                tableView.getItems().remove(selectedSupplier);
+                tableView.getItems().remove(selectedConsumer);
                 tableView.getItems().add(index, param);
                 tableView.getSelectionModel().select(param);
                 return null;
             }
         };
-        controller.initialize(subStage, callback, selectedSupplier);
-        subStage.setTitle("更改供应商");
+        controller.initialize(subStage, callback, selectedConsumer);
+        subStage.setTitle("更改客户");
         subStage.initOwner(dialog);
         subStage.setResizable(false);
         subStage.initModality(Modality.APPLICATION_MODAL);
@@ -154,16 +166,16 @@ public class SupplierChooserController {
     }
 
     private void delete() {
-        Supplier selectedSupplier = tableView.getSelectionModel().getSelectedItem();
-        if(selectedSupplier == null) {
+        Consumer selectedConsumer = tableView.getSelectionModel().getSelectedItem();
+        if(selectedConsumer == null) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
             alert.setHeaderText("");
             alert.show();
             return;
         }
         try {
-            HttpClient.DELETE("/suppliers/"+selectedSupplier.getId());
-            tableView.getItems().remove(selectedSupplier);
+            HttpClient.DELETE("/consumers/"+selectedConsumer.getId());
+            tableView.getItems().remove(selectedConsumer);
             tableView.refresh();
         } catch (IOException e) {
             e.printStackTrace();
@@ -172,18 +184,18 @@ public class SupplierChooserController {
 
     @FXML
     private void search() {
-        Supplier supplier = new Supplier();
-        supplier.setCode(txtCode.getText());
-        supplier.setName(txtName.getText());
-        supplier.setContact(txtContact.getText());
-        supplier.setPhone(txtTel.getText());
-        supplier.setNotes(txtOther.getText());
-        String json = GoogleJson.GET().toJson(supplier);
+        Consumer consumer = new Consumer();
+        consumer.setCode(txtCode.getText());
+        consumer.setName(txtName.getText());
+        consumer.setContact(txtContact.getText());
+        consumer.setPhone(txtTel.getText());
+        consumer.setNotes(txtOther.getText());
+        String json = GoogleJson.GET().toJson(consumer);
         try {
-            String data = HttpClient.POST("/suppliers/search", json);
-            Supplier[] suppliers = GoogleJson.GET().fromJson(data, Supplier[].class);
+            String data = HttpClient.POST("/consumers/search", json);
+            Consumer[] consumers = GoogleJson.GET().fromJson(data, Consumer[].class);
             tableView.getItems().clear();
-            tableView.getItems().addAll(suppliers);
+            tableView.getItems().addAll(consumers);
             tableView.refresh();
         } catch (IOException e) {
             e.printStackTrace();
@@ -202,12 +214,12 @@ public class SupplierChooserController {
     /**
      *
      * @param dialog
-     * @param selectedSupplier
+     * @param selectedConsumer
      * @param callback
      */
-    public void initialize(Stage dialog, Callback<Supplier, String> callback, Supplier selectedSupplier) {
+    public void initialize(Stage dialog, Callback<Consumer, String> callback, Consumer selectedConsumer) {
         this.dialog = dialog;
-        this.selectedSupplier = selectedSupplier;
+        this.selectedConsumer = selectedConsumer;
         this.callback = callback;
         final String css = getClass().getResource("/css/styles.css").toExternalForm();
         treeView.getStylesheets().add(css);
@@ -216,10 +228,10 @@ public class SupplierChooserController {
 //            }
 //        });
         btnSaveAndQuit.setStyle(String.format("-fx-base: %s;", "rgb(63,81,181)"));
-        SupplierCategory sc = null;
+        ConsumerCategory sc = null;
         try {
-            sc = HttpClient.GET("/supplier/categories/root", SupplierCategory.class);
-            TreeItem<SupplierCategory> root = new TreeItem<>(sc);
+            sc = HttpClient.GET("/consumer/categories/root", ConsumerCategory.class);
+            TreeItem<ConsumerCategory> root = new TreeItem<>(sc);
             treeView.setRoot(root);
             initTreeNodes(root);
         } catch (IOException e) {
@@ -236,11 +248,11 @@ public class SupplierChooserController {
      *
      * @param root
      */
-    private void initTreeNodes(TreeItem<SupplierCategory> root) {
+    private void initTreeNodes(TreeItem<ConsumerCategory> root) {
         try {
-            String path = "/supplier/categories";
+            String path = "/consumer/categories";
             String data = HttpClient.GET(path);
-            SupplierCategory[] res = GoogleJson.GET().fromJson(data, SupplierCategory[].class);
+            ConsumerCategory[] res = GoogleJson.GET().fromJson(data, ConsumerCategory[].class);
             getNodes(root, res);
         } catch (IOException e) {
             e.printStackTrace();
@@ -252,10 +264,10 @@ public class SupplierChooserController {
      * @param parent
      * @param all
      */
-    private void getNodes(TreeItem<SupplierCategory> parent, SupplierCategory[] all) {
-        for(SupplierCategory sc : all) {
+    private void getNodes(TreeItem<ConsumerCategory> parent, ConsumerCategory[] all) {
+        for(ConsumerCategory sc : all) {
             if(sc.getParentId().equals(parent.getValue().getId())) {
-                TreeItem<SupplierCategory> node = new TreeItem<>(sc);
+                TreeItem<ConsumerCategory> node = new TreeItem<>(sc);
                 parent.getChildren().add(node);
                 parent.setExpanded(true);
                 getNodes(node, all);
@@ -263,29 +275,29 @@ public class SupplierChooserController {
         }
     }
 
-    private void createSupplierCategory() {
-        Callback<SupplierCategory, String> callback = new Callback<SupplierCategory, String>() {
+    private void createConsumerCategory() {
+        Callback<ConsumerCategory, String> callback = new Callback<ConsumerCategory, String>() {
             @Override
-            public String call(SupplierCategory param) {
+            public String call(ConsumerCategory param) {
                 if(param != null) {
-                    TreeItem<SupplierCategory> parent = treeView.getSelectionModel().getSelectedItem();
+                    TreeItem<ConsumerCategory> parent = treeView.getSelectionModel().getSelectedItem();
                     parent.getValue().setParent(true);
                     String json = GoogleJson.GET().toJson(parent.getValue());
                     try {
-                         HttpClient.PUT("/supplier/categories/"+parent.getValue().getId(),json);
+                         HttpClient.PUT("/consumer/categories/"+parent.getValue().getId(),json);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                     param.setParentId(parent.getValue().getId());
                     param.setParent(Constants.PARENT_FALSE);
                     try {
-                        json = GoogleJson.GET().toJson(param, SupplierCategory.class);
-                        String idStr = HttpClient.POST("/supplier/categories",json);
+                        json = GoogleJson.GET().toJson(param, ConsumerCategory.class);
+                        String idStr = HttpClient.POST("/consumer/categories",json);
                         param.setId(Long.valueOf(idStr));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    TreeItem<SupplierCategory> node = new TreeItem<>(param);
+                    TreeItem<ConsumerCategory> node = new TreeItem<>(param);
                     parent.getChildren().add(node);
                     // 选中新建的节点
                     treeView.getSelectionModel().select(node);
@@ -296,7 +308,7 @@ public class SupplierChooserController {
 
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource(
-                        "/fxml/supplier/SupplierCategoryEditor.fxml"
+                        "/fxml/consumer/ConsumerCategoryEditor.fxml"
                 )
         );
         VBox root = null;
@@ -309,9 +321,9 @@ public class SupplierChooserController {
         Stage dialog = new Stage();
         dialog.setOnHiding( e -> {
         });
-        SupplierCategoryEditorController controller = loader.getController();
+        ConsumerCategoryEditorController controller = loader.getController();
         controller.prepare(dialog, callback);
-        dialog.setTitle("新建供应商分类");
+        dialog.setTitle("新建客户分类");
         dialog.initOwner(this.dialog);
         dialog.setResizable(false);
         dialog.initModality(Modality.APPLICATION_MODAL);
@@ -321,8 +333,8 @@ public class SupplierChooserController {
         dialog.show();
     }
 
-    private void removeSupplierCategory() {
-        TreeItem<SupplierCategory> selected = treeView.getSelectionModel().getSelectedItem();
+    private void removeConsumerCategory() {
+        TreeItem<ConsumerCategory> selected = treeView.getSelectionModel().getSelectedItem();
         if(selected.getValue().getId() == 0) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
             alert.setHeaderText("根节点不可删除");
@@ -337,10 +349,10 @@ public class SupplierChooserController {
         }
         else {
             try {
-                Supplier[] suppliers = HttpClient.GET("/suppliers/category/"+selected.getValue().getId(), Supplier[].class);
-                if(suppliers.length > 0) {
+                Consumer[] consumers = HttpClient.GET("/consumers/category/"+selected.getValue().getId(), Consumer[].class);
+                if(consumers.length > 0) {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
-                    alert.setHeaderText("该分类下存在供应商，无法删除");
+                    alert.setHeaderText("该分类下存在客户，无法删除");
                     alert.show();
                     return;
                 }
@@ -352,11 +364,11 @@ public class SupplierChooserController {
             alertConfirm.setHeaderText("是否删除该类目？");
             alertConfirm.showAndWait().filter(response -> response == ButtonType.YES).ifPresent(response -> {
                 try {
-                    HttpClient.DELETE("/supplier/categories/"+selected.getValue().getId());
+                    HttpClient.DELETE("/consumer/categories/"+selected.getValue().getId());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                TreeItem<SupplierCategory> parent = selected.getParent();
+                TreeItem<ConsumerCategory> parent = selected.getParent();
                 if(parent != null) {
                     parent.getChildren().remove(selected);
                     parent.setExpanded(true);
@@ -367,7 +379,7 @@ public class SupplierChooserController {
                     parent.getValue().setParent(false);
                     String json = GoogleJson.GET().toJson(parent.getValue());
                     try {
-                        HttpClient.PUT("/supplier/categories/"+parent.getValue().getId(), json);
+                        HttpClient.PUT("/consumer/categories/"+parent.getValue().getId(), json);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -384,21 +396,22 @@ public class SupplierChooserController {
         itemNew.setStyle("-fx-font-size: 14px;");
         itemRM.setStyle("-fx-font-size: 14px;");
         itemRN.setStyle("-fx-font-size: 14px;");
+
         menu.getItems().addAll(itemNew, itemRM, itemRN);
         treeView.setEditable(true);
         treeView.setContextMenu(menu);
-        treeView.setCellFactory(new Callback<TreeView<SupplierCategory>, TreeCell<SupplierCategory>>() {
+        treeView.setCellFactory(new Callback<TreeView<ConsumerCategory>, TreeCell<ConsumerCategory>>() {
             @Override
-            public TreeCell<SupplierCategory> call(TreeView<SupplierCategory> p) {
-                return new TextFieldTreeCell<SupplierCategory>(new StringConverter<SupplierCategory>(){
+            public TreeCell<ConsumerCategory> call(TreeView<ConsumerCategory> p) {
+                return new TextFieldTreeCell<ConsumerCategory>(new StringConverter<ConsumerCategory>(){
 
                     @Override
-                    public String toString(SupplierCategory object) {
+                    public String toString(ConsumerCategory object) {
                         return object.getName();
                     }
 
                     @Override
-                    public SupplierCategory fromString(String string) {
+                    public ConsumerCategory fromString(String string) {
                         p.getEditingItem().getValue().setName(string);
                         return p.getEditingItem().getValue();
                     }
@@ -408,13 +421,13 @@ public class SupplierChooserController {
         itemNew.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                createSupplierCategory();
+                createConsumerCategory();
             }
         });
         itemRM.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                removeSupplierCategory();
+                removeConsumerCategory();
             }
         });
         itemRN.setOnAction(new EventHandler<ActionEvent>() {
@@ -423,11 +436,11 @@ public class SupplierChooserController {
                 treeView.edit(treeView.getSelectionModel().getSelectedItem());
             }
         });
-        treeView.setOnEditCommit(new EventHandler<TreeView.EditEvent<SupplierCategory>>() {
+        treeView.setOnEditCommit(new EventHandler<TreeView.EditEvent<ConsumerCategory>>() {
             @Override
-            public void handle(TreeView.EditEvent<SupplierCategory> event) {
+            public void handle(TreeView.EditEvent<ConsumerCategory> event) {
                 if(!event.getNewValue().getId().equals(0L)) {
-                    String path = "/supplier/categories/"+event.getNewValue().getId();
+                    String path = "/consumer/categories/"+event.getNewValue().getId();
                     String json = GoogleJson.GET().toJson(event.getNewValue());
                     try {
                         HttpClient.PUT(path, json);
@@ -439,16 +452,16 @@ public class SupplierChooserController {
         });
         treeView.setOnMouseClicked((MouseEvent event) -> {
             if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 1){
-                TreeItem<SupplierCategory> item = treeView.getSelectionModel().getSelectedItem();
+                TreeItem<ConsumerCategory> item = treeView.getSelectionModel().getSelectedItem();
                 tableView.getItems().clear();
                 String json = null;
                 try {
-                    json = HttpClient.GET("/suppliers/category/recursion/"+item.getValue().getId());
+                    json = HttpClient.GET("/consumers/category/recursion/"+item.getValue().getId());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                Supplier[] suppliers = GoogleJson.GET().fromJson(json, Supplier[].class);
-                tableView.getItems().addAll(suppliers);
+                Consumer[] consumers = GoogleJson.GET().fromJson(json, Consumer[].class);
+                tableView.getItems().addAll(consumers);
                 tableView.refresh();
             }
         });
@@ -466,41 +479,68 @@ public class SupplierChooserController {
             }
         });
         try {
-            String json = HttpClient.GET("/suppliers");
-            Supplier[] suppliers = GoogleJson.GET().fromJson(json, Supplier[].class);
+            String json = HttpClient.GET("/consumers");
+            Consumer[] consumers = GoogleJson.GET().fromJson(json, Consumer[].class);
             tableView.getItems().clear();
-            tableView.getItems().addAll(suppliers);
+            tableView.getItems().addAll(consumers);
             tableView.refresh();
         } catch (IOException e) {
             e.printStackTrace();
         }
         // 编码列设置
         colCode.setCellValueFactory(
-                new PropertyValueFactory<Supplier, String>("code")
+                new PropertyValueFactory<Consumer, String>("code")
         );
         //名称列设置
         colName.setCellValueFactory(
-                new PropertyValueFactory<Supplier, String>("name")
+                new PropertyValueFactory<Consumer, String>("name")
         );
         //联系人列设置
         colContact.setCellValueFactory(
-                new PropertyValueFactory<Supplier, String>("contact")
+                new PropertyValueFactory<Consumer, String>("contact")
         );
         //电话列设置
         colPhone.setCellValueFactory(
-                new PropertyValueFactory<Supplier, String>("phone")
+                new PropertyValueFactory<Consumer, String>("phone")
         );
-        //传真
-        colFax.setCellValueFactory(
-                new PropertyValueFactory<Supplier, String>("fax")
+        //车牌号
+        colLicensePlate.setCellValueFactory(
+                new PropertyValueFactory<Consumer, String>("licensePlate")
         );
-        //邮编
-        colPostcode.setCellValueFactory(
-                new PropertyValueFactory<Supplier, String>("postCode")
+        //地址
+        colAddress.setCellValueFactory(
+                new PropertyValueFactory<Consumer, String>("address")
         );
+        //Email
+        colEmail.setCellValueFactory(
+                new PropertyValueFactory<Consumer, String>("email")
+        );
+        //信用额度
+        colLineOfCredit.setCellValueFactory(
+                new PropertyValueFactory<Consumer, String>("lineOfCredit")
+        );
+        //预收款总额
+        colTotalAmountReceived.setCellValueFactory(
+                new PropertyValueFactory<Consumer, String>("totalAmountReceived")
+        );
+        //当前欠款
+        colAmountOwing.setCellValueFactory(
+                new PropertyValueFactory<Consumer, String>("amountOwing")
+        );
+        //公司
+        colCompany.setCellValueFactory(
+                new PropertyValueFactory<Consumer, String>("company")
+        );
+        //备注
+        colNotes.setCellValueFactory(
+                new PropertyValueFactory<Consumer, String>("notes")
+        );
+
         ContextMenu menu = new ContextMenu();
         MenuItem itemEdit = new MenuItem("编 辑");
         MenuItem itemDel = new MenuItem("删 除");
+        itemEdit.setStyle("-fx-font-size: 14px;");
+        itemDel.setStyle("-fx-font-size: 14px;");
         itemEdit.setOnAction(e ->{
             edit();
         });

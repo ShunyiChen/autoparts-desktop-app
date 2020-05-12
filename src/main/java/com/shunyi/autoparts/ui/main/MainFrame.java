@@ -9,9 +9,9 @@ import com.shunyi.autoparts.ui.inventory.PriceAdjustmentOrder;
 import com.shunyi.autoparts.ui.purchase.PO;
 import com.shunyi.autoparts.ui.purchase.PRO;
 import com.shunyi.autoparts.ui.purchase.PurchaseView;
-import com.shunyi.autoparts.ui.sale.SalesOrder;
-import com.shunyi.autoparts.ui.sale.SalesReturnOrder;
-import com.shunyi.autoparts.ui.sale.SalesView;
+import com.shunyi.autoparts.ui.sales.SO;
+import com.shunyi.autoparts.ui.sales.SRO;
+import com.shunyi.autoparts.ui.sales.SalesView;
 import com.shunyi.autoparts.ui.system.SystemSettings;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
@@ -115,7 +115,7 @@ public class MainFrame extends BorderPane {
             public Object call(Object param) {
                 toolbar.setTitle(Constants.SALES_ORDER);
                 if(salesOrderTab == null) {
-                    salesOrderTab = new NewTab(Constants.SALES_ORDER, new SalesOrder());
+                    salesOrderTab = new NewTab(Constants.SALES_ORDER, new SO(application));
                 }
                 contentPane.addNewTab(salesOrderTab);
                 return null;
@@ -127,7 +127,7 @@ public class MainFrame extends BorderPane {
             public Object call(Object param) {
                 toolbar.setTitle(Constants.SALES_RETURN_ORDER);
                 if(salesReturnOrderTab == null) {
-                    salesReturnOrderTab = new NewTab(Constants.SALES_RETURN_ORDER, new SalesReturnOrder());
+                    salesReturnOrderTab = new NewTab(Constants.SALES_RETURN_ORDER, new SRO(application));
                 }
                 contentPane.addNewTab(salesReturnOrderTab);
                 return null;
