@@ -143,6 +143,16 @@ public class SOEditorController {
     /**经办人 */
     @FXML
     private TextField txtOperator;
+    /**当前欠款总额 */
+    @FXML
+    private Label labelAmountOwing;
+    /**信用额度 */
+    @FXML
+    private Label labelLineOfCredit;
+    /**预收款总额 */
+    @FXML
+    private Label labelTotalAmountReceived;
+
     /** 采购订单明细表 */
     @FXML
     private TableView<SalesOrderItem> tableView;
@@ -436,6 +446,10 @@ public class SOEditorController {
                 txtPhone.setText(consumer.getPhone());
                 txtConsignee.setText(consumer.getContact());
                 txtTel.setText(consumer.getPhone());
+                labelAmountOwing.setText(consumer.getAmountOwing().toString());
+                labelLineOfCredit.setText(consumer.getLineOfCredit().toString());
+                labelTotalAmountReceived.setText(consumer.getTotalAmountReceived().toString());
+
             } else {
                 txtConsumerName.setText("");
                 txtContact.setText("");
