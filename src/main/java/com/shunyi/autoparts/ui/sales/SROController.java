@@ -4,12 +4,11 @@ import com.shunyi.autoparts.ui.MainApp;
 import com.shunyi.autoparts.ui.common.*;
 import com.shunyi.autoparts.ui.common.vo.InvoiceType;
 import com.shunyi.autoparts.ui.common.vo.Payment;
-import com.shunyi.autoparts.ui.common.vo.PurchaseReturnOrder;
-import com.shunyi.autoparts.ui.common.vo.Supplier;
+import com.shunyi.autoparts.ui.common.vo.SalesReturnOrder;
+import com.shunyi.autoparts.ui.common.vo.Consumer;
 import com.shunyi.autoparts.ui.purchase.InvoiceTypeChooserController;
-import com.shunyi.autoparts.ui.purchase.PROEditorController;
 import com.shunyi.autoparts.ui.purchase.PaymentChooserController;
-import com.shunyi.autoparts.ui.supplier.SupplierChooserController;
+import com.shunyi.autoparts.ui.consumer.ConsumerChooserController;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -36,15 +35,15 @@ import java.util.Date;
 import java.util.stream.Collectors;
 
 /**
- * @Description: 采购退货单Controller
+ * @Description: 销售退货单Controller
  * @Author: Shunyi
  * @CreateDate: 2020/5/9
  */
 public class SROController {
     private MainApp application;
-    private PROEditorController proEditorController;
+    private SROEditorController sroEditorController;
     @FXML
-    private ComboBox<String> comboBoxSupplier;
+    private ComboBox<String> comboBoxConsumer;
     @FXML
     private TextField txtNo;
     @FXML
@@ -66,53 +65,51 @@ public class SROController {
     @FXML
     private TextField txtNotes;
     @FXML
-    private TableView<PurchaseReturnOrder> tableView;
+    private TableView<SalesReturnOrder> tableView;
     @FXML
-    private TableColumn<PurchaseReturnOrder, String> colOrderNo;
+    private TableColumn<SalesReturnOrder, String> colOrderNo;
     @FXML
-    private TableColumn<PurchaseReturnOrder, String> colOrderDate;
+    private TableColumn<SalesReturnOrder, String> colOrderDate;
     @FXML
-    private TableColumn<PurchaseReturnOrder, String> colSupplierCode;
+    private TableColumn<SalesReturnOrder, String> colConsumerCode;
     @FXML
-    private TableColumn<PurchaseReturnOrder, String> colSupplierName;
+    private TableColumn<SalesReturnOrder, String> colConsumerName;
     @FXML
-    private TableColumn<PurchaseReturnOrder, String> colWarehouse;
+    private TableColumn<SalesReturnOrder, String> colWarehouse;
     @FXML
-    private TableColumn<PurchaseReturnOrder, String> colOperator;
+    private TableColumn<SalesReturnOrder, String> colOperator;
     @FXML
-    private TableColumn<PurchaseReturnOrder, String> colUserName;
+    private TableColumn<SalesReturnOrder, String> colUserName;
     @FXML
-    private TableColumn<PurchaseReturnOrder, String> colReturnQty;
+    private TableColumn<SalesReturnOrder, String> colReturnQty;
     @FXML
-    private TableColumn<PurchaseReturnOrder, String> colReturnedTotalQty;
+    private TableColumn<SalesReturnOrder, String> colAmountExcludingTax;
     @FXML
-    private TableColumn<PurchaseReturnOrder, String> colAmountExcludingTax;
+    private TableColumn<SalesReturnOrder, String> colAmountIncludingTax;
     @FXML
-    private TableColumn<PurchaseReturnOrder, String> colAmountIncludingTax;
+    private TableColumn<SalesReturnOrder, String> colPayment;
     @FXML
-    private TableColumn<PurchaseReturnOrder, String> colPayment;
+    private TableColumn<SalesReturnOrder, String> colInvoiceType;
     @FXML
-    private TableColumn<PurchaseReturnOrder, String> colInvoiceType;
+    private TableColumn<SalesReturnOrder, String> colNotes;
     @FXML
-    private TableColumn<PurchaseReturnOrder, String> colNotes;
+    private TableColumn<SalesReturnOrder, String> colStatus;
     @FXML
-    private TableColumn<PurchaseReturnOrder, String> colStatus;
+    private TableColumn<SalesReturnOrder, String> colRepaymentDate;
     @FXML
-    private TableColumn<PurchaseReturnOrder, String> colRepaymentDate;
+    private TableColumn<SalesReturnOrder, String> colDisbursementAmount;
     @FXML
-    private TableColumn<PurchaseReturnOrder, String> colDisbursementAmount;
+    private TableColumn<SalesReturnOrder, String> colRepaymentAmount;
     @FXML
-    private TableColumn<PurchaseReturnOrder, String> colRepaymentAmount;
+    private TableColumn<SalesReturnOrder, String> colDiscountAmount;
     @FXML
-    private TableColumn<PurchaseReturnOrder, String> colDiscountAmount;
-    @FXML
-    private TableColumn<PurchaseReturnOrder, String> colAccount;
+    private TableColumn<SalesReturnOrder, String> colAccount;
 
     @FXML
     private void create() {
-        Callback<PurchaseReturnOrder, String> callback = new Callback<PurchaseReturnOrder, String>() {
+        Callback<SalesReturnOrder, String> callback = new Callback<SalesReturnOrder, String>() {
             @Override
-            public String call(PurchaseReturnOrder purchaseOrder) {
+            public String call(SalesReturnOrder purchaseOrder) {
                 tableView.getItems().add(purchaseOrder);
                 tableView.refresh();
                 return null;
@@ -120,7 +117,7 @@ public class SROController {
         };
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource(
-                        "/fxml/purchase/PROEditor.fxml"
+                        "/fxml/sales/SROEditor.fxml"
                 )
         );
         BorderPane root = null;
@@ -131,9 +128,9 @@ public class SROController {
         }
         Scene scene = new Scene(root);
         Stage dialog = new Stage();
-        proEditorController = loader.getController();
-        proEditorController.initialize(dialog, callback, null,false);
-        dialog.setTitle("新建采购退货订单");
+        sroEditorController = loader.getController();
+        sroEditorController.initialize(dialog, callback, null,false);
+        dialog.setTitle("新建销售退货订单");
         dialog.initOwner(application.getStage());
         dialog.setResizable(true);
         dialog.setMaximized(true);
@@ -146,17 +143,17 @@ public class SROController {
 
     @FXML
     private void update() {
-        PurchaseReturnOrder po = tableView.getSelectionModel().getSelectedItem();
+        SalesReturnOrder po = tableView.getSelectionModel().getSelectedItem();
         if(po == null) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
-            alert.setHeaderText("请选择采购退货单");
+            alert.setHeaderText("请选择销售退货单");
             alert.show();
             return;
         }
         boolean readOnly = po.getStatus().equals(Constants.CLOSED);
-        Callback<PurchaseReturnOrder, String> callback = new Callback<PurchaseReturnOrder, String>() {
+        Callback<SalesReturnOrder, String> callback = new Callback<SalesReturnOrder, String>() {
             @Override
-            public String call(PurchaseReturnOrder updated) {
+            public String call(SalesReturnOrder updated) {
                 //刷新表格
                 int index = tableView.getSelectionModel().getSelectedIndex();
                 tableView.getItems().remove(po);
@@ -167,7 +164,7 @@ public class SROController {
         };
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource(
-                        "/fxml/purchase/PROEditor.fxml"
+                        "/fxml/sales/SROEditor.fxml"
                 )
         );
         BorderPane root = null;
@@ -178,9 +175,9 @@ public class SROController {
         }
         Scene scene = new Scene(root);
         Stage dialog = new Stage();
-        proEditorController = loader.getController();
-        proEditorController.initialize(dialog, callback, po, readOnly);
-        dialog.setTitle("更改采购退货单");
+        sroEditorController = loader.getController();
+        sroEditorController.initialize(dialog, callback, po, readOnly);
+        dialog.setTitle("更改销售退货单");
         dialog.initOwner(application.getStage());
         dialog.setResizable(true);
         dialog.setMaximized(true);
@@ -193,7 +190,7 @@ public class SROController {
 
     @FXML
     private void delete() {
-        PurchaseReturnOrder selected = tableView.getSelectionModel().getSelectedItem();
+        SalesReturnOrder selected = tableView.getSelectionModel().getSelectedItem();
         if(selected != null) {
             if(selected.getStatus().equals(Constants.CLOSED)) {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
@@ -207,19 +204,24 @@ public class SROController {
 
                 //删除订单明细
                 try {
-                    HttpClient.DELETE("/purchaseReturnOrderItems/order/"+selected.getId());
+                    HttpClient.DELETE("/salesReturnOrdersItems/order/"+selected.getId());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
                 //删除订单
                 try {
-                    HttpClient.DELETE("/purchaseReturnOrders/"+selected.getId());
+                    HttpClient.DELETE("/salesReturnOrders/"+selected.getId());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
                 tableView.getItems().remove(selected);
                 tableView.refresh();
             });
+        } else {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
+            alert.setHeaderText("请选择销售退货单");
+            alert.show();
+            return;
         }
     }
 
@@ -227,8 +229,8 @@ public class SROController {
     private void refresh() {
         tableView.getItems().clear();
         try {
-            PurchaseReturnOrder[] purchaseReturnOrders = HttpClient.GET("/purchaseReturnOrders", PurchaseReturnOrder[].class);
-            tableView.getItems().addAll(purchaseReturnOrders);
+            SalesReturnOrder[] salesReturnOrders = HttpClient.GET("/salesReturnOrders", SalesReturnOrder[].class);
+            tableView.getItems().addAll(salesReturnOrders);
             tableView.refresh();
         } catch (IOException e) {
             e.printStackTrace();
@@ -258,10 +260,10 @@ public class SROController {
 
     @FXML
     private void search() {
-        PurchaseReturnOrder confition = new PurchaseReturnOrder();
-        Supplier supplier = new Supplier();
-        supplier.setCode(comboBoxSupplier.getValue());
-        confition.setSupplier(supplier);
+        SalesReturnOrder confition = new SalesReturnOrder();
+        Consumer consumer = new Consumer();
+        consumer.setCode(comboBoxConsumer.getValue());
+        confition.setConsumer(consumer);
         confition.setOrderNo(txtNo.getText());
         confition.setOperator(txtOperator.getText());
         confition.setUserName(txtUserName.getText());
@@ -277,11 +279,11 @@ public class SROController {
         String json = GoogleJson.GET().toJson(confition);
         String data = null;
         try {
-            data = HttpClient.POST("/purchaseReturnOrders/search", json);
+            data = HttpClient.POST("/salesReturnOrders/search", json);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        PurchaseReturnOrder[] results = GoogleJson.GET().fromJson(data, PurchaseReturnOrder[].class);
+        SalesReturnOrder[] results = GoogleJson.GET().fromJson(data, SalesReturnOrder[].class);
         tableView.getItems().clear();
         tableView.getItems().addAll(results);
         tableView.refresh();
@@ -289,7 +291,7 @@ public class SROController {
 
     @FXML
     private void clearQueryConditions() {
-        comboBoxSupplier.setValue(null);
+        comboBoxConsumer.setValue(null);
         comboBoxInvoiceType.setValue(null);
         comboBoxStatus.setValue(null);
         txtNo.setText("");
@@ -303,10 +305,10 @@ public class SROController {
     }
 
     @FXML
-    private void openSupplierChooser() {
+    private void openConsumerChooser() {
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource(
-                        "/fxml/supplier/SupplierChooser.fxml"
+                        "/fxml/consumer/ConsumerChooser.fxml"
                 )
         );
         VBox root = null;
@@ -317,18 +319,18 @@ public class SROController {
         }
         Scene scene = new Scene(root);
         Stage subStage = new Stage();
-        SupplierChooserController controller = loader.getController();
-        Callback<Supplier, String> callback = returnedSupplier -> {
-            if(returnedSupplier != null) {
-                if(!comboBoxSupplier.getItems().contains(returnedSupplier.getCode())) {
-                    comboBoxSupplier.getItems().add(0, returnedSupplier.getCode());
+        ConsumerChooserController controller = loader.getController();
+        Callback<Consumer, String> callback = returnedConsumer -> {
+            if(returnedConsumer != null) {
+                if(!comboBoxConsumer.getItems().contains(returnedConsumer.getCode())) {
+                    comboBoxConsumer.getItems().add(0, returnedConsumer.getCode());
                 }
-                comboBoxSupplier.setValue(returnedSupplier.getCode());
+                comboBoxConsumer.setValue(returnedConsumer.getCode());
             }
             return null;
         };
         controller.initialize(subStage, callback, null);
-        subStage.setTitle("选择供应商");
+        subStage.setTitle("选择客户");
         subStage.initOwner(application.getStage());
         subStage.setResizable(false);
         subStage.initModality(Modality.APPLICATION_MODAL);
@@ -430,18 +432,18 @@ public class SROController {
     private void initSearchFields() {
         //获取供应商列表
         try {
-            Supplier[] suppliers = HttpClient.GET("/suppliers", Supplier[].class);
-            comboBoxSupplier.getItems().addAll(Arrays.asList(suppliers).stream().map(e -> e.getCode()).collect(Collectors.toList()));
+            Consumer[] consumers = HttpClient.GET("/consumers", Consumer[].class);
+            comboBoxConsumer.getItems().addAll(Arrays.asList(consumers).stream().map(e -> e.getCode()).collect(Collectors.toList()));
         } catch (IOException e) {
             e.printStackTrace();
         }
-        comboBoxSupplier.setOnKeyReleased(e -> {
+        comboBoxConsumer.setOnKeyReleased(e -> {
             if(e.getCode() == KeyCode.ENTER) {
             }
         });
-        comboBoxSupplier.setOnAction(e -> {
+        comboBoxConsumer.setOnAction(e -> {
         });
-        new AutoCompleteBox(comboBoxSupplier);
+        new AutoCompleteBox(comboBoxConsumer);
         //获取发票类型列表
         try {
             InvoiceType[] invoiceTypes = HttpClient.GET("/invoiceTypes", InvoiceType[].class);
@@ -495,19 +497,19 @@ public class SROController {
             }
         });
         //供应商编码
-        colSupplierCode.setCellValueFactory(param -> {
-            if(param.getValue().getSupplier() == null) {
+        colConsumerCode.setCellValueFactory(param -> {
+            if(param.getValue().getConsumer() == null) {
                 return new SimpleObjectProperty<>("");
             } else {
-                return new SimpleObjectProperty<>(param.getValue().getSupplier().getCode());
+                return new SimpleObjectProperty<>(param.getValue().getConsumer().getCode());
             }
         });
         //供应商名称
-        colSupplierName.setCellValueFactory(param -> {
-            if(param.getValue().getSupplier() == null) {
+        colConsumerName.setCellValueFactory(param -> {
+            if(param.getValue().getConsumer() == null) {
                 return new SimpleObjectProperty<>("");
             } else {
-                return new SimpleObjectProperty<>(param.getValue().getSupplier().getName());
+                return new SimpleObjectProperty<>(param.getValue().getConsumer().getName());
             }
         });
         //仓库名称
@@ -550,28 +552,20 @@ public class SROController {
 //                return new SimpleObjectProperty<>(param.getValue().getWarehouseQty().intValue()+"");
 //            }
 //        });
-        //退货数量合计
-        colReturnedTotalQty.setCellValueFactory(param -> {
-            if(param.getValue().getReturnedTotalQty() == null) {
-                return new SimpleObjectProperty<>("");
-            } else {
-                return new SimpleObjectProperty<>(param.getValue().getReturnedTotalQty().intValue()+"");
-            }
-        });
         //未税金额
         colAmountExcludingTax.setCellValueFactory(param -> {
-            if(param.getValue().getAmountPayable() == null) {
+            if(param.getValue().getAmountExcludingTax() == null) {
                 return new SimpleObjectProperty<>("");
             } else {
-                return new SimpleObjectProperty<>(param.getValue().getAmountPayable().setScale(2, RoundingMode.HALF_UP).toString());
+                return new SimpleObjectProperty<>(param.getValue().getAmountExcludingTax().setScale(2, RoundingMode.HALF_UP).toString());
             }
         });
         //含税金额
         colAmountIncludingTax.setCellValueFactory(param -> {
-            if(param.getValue().getAmountPayable() == null) {
+            if(param.getValue().getAmountIncludingTax() == null) {
                 return new SimpleObjectProperty<>("");
             } else {
-                return new SimpleObjectProperty<>(param.getValue().getAmountPayable().setScale(2, RoundingMode.HALF_UP).toString());
+                return new SimpleObjectProperty<>(param.getValue().getAmountIncludingTax().setScale(2, RoundingMode.HALF_UP).toString());
             }
         });
         //结算方式

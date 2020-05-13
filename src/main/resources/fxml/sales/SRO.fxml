@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="635.0" prefWidth="1156.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.shunyi.autoparts.ui.purchase.PROController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="635.0" prefWidth="1156.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.shunyi.autoparts.ui.sales.SROController">
    <top>
        <VBox prefHeight="142.0" prefWidth="1832.0" BorderPane.alignment="CENTER">
            <children>
@@ -52,13 +52,13 @@
             </ToolBar>
                <FlowPane alignment="CENTER_LEFT" prefHeight="38.0" prefWidth="511.0">
                    <children>
-                       <Label alignment="CENTER_RIGHT" prefWidth="72.0" text="供应商:">
+                       <Label alignment="CENTER_RIGHT" prefWidth="72.0" text="客户编码:">
                            <font>
                                <Font size="14.0" />
                            </font>
                        </Label>
-                  <ComboBox fx:id="comboBoxSupplier" prefHeight="30.0" prefWidth="170.0" />
-                  <Button mnemonicParsing="false" onAction="#openSupplierChooser" text="..." />
+                  <ComboBox fx:id="comboBoxConsumer" prefHeight="30.0" prefWidth="170.0" />
+                  <Button mnemonicParsing="false" onAction="#openConsumerChooser" text="..." />
                    <Label alignment="CENTER_RIGHT" layoutX="10.0" layoutY="21.0" prefHeight="19.0" prefWidth="60.0" text="单 号:">
                        <font>
                            <Font size="14.0" />
@@ -169,29 +169,30 @@
    <center>
       <TableView fx:id="tableView" prefHeight="454.0" prefWidth="1832.0" tableMenuButtonVisible="true" BorderPane.alignment="CENTER">
         <columns>
-            <TableColumn fx:id="colOrderNo" prefWidth="220.0" text="采购退货单号" />
-            <TableColumn fx:id="colOrderDate" prefWidth="120.0" text="采购退货日期" />
-            <TableColumn fx:id="colSupplierCode" prefWidth="120.0" text="供应商编码" />
-            <TableColumn fx:id="colSupplierName" prefWidth="120.0" text="供应商名称" />
+            <TableColumn fx:id="colOrderNo" prefWidth="220.0" text="销售退货单号" />
+            <TableColumn fx:id="colOrderDate" prefWidth="120.0" text="日期" />
+            <TableColumn fx:id="colConsumerCode" prefWidth="120.0" text="客户编码" />
+            <TableColumn fx:id="colConsumerName" prefWidth="120.0" text="客户名称" />
             <TableColumn fx:id="colWarehouse" prefWidth="120.0" text="仓库名称" />
             <TableColumn fx:id="colOperator" prefWidth="120.0" text="经办人" />
             <TableColumn fx:id="colUserName" prefWidth="120.0" text="操作员" />
             <TableColumn fx:id="colReturnQty" prefWidth="120.0" text="退货数量" />
-            <TableColumn fx:id="colReturnedTotalQty" prefWidth="120.0" text="退货数量合计" />
             <TableColumn fx:id="colAmountExcludingTax" prefWidth="120.0" text="未税金额" />
             <TableColumn fx:id="colAmountIncludingTax" prefWidth="75.0" text="含税金额" />
-            <TableColumn fx:id="colAmountExcludingTax1" prefWidth="120.0" text="税额" />
-            <TableColumn fx:id="colAmountExcludingTax11" prefWidth="120.0" text="费用金额" />
-            <TableColumn fx:id="colAmountExcludingTax111" prefWidth="120.0" text="费用已付金额" />
-            <TableColumn fx:id="colAmountExcludingTax1111" prefWidth="120.0" text="货款已付金额" />
-            <TableColumn fx:id="colAmountExcludingTax11111" prefWidth="120.0" text="应付总额" />
+            <TableColumn fx:id="colTaxAmount" prefWidth="120.0" text="税额" />
+            <TableColumn fx:id="colTotalAmount" prefWidth="120.0" text="总额" />
+            <TableColumn fx:id="colExpenses" prefWidth="120.0" text="费用金额" />
+            <TableColumn fx:id="colReturnedExpenses" prefWidth="120.0" text="费用已退金额" />
+            <TableColumn fx:id="colReturnedSalesAmount" prefWidth="120.0" text="货款已退金额" />
+            <TableColumn fx:id="colTotalReturnedAmount" prefWidth="120.0" text="已退款总额" />
             <TableColumn fx:id="colPayment" prefWidth="90.0" text="结算方式" />
             <TableColumn fx:id="colInvoiceType" prefWidth="75.0" text="发票类型" />
             <TableColumn fx:id="colNotes" prefWidth="88.0" text="备注" />
             <TableColumn fx:id="colStatus" prefWidth="75.0" text="状态" />
             <TableColumn fx:id="colRepaymentDate" prefWidth="75.0" text="还款日期" />
             <TableColumn fx:id="colDisbursementAmount" prefWidth="75.0" text="代垫金额" />
-            <TableColumn fx:id="colRepaymentAmount" prefWidth="75.0" text="已还金额" />
+            <TableColumn fx:id="colRepaymentAmount" prefWidth="75.0" text="还款金额" />
+            <TableColumn fx:id="colPaidAmount" prefWidth="75.0" text="已还金额" />
             <TableColumn fx:id="colDiscountAmount" prefWidth="75.0" text="优惠金额" />
             <TableColumn fx:id="colAccount" prefWidth="90.0" text="账号" />
         </columns>

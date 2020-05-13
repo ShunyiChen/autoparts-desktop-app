@@ -2,7 +2,6 @@ package com.shunyi.autoparts.ui.sales;
 
 import com.shunyi.autoparts.ui.MainApp;
 import com.shunyi.autoparts.ui.main.TabContent;
-import com.shunyi.autoparts.ui.purchase.PROController;
 import javafx.beans.binding.DoubleBinding;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.BorderPane;
@@ -10,14 +9,14 @@ import javafx.scene.layout.BorderPane;
 import java.io.IOException;
 
 /**
- * @Description: 采购退货单
- * @Author: Shunyi Chen
+ * @Description: 销售退货单
+ * @Author: Shunyi
  * @CreateDate: 2020/5/9
  */
 public class SRO extends TabContent {
 
     private MainApp application;
-    private PROController proController;
+    private SROController sroController;
 
     public SRO(MainApp application) {
         this.application = application;
@@ -27,7 +26,7 @@ public class SRO extends TabContent {
     private void initComponents() {
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource(
-                        "/fxml/purchase/PRO.fxml"
+                        "/fxml/sales/SRO.fxml"
                 )
         );
         BorderPane root = null;
@@ -36,8 +35,8 @@ public class SRO extends TabContent {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        proController = loader.getController();
-        proController.initialize(application);
+        sroController = loader.getController();
+        sroController.initialize(application);
 
         //主面板右侧宽度
         DoubleBinding wBinding = application.getStage().widthProperty().subtract(application.getMainFrame().getNavigation().widthProperty().add(35));
@@ -49,8 +48,8 @@ public class SRO extends TabContent {
 
     @Override
     protected void reload() {
-        proController.clean();
-        proController.initialize(application);
+        sroController.clean();
+        sroController.initialize(application);
     }
 
     @Override
