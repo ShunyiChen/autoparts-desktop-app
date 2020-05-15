@@ -16,9 +16,9 @@ public class Constants {
     public static final String PURCHASE_RETURN_ORDER = "采购退货单";
     public static final String SALES_ORDER = "销售单";
     public static final String SALES_RETURN_ORDER = "销售退货单";
-    public static final String INVENTORYING_ORDER = "盘点单";
+    public static final String STOCKTAKING_ORDER = "盘点单";
     public static final String PRICE_ADJUSTMENT_ORDER = "调价单";
-    public static final String INVENTORY_DETAILS = "库存明细";
+    public static final String INVENTORY_ACCESSORIES = "库存配件";
     public static final String SYSTEM_SETTINGS = "系统设置";
     public static final String ROOT = "root";
     public static final String EMPTY = "";
@@ -53,5 +53,6 @@ public class Constants {
     public static final Integer ZERO = 0;
 
     /** 创建日期pattern */
-    public static final String PATTERN = "yyyy-MM-dd HH:mm:ss";
+    public static final String PATTERN_DATETIME = "yyyy-MM-dd HH:mm:ss";
+    public static final String PATTERN_DATE = "yyyy-MM-dd";
 }

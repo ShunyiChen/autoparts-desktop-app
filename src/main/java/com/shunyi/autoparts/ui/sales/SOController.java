@@ -490,7 +490,7 @@ public class SOController {
             }
         });
         //订单日期
-        SimpleDateFormat format = new SimpleDateFormat(Constants.PATTERN);
+        SimpleDateFormat format = new SimpleDateFormat(Constants.PATTERN_DATETIME);
         colOrderDate.setCellValueFactory(param -> {
             if(param.getValue().getOrderDate() == null) {
                 return new SimpleObjectProperty<>("");

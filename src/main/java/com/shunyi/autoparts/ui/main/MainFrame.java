@@ -3,9 +3,9 @@ package com.shunyi.autoparts.ui.main;
 import com.shunyi.autoparts.ui.MainApp;
 import com.shunyi.autoparts.ui.common.Constants;
 import com.shunyi.autoparts.ui.common.ICONS;
+import com.shunyi.autoparts.ui.stocktaking.STO;
 import com.shunyi.autoparts.ui.inventory.InventoryDetails;
-import com.shunyi.autoparts.ui.inventory.InventoryingOrder;
-import com.shunyi.autoparts.ui.inventory.PriceAdjustmentOrder;
+import com.shunyi.autoparts.ui.adjustment.PAO;
 import com.shunyi.autoparts.ui.purchase.PO;
 import com.shunyi.autoparts.ui.purchase.PRO;
 import com.shunyi.autoparts.ui.purchase.PurchaseView;
@@ -33,9 +33,9 @@ public class MainFrame extends BorderPane {
     private NewTab purchaseReturnOrderTab;
     private NewTab salesOrderTab;
     private NewTab salesReturnOrderTab;
-    private NewTab inventoryingOrderTab;
+    private NewTab stocktakingTab;
     private NewTab priceAdjustmentOrderTab;
-    private NewTab inventoryDetailsTab;
+    private NewTab inventoryAccessoriesTab;
 
     private NewTab systemSettingsTab;
 
@@ -134,14 +134,14 @@ public class MainFrame extends BorderPane {
             }
         });
         //盘点单
-        ClickableItem inventoryingOrder = new ClickableItem(icons.account_multiple(), Constants.INVENTORYING_ORDER, new Callback() {
+        ClickableItem inventoryingOrder = new ClickableItem(icons.account_multiple(), Constants.STOCKTAKING_ORDER, new Callback() {
             @Override
             public Object call(Object param) {
-                toolbar.setTitle(Constants.INVENTORYING_ORDER);
-                if(inventoryingOrderTab == null) {
-                    inventoryingOrderTab = new NewTab(Constants.INVENTORYING_ORDER, new InventoryingOrder(application));
+                toolbar.setTitle(Constants.STOCKTAKING_ORDER);
+                if(stocktakingTab == null) {
+                    stocktakingTab = new NewTab(Constants.STOCKTAKING_ORDER, new STO(application));
                 }
-                contentPane.addNewTab(inventoryingOrderTab);
+                contentPane.addNewTab(stocktakingTab);
                 return null;
             }
         });
@@ -151,22 +151,21 @@ public class MainFrame extends BorderPane {
             public Object call(Object param) {
                 toolbar.setTitle(Constants.PRICE_ADJUSTMENT_ORDER);
                 if(priceAdjustmentOrderTab == null) {
-                    priceAdjustmentOrderTab = new NewTab(Constants.PRICE_ADJUSTMENT_ORDER, new PriceAdjustmentOrder(application));
+                    priceAdjustmentOrderTab = new NewTab(Constants.PRICE_ADJUSTMENT_ORDER, new PAO(application));
                 }
                 contentPane.addNewTab(priceAdjustmentOrderTab);
                 return null;
             }
         });
-        //库存明细
-        ClickableItem inventoryDetails = new ClickableItem(icons.car_door(), Constants.INVENTORY_DETAILS, new Callback() {
+        //库存配件
+        ClickableItem inventoryDetails = new ClickableItem(icons.car_door(), Constants.INVENTORY_ACCESSORIES, new Callback() {
             @Override
             public Object call(Object param) {
-                toolbar.setTitle(Constants.INVENTORY_DETAILS);
-                if(inventoryDetailsTab == null) {
-                    inventoryDetailsTab = new NewTab(Constants.INVENTORY_DETAILS, new InventoryDetails(application));
-//                    toolbar.addAffectedTabContent(productDetails);
+                toolbar.setTitle(Constants.INVENTORY_ACCESSORIES);
+                if(inventoryAccessoriesTab == null) {
+                    inventoryAccessoriesTab = new NewTab(Constants.INVENTORY_ACCESSORIES, new InventoryDetails(application));
                 }
-                contentPane.addNewTab(inventoryDetailsTab);
+                contentPane.addNewTab(inventoryAccessoriesTab);
                 return null;
             }
         });

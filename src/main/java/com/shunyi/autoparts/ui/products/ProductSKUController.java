@@ -279,7 +279,7 @@ public class ProductSKUController {
         colSkuSlot.setCellValueFactory(
                 new PropertyValueFactory<SKU, String>("skuSlotMappings")
         );
-        SimpleDateFormat format = new SimpleDateFormat(Constants.PATTERN);
+        SimpleDateFormat format = new SimpleDateFormat(Constants.PATTERN_DATETIME);
         colDateCreated.setCellValueFactory(param -> {
             if(param.getValue().getDateCreated() == null) {
                 return new SimpleObjectProperty<>("");

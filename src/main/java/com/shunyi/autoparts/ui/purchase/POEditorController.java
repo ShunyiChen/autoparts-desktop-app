@@ -36,7 +36,6 @@ import java.util.stream.Collectors;
  * @CreateDate: 2020/4/19
  */
 public class POEditorController {
-    private SimpleDateFormat format = new SimpleDateFormat(Constants.PATTERN);
     /** 表单内容只读 */
     private boolean readOnly;
     private Stage dialog;
@@ -459,6 +458,7 @@ public class POEditorController {
     }
 
     private void initTable() {
+        SimpleDateFormat format = new SimpleDateFormat(Constants.PATTERN_DATETIME);
         String css = getClass().getResource("/css/styles.css").toExternalForm();
         tableView.getStylesheets().add(css);
         tableView.setId("my-table");

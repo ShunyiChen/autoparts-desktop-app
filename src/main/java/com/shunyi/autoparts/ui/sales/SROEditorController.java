@@ -41,7 +41,7 @@ import java.util.stream.Collectors;
  * @CreateDate: 2020/5/9
  */
 public class SROEditorController {
-    private SimpleDateFormat format = new SimpleDateFormat(Constants.PATTERN);
+    private SimpleDateFormat format = new SimpleDateFormat(Constants.PATTERN_DATETIME);
     /** 表单内容只读 */
     private boolean readOnly;
     private Stage dialog;
