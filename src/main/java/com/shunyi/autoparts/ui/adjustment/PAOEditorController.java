@@ -1,9 +1,9 @@
-package com.shunyi.autoparts.ui.stocktaking;
+package com.shunyi.autoparts.ui.adjustment;
 
 import com.shunyi.autoparts.ui.common.*;
 import com.shunyi.autoparts.ui.common.vo.SKU;
-import com.shunyi.autoparts.ui.common.vo.StocktakingOrder;
-import com.shunyi.autoparts.ui.common.vo.StocktakingOrderItem;
+import com.shunyi.autoparts.ui.common.vo.PriceAdjustmentOrder;
+import com.shunyi.autoparts.ui.common.vo.PriceAdjustmentOrderItem;
 import com.shunyi.autoparts.ui.common.vo.User;
 import com.shunyi.autoparts.ui.products.ProductChooserController;
 import javafx.application.Platform;
@@ -20,9 +20,10 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
-import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -32,19 +33,19 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * @Description: 销盘点单编辑器Controller
+ * @Description: 调整单编辑器Controller
  * @Author: Shunyi
- * @CreateDate: 2020/5/14
+ * @CreateDate: 2020/5/15
  */
-public class STOEditorController {
+public class PAOEditorController {
     /** 表单内容只读 */
     private boolean readOnly;
     private Stage dialog;
-    private Callback<StocktakingOrder, String> callback;
-    private Callback<TableColumn<StocktakingOrderItem, String>, TableCell<StocktakingOrderItem, String>> cellFactory;
+    private Callback<PriceAdjustmentOrder, String> callback;
+    private Callback<TableColumn<PriceAdjustmentOrderItem, String>, TableCell<PriceAdjustmentOrderItem, String>> cellFactory;
     private List<Long> deletedIds = new ArrayList<>();
-    /** 盘点单 */
-    private StocktakingOrder so;
+    /** 调价单 */
+    private PriceAdjustmentOrder pao;
     @FXML
     private Button btnSave;
     @FXML
@@ -55,15 +56,15 @@ public class STOEditorController {
     /** 单号 */
     @FXML
     private TextField txtOrderNo;
-    /** 配件条码 */
-    @FXML
-    private TextField txtProductBarcode;
     /** 仓库 */
     @FXML
     private ComboBox<String> comboBoxWarehouse;
     /** 盘点说明 */
     @FXML
     private TextField txtNotes;
+    /** 调整金额合计 */
+    @FXML
+    private TextField txtTotalAdjustedAmount;
     /** 经办人 */
     @FXML
     private TextField txtOperator;
@@ -72,94 +73,82 @@ public class STOEditorController {
     private TextField txtUserName;
     /** 采购订单明细表 */
     @FXML
-    private TableView<StocktakingOrderItem> tableView;
+    private TableView<PriceAdjustmentOrderItem> tableView;
     /** 行号 */
     @FXML
-    private TableColumn<StocktakingOrderItem, String> colRowNumber;
+    private TableColumn<PriceAdjustmentOrderItem, String> colRowNumber;
     /** SKU编码 */
     @FXML
-    private TableColumn<StocktakingOrderItem, String> colSkuCode;
+    private TableColumn<PriceAdjustmentOrderItem, String> colSkuCode;
     /** SKU名称 */
     @FXML
-    private TableColumn<StocktakingOrderItem, String> colSkuName;
+    private TableColumn<PriceAdjustmentOrderItem, String> colSkuName;
     /** 规格 */
     @FXML
-    private TableColumn<StocktakingOrderItem, String> colSpecification;
+    private TableColumn<PriceAdjustmentOrderItem, String> colSpecification;
     /** 单位 */
     @FXML
-    private TableColumn<StocktakingOrderItem, String> colUnit;
-    /** 点货数量 */
+    private TableColumn<PriceAdjustmentOrderItem, String> colUnit;
+    /** 库存数量 */
     @FXML
-    private TableColumn<StocktakingOrderItem, String> colQty;
-    /** 点货时间 */
+    private TableColumn<PriceAdjustmentOrderItem, String> colStockQty;
+    /** 库存平均价 */
     @FXML
-    private TableColumn<StocktakingOrderItem, String> colDate;
+    private TableColumn<PriceAdjustmentOrderItem, String> colAvgPrice;
+    /** 调整价 */
+    @FXML
+    private TableColumn<PriceAdjustmentOrderItem, String> colAdjustedPrice;
+    /** 现库存金额 */
+    @FXML
+    private TableColumn<PriceAdjustmentOrderItem, String> colCurrentAmount;
+    /** 调整金额 */
+    @FXML
+    private TableColumn<PriceAdjustmentOrderItem, String> colAdjustedAmount;
+    /** 进口 */
+    @FXML
+    private TableColumn<PriceAdjustmentOrderItem, String> colImport;
     /** 车型 */
     @FXML
-    private TableColumn<StocktakingOrderItem, String> colCar;
+    private TableColumn<PriceAdjustmentOrderItem, String> colCar;
     /** 品牌 */
     @FXML
-    private TableColumn<StocktakingOrderItem, String> colBrand;
-    /** 账面 */
-    @FXML
-    private TableColumn<StocktakingOrderItem, String> colAccount;
-    /** 账面-数量 */
-    @FXML
-    private TableColumn<StocktakingOrderItem, String> colAccountQty;
-    /** 账面-金额 */
-    @FXML
-    private TableColumn<StocktakingOrderItem, String> colAccountAmount;
-    /** 调整 */
-    @FXML
-    private TableColumn<StocktakingOrderItem, String> colAdjustment;
-    /** 调整-数量 */
-    @FXML
-    private TableColumn<StocktakingOrderItem, String> colAdjustmentQty;
-    /** 调整-单价 */
-    @FXML
-    private TableColumn<StocktakingOrderItem, String> colAdjustmentPrice;
-    /** 调整-金额 */
-    @FXML
-    private TableColumn<StocktakingOrderItem, String> colAdjustmentAmount;
-    /** 实际 */
-    @FXML
-    private TableColumn<StocktakingOrderItem, String> colReality;
-    /** 实际-数量 */
-    @FXML
-    private TableColumn<StocktakingOrderItem, String> colRealityQty;
-    /** 实际-金额 */
-    @FXML
-    private TableColumn<StocktakingOrderItem, String> colRealityAmount;
+    private TableColumn<PriceAdjustmentOrderItem, String> colBrand;
     /** 产地 */
     @FXML
-    private TableColumn<StocktakingOrderItem, String> colPlace;
+    private TableColumn<PriceAdjustmentOrderItem, String> colPlace;
     /** 备注 */
     @FXML
-    private TableColumn<StocktakingOrderItem, String> colNotes;
+    private TableColumn<PriceAdjustmentOrderItem, String> colNotes;
+    /** 通用件号 */
+    @FXML
+    private TableColumn<PriceAdjustmentOrderItem, String> colCommonNumber;
+    /** 通用车型 */
+    @FXML
+    private TableColumn<PriceAdjustmentOrderItem, String> colRelevantModels;
 
     /**
      * Constructor
      *
      * @param dialog
      * @param callback
-     * @param so
+     * @param pao
      * @param readOnly
      */
-    public void initialize(Stage dialog, Callback<StocktakingOrder, String> callback, StocktakingOrder so, boolean readOnly) {
+    public void initialize(Stage dialog, Callback<PriceAdjustmentOrder, String> callback, PriceAdjustmentOrder pao, boolean readOnly) {
         this.dialog = dialog;
         this.callback = callback;
-        this.so = so;
+        this.pao = pao;
         this.readOnly = readOnly;
         btnSubmit.setStyle(String.format("-fx-base: %s;", "rgb(63,81,181)"));
         initCellFactory();
         initInputFields();
         initTable();
-        if(so != null) {
+        if(pao != null) {
             //单据日期
-            LocalDate localDate = so.getOrderDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            LocalDate localDate = pao.getOrderDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             orderDate.setValue(localDate);
             //单号
-            txtOrderNo.setText(so.getOrderNo());
+            txtOrderNo.setText(pao.getOrderNo());
 //            //客户编码
 //            comboBoxConsumerCode.setValue(pro.getConsumer().getCode());
 //            //发票类型
@@ -169,9 +158,9 @@ public class STOEditorController {
 //            //运费
 //            txtFreight.setText(pro.getFreight()+"");
             //备注
-            txtNotes.setText(so.getNotes());
+            txtNotes.setText(pao.getNotes());
             //经办人
-            txtOperator.setText(so.getOperator());
+            txtOperator.setText(pao.getOperator());
 //            //结算方式
 //            comboBoxPayments.setValue(pro.getPayment());
 //            //系统账号
@@ -189,13 +178,15 @@ public class STOEditorController {
 //            //账号
 //            comboBoxAccount.setValue(pro.getAccount());
             try {
-                StocktakingOrderItem[] items = HttpClient.GET("/stocktakingOrderItems/order/"+so.getId(), StocktakingOrderItem[].class);
-                for(StocktakingOrderItem item : items) {
+                PriceAdjustmentOrderItem[] items = HttpClient.GET("/priceAdjustmentOrderItems/order/"+pao.getId(), PriceAdjustmentOrderItem[].class);
+                for(PriceAdjustmentOrderItem item : items) {
                     addItem(item);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
+            updateSummary();
 
         } else {
             addItem();
@@ -220,7 +211,7 @@ public class STOEditorController {
         //单号
         try {
             User user = HttpClient.GET("/users/username/"+Env.getInstance().currentUser(), User.class);
-            String generatedOrderNo = HttpClient.GET("/stocktakingOrders/generation/orderNo/"+user.getId());
+            String generatedOrderNo = HttpClient.GET("/priceAdjustmentOrders/generation/orderNo/"+user.getId());
             txtOrderNo.setText(generatedOrderNo);
         } catch (IOException e) {
             e.printStackTrace();
@@ -252,11 +243,11 @@ public class STOEditorController {
                 return new SimpleObjectProperty<>(param.getValue().getSku().getSkuCode() );
             }
         });
-        colSkuCode.setOnEditCommit((EventHandler<TableColumn.CellEditEvent<StocktakingOrderItem, String>>) t -> {
-            ObservableList<StocktakingOrderItem> data = t.getTableView().getItems();
+        colSkuCode.setOnEditCommit((EventHandler<TableColumn.CellEditEvent<PriceAdjustmentOrderItem, String>>) t -> {
+            ObservableList<PriceAdjustmentOrderItem> data = t.getTableView().getItems();
             if(data != null) {
                 if(t.getTablePosition().getRow() < data.size()) {
-                    StocktakingOrderItem selected = data.get( t.getTablePosition().getRow());
+                    PriceAdjustmentOrderItem selected = data.get( t.getTablePosition().getRow());
                     if(selected != null) {
                         String skuCode = t.getNewValue();
                         try {
@@ -264,9 +255,8 @@ public class STOEditorController {
                             SKU sku = GoogleJson.GET().fromJson(json, SKU.class);
                             if(sku.getId() != null) {
                                 selected.setSku(sku);
-                                selected.setStocktakingQty(0);
-                                selected.setStocktakingDate(new Date());
                                 data.set(t.getTablePosition().getRow(), selected);
+                                updateSummary();
 
                             } else {
                                 Platform.runLater(() -> {
@@ -304,50 +294,77 @@ public class STOEditorController {
                 return new SimpleObjectProperty<>(param.getValue().getSku().getProduct().getUnit().getName());
             }
         });
-        //点货数量
-        colQty.setCellFactory(cellFactory);
-        colQty.setCellValueFactory(new PropertyValueFactory<>("stocktakingQty"));
-        colQty.setOnEditCommit(t -> {
-            ObservableList<StocktakingOrderItem> data = t.getTableView().getItems();
+        //库存数量
+        colStockQty.setCellValueFactory(param -> {
+            if(param.getValue().getSku() == null) {
+                return new SimpleObjectProperty<>("");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getSku().getStockQty()+"");
+            }
+        });
+        //库存平均价
+        colAvgPrice.setCellValueFactory(param -> {
+            if(param.getValue().getSku() == null) {
+                return new SimpleObjectProperty<>("");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getSku().getStockQty()+"");
+            }
+        });
+        //调整价
+        colAdjustedPrice.setCellFactory(cellFactory);
+        colAdjustedPrice.setCellValueFactory(new PropertyValueFactory<>("priceOfAdjustment"));
+        colAdjustedPrice.setOnEditCommit(t -> {
+            ObservableList<PriceAdjustmentOrderItem> data = t.getTableView().getItems();
             if(data != null) {
                 if(t.getTablePosition().getRow() < data.size()) {
-                    StocktakingOrderItem selected = data.get( t.getTablePosition().getRow());
+                    PriceAdjustmentOrderItem selected = data.get( t.getTablePosition().getRow());
                     if(selected != null) {
                         String newValue = t.getNewValue();
-                        if(NumberValidationUtils.isPositiveInteger(newValue)) {
-                            //手动输入点货数量
-                            selected.setStocktakingQty(Integer.parseInt(newValue));
-                            data.set(t.getTablePosition().getRow(), selected);
-                        }
+                        selected.setPriceOfAdjustment(new BigDecimal(newValue).setScale(2, RoundingMode.HALF_UP));
+                        data.set(t.getTablePosition().getRow(), selected);
+                        updateSummary();
                     }
                 }
             }
         });
-        //点货时间
-        colDate.setCellFactory(TextFieldTableCell.forTableColumn());
-        colDate.setCellValueFactory(param -> {
-            if(param.getValue().getStocktakingDate() == null) {
-                return new SimpleObjectProperty<>(format.format(new Date()));
+        //现库存金额
+        colCurrentAmount.setCellValueFactory(param -> {
+            if(param.getValue().getSku() == null) {
+                return new SimpleObjectProperty<>("");
             } else {
-                return new SimpleObjectProperty<>(format.format(param.getValue().getStocktakingDate()));
+                return new SimpleObjectProperty<>(param.getValue().getSku().getStockQty()+"");
             }
         });
-        colDate.setOnEditCommit(t -> {
-            ObservableList<StocktakingOrderItem> data = t.getTableView().getItems();
+        //调整金额
+        colAdjustedAmount.setCellValueFactory(param -> {
+            if(param.getValue().getSku() == null) {
+                return new SimpleObjectProperty<>("");
+            } else {
+                return new SimpleObjectProperty<>(new BigDecimal(param.getValue().getSku().getStockQty()).multiply(param.getValue().getPriceOfAdjustment())+"");
+            }
+        });
+        //备注
+        colNotes.setCellFactory(cellFactory);
+        colNotes.setCellValueFactory(new PropertyValueFactory<>("notes"));
+        colNotes.setOnEditCommit(t -> {
+            ObservableList<PriceAdjustmentOrderItem> data = t.getTableView().getItems();
             if(data != null) {
                 if(t.getTablePosition().getRow() < data.size()) {
-                    StocktakingOrderItem selected = data.get( t.getTablePosition().getRow());
+                    PriceAdjustmentOrderItem selected = data.get( t.getTablePosition().getRow());
                     if(selected != null) {
                         String newValue = t.getNewValue();
-                        //手动输入点货时间
-                        try {
-                            selected.setStocktakingDate(format.parse(newValue));
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
+                        selected.setNotes(newValue);
                         data.set(t.getTablePosition().getRow(), selected);
                     }
                 }
+            }
+        });
+        //进口
+        colImport.setCellValueFactory(param -> {
+            if(param.getValue().getSku() == null) {
+                return new SimpleObjectProperty<>("");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getSku().getProduct().getImported()+"");
             }
         });
         //车型
@@ -366,14 +383,6 @@ public class STOEditorController {
                 return new SimpleObjectProperty<>(param.getValue().getSku().getProduct().getBrand().getName());
             }
         });
-        //账面数量
-        colAccountQty.setCellValueFactory(param -> {
-            if(param.getValue().getSku() == null || param.getValue().getSku().getProduct().getBrand() == null) {
-                return new SimpleObjectProperty<>("");
-            } else {
-                return new SimpleObjectProperty<>(param.getValue().getSku().getStockQty().toString());
-            }
-        });
         //产地
         colPlace.setCellValueFactory(param -> {
             if(param.getValue().getSku() == null || param.getValue().getSku().getProduct().getPlace() == null) {
@@ -382,20 +391,20 @@ public class STOEditorController {
                 return new SimpleObjectProperty<>(param.getValue().getSku().getProduct().getPlace().getName());
             }
         });
-        //备注
-        colNotes.setCellFactory(cellFactory);
-        colNotes.setCellValueFactory(new PropertyValueFactory<>("notes"));
-        colNotes.setOnEditCommit(t -> {
-            ObservableList<StocktakingOrderItem> data = t.getTableView().getItems();
-            if(data != null) {
-                if(t.getTablePosition().getRow() < data.size()) {
-                    StocktakingOrderItem selected = data.get( t.getTablePosition().getRow());
-                    if(selected != null) {
-                        String newValue = t.getNewValue();
-                        selected.setNotes(newValue);
-                        data.set(t.getTablePosition().getRow(), selected);
-                    }
-                }
+        //通用件号
+        colCommonNumber.setCellValueFactory(param -> {
+            if(param.getValue().getSku() == null) {
+                return new SimpleObjectProperty<>("");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getSku().getProduct().getCommonNumber());
+            }
+        });
+        //通用车型
+        colRelevantModels.setCellValueFactory(param -> {
+            if(param.getValue().getSku() == null) {
+                return new SimpleObjectProperty<>("");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getSku().getProduct().getRelevantModels());
             }
         });
 //        tableView.setOnMouseClicked((MouseEvent event) -> {
@@ -407,11 +416,26 @@ public class STOEditorController {
 //        });
     }
 
+    private void updateSummary() {
+        int totalRecords = 0;
+//        BigDecimal totalQty = BigDecimal.ZERO;
+        BigDecimal totalAmount = BigDecimal.ZERO;
+        ObservableList<PriceAdjustmentOrderItem> list = tableView.getItems();
+        for(PriceAdjustmentOrderItem item : list) {
+            totalRecords++;
+//            totalQty = totalQty.add(new BigDecimal(item.getSku().getStockQty()));
+            totalAmount = totalAmount.add(item.getPriceOfAdjustment().multiply(new BigDecimal(item.getSku().getStockQty())));
+        }
+//        labelRecords.setText(totalRecords+"");
+//        labelTotalQty.setText(totalQty.toString());
+        txtTotalAdjustedAmount.setText(totalAmount.toString());
+    }
+
     /**
      *
      * @param item
      */
-    private void addItem(StocktakingOrderItem item) {
+    private void addItem(PriceAdjustmentOrderItem item) {
         tableView.getItems().add(item);
         tableView.refresh();
         tableView.getSelectionModel().select(item);
@@ -419,17 +443,18 @@ public class STOEditorController {
 
     @FXML
     private void addItem() {
-        StocktakingOrderItem item = new StocktakingOrderItem(Constants.ID, null, null, Constants.ZERO, null, "");
+        PriceAdjustmentOrderItem item = new PriceAdjustmentOrderItem(Constants.ID, null, null, BigDecimal.ZERO,"");
         addItem(item);
     }
 
     @FXML
     private void removeItem() {
-        StocktakingOrderItem selectedItem = tableView.getSelectionModel().getSelectedItem();
+        PriceAdjustmentOrderItem selectedItem = tableView.getSelectionModel().getSelectedItem();
         tableView.getItems().remove(selectedItem);
         tableView.refresh();
         //记录删除ID,用于保存更新
         deletedIds.add(selectedItem.getId());
+        updateSummary();
     }
 
     @FXML
@@ -441,17 +466,10 @@ public class STOEditorController {
      * 确认提交
      */
     private void confirmAndSubmit() {
-        String header = "盘点单: "+txtOrderNo.getText()+"\n请谨慎确定以下数据:\n";
+        String header = "调价单: "+txtOrderNo.getText()+"\n请谨慎确定以下数据:\n";
         StringBuilder content = new StringBuilder();
         content.append("============================================\n");
-//        content.append("\n退货总金额: "+labelTotalAmount.getText()+" 元 \n");
-//        content.append("\n代垫费用金额: "+txtDisbursement.getText()+" 元 \n");
-//        content.append("\n应付货款金额: "+txtPurchaseAmount.getText()+" 元 \n");
-//        content.append("\n代垫费用金额: "+txtDisbursement.getText()+" 元 \n");
-//        content.append("\n本次优惠金额: "+txtDiscountAmount.getText()+" 元 \n");
-//        content.append("\n总计应付金额: "+txtAmountPayable.getText()+" 元 \n");
-//        content.append("\n本次实付金额: "+txtPaymentAmount.getText()+" 元 \n\n");
-
+        content.append("\n调价总金额: "+txtTotalAdjustedAmount.getText()+" 元 \n");
         Alert alertConfirm = new Alert(Alert.AlertType.CONFIRMATION, "", ButtonType.NO, ButtonType.YES);
         alertConfirm.setHeaderText(header);
         alertConfirm.setContentText(content.toString());
@@ -467,16 +485,16 @@ public class STOEditorController {
      * @param status
      * @param item
      */
-    private void updateStockQty(String status, StocktakingOrderItem item) {
+    private void updateStockQty(String status, PriceAdjustmentOrderItem item) {
         //如果结算，则覆盖原有库存数
-        if(status.equals(Constants.CLOSED)) {
-            String json2 = GoogleJson.GET().toJson(item.getStocktakingQty());
-            try {
-                HttpClient.PUT("/sku/stockQty/overwrite/"+item.getSku().getId(), json2);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-        }
+//        if(status.equals(Constants.CLOSED)) {
+//            String json2 = GoogleJson.GET().toJson(item.getStocktakingQty());
+//            try {
+//                HttpClient.PUT("/sku/stockQty/overwrite/"+item.getSku().getId(), json2);
+//            } catch (IOException ex) {
+//                ex.printStackTrace();
+//            }
+//        }
     }
 
     /**
@@ -485,46 +503,43 @@ public class STOEditorController {
      * @param status
      */
     private void saveOrUpdate(String status) {
-        if(so == null) {
+        if(pao == null) {
             //插入新记录
-            so = new StocktakingOrder();
+            pao = new PriceAdjustmentOrder();
             LocalDate localDate = orderDate.getValue();
             Date date = Date.from(localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
             //日期
-            so.setOrderDate(date);
+            pao.setOrderDate(date);
             //单号
-            so.setOrderNo(txtOrderNo.getText());
-            //配件条码
-            so.setProductBarcode(txtProductBarcode.getText());
+            pao.setOrderNo(txtOrderNo.getText());
             //仓库
-            so.setWarehouse(Env.getInstance().currentStore().getWarehouse());
-            //盘点说明
-            so.setNotes(txtNotes.getText());
+            pao.setWarehouse(Env.getInstance().currentStore().getWarehouse());
+            //调价说明
+            pao.setNotes(txtNotes.getText());
+            //合计调整金额
+            pao.setAmountOfAdjustment(new BigDecimal(txtTotalAdjustedAmount.getText()));
             //经办人
-            so.setOperator(txtOperator.getText());
+            pao.setOperator(txtOperator.getText());
             //操作员
-            so.setUserName(Env.getInstance().currentUser());
+            pao.setUserName(Env.getInstance().currentUser());
             //状态
-            so.setStatus(status);
-            //
-
-
-            //创建盘点单对象
-            String json = GoogleJson.GET().toJson(so);
+            pao.setStatus(status);
+            //创建调价单对象
+            String json = GoogleJson.GET().toJson(pao);
             try {
-                String idStr = HttpClient.POST("/stocktakingOrders", json);
-                so.setId(Long.valueOf(idStr));
+                String idStr = HttpClient.POST("/priceAdjustmentOrders", json);
+                pao.setId(Long.valueOf(idStr));
             } catch (IOException e) {
                 e.printStackTrace();
             }
             //创建销售退货单明细
-            ObservableList<StocktakingOrderItem> items = tableView.getItems();
+            ObservableList<PriceAdjustmentOrderItem> items = tableView.getItems();
             items.forEach(e -> {
                 if(e.getSku() != null) {
-                    e.setStocktakingOrder(so);
+                    e.setPriceAdjustmentOrder(pao);
                     String data = GoogleJson.GET().toJson(e);
                     try {
-                        String idStr = HttpClient.POST("/stocktakingOrderItems", data);
+                        String idStr = HttpClient.POST("/priceAdjustmentOrderItems", data);
                         e.setId(Long.valueOf(idStr));
                     } catch (IOException e2) {
                         e2.printStackTrace();
@@ -533,51 +548,51 @@ public class STOEditorController {
                     updateStockQty(status, e);
                 }
             });
-            callback.call(so);
+            callback.call(pao);
         } else {
             //更新原有记录
-            StocktakingOrder so = new StocktakingOrder();
-            so.setId(this.so.getId());
+            PriceAdjustmentOrder pao = new PriceAdjustmentOrder();
+            pao.setId(this.pao.getId());
             LocalDate localDate = orderDate.getValue();
             Date date = Date.from(localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
             //日期
-            so.setOrderDate(date);
+            pao.setOrderDate(date);
             //单号
-            so.setOrderNo(txtOrderNo.getText());
-            //配件条码
-            so.setProductBarcode(txtProductBarcode.getText());
+            pao.setOrderNo(txtOrderNo.getText());
             //仓库
-            so.setWarehouse(Env.getInstance().currentStore().getWarehouse());
-            //盘点说明
-            so.setNotes(txtNotes.getText());
+            pao.setWarehouse(Env.getInstance().currentStore().getWarehouse());
+            //调价说明
+            pao.setNotes(txtNotes.getText());
+            //合计调整金额
+            pao.setAmountOfAdjustment(new BigDecimal(txtTotalAdjustedAmount.getText()));
             //经办人
-            so.setOperator(txtOperator.getText());
+            pao.setOperator(txtOperator.getText());
             //操作员
-            so.setUserName(Env.getInstance().currentUser());
+            pao.setUserName(Env.getInstance().currentUser());
             //状态
-            so.setStatus(status);
-            String json = GoogleJson.GET().toJson(so);
+            pao.setStatus(status);
+            String json = GoogleJson.GET().toJson(pao);
             try {
-                HttpClient.PUT("/stocktakingOrders/"+so.getId(), json);
+                HttpClient.PUT("/priceAdjustmentOrders/"+pao.getId(), json);
             } catch (IOException e) {
                 e.printStackTrace();
             }
             //更新或创建销售退货单明细
-            ObservableList<StocktakingOrderItem> items = tableView.getItems();
+            ObservableList<PriceAdjustmentOrderItem> items = tableView.getItems();
             items.forEach(e -> {
                 if(e.getSku() != null) {
-                    e.setStocktakingOrder(so);
+                    e.setPriceAdjustmentOrder(pao);
                     String data = GoogleJson.GET().toJson(e);
                     if(e.getId() == 0L) {
                         try {
-                            String idStr = HttpClient.POST("/stocktakingOrderItems", data);
+                            String idStr = HttpClient.POST("/priceAdjustmentOrderItems", data);
                             e.setId(Long.valueOf(idStr));
                         } catch (IOException e2) {
                             e2.printStackTrace();
                         }
                     } else {
                         try {
-                            HttpClient.PUT("/stocktakingOrderItems/"+e.getId(), data);
+                            HttpClient.PUT("/priceAdjustmentOrderItems/"+e.getId(), data);
                         } catch (IOException e2) {
                             e2.printStackTrace();
                         }
@@ -587,14 +602,14 @@ public class STOEditorController {
                 }
             });
             //删除已经移除的行
-            deletedIds.forEach(StocktakingOrderItemId -> {
+            deletedIds.forEach(PriceAdjustmentOrderItemId -> {
                 try {
-                    HttpClient.DELETE("/stocktakingOrderItems/"+StocktakingOrderItemId);
+                    HttpClient.DELETE("/priceAdjustmentOrderItems/"+PriceAdjustmentOrderItemId);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             });
-            callback.call(so);
+            callback.call(pao);
         }
     }
 
@@ -614,10 +629,11 @@ public class STOEditorController {
 
             @Override
             public String call(SKU sku) {
-                StocktakingOrderItem item = tableView.getSelectionModel().getSelectedItem();
+                PriceAdjustmentOrderItem item = tableView.getSelectionModel().getSelectedItem();
                 item.setSku(sku);
                 tableView.refresh();
                 tableView.getSelectionModel().select(item);
+                updateSummary();
                 return null;
             }
         };

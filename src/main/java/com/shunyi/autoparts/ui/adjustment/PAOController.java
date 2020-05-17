@@ -1,9 +1,8 @@
-package com.shunyi.autoparts.ui.stocktaking;
+package com.shunyi.autoparts.ui.adjustment;
 
 import com.shunyi.autoparts.ui.MainApp;
 import com.shunyi.autoparts.ui.common.*;
-import com.shunyi.autoparts.ui.common.vo.Stocktaking;
-import com.shunyi.autoparts.ui.common.vo.StocktakingOrder;
+import com.shunyi.autoparts.ui.common.vo.PriceAdjustmentOrder;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -28,60 +27,55 @@ import java.util.Date;
 import java.util.stream.Collectors;
 
 /**
- * @Description: 盘点单Controller
+ * @Description: 调整单Controller
  * @Author: Shunyi
- * @CreateDate: 2020/5/13
+ * @CreateDate: 2020/5/15
  */
-public class STOController {
+public class PAOController {
     private MainApp application;
-    private STOEditorController stoEditorController;
-    private Stocktaking stocktaking;
+    private PAOEditorController paoEditorController;
 
     @FXML
     private TextField txtNo;
-    @FXML
-    private ComboBox<String> comboBoxWarehouse;
-    @FXML
-    private ComboBox<String> comboBoxStocktaking;
     @FXML
     private TextField txtOperator;
     @FXML
     private TextField txtUserName;
     @FXML
+    private ComboBox<String> comboBoxWarehouse;
+    @FXML
+    private TextField txtNotes;
+    @FXML
+    private ComboBox<String> comboBoxStatus;
+    @FXML
     private DatePicker fromDate;
     @FXML
     private DatePicker toDate;
     @FXML
-    private ComboBox<String> comboBoxStatus;
+    private TableView<PriceAdjustmentOrder> tableView;
     @FXML
-    private TextField txtNotes;
+    private TableColumn<PriceAdjustmentOrder, String> colOrderNo;
     @FXML
-    private TableView<StocktakingOrder> tableView;
+    private TableColumn<PriceAdjustmentOrder, String> colOrderDate;
     @FXML
-    private TableColumn<StocktakingOrder, String> colOrderNo;
+    private TableColumn<PriceAdjustmentOrder, String> colWarehouseCode;
     @FXML
-    private TableColumn<StocktakingOrder, String> colOrderDate;
+    private TableColumn<PriceAdjustmentOrder, String> colWarehouseName;
     @FXML
-    private TableColumn<StocktakingOrder, String> colWarehouseCode;
+    private TableColumn<PriceAdjustmentOrder, String> colAdjustmentAmount;
     @FXML
-    private TableColumn<StocktakingOrder, String> colWarehouseName;
+    private TableColumn<PriceAdjustmentOrder, String> colOperator;
     @FXML
-    private TableColumn<StocktakingOrder, String> colStocktakingQty;
+    private TableColumn<PriceAdjustmentOrder, String> colUserName;
     @FXML
-    private TableColumn<StocktakingOrder, String> colStocktakingAmount;
+    private TableColumn<PriceAdjustmentOrder, String> colNotes;
     @FXML
-    private TableColumn<StocktakingOrder, String> colOperator;
-    @FXML
-    private TableColumn<StocktakingOrder, String> colUserName;
-    @FXML
-    private TableColumn<StocktakingOrder, String> colNotes;
-    @FXML
-    private TableColumn<StocktakingOrder, String> colStatus;
+    private TableColumn<PriceAdjustmentOrder, String> colStatus;
     @FXML
     private void create() {
-        Callback<StocktakingOrder, String> callback = new Callback<StocktakingOrder, String>() {
+        Callback<PriceAdjustmentOrder, String> callback = new Callback<PriceAdjustmentOrder, String>() {
             @Override
-            public String call(StocktakingOrder stockTakingOrder) {
+            public String call(PriceAdjustmentOrder stockTakingOrder) {
                 tableView.getItems().add(stockTakingOrder);
                 tableView.refresh();
                 return null;
@@ -89,7 +83,7 @@ public class STOController {
         };
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource(
-                        "/fxml/stocktaking/STOEditor.fxml"
+                        "/fxml/adjustment/PAOEditor.fxml"
                 )
         );
         BorderPane root = null;
@@ -100,9 +94,9 @@ public class STOController {
         }
         Scene scene = new Scene(root);
         Stage dialog = new Stage();
-        stoEditorController = loader.getController();
-        stoEditorController.initialize(dialog, callback, null,false);
-        dialog.setTitle("新建盘点单");
+        paoEditorController = loader.getController();
+        paoEditorController.initialize(dialog, callback, null,false);
+        dialog.setTitle("新建调价单");
         dialog.initOwner(application.getStage());
         dialog.setResizable(true);
         dialog.setMaximized(true);
@@ -115,20 +109,20 @@ public class STOController {
 
     @FXML
     private void update() {
-        StocktakingOrder po = tableView.getSelectionModel().getSelectedItem();
-        if(po == null) {
+        PriceAdjustmentOrder pao = tableView.getSelectionModel().getSelectedItem();
+        if(pao == null) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
-            alert.setHeaderText("请选择盘点单");
+            alert.setHeaderText("请选择调价单");
             alert.show();
             return;
         }
-        boolean readOnly = po.getStatus().equals(Constants.CLOSED);
-        Callback<StocktakingOrder, String> callback = new Callback<StocktakingOrder, String>() {
+        boolean readOnly = pao.getStatus().equals(Constants.CLOSED);
+        Callback<PriceAdjustmentOrder, String> callback = new Callback<PriceAdjustmentOrder, String>() {
             @Override
-            public String call(StocktakingOrder updated) {
+            public String call(PriceAdjustmentOrder updated) {
                 //刷新表格
                 int index = tableView.getSelectionModel().getSelectedIndex();
-                tableView.getItems().remove(po);
+                tableView.getItems().remove(pao);
                 tableView.getItems().add(index, updated);
                 tableView.getSelectionModel().select(updated);
                 return null;
@@ -136,7 +130,7 @@ public class STOController {
         };
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource(
-                        "/fxml/stocktaking/STOEditor.fxml"
+                        "/fxml/adjustment/PAOEditor.fxml"
                 )
         );
         BorderPane root = null;
@@ -147,9 +141,9 @@ public class STOController {
         }
         Scene scene = new Scene(root);
         Stage dialog = new Stage();
-        stoEditorController = loader.getController();
-        stoEditorController.initialize(dialog, callback, po, readOnly);
-        dialog.setTitle("更改盘点单");
+        paoEditorController = loader.getController();
+        paoEditorController.initialize(dialog, callback, pao, readOnly);
+        dialog.setTitle("更改调价单");
         dialog.initOwner(application.getStage());
         dialog.setResizable(true);
         dialog.setMaximized(true);
@@ -162,7 +156,7 @@ public class STOController {
 
     @FXML
     private void delete() {
-        StocktakingOrder selected = tableView.getSelectionModel().getSelectedItem();
+        PriceAdjustmentOrder selected = tableView.getSelectionModel().getSelectedItem();
         if(selected != null) {
             if(selected.getStatus().equals(Constants.CLOSED)) {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
@@ -171,18 +165,18 @@ public class STOController {
                 return;
             }
             Alert alertConfirm = new Alert(Alert.AlertType.CONFIRMATION, "", ButtonType.NO, ButtonType.YES);
-            alertConfirm.setHeaderText("请确认是否要删除盘点单？");
+            alertConfirm.setHeaderText("请确认是否要删除调价单？");
             alertConfirm.showAndWait().filter(response -> response == ButtonType.YES).ifPresent(response -> {
 
                 //删除订单明细
                 try {
-                    HttpClient.DELETE("/stocktakingOrdersItems/order/"+selected.getId());
+                    HttpClient.DELETE("/priceAdjustmentOrderItems/order/"+selected.getId());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
                 //删除订单
                 try {
-                    HttpClient.DELETE("/stocktakingOrders/"+selected.getId());
+                    HttpClient.DELETE("/priceAdjustmentOrders/"+selected.getId());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -191,7 +185,7 @@ public class STOController {
             });
         } else {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
-            alert.setHeaderText("请选择盘点单");
+            alert.setHeaderText("请选择调价单");
             alert.show();
             return;
         }
@@ -201,8 +195,8 @@ public class STOController {
     private void refresh() {
         tableView.getItems().clear();
         try {
-            StocktakingOrder[] stocktakingOrders = HttpClient.GET("/stocktakingOrders", StocktakingOrder[].class);
-            tableView.getItems().addAll(stocktakingOrders);
+            PriceAdjustmentOrder[] priceAdjustmentOrders = HttpClient.GET("/priceAdjustmentOrders", PriceAdjustmentOrder[].class);
+            tableView.getItems().addAll(priceAdjustmentOrders);
             tableView.refresh();
         } catch (IOException e) {
             e.printStackTrace();
@@ -232,13 +226,13 @@ public class STOController {
 
     @FXML
     private void search() {
-        StocktakingOrder condition = new StocktakingOrder();
+        PriceAdjustmentOrder condition = new PriceAdjustmentOrder();
         condition.setOrderNo(txtNo.getText());
-        condition.setStocktaking(stocktaking);
         condition.setOperator(txtOperator.getText());
         condition.setUserName(txtUserName.getText());
         condition.setWarehouse(Env.getInstance().currentStore().getWarehouse());
         condition.setNotes(txtNotes.getText());
+        condition.setStatus(comboBoxStatus.getValue());
         if(fromDate.getValue() != null && toDate.getValue() != null) {
             condition.setFromDate(Date.from(fromDate.getValue().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
             condition.setToDate(Date.from(toDate.getValue().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
@@ -246,11 +240,11 @@ public class STOController {
         String json = GoogleJson.GET().toJson(condition);
         String data = null;
         try {
-            data = HttpClient.POST("/stocktakingOrders/search", json);
+            data = HttpClient.POST("/priceAdjustmentOrders/search", json);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        StocktakingOrder[] results = GoogleJson.GET().fromJson(data, StocktakingOrder[].class);
+        PriceAdjustmentOrder[] results = GoogleJson.GET().fromJson(data, PriceAdjustmentOrder[].class);
         tableView.getItems().clear();
         tableView.getItems().addAll(results);
         tableView.refresh();
@@ -266,45 +260,6 @@ public class STOController {
         txtUserName.setText("");
         txtNotes.setText("");
         toDate.setValue(null);
-    }
-
-    @FXML
-    private void openStocktakingChooser() {
-        Callback<Stocktaking, String> callback = new Callback<Stocktaking, String>() {
-            @Override
-            public String call(Stocktaking param) {
-                if(param != null) {
-                    if(!comboBoxStocktaking.getItems().contains(param.getName())) {
-                        comboBoxStocktaking.getItems().add(0, param.getName());
-                    }
-                    comboBoxStocktaking.setValue(param.getName());
-                }
-                return null;
-            }
-        };
-        FXMLLoader loader = new FXMLLoader(
-                getClass().getResource(
-                        "/fxml/stocktaking/StocktakingChooser.fxml"
-                )
-        );
-        BorderPane root = null;
-        try {
-            root = loader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Scene scene = new Scene(root);
-        Stage dialog = new Stage();
-        StocktakingChooserController controller = loader.getController();
-        controller.initialize(dialog, callback, null);
-        dialog.setTitle("盘点方式选择器");
-        dialog.initOwner(application.getStage());
-        dialog.setResizable(false);
-        dialog.initModality(Modality.APPLICATION_MODAL);
-        dialog.setScene(scene);
-        // center stage on screen
-        dialog.centerOnScreen();
-        dialog.show();
     }
 
     public void clean() {
@@ -323,14 +278,6 @@ public class STOController {
         new AutoCompleteBox(comboBoxStatus);
         //仓库
         comboBoxWarehouse.getItems().add(Env.getInstance().currentStore().getWarehouse().getName());
-        //盘点方式
-        try {
-            Stocktaking[] stockTakings = HttpClient.GET("/stocktaking", Stocktaking[].class);
-            comboBoxStocktaking.getItems().addAll(Arrays.asList(stockTakings).stream().map(e -> e.getName()).collect(Collectors.toList()));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        new AutoCompleteBox(comboBoxStocktaking);
     }
 
     private void initTable() {
@@ -390,20 +337,12 @@ public class STOController {
                 return new SimpleObjectProperty<>(param.getValue().getWarehouse().getName());
             }
         });
-        //盘点数量
-        colStocktakingQty.setCellValueFactory(param -> {
-            if(param.getValue().getStocktakingQty() == null) {
-                return new SimpleObjectProperty<>("");
+        //调价金额
+        colAdjustmentAmount.setCellValueFactory(param -> {
+            if(param.getValue().getAmountOfAdjustment() == null) {
+                return new SimpleObjectProperty<>("-----");
             } else {
-                return new SimpleObjectProperty<>(param.getValue().getStocktakingQty()+"");
-            }
-        });
-        //盘点金额
-        colStocktakingAmount.setCellValueFactory(param -> {
-            if(param.getValue().getStocktakingAmount() == null) {
-                return new SimpleObjectProperty<>("");
-            } else {
-                return new SimpleObjectProperty<>(param.getValue().getStocktakingAmount().setScale(2, RoundingMode.HALF_UP).toString());
+                return new SimpleObjectProperty<>(param.getValue().getAmountOfAdjustment().toString());
             }
         });
         //备注

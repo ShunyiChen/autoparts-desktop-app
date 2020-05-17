@@ -16,7 +16,7 @@ import java.io.IOException;
  */
 public class PAO extends TabContent {
     private MainApp application;
-    private STOController stController;
+    private PAOController paoController;
 
     public PAO(MainApp application) {
         this.application = application;
@@ -26,7 +26,7 @@ public class PAO extends TabContent {
     private void initComponents() {
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource(
-                        "/fxml/adjustment/STO.fxml"
+                        "/fxml/adjustment/PAO.fxml"
                 )
         );
         BorderPane root = null;
@@ -35,8 +35,8 @@ public class PAO extends TabContent {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        stController = loader.getController();
-        stController.initialize(application);
+        paoController = loader.getController();
+        paoController.initialize(application);
 
         //主面板右侧宽度
         DoubleBinding wBinding = application.getStage().widthProperty().subtract(application.getMainFrame().getNavigation().widthProperty().add(35));
@@ -48,8 +48,8 @@ public class PAO extends TabContent {
 
     @Override
     protected void reload() {
-        stController.clean();
-        stController.initialize(application);
+        paoController.clean();
+        paoController.initialize(application);
     }
 
     @Override

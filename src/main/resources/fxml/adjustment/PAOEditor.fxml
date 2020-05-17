@@ -13,13 +13,13 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="721.0" prefWidth="1164.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.shunyi.autoparts.ui.stocktaking.STOEditorController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="721.0" prefWidth="1164.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.shunyi.autoparts.ui.adjustment.PAOEditorController">
    <top>
       <VBox prefHeight="100.0" prefWidth="1164.0" BorderPane.alignment="CENTER">
          <children>
             <BorderPane prefHeight="60.0" prefWidth="1164.0" style="-fx-background-color: rgb(63,81,181);">
                <left>
-                  <Label fx:id="title" alignment="CENTER" prefHeight="41.0" prefWidth="156.0" text="盘点单" textFill="WHITE" BorderPane.alignment="CENTER">
+                  <Label fx:id="title" alignment="CENTER" prefHeight="41.0" prefWidth="156.0" text="调价单" textFill="WHITE" BorderPane.alignment="CENTER">
                      <font>
                         <Font name="Microsoft YaHei" size="30.0" />
                      </font>
@@ -54,17 +54,7 @@
             </BorderPane>
             <FlowPane alignment="CENTER_LEFT" layoutX="10.0" layoutY="56.0" prefHeight="38.0" prefWidth="1164.0">
                <children>
-                  <Label alignment="CENTER_RIGHT" layoutX="234.0" layoutY="25.0" prefHeight="19.0" prefWidth="72.0" text="配件条码:">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </Label>
-                  <TextField fx:id="txtProductBarcode" editable="true" layoutX="294.0" layoutY="20.0" prefHeight="29.0" prefWidth="170.0">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </TextField>
-                  <Label alignment="CENTER_RIGHT" prefHeight="19.0" prefWidth="74.0" text="仓 库:">
+                  <Label alignment="CENTER_RIGHT" prefHeight="19.0" prefWidth="61.0" text="仓 库:">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -115,43 +105,23 @@
            <!-- 单位 -->
            <TableColumn fx:id="colUnit" prefWidth="125.0" text="单位" />
            <!-- 数量 -->
-           <TableColumn fx:id="colQty" prefWidth="125.0" text="点货数量" />
+           <TableColumn fx:id="colStockQty" prefWidth="125.0" text="库存数量" />
            <!-- 不含税单价 -->
-           <TableColumn fx:id="colDate" prefWidth="125.0" text="点货时间" />
+           <TableColumn fx:id="colAvgPrice" prefWidth="125.0" text="库存平均价" />
+            <TableColumn fx:id="colAdjustedPrice" prefWidth="125.0" text="调整价" />
+            <TableColumn fx:id="colCurrentAmount" prefWidth="125.0" text="现库存金额" />
+            <TableColumn fx:id="colAdjustedAmount" prefWidth="125.0" text="调整金额" />
+           <!-- 含税金额 -->
+           <TableColumn fx:id="colNotes" prefWidth="125.0" text="备注" />
+            <TableColumn fx:id="colImport" prefWidth="125.0" text="进口" />
            <!-- 不含税金额 -->
            <TableColumn fx:id="colCar" prefWidth="125.0" text="车型" />
            <!-- 仓库 -->
            <TableColumn fx:id="colBrand" prefWidth="125.0" text="品牌" />
-           <!-- 本库现库存数 -->
-           <TableColumn fx:id="colAccount" prefWidth="125.0" text="账面">
-               <columns>
-                 <!-- 货位 -->
-                 <TableColumn fx:id="colAccountQty" prefWidth="125.0" text="数量" />
-                 <!-- 图片 -->
-                 <TableColumn fx:id="colAccountAmount" prefWidth="125.0" text="金额" />
-               </columns></TableColumn>
-           <!-- 备注 -->
-           <TableColumn fx:id="colAdjustment" prefWidth="125.0" text="调整">
-               <columns>
-                 <!-- 产品类别 -->
-                 <TableColumn fx:id="colAdjustmentQty" prefWidth="125.0" text="数量" />
-                 <!-- 产品编码 -->
-                 <TableColumn fx:id="colAdjustmentPrice" prefWidth="125.0" text="单价" />
-                 <!-- 产品名称 -->
-                 <TableColumn fx:id="colAdjustmentAmount" maxWidth="-1.0" minWidth="-1.0" prefWidth="-1.0" text="金额" />
-               </columns></TableColumn>
-           <!-- SKU条形码 -->
-           <TableColumn fx:id="colReality" prefWidth="125.0" text="实际">
-               <columns>
-                 <!-- 车型 -->
-                 <TableColumn fx:id="colRealityQty" prefWidth="125.0" text="数量" />
-                 <!-- 通用车型 -->
-                 <TableColumn fx:id="colRealityAmount" prefWidth="125.0" text="金额" />
-               </columns></TableColumn>
            <!-- 进货平均价 -->
            <TableColumn fx:id="colPlace" prefWidth="125.0" text="产地" />
-           <!-- 含税金额 -->
-           <TableColumn fx:id="colNotes" prefWidth="125.0" text="备注" />
+            <TableColumn fx:id="colCommonNumber" prefWidth="125.0" text="通用件号" />
+            <TableColumn fx:id="colRelevantModels" prefWidth="125.0" text="通用车型" />
         </columns>
       </TableView>
    </center>
@@ -160,7 +130,17 @@
          <children>
             <FlowPane alignment="CENTER_RIGHT" prefHeight="48.0" prefWidth="1164.0">
                <children>
-                  <Label alignment="CENTER_RIGHT" prefHeight="19.0" prefWidth="88.0" text="经办人:">
+                  <Label alignment="CENTER_RIGHT" layoutX="706.0" layoutY="25.0" prefHeight="19.0" prefWidth="88.0" text="调整金额合计:">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="txtTotalAdjustedAmount" editable="false" layoutX="794.0" layoutY="20.0" prefHeight="29.0" prefWidth="150.0">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </TextField>
+                  <Label alignment="CENTER_RIGHT" prefHeight="19.0" prefWidth="74.0" text="经办人:">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -178,7 +158,7 @@
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="txtLoginAccount" editable="false" layoutX="1019.0" layoutY="13.0" prefHeight="29.0" prefWidth="150.0">
+                  <TextField fx:id="txtUserName" editable="false" layoutX="1019.0" layoutY="13.0" prefHeight="29.0" prefWidth="150.0">
                      <font>
                         <Font size="14.0" />
                      </font>
