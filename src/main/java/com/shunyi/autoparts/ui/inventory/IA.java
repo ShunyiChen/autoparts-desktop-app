@@ -4,21 +4,21 @@ import com.shunyi.autoparts.ui.MainApp;
 import com.shunyi.autoparts.ui.main.TabContent;
 import javafx.beans.binding.DoubleBinding;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.TabPane;
+import javafx.scene.layout.BorderPane;
 
 import java.io.IOException;
 
 /**
- * @Description: 盘点单
- * @Author: Shunyi Chen
- * @CreateDate: 2020/4/4
+ * @Description: 库存配件
+ * @Author: Shunyi
+ * @CreateDate: 2020/5/18
  */
-public class InventoryingOrder extends TabContent {
+public class IA extends TabContent {
 
     private MainApp application;
-    private InventoryDetailsController controller;
+    private IAController controller;
 
-    public InventoryingOrder(MainApp application) {
+    public IA(MainApp application) {
         this.application = application;
         initComponents();
     }
@@ -26,18 +26,17 @@ public class InventoryingOrder extends TabContent {
     private void initComponents() {
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource(
-                        "/fxml/inventory/InventoryDetails.fxml"
+                        "/fxml/inventory/IA.fxml"
                 )
         );
-        TabPane root = null;
+        BorderPane root = null;
         try {
             root = loader.load();
         } catch (IOException e) {
             e.printStackTrace();
         }
         controller = loader.getController();
-        controller.prepare(application.getStage());
-
+        controller.initialize(application.getStage());
         //主面板右侧宽度
         DoubleBinding wBinding = application.getStage().widthProperty().subtract(application.getMainFrame().getNavigation().widthProperty().add(35));
         root.prefWidthProperty().bind(wBinding);
@@ -48,7 +47,7 @@ public class InventoryingOrder extends TabContent {
 
     @Override
     protected void reload() {
-        controller.prepare(application.getStage());
+        controller.initialize(application.getStage());
     }
 
     @Override

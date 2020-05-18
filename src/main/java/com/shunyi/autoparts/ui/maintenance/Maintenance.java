@@ -1,25 +1,25 @@
-package com.shunyi.autoparts.ui.inventory;
+package com.shunyi.autoparts.ui.maintenance;
 
 import com.shunyi.autoparts.ui.MainApp;
 import com.shunyi.autoparts.ui.main.TabContent;
 import javafx.beans.binding.DoubleBinding;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TabPane;
+import javafx.scene.layout.BorderPane;
 
 import java.io.IOException;
 
 /**
- * @Description: 库存明细
- * @Author: 陈顺谊
- * @CreateDate: 2020/3/23 23:07
- * @Version: 1.0
+ * @Description: 库存配件
+ * @Author: Shunyi
+ * @CreateDate: 2020/5/18
  */
-public class InventoryDetails extends TabContent {
+public class Maintenance extends TabContent {
 
     private MainApp application;
-    private InventoryDetailsController controller;
+    private MaintenanceController controller;
 
-    public InventoryDetails(MainApp application) {
+    public Maintenance(MainApp application) {
         this.application = application;
         initComponents();
     }
@@ -27,17 +27,17 @@ public class InventoryDetails extends TabContent {
     private void initComponents() {
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource(
-                        "/fxml/inventory/InventoryDetails.fxml"
+                        "/fxml/inventory/IA.fxml"
                 )
         );
-        TabPane root = null;
+        BorderPane root = null;
         try {
             root = loader.load();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        controller = loader.getController();
-        controller.prepare(application.getStage());
+//        controller = loader.getController();
+//        controller.prepare(application.getStage());
 
         //主面板右侧宽度
         DoubleBinding wBinding = application.getStage().widthProperty().subtract(application.getMainFrame().getNavigation().widthProperty().add(35));

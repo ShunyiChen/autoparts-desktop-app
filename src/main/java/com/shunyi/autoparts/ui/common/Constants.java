@@ -19,6 +19,7 @@ public class Constants {
     public static final String STOCKTAKING_ORDER = "盘点单";
     public static final String PRICE_ADJUSTMENT_ORDER = "调价单";
     public static final String INVENTORY_ACCESSORIES = "库存配件";
+    public static final String DATA_MAINTENANCE = "数据维护";
     public static final String SYSTEM_SETTINGS = "系统设置";
     public static final String ROOT = "root";
     public static final String EMPTY = "";

@@ -22,14 +22,26 @@ import java.io.IOException;
 import java.math.RoundingMode;
 
 /**
- * @Description: 库存明细Controller
- * @Author: 陈顺谊
- * @CreateDate: 2020/3/31 23:07
- * @Version: 1.0
+ * @Description: 库存配件Controller
+ * @Author: Shunyi
+ * @CreateDate: 2020/5/18
  */
-public class InventoryDetailsController {
-
+public class IAController {
     private Callback<TableColumn, TableCell> cellFactory;
+    @FXML
+    private TextField txtSKUCode;
+    @FXML
+    private TextField txtSKUName;
+    @FXML
+    private TextField txtBrand;
+    @FXML
+    private TextField txtCar;
+    @FXML
+    private ComboBox<String> comboBoxSupplier;
+    @FXML
+    private TextField txtSKUBarcode;
+    @FXML
+    private TextField txtSpec;
 
     /** SKU明细分类 */
     @FXML
@@ -44,55 +56,34 @@ public class InventoryDetailsController {
     @FXML
     private TableView<ProductDetail> tableViewForAccount;
     @FXML
-    private TableColumn<SKU, String> colProductCode;
+    private TableColumn<SKU, String> colSKUCode;
     @FXML
-    private TableColumn<SKU, String> colProductName;
-    @FXML
-    private TableColumn<SKU, String> colProductBarcode;
-    @FXML
-    private TableColumn<SKU, String> colBrand;
-    @FXML
-    private TableColumn<SKU, String> colCar;
-    @FXML
-    private TableColumn<SKU, String> colSupplier;
+    private TableColumn<SKU, String> colSKUName;
     @FXML
     private TableColumn<SKU, String> colUnit;
     @FXML
-    private TableColumn<SKU, String> colListPrice;
+    private TableColumn colStockQty;
+    @FXML
+    private TableColumn colAvgPrice;
+    @FXML
+    private TableColumn colAmount;
+    @FXML
+    private TableColumn<SKU, String> colCar;
+    @FXML
+    private TableColumn<SKU, String> colProductivePlace;
+    @FXML
+    private TableColumn<SKU, String> colBrand;
+    @FXML
+    private TableColumn<SKU, String> colSupplier;
     @FXML
     private TableColumn<SKU, String> colImport;
     @FXML
-    private TableColumn<SKU, String> colOrigin;
-    @FXML
-    private TableColumn colSKUCode;
-    @FXML
-    private TableColumn colSKUName;
-    @FXML
     private TableColumn colSpec;
     @FXML
-    private TableColumn colQty;
-    @FXML
-    private TableColumn colPrice;
-    @FXML
-    private TableColumn colDiscountedPrice;
-    @FXML
-    private TableColumn colStatus;
+    private TableColumn colSlot;
     @FXML
     private TableColumn colSKUBarcode;
-    @FXML
-    private TextField txtProductCode;
-    @FXML
-    private TextField txtProductName;
-    @FXML
-    private TextField txtSKUCode;
-    @FXML
-    private TextField txtSKUName;
-    @FXML
-    private TextField txtSupplier;
-    @FXML
-    private TextField txtBarcode;
-    @FXML
-    private TextField txtSpec;
+
 
 
     @FXML
@@ -143,7 +134,7 @@ public class InventoryDetailsController {
 
     }
 
-    public void prepare(Stage dialog) {
+    public void initialize(Stage dialog) {
         initTreeViewForSKUDetails();
         initTreeViewForAccount();
         initTableViewForSKUDetails();

@@ -23,6 +23,7 @@ module desktopapp {
     exports com.shunyi.autoparts.ui.consumer;
     exports com.shunyi.autoparts.ui.stocktaking;
     exports com.shunyi.autoparts.ui.adjustment;
+    exports com.shunyi.autoparts.ui.maintenance;
     exports com.shunyi.autoparts.ui.login;
     exports com.shunyi.autoparts.ui.main;
     exports com.shunyi.autoparts.ui.dashboard;
@@ -34,6 +35,7 @@ module desktopapp {
     opens com.shunyi.autoparts.ui.consumer;
     opens com.shunyi.autoparts.ui.stocktaking;
     opens com.shunyi.autoparts.ui.adjustment;
+    opens com.shunyi.autoparts.ui.maintenance;
     opens com.shunyi.autoparts.ui.login;
     opens com.shunyi.autoparts.ui.purchase to javafx.fxml;
     opens com.shunyi.autoparts.ui.sales to javafx.fxml;

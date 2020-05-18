@@ -1,18 +1,20 @@
 package com.shunyi.autoparts.ui.main;
 
 import com.shunyi.autoparts.ui.MainApp;
+import com.shunyi.autoparts.ui.adjustment.PAO;
 import com.shunyi.autoparts.ui.common.Constants;
 import com.shunyi.autoparts.ui.common.ICONS;
-import com.shunyi.autoparts.ui.stocktaking.STO;
-import com.shunyi.autoparts.ui.inventory.InventoryDetails;
-import com.shunyi.autoparts.ui.adjustment.PAO;
+import com.shunyi.autoparts.ui.inventory.IA;
+import com.shunyi.autoparts.ui.maintenance.Maintenance;
 import com.shunyi.autoparts.ui.purchase.PO;
 import com.shunyi.autoparts.ui.purchase.PRO;
 import com.shunyi.autoparts.ui.purchase.PurchaseView;
 import com.shunyi.autoparts.ui.sales.SO;
 import com.shunyi.autoparts.ui.sales.SRO;
 import com.shunyi.autoparts.ui.sales.SalesView;
+import com.shunyi.autoparts.ui.stocktaking.STO;
 import com.shunyi.autoparts.ui.system.SystemSettings;
+import javafx.application.Platform;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
 import javafx.util.Callback;
@@ -27,16 +29,27 @@ public class MainFrame extends BorderPane {
     private ContentPane contentPane;
     private ICONS icons = ICONS.getInstance();
     private TabPane tabPane = new TabPane();
+    /** 销售视图Tab */
     private NewTab salesViewTab;
+    /** 采购视图Tab */
     private NewTab purchaseViewTab;
+    /** 采购单Tab */
     private NewTab purchaseOrderTab;
+    /** 采购退货单Tab */
     private NewTab purchaseReturnOrderTab;
+    /** 销售单Tab */
     private NewTab salesOrderTab;
+    /** 销售退货单Tab */
     private NewTab salesReturnOrderTab;
+    /** 盘点单Tab */
     private NewTab stocktakingTab;
+    /** 调价单Tab */
     private NewTab priceAdjustmentOrderTab;
+    /** 库存配件Tab */
     private NewTab inventoryAccessoriesTab;
-
+    /** 数据维护Tab */
+    private NewTab dataMaintainingTab;
+    /** 系统设置Tab */
     private NewTab systemSettingsTab;
 
     /**
@@ -73,6 +86,7 @@ public class MainFrame extends BorderPane {
                 return null;
             }
         });
+
         //销售视图
         ClickableItem salesView = new ClickableItem(icons.view_dashboard(), Constants.SALES_VIEW, new Callback() {
             @Override
@@ -163,12 +177,25 @@ public class MainFrame extends BorderPane {
             public Object call(Object param) {
                 toolbar.setTitle(Constants.INVENTORY_ACCESSORIES);
                 if(inventoryAccessoriesTab == null) {
-                    inventoryAccessoriesTab = new NewTab(Constants.INVENTORY_ACCESSORIES, new InventoryDetails(application));
+                    inventoryAccessoriesTab = new NewTab(Constants.INVENTORY_ACCESSORIES, new IA(application));
                 }
                 contentPane.addNewTab(inventoryAccessoriesTab);
                 return null;
             }
         });
+        //数据维护
+        ClickableItem dataMaintaining = new ClickableItem(icons.car_door(), Constants.DATA_MAINTENANCE, new Callback() {
+            @Override
+            public Object call(Object param) {
+                toolbar.setTitle(Constants.DATA_MAINTENANCE);
+                if(dataMaintainingTab == null) {
+                    dataMaintainingTab = new NewTab(Constants.DATA_MAINTENANCE, new Maintenance(application));
+                }
+                contentPane.addNewTab(dataMaintainingTab);
+                return null;
+            }
+        });
+
         // 系统设置
         ClickableItem systemSettings = new ClickableItem(icons.settings_transfer_outline(), Constants.SYSTEM_SETTINGS, new Callback() {
             @Override
@@ -181,7 +208,9 @@ public class MainFrame extends BorderPane {
                 return null;
             }
         });
-        navigation.addClickableItem(purchaseView, salesView, purchaseOrder, purchaseReturnOrder, salesOrder, salesReturnOrder, inventoryingOrder, priceAdjustmentOrder, inventoryDetails, systemSettings);
+        navigation.addClickableItem(purchaseView, salesView, purchaseOrder, purchaseReturnOrder, salesOrder, salesReturnOrder, inventoryingOrder, priceAdjustmentOrder, inventoryDetails, dataMaintaining, systemSettings);
+
+        Platform.runLater(() -> purchaseView.fire());
     }
 
     public Navigation getNavigation() {

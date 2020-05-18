@@ -72,6 +72,10 @@ public class ClickableItem extends HBox implements EventHandler<MouseEvent>{
         }
     }
 
+    public void fire() {
+        action.call("");
+    }
+
     public void showOnlyIcon(boolean bool) {
         if (bool) {
             this.getChildren().remove(rightTxt);
