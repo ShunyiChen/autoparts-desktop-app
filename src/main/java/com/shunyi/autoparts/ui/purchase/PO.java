@@ -10,10 +10,9 @@ import javafx.scene.layout.BorderPane;
 import java.io.IOException;
 
 /**
- * @Description: 采购单
- * @Author: Shunyi Chen
+ * @Description: 采购单Tab
+ * @Author: Shunyi
  * @CreateDate: 2020/3/23 23:00
- * @Version: 1.0
  */
 public class PO extends TabContent {
     private MainApp application;
@@ -38,7 +37,6 @@ public class PO extends TabContent {
         }
         poController = loader.getController();
         poController.initialize(application);
-
         //主面板右侧宽度
         DoubleBinding wBinding = application.getStage().widthProperty().subtract(application.getMainFrame().getNavigation().widthProperty().add(35));
         root.prefWidthProperty().bind(wBinding);

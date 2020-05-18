@@ -867,7 +867,7 @@ public class PROEditorController {
             if(param.getValue().getSku() == null) {
                 return new SimpleObjectProperty<>("");
             } else {
-                return new SimpleObjectProperty<>(param.getValue().getSku().getStatus());
+                return new SimpleObjectProperty<>(param.getValue().getSku().getEnabled().toString());
             }
         });
         //SKU属性

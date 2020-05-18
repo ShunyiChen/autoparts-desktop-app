@@ -537,12 +537,12 @@ public class POController {
                 return new SimpleObjectProperty<>(param.getValue().getPurchaseQty().intValue()+"");
             }
         });
-        //入库数量
+        //已入库数量
         colWarehouseQty.setCellValueFactory(param -> {
-            if(param.getValue().getWarehouseQty() == null) {
+            if(param.getValue().getStockedQty() == null) {
                 return new SimpleObjectProperty<>("");
             } else {
-                return new SimpleObjectProperty<>(param.getValue().getWarehouseQty().intValue()+"");
+                return new SimpleObjectProperty<>(param.getValue().getStockedQty().intValue()+"");
             }
         });
         //退货数量合计

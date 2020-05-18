@@ -200,7 +200,7 @@ public class ProductChooserController {
     private void initTreeView() {
         Category rootCategory = null;
         try {
-            rootCategory = HttpClient.GET("/category/root/"+Env.getInstance().currentStore().getId(), Category.class);
+            rootCategory = HttpClient.GET("/category/root/"+Env.getInstance().currentStore().getWarehouse().getId(), Category.class);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -286,7 +286,7 @@ public class ProductChooserController {
 
     private void initTreeNodes(TreeItem<Category> root) {
         try {
-            String data = HttpClient.GET("/categories/store/"+Env.getInstance().currentStore().getId());
+            String data = HttpClient.GET("/categories/warehouse/"+Env.getInstance().currentStore().getWarehouse().getId());
             Category[] res = GoogleJson.GET().fromJson(data, Category[].class);
             getNodes(root, res);
         } catch (IOException e) {
@@ -321,7 +321,7 @@ public class ProductChooserController {
         colSupplier.setCellValueFactory(param -> new SimpleObjectProperty(param.getValue().getProduct().getSupplier()));
         colCompany.setCellValueFactory(param -> new SimpleObjectProperty(param.getValue().getProduct().getCompany()));
         colDiscountPercentage.setCellValueFactory(new PropertyValueFactory<SKU, String>("discountPercentage"));
-        colAvgPrice.setCellValueFactory(new PropertyValueFactory<SKU, String>("avgPrice"));
+//        colAvgPrice.setCellValueFactory(new PropertyValueFactory<SKU, String>("avgPrice"));
         colPurchasingPrice1.setCellValueFactory(param -> new SimpleObjectProperty(param.getValue().getProduct().getPurchasingPrice1()));
         colPurchasingPrice2.setCellValueFactory(param -> new SimpleObjectProperty(param.getValue().getProduct().getPurchasingPrice2()));
         colPurchasingPrice3.setCellValueFactory(param -> new SimpleObjectProperty(param.getValue().getProduct().getPurchasingPrice3()));
@@ -330,7 +330,7 @@ public class ProductChooserController {
         colSellingPrice3.setCellValueFactory(param -> new SimpleObjectProperty(param.getValue().getProduct().getSellingPrice3()));
         colBottomPrice.setCellValueFactory(param -> new SimpleObjectProperty(param.getValue().getProduct().getBottomPrice()));
         colShortage.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getProduct().getShortage()?"是":"否"));
-        colStatus.setCellValueFactory(new PropertyValueFactory<SKU, String>("status"));
+        colStatus.setCellValueFactory(new PropertyValueFactory<SKU, String>("enabled"));
         colNotes.setCellValueFactory(new PropertyValueFactory<SKU, String>("notes"));
         colSlot.setCellValueFactory(param -> {
             StringBuilder slots = new StringBuilder();

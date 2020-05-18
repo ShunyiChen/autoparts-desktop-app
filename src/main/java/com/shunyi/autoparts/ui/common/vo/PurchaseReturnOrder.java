@@ -61,12 +61,6 @@ public class PurchaseReturnOrder {
     private Date dateCreated;
     /** 创建者 */
     private String creator;
-    /** 删除时间 */
-    private Date dateDeleted;
-    /** 删除标记 */
-    private Boolean deleteFlag;
-    /** 删除者 */
-    private String deleter;
     /** 搜索日期类型 */
     private String dateType;
     /** 起始日期 */
@@ -76,7 +70,7 @@ public class PurchaseReturnOrder {
 
     public PurchaseReturnOrder() {}
 
-    public PurchaseReturnOrder(Long id, String orderNo, Date orderDate, Warehouse warehouse, Supplier supplier, String invoiceType, String invoiceNo, BigDecimal freight, String notes, String operator, String userName, String payment, Integer returnQty, Integer warehouseQty, Integer returnedTotalQty, BigDecimal purchaseAmount, BigDecimal disbursementAmount, BigDecimal discountAmount, BigDecimal amountPayable, BigDecimal paymentAmount, String account, BigDecimal repaymentAmount, Date repaymentDate, String status, Date dateCreated, String creator, Date dateDeleted, Boolean deleteFlag, String deleter) {
+    public PurchaseReturnOrder(Long id, String orderNo, Date orderDate, Warehouse warehouse, Supplier supplier, String invoiceType, String invoiceNo, BigDecimal freight, String notes, String operator, String userName, String payment, Integer returnQty, Integer warehouseQty, Integer returnedTotalQty, BigDecimal purchaseAmount, BigDecimal disbursementAmount, BigDecimal discountAmount, BigDecimal amountPayable, BigDecimal paymentAmount, String account, BigDecimal repaymentAmount, Date repaymentDate, String status, Date dateCreated, String creator) {
         this.id = id;
         this.orderNo = orderNo;
         this.orderDate = orderDate;
@@ -103,9 +97,6 @@ public class PurchaseReturnOrder {
         this.status = status;
         this.dateCreated = dateCreated;
         this.creator = creator;
-        this.dateDeleted = dateDeleted;
-        this.deleteFlag = deleteFlag;
-        this.deleter = deleter;
     }
 
     public Long getId() {
@@ -300,30 +291,6 @@ public class PurchaseReturnOrder {
         this.creator = creator;
     }
 
-    public Date getDateDeleted() {
-        return dateDeleted;
-    }
-
-    public void setDateDeleted(Date dateDeleted) {
-        this.dateDeleted = dateDeleted;
-    }
-
-    public Boolean getDeleteFlag() {
-        return deleteFlag;
-    }
-
-    public void setDeleteFlag(Boolean deleteFlag) {
-        this.deleteFlag = deleteFlag;
-    }
-
-    public String getDeleter() {
-        return deleter;
-    }
-
-    public void setDeleter(String deleter) {
-        this.deleter = deleter;
-    }
-
     public Integer getWarehouseQty() {
         return warehouseQty;
     }
@@ -393,9 +360,6 @@ public class PurchaseReturnOrder {
                 ", status='" + status + '\'' +
                 ", dateCreated=" + dateCreated +
                 ", creator='" + creator + '\'' +
-                ", dateDeleted=" + dateDeleted +
-                ", deleteFlag=" + deleteFlag +
-                ", deleter='" + deleter + '\'' +
                 ", dateType='" + dateType + '\'' +
                 ", fromDate=" + fromDate +
                 ", toDate=" + toDate +

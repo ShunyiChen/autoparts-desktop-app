@@ -118,8 +118,6 @@ public class ProductEditorController {
     @FXML
     private TextField txtDiscountPercentage;
     @FXML
-    private TextField txtAvgPrice;
-    @FXML
     private TextField txtNotes;
     @FXML
     private CheckBox checkBoxShortage;
@@ -156,7 +154,7 @@ public class ProductEditorController {
         new AutoCompleteBox(comboBoxUnit);
         //初始化分类
         try {
-            Category[] categories = HttpClient.GET("/categories", Category[].class);
+            Category[] categories = HttpClient.GET("/categories/warehouse/"+Env.getInstance().currentStore().getWarehouse().getId(), Category[].class);
             comboBoxCategory.getItems().addAll(Arrays.asList(categories).stream().map(e -> e.getName()).collect(Collectors.toList()));
         } catch (IOException e) {
             e.printStackTrace();
@@ -259,7 +257,7 @@ public class ProductEditorController {
             txtDiscountPercentage.setText(sku.getDiscountPercentage());
 //            txtAvgPrice.setText(sku.getAvgPrice().toString());
             txtNotes.setText(sku.getNotes());
-            checkBoxAvailable.setSelected(sku.getStatus().equals("可用"));
+//            checkBoxAvailable.setSelected(sku.getStatus().equals("可用"));
             checkBoxShortage.setSelected(product.getShortage());
         }
     }
@@ -333,7 +331,7 @@ public class ProductEditorController {
                 sku.setDiscountPercentage(txtDiscountPercentage.getText());
 //                sku.setAvgPrice(NumberValidationUtils.isRealNumber(txtAvgPrice.getText())? new BigDecimal(txtAvgPrice.getText()).setScale(2, RoundingMode.HALF_UP): BigDecimal.ZERO);
                 sku.setNotes(txtNotes.getText());
-                sku.setStatus(checkBoxAvailable.isSelected()?"可用":"不可用");
+//                sku.setStatus(checkBoxAvailable.isSelected()?"可用":"不可用");
                 try {
                     String json = GoogleJson.GET().toJson(sku);
                     HttpClient.PUT("/sku/"+sku.getId(), json);
@@ -400,9 +398,8 @@ public class ProductEditorController {
             sku.setSpecification(txtSpec.getText());
             sku.setStockQty(0); //默认库存数为0
             sku.setDiscountPercentage(txtDiscountPercentage.getText());
-//            sku.setAvgPrice(NumberValidationUtils.isRealNumber(txtAvgPrice.getText())? new BigDecimal(txtAvgPrice.getText()).setScale(2, RoundingMode.HALF_UP): BigDecimal.ZERO);
             sku.setNotes(txtNotes.getText());
-            sku.setStatus(checkBoxAvailable.isSelected()?"可用":"不可用");
+            sku.setEnabled(checkBoxAvailable.isSelected());
             json = GoogleJson.GET().toJson(sku);
             try {
                 String idStr = HttpClient.POST("/sku", json);
@@ -425,7 +422,7 @@ public class ProductEditorController {
         if(comboBoxCategory.getValue() != null && !comboBoxCategory.getValue().trim().equals("")) {
 
             try {
-                Category rootCategory = HttpClient.GET("/category/root/"+Env.getInstance().currentStore().getId(), Category.class);
+                Category rootCategory = HttpClient.GET("/category/root/"+Env.getInstance().currentStore().getWarehouse().getId(), Category.class);
                 category = new Category();
                 category.setName(comboBoxCategory.getValue());
                 category.setParent(false);

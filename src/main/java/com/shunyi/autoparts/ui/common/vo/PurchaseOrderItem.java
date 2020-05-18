@@ -34,12 +34,14 @@ public class PurchaseOrderItem {
     private BigDecimal priceExcludingTax;
     /** 不含税金额 */
     private BigDecimal amountExcludingTax;
+    /** 均摊单价 */
+    private BigDecimal capitationPrice;
     /** 备注 */
     private String notes;
 
     public PurchaseOrderItem() {}
 
-    public PurchaseOrderItem(Long id, PurchaseOrder purchaseOrder, SKU sku, Integer quantity, BigDecimal amount, BigDecimal discount, BigDecimal discountedAmount, BigDecimal taxRate, BigDecimal taxAmount, BigDecimal priceIncludingTax, BigDecimal amountIncludingTax, BigDecimal priceExcludingTax, BigDecimal amountExcludingTax, String notes) {
+    public PurchaseOrderItem(Long id, PurchaseOrder purchaseOrder, SKU sku, Integer quantity, BigDecimal amount, BigDecimal discount, BigDecimal discountedAmount, BigDecimal taxRate, BigDecimal taxAmount, BigDecimal priceIncludingTax, BigDecimal amountIncludingTax, BigDecimal priceExcludingTax, BigDecimal amountExcludingTax, BigDecimal capitationPrice, String notes) {
         this.id = id;
         this.purchaseOrder = purchaseOrder;
         this.sku = sku;
@@ -53,6 +55,7 @@ public class PurchaseOrderItem {
         this.amountIncludingTax = amountIncludingTax;
         this.priceExcludingTax = priceExcludingTax;
         this.amountExcludingTax = amountExcludingTax;
+        this.capitationPrice = capitationPrice;
         this.notes = notes;
     }
 
@@ -160,6 +163,14 @@ public class PurchaseOrderItem {
         this.amountExcludingTax = amountExcludingTax;
     }
 
+    public BigDecimal getCapitationPrice() {
+        return capitationPrice;
+    }
+
+    public void setCapitationPrice(BigDecimal capitationPrice) {
+        this.capitationPrice = capitationPrice;
+    }
+
     public String getNotes() {
         return notes;
     }
@@ -173,7 +184,7 @@ public class PurchaseOrderItem {
         return "PurchaseOrderItem{" +
                 "id=" + id +
                 ", purchaseOrder=" + purchaseOrder +
-//                ", sku=" + sku +
+                ", sku=" + sku +
                 ", quantity=" + quantity +
                 ", amount=" + amount +
                 ", discount=" + discount +
@@ -184,6 +195,7 @@ public class PurchaseOrderItem {
                 ", amountIncludingTax=" + amountIncludingTax +
                 ", priceExcludingTax=" + priceExcludingTax +
                 ", amountExcludingTax=" + amountExcludingTax +
+                ", capitationPrice=" + capitationPrice +
                 ", notes='" + notes + '\'' +
                 '}';
     }

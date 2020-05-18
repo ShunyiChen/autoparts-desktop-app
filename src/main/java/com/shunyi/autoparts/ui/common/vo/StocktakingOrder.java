@@ -33,6 +33,10 @@ public class StocktakingOrder {
     private String status;
     /** 备注 */
     private String notes;
+    /** 创建时间 */
+    private Date dateCreated;
+    /** 创建者 */
+    private String creator;
     /** 起始日期 */
     private Date fromDate;
     /** 结束日期 */
@@ -40,7 +44,7 @@ public class StocktakingOrder {
 
     public StocktakingOrder() {}
 
-    public StocktakingOrder(Long id, String orderNo, Date orderDate, String productBarcode, Warehouse warehouse, Stocktaking stocktaking, Integer stocktakingQty, BigDecimal stocktakingAmount, String operator, String userName, String status, String notes, Date fromDate, Date toDate) {
+    public StocktakingOrder(Long id, String orderNo, Date orderDate, String productBarcode, Warehouse warehouse, Stocktaking stocktaking, Integer stocktakingQty, BigDecimal stocktakingAmount, String operator, String userName, String status, String notes, Date dateCreated, String creator, Date fromDate, Date toDate) {
         this.id = id;
         this.orderNo = orderNo;
         this.orderDate = orderDate;
@@ -53,6 +57,8 @@ public class StocktakingOrder {
         this.userName = userName;
         this.status = status;
         this.notes = notes;
+        this.dateCreated = dateCreated;
+        this.creator = creator;
         this.fromDate = fromDate;
         this.toDate = toDate;
     }
@@ -151,6 +157,22 @@ public class StocktakingOrder {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    public Date getDateCreated() {
+        return dateCreated;
+    }
+
+    public void setDateCreated(Date dateCreated) {
+        this.dateCreated = dateCreated;
+    }
+
+    public String getCreator() {
+        return creator;
+    }
+
+    public void setCreator(String creator) {
+        this.creator = creator;
     }
 
     public Date getFromDate() {

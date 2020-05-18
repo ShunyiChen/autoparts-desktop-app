@@ -75,12 +75,6 @@ public class SalesReturnOrder {
     private Date dateCreated;
     /** 创建者 */
     private String creator;
-    /** 删除时间 */
-    private Date dateDeleted;
-    /** 删除标记 */
-    private Boolean deleteFlag;
-    /** 删除者 */
-    private String deleter;
     /** 搜索日期类型 */
     private String dateType;
     /** 起始日期 */
@@ -90,7 +84,7 @@ public class SalesReturnOrder {
 
     public SalesReturnOrder() {}
 
-    public SalesReturnOrder(Long id, String orderNo, Date orderDate, Warehouse warehouse, Consumer consumer, String invoiceType, String invoiceNo, BigDecimal freight, String notes, String operator, String userName, String payment, Integer returnQty, Integer warehouseQty, Integer returnedTotalQty, BigDecimal amountIncludingTax, BigDecimal amountExcludingTax, BigDecimal taxAmount, BigDecimal totalAmount, BigDecimal expenses, BigDecimal returnedExpenses, BigDecimal returnedSalesAmount, BigDecimal totalReturnedAmount, BigDecimal disbursementAmount, BigDecimal discountAmount, BigDecimal paymentAmount, String account, BigDecimal repaymentAmount, Date repaymentDate, Date paidAmount, String status, Date dateCreated, String creator, Date dateDeleted, Boolean deleteFlag, String deleter, String dateType, Date fromDate, Date toDate) {
+    public SalesReturnOrder(Long id, String orderNo, Date orderDate, Warehouse warehouse, Consumer consumer, String invoiceType, String invoiceNo, BigDecimal freight, String notes, String operator, String userName, String payment, Integer returnQty, Integer warehouseQty, Integer returnedTotalQty, BigDecimal amountIncludingTax, BigDecimal amountExcludingTax, BigDecimal taxAmount, BigDecimal totalAmount, BigDecimal expenses, BigDecimal returnedExpenses, BigDecimal returnedSalesAmount, BigDecimal totalReturnedAmount, BigDecimal disbursementAmount, BigDecimal discountAmount, BigDecimal paymentAmount, String account, BigDecimal repaymentAmount, Date repaymentDate, Date paidAmount, String status, Date dateCreated, String creator, String dateType, Date fromDate, Date toDate) {
         this.id = id;
         this.orderNo = orderNo;
         this.orderDate = orderDate;
@@ -124,9 +118,6 @@ public class SalesReturnOrder {
         this.status = status;
         this.dateCreated = dateCreated;
         this.creator = creator;
-        this.dateDeleted = dateDeleted;
-        this.deleteFlag = deleteFlag;
-        this.deleter = deleter;
         this.dateType = dateType;
         this.fromDate = fromDate;
         this.toDate = toDate;
@@ -394,30 +385,6 @@ public class SalesReturnOrder {
 
     public void setCreator(String creator) {
         this.creator = creator;
-    }
-
-    public Date getDateDeleted() {
-        return dateDeleted;
-    }
-
-    public void setDateDeleted(Date dateDeleted) {
-        this.dateDeleted = dateDeleted;
-    }
-
-    public Boolean getDeleteFlag() {
-        return deleteFlag;
-    }
-
-    public void setDeleteFlag(Boolean deleteFlag) {
-        this.deleteFlag = deleteFlag;
-    }
-
-    public String getDeleter() {
-        return deleter;
-    }
-
-    public void setDeleter(String deleter) {
-        this.deleter = deleter;
     }
 
     public String getDateType() {

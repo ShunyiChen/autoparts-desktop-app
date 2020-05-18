@@ -36,7 +36,7 @@ public class CategoryEditorController {
             return;
         }
         try {
-            Category root = HttpClient.GET("/category/root/"+Env.getInstance().currentStore().getId(), Category.class);
+            Category root = HttpClient.GET("/category/root/"+Env.getInstance().currentStore().getWarehouse().getId(), Category.class);
             Category newCategory = new Category();
             newCategory.setName(txtName.getText());
             newCategory.setStore(root.getStore());

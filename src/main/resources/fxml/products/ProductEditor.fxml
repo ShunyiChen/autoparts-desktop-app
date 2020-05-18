@@ -366,26 +366,12 @@
                         <Font size="14.0" />
                      </font>
                   </TextField>
-                  <Label alignment="CENTER_RIGHT" layoutX="10.0" layoutY="20.0" prefHeight="19.0" prefWidth="108.0" text="进货平均价:">
+                  <Label alignment="CENTER_RIGHT" prefHeight="19.0" prefWidth="108.0" text="备 注:">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="txtAvgPrice" layoutX="85.0" layoutY="15.0" prefHeight="29.0" prefWidth="170.0">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </TextField>
-               </children>
-            </FlowPane>
-            <FlowPane alignment="CENTER_LEFT" layoutX="10.0" layoutY="504.0" prefHeight="38.0" prefWidth="600.0">
-               <children>
-                  <Label alignment="CENTER_RIGHT" prefHeight="19.0" prefWidth="75.0" text="备 注:">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </Label>
-                  <TextField fx:id="txtNotes" prefHeight="29.0" prefWidth="448.0">
+                  <TextField fx:id="txtNotes" prefHeight="29.0" prefWidth="170.0">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -425,7 +411,7 @@
    <bottom>
       <BorderPane prefHeight="53.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <right>
-            <FlowPane fx:id="buttonPanel" alignment="CENTER" hgap="10.0" prefHeight="59.0" prefWidth="245.0" BorderPane.alignment="CENTER">
+            <FlowPane fx:id="buttonPanel" alignment="CENTER" hgap="7.0" prefHeight="59.0" prefWidth="245.0" BorderPane.alignment="CENTER">
                <children>
                   <Button fx:id="btnCancel" mnemonicParsing="false" onAction="#cancel" text="取 消">
                      <font>
@@ -443,7 +429,7 @@
                         <Insets />
                      </FlowPane.margin>
                   </Button>
-                  <Button fx:id="btnSaveAndQuit" layoutX="80.0" layoutY="22.0" mnemonicParsing="false" onAction="#saveAndQuit" text="保存退出">
+                  <Button fx:id="btnSaveAndQuit" layoutX="80.0" layoutY="22.0" mnemonicParsing="false" onAction="#saveAndQuit" text="添加并退出">
                      <font>
                         <Font size="14.0" />
                      </font>

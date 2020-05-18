@@ -32,14 +32,12 @@ public class SKU {
     private BigDecimal purchaseAvgPrice;
     /** 进货金额 */
     private BigDecimal purchaseAmount;
-    /** 均摊价 */
-    private BigDecimal capitationPrice;
     /** 属性字符串 */
     private String properties;
     /** 折扣% */
     private String discountPercentage;
     /** 可用状态 */
-    private String status;
+    private Boolean enabled;
     /** 备注 */
     private String notes;
     /** SKU与货位映射集合 */
@@ -49,7 +47,7 @@ public class SKU {
 
     public SKU() {}
 
-    public SKU(Long id, Product product, String skuCode, String skuName, String specification, String skuBarCode, Integer stockQty, Integer stockAvgPrice, Integer stockAmount, BigDecimal purchaseAvgPrice, BigDecimal purchaseAmount, BigDecimal capitationPrice, String properties, String discountPercentage, String status, String notes, Set<SKUSlotMapping> skuSlotMappingSet, Set<SKUPhoto> photos) {
+    public SKU(Long id, Product product, String skuCode, String skuName, String specification, String skuBarCode, Integer stockQty, Integer stockAvgPrice, Integer stockAmount, BigDecimal purchaseAvgPrice, BigDecimal purchaseAmount, String properties, String discountPercentage, Boolean enabled, String notes, Set<SKUSlotMapping> skuSlotMappingSet, Set<SKUPhoto> photos) {
         this.id = id;
         this.product = product;
         this.skuCode = skuCode;
@@ -61,10 +59,9 @@ public class SKU {
         this.stockAmount = stockAmount;
         this.purchaseAvgPrice = purchaseAvgPrice;
         this.purchaseAmount = purchaseAmount;
-        this.capitationPrice = capitationPrice;
         this.properties = properties;
         this.discountPercentage = discountPercentage;
-        this.status = status;
+        this.enabled = enabled;
         this.notes = notes;
         this.skuSlotMappingSet = skuSlotMappingSet;
         this.photos = photos;
@@ -158,14 +155,6 @@ public class SKU {
         this.purchaseAmount = purchaseAmount;
     }
 
-    public BigDecimal getCapitationPrice() {
-        return capitationPrice;
-    }
-
-    public void setCapitationPrice(BigDecimal capitationPrice) {
-        this.capitationPrice = capitationPrice;
-    }
-
     public String getProperties() {
         return properties;
     }
@@ -182,12 +171,12 @@ public class SKU {
         this.discountPercentage = discountPercentage;
     }
 
-    public String getStatus() {
-        return status;
+    public Boolean getEnabled() {
+        return enabled;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
     }
 
     public String getNotes() {
@@ -228,10 +217,9 @@ public class SKU {
                 ", stockAmount=" + stockAmount +
                 ", purchaseAvgPrice=" + purchaseAvgPrice +
                 ", purchaseAmount=" + purchaseAmount +
-                ", capitationPrice=" + capitationPrice +
                 ", properties='" + properties + '\'' +
                 ", discountPercentage='" + discountPercentage + '\'' +
-                ", status='" + status + '\'' +
+                ", enabled='" + enabled + '\'' +
                 ", notes='" + notes + '\'' +
                 ", skuSlotMappingSet=" + skuSlotMappingSet +
                 ", photos=" + photos +

@@ -53,7 +53,7 @@ public class CategoryChooserController {
      */
     private void initTreeNodes(TreeItem<Category> root) {
         try {
-            String path = "/categories/store/"+ Env.getInstance().currentStore().getId();
+            String path = "/categories/warehouse/"+ Env.getInstance().currentStore().getWarehouse().getId();
             String data = HttpClient.GET(path);
             Category[] res = GoogleJson.GET().fromJson(data, Category[].class);
             getNodes(root, res);
@@ -98,7 +98,7 @@ public class CategoryChooserController {
         });
         btnChooser.setStyle(String.format("-fx-base: %s;", "rgb(63,81,181)"));
         try {
-            Category rootCategory = HttpClient.GET("/category/root/"+Env.getInstance().currentStore().getId(), Category.class);
+            Category rootCategory = HttpClient.GET("/category/root/"+Env.getInstance().currentStore().getWarehouse().getId(), Category.class);
             TreeItem<Category> root = new TreeItem<Category>(rootCategory);
             treeView.setRoot(root);
             initTreeNodes(root);

@@ -214,7 +214,7 @@ public class MaintenanceController {
      */
     private void initTreeNodes(TreeItem<Category> root) {
         try {
-            String path = "/categories/store/"+ Env.getInstance().currentStore().getId();
+            String path = "/categories/warehouse/"+ Env.getInstance().currentStore().getWarehouse().getId();
             String data = HttpClient.GET(path);
             Category[] res = GoogleJson.GET().fromJson(data, Category[].class);
             getNodes(root, res);
