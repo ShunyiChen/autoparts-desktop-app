@@ -91,15 +91,15 @@ public class IAController {
         tableViewForSKUDetails.getItems().clear();
         SKU searchSKU = new SKU();
         Product product = new Product();
-        product.setCode(txtProductCode.getText());
-        product.setName(txtProductName.getText());
+//        product.setCode(txtProductCode.getText());
+//        product.setName(txtProductName.getText());
         Supplier supplier = new Supplier();
-        supplier.setName(txtSupplier.getText());
+//        supplier.setName(txtSupplier.getText());
         product.setSupplier(supplier);
         searchSKU.setProduct(product);
         searchSKU.setSkuCode(txtSKUCode.getText());
         searchSKU.setSkuName(txtSKUName.getText());
-        searchSKU.setSkuBarCode(txtBarcode.getText());
+//        searchSKU.setSkuBarCode(txtBarcode.getText());
         searchSKU.setSpecification(txtSpec.getText());
         String json = GoogleJson.GET().toJson(searchSKU);
         String data;
@@ -115,13 +115,13 @@ public class IAController {
 
     @FXML
     private void clearSKUCondition() {
-        txtProductCode.setText("");
-        txtProductName.setText("");
-        txtSKUCode.setText("");
-        txtSKUName.setText("");
-        txtSupplier.setText("");
-        txtBarcode.setText("");
-        txtSpec.setText("");
+//        txtProductCode.setText("");
+//        txtProductName.setText("");
+//        txtSKUCode.setText("");
+//        txtSKUName.setText("");
+//        txtSupplier.setText("");
+//        txtBarcode.setText("");
+//        txtSpec.setText("");
     }
 
     @FXML
@@ -240,27 +240,27 @@ public class IAController {
         tableViewForSKUDetails.setEditable(true);
 
 
-        colProductCode.setCellValueFactory(param -> {
-            if(param.getValue().getProduct().getCode() == null) {
-                return new SimpleObjectProperty<>("");
-            } else {
-                return new SimpleObjectProperty<>(param.getValue().getProduct().getCode());
-            }
-        });
-        colProductName.setCellValueFactory(param -> {
-            if(param.getValue().getProduct().getName() == null) {
-                return new SimpleObjectProperty<>("");
-            } else {
-                return new SimpleObjectProperty<>(param.getValue().getProduct().getName());
-            }
-        });
-        colProductBarcode.setCellValueFactory(param -> {
-            if(param.getValue().getProduct().getBarCode() == null) {
-                return new SimpleObjectProperty<>("");
-            } else {
-                return new SimpleObjectProperty<>(param.getValue().getProduct().getBarCode());
-            }
-        });
+//        colProductCode.setCellValueFactory(param -> {
+//            if(param.getValue().getProduct().getCode() == null) {
+//                return new SimpleObjectProperty<>("");
+//            } else {
+//                return new SimpleObjectProperty<>(param.getValue().getProduct().getCode());
+//            }
+//        });
+//        colProductName.setCellValueFactory(param -> {
+//            if(param.getValue().getProduct().getName() == null) {
+//                return new SimpleObjectProperty<>("");
+//            } else {
+//                return new SimpleObjectProperty<>(param.getValue().getProduct().getName());
+//            }
+//        });
+//        colProductBarcode.setCellValueFactory(param -> {
+//            if(param.getValue().getProduct().getBarCode() == null) {
+//                return new SimpleObjectProperty<>("");
+//            } else {
+//                return new SimpleObjectProperty<>(param.getValue().getProduct().getBarCode());
+//            }
+//        });
 //        colBrand.setCellValueFactory(param -> {
 //            if(param.getValue().getProduct().getBrandSeries() == null) {
 //                return new SimpleObjectProperty<>("");
@@ -313,10 +313,10 @@ public class IAController {
         colSKUCode.setCellValueFactory(new PropertyValueFactory<SKU, String>("skuCode"));
         colSKUName.setCellValueFactory(new PropertyValueFactory<SKU, String>("skuName"));
         colSpec.setCellValueFactory(new PropertyValueFactory<SKU, String>("specification"));
-        colQty.setCellValueFactory(new PropertyValueFactory<SKU, String>("quantity"));
-        colPrice.setCellValueFactory(new PropertyValueFactory<SKU, String>("price"));
-        colDiscountedPrice.setCellValueFactory(new PropertyValueFactory<SKU, String>("discountedPrice"));
-        colStatus.setCellValueFactory(new PropertyValueFactory<SKU, String>("status"));
+//        colQty.setCellValueFactory(new PropertyValueFactory<SKU, String>("quantity"));
+//        colPrice.setCellValueFactory(new PropertyValueFactory<SKU, String>("price"));
+//        colDiscountedPrice.setCellValueFactory(new PropertyValueFactory<SKU, String>("discountedPrice"));
+//        colStatus.setCellValueFactory(new PropertyValueFactory<SKU, String>("status"));
         colSKUBarcode.setCellValueFactory(new PropertyValueFactory<SKU, String>("barCode"));
     }
 

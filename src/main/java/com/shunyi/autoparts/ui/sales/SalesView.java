@@ -1,6 +1,7 @@
 package com.shunyi.autoparts.ui.sales;
 
 import com.shunyi.autoparts.ui.MainApp;
+import com.shunyi.autoparts.ui.common.Constants;
 import com.shunyi.autoparts.ui.main.TabContent;
 import javafx.beans.binding.DoubleBinding;
 import javafx.collections.FXCollections;
@@ -23,7 +24,6 @@ public class SalesView extends TabContent {
         this.application = application;
         initComponents();
     }
-
 
     private void initComponents() {
         FlowPane flowPane = new FlowPane();
@@ -213,14 +213,12 @@ public class SalesView extends TabContent {
         return chart;
     }
 
-
     @Override
     protected void reload() {
-        System.out.println("reload");
     }
 
     @Override
-    protected void willClose() {
+    protected void dispose() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION,"", ButtonType.YES, ButtonType.NO);
         alert.setTitle("是否保持更改");
         alert.setHeaderText("是否保持更改?");
@@ -230,7 +228,10 @@ public class SalesView extends TabContent {
         } else {
 
         }
+    }
 
-        System.out.println("result="+alert.getResult());
+    @Override
+    protected String getTitle() {
+        return Constants.SALES_VIEW;
     }
 }

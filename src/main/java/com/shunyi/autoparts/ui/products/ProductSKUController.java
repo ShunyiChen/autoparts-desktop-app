@@ -279,27 +279,6 @@ public class ProductSKUController {
         colSkuSlot.setCellValueFactory(
                 new PropertyValueFactory<SKU, String>("skuSlotMappings")
         );
-        SimpleDateFormat format = new SimpleDateFormat(Constants.PATTERN_DATETIME);
-        colDateCreated.setCellValueFactory(param -> {
-            if(param.getValue().getDateCreated() == null) {
-                return new SimpleObjectProperty<>("");
-            } else {
-                return new SimpleObjectProperty<>(format.format(param.getValue().getDateCreated()));
-            }
-        });
-        colCreator.setCellValueFactory(
-                new PropertyValueFactory<SKU, String>("creator")
-        );
-        colSateUpdated.setCellValueFactory(param -> {
-            if(param.getValue().getDateCreated() == null) {
-                return new SimpleObjectProperty<>("");
-            } else {
-                return new SimpleObjectProperty<>(param.getValue().getDateUpdated() == null ? "" : format.format(param.getValue().getDateUpdated()));
-            }
-        });
-        colUpdater.setCellValueFactory(
-                new PropertyValueFactory<SKU, String>("updater")
-        );
     }
 
     @FXML
@@ -329,7 +308,6 @@ public class ProductSKUController {
                 }
 
             } else {
-                sku.setUpdater(Env.getInstance().currentUser());
                 String data = GoogleJson.GET().toJson(sku);
                 try {
                     HttpClient.PUT("/sku/"+sku.getId(), data);

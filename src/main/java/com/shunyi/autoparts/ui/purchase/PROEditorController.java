@@ -497,10 +497,9 @@ public class PROEditorController {
                             if(sku.getId() != null) {
                                 selected.setSku(sku);
                                 selected.setQuantity(0);
-                                selected.setPriceExcludingTax(sku.getAvgPrice());
+//                                selected.setPriceExcludingTax(sku.getAvgPrice());
                                 selected.setAmountExcludingTax(BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP));
 
-                                //todo
                                 //取原采购单号
                                 String originalOrderNo = fetchOriginalOrderNo(sku.getSkuCode());
                                 selected.setOriginalOrderNo(originalOrderNo);
@@ -573,7 +572,8 @@ public class PROEditorController {
             if(param.getValue().getSku() == null) {
                 return new SimpleObjectProperty<>("");
             } else {
-                return new SimpleObjectProperty<>(param.getValue().getSku().getAvgPrice().toString());
+                return new SimpleObjectProperty<>("");
+//                return new SimpleObjectProperty<>(param.getValue().getSku().getAvgPrice().toString());
             }
         });
         //不含税金额
@@ -581,7 +581,8 @@ public class PROEditorController {
             if(param.getValue().getSku() == null) {
                 return new SimpleObjectProperty<>("");
             } else {
-                return new SimpleObjectProperty<>(param.getValue().getSku().getAvgPrice().multiply(new BigDecimal(param.getValue().getQuantity())).setScale(2, RoundingMode.HALF_UP).toString());
+                return new SimpleObjectProperty<>("");
+//                return new SimpleObjectProperty<>(param.getValue().getSku().getAvgPrice().multiply(new BigDecimal(param.getValue().getQuantity())).setScale(2, RoundingMode.HALF_UP).toString());
             }
         });
         //仓库
@@ -625,7 +626,8 @@ public class PROEditorController {
             if(param.getValue().getSku() == null) {
                 return new SimpleObjectProperty<>("");
             } else {
-                return new SimpleObjectProperty<>(param.getValue().getSku().getAvgPrice().toString());
+                return new SimpleObjectProperty<>("");
+//                return new SimpleObjectProperty<>(param.getValue().getSku().getAvgPrice().toString());
             }
         });
         //货位
@@ -916,47 +918,6 @@ public class PROEditorController {
                 return new SimpleObjectProperty<>("");
             }
         });
-        //创建日期
-        colDateCreated.setCellValueFactory(param -> {
-            if(param.getValue().getSku() == null) {
-                return new SimpleObjectProperty<>("");
-            } else {
-                return new SimpleObjectProperty<>(format.format(param.getValue().getSku().getDateCreated()));
-            }
-        });
-        //创建者
-        colCreator.setCellValueFactory(param -> {
-            if(param.getValue().getSku() == null) {
-                return new SimpleObjectProperty<>("");
-            } else {
-                return new SimpleObjectProperty<>(param.getValue().getSku().getCreator());
-            }
-        });
-        //更新时间
-        colDateUpdated.setCellValueFactory(param -> {
-            if(param.getValue().getSku() == null) {
-                return new SimpleObjectProperty<>("");
-            } else {
-                return new SimpleObjectProperty<>(format.format(param.getValue().getSku().getDateUpdated()));
-            }
-        });
-        //更新者
-        colUpdator.setCellValueFactory(param -> {
-            if(param.getValue().getSku() == null) {
-                return new SimpleObjectProperty<>("");
-            } else {
-                return new SimpleObjectProperty<>(param.getValue().getSku().getUpdater());
-            }
-        });
-        //更新次数
-        colUpdateCount.setCellValueFactory(param -> {
-            if(param.getValue().getSku() == null) {
-                return new SimpleObjectProperty<>("");
-            } else {
-                return new SimpleObjectProperty<>(param.getValue().getSku().getUpdatedCount()+"");
-            }
-        });
-
         tableView.setOnMouseClicked((MouseEvent event) -> {
             if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2){
                 PurchaseReturnOrderItem selected = tableView.getSelectionModel().getSelectedItem();
@@ -1396,7 +1357,7 @@ public class PROEditorController {
                 PurchaseReturnOrderItem item = tableView.getSelectionModel().getSelectedItem();
                 item.setSku(sku);
                 item.setQuantity(0);
-                item.setPriceExcludingTax(sku.getAvgPrice());
+//                item.setPriceExcludingTax(sku.getAvgPrice());
                 item.setAmountExcludingTax(BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP));
 
                 tableView.refresh();

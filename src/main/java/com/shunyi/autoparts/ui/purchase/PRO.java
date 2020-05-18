@@ -1,6 +1,7 @@
 package com.shunyi.autoparts.ui.purchase;
 
 import com.shunyi.autoparts.ui.MainApp;
+import com.shunyi.autoparts.ui.common.Constants;
 import com.shunyi.autoparts.ui.main.TabContent;
 import javafx.beans.binding.DoubleBinding;
 import javafx.fxml.FXMLLoader;
@@ -53,7 +54,12 @@ public class PRO extends TabContent {
     }
 
     @Override
-    protected void willClose() {
+    protected void dispose() {
 
+    }
+
+    @Override
+    protected String getTitle() {
+        return Constants.PURCHASE_RETURN_ORDER;
     }
 }

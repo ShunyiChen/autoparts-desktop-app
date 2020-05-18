@@ -30,27 +30,27 @@ public class MainFrame extends BorderPane {
     private ICONS icons = ICONS.getInstance();
     private TabPane tabPane = new TabPane();
     /** 销售视图Tab */
-    private NewTab salesViewTab;
+    private TabExt salesViewTab;
     /** 采购视图Tab */
-    private NewTab purchaseViewTab;
+    private TabExt purchaseViewTab;
     /** 采购单Tab */
-    private NewTab purchaseOrderTab;
+    private TabExt purchaseOrderTab;
     /** 采购退货单Tab */
-    private NewTab purchaseReturnOrderTab;
+    private TabExt purchaseReturnOrderTab;
     /** 销售单Tab */
-    private NewTab salesOrderTab;
+    private TabExt salesOrderTab;
     /** 销售退货单Tab */
-    private NewTab salesReturnOrderTab;
+    private TabExt salesReturnOrderTab;
     /** 盘点单Tab */
-    private NewTab stocktakingTab;
+    private TabExt stocktakingTab;
     /** 调价单Tab */
-    private NewTab priceAdjustmentOrderTab;
+    private TabExt priceAdjustmentOrderTab;
     /** 库存配件Tab */
-    private NewTab inventoryAccessoriesTab;
+    private TabExt inventoryAccessoriesTab;
     /** 数据维护Tab */
-    private NewTab dataMaintainingTab;
+    private TabExt dataMaintainingTab;
     /** 系统设置Tab */
-    private NewTab systemSettingsTab;
+    private TabExt systemSettingsTab;
 
     /**
      * Constructor
@@ -73,6 +73,9 @@ public class MainFrame extends BorderPane {
 
     }
 
+    /**
+     * 初始化左侧Items
+     */
     private void initEvents() {
         //采购视图
         ClickableItem purchaseView = new ClickableItem(icons.view_dashboard(), Constants.PURCHASE_VIEW, new Callback() {
@@ -80,7 +83,7 @@ public class MainFrame extends BorderPane {
             public Object call(Object param) {
                 toolbar.setTitle(Constants.PURCHASE_VIEW);
                 if(purchaseViewTab == null) {
-                    purchaseViewTab = new NewTab(Constants.PURCHASE_VIEW, new PurchaseView(application));
+                    purchaseViewTab = new TabExt(new PurchaseView(application));
                 }
                 contentPane.addNewTab(purchaseViewTab);
                 return null;
@@ -93,7 +96,7 @@ public class MainFrame extends BorderPane {
             public Object call(Object param) {
                 toolbar.setTitle(Constants.SALES_VIEW);
                 if(salesViewTab == null) {
-                    salesViewTab = new NewTab(Constants.SALES_VIEW, new SalesView(application));
+                    salesViewTab = new TabExt(new SalesView(application));
                 }
                 contentPane.addNewTab(salesViewTab);
                 return null;
@@ -105,7 +108,7 @@ public class MainFrame extends BorderPane {
             public Object call(Object param) {
                 toolbar.setTitle(Constants.PURCHASE_ORDER);
                 if(purchaseOrderTab == null) {
-                    purchaseOrderTab = new NewTab(Constants.PURCHASE_ORDER, new PO(application));
+                    purchaseOrderTab = new TabExt(new PO(application));
                 }
                 contentPane.addNewTab(purchaseOrderTab);
                 return null;
@@ -117,7 +120,7 @@ public class MainFrame extends BorderPane {
             public Object call(Object param) {
                 toolbar.setTitle(Constants.PURCHASE_RETURN_ORDER);
                 if(purchaseReturnOrderTab == null) {
-                    purchaseReturnOrderTab = new NewTab(Constants.PURCHASE_RETURN_ORDER, new PRO(application));
+                    purchaseReturnOrderTab = new TabExt(new PRO(application));
                 }
                 contentPane.addNewTab(purchaseReturnOrderTab);
                 return null;
@@ -129,7 +132,7 @@ public class MainFrame extends BorderPane {
             public Object call(Object param) {
                 toolbar.setTitle(Constants.SALES_ORDER);
                 if(salesOrderTab == null) {
-                    salesOrderTab = new NewTab(Constants.SALES_ORDER, new SO(application));
+                    salesOrderTab = new TabExt(new SO(application));
                 }
                 contentPane.addNewTab(salesOrderTab);
                 return null;
@@ -141,7 +144,7 @@ public class MainFrame extends BorderPane {
             public Object call(Object param) {
                 toolbar.setTitle(Constants.SALES_RETURN_ORDER);
                 if(salesReturnOrderTab == null) {
-                    salesReturnOrderTab = new NewTab(Constants.SALES_RETURN_ORDER, new SRO(application));
+                    salesReturnOrderTab = new TabExt(new SRO(application));
                 }
                 contentPane.addNewTab(salesReturnOrderTab);
                 return null;
@@ -153,7 +156,7 @@ public class MainFrame extends BorderPane {
             public Object call(Object param) {
                 toolbar.setTitle(Constants.STOCKTAKING_ORDER);
                 if(stocktakingTab == null) {
-                    stocktakingTab = new NewTab(Constants.STOCKTAKING_ORDER, new STO(application));
+                    stocktakingTab = new TabExt(new STO(application));
                 }
                 contentPane.addNewTab(stocktakingTab);
                 return null;
@@ -165,7 +168,7 @@ public class MainFrame extends BorderPane {
             public Object call(Object param) {
                 toolbar.setTitle(Constants.PRICE_ADJUSTMENT_ORDER);
                 if(priceAdjustmentOrderTab == null) {
-                    priceAdjustmentOrderTab = new NewTab(Constants.PRICE_ADJUSTMENT_ORDER, new PAO(application));
+                    priceAdjustmentOrderTab = new TabExt(new PAO(application));
                 }
                 contentPane.addNewTab(priceAdjustmentOrderTab);
                 return null;
@@ -177,7 +180,7 @@ public class MainFrame extends BorderPane {
             public Object call(Object param) {
                 toolbar.setTitle(Constants.INVENTORY_ACCESSORIES);
                 if(inventoryAccessoriesTab == null) {
-                    inventoryAccessoriesTab = new NewTab(Constants.INVENTORY_ACCESSORIES, new IA(application));
+                    inventoryAccessoriesTab = new TabExt(new IA(application));
                 }
                 contentPane.addNewTab(inventoryAccessoriesTab);
                 return null;
@@ -189,7 +192,7 @@ public class MainFrame extends BorderPane {
             public Object call(Object param) {
                 toolbar.setTitle(Constants.DATA_MAINTENANCE);
                 if(dataMaintainingTab == null) {
-                    dataMaintainingTab = new NewTab(Constants.DATA_MAINTENANCE, new Maintenance(application));
+                    dataMaintainingTab = new TabExt(new Maintenance(application));
                 }
                 contentPane.addNewTab(dataMaintainingTab);
                 return null;
@@ -202,7 +205,7 @@ public class MainFrame extends BorderPane {
             public Object call(Object param) {
                 toolbar.setTitle(Constants.SYSTEM_SETTINGS);
                 if(systemSettingsTab == null) {
-                    systemSettingsTab = new NewTab(Constants.SYSTEM_SETTINGS, new SystemSettings(application));
+                    systemSettingsTab = new TabExt(new SystemSettings(application));
                 }
                 contentPane.addNewTab(systemSettingsTab);
                 return null;

@@ -499,7 +499,7 @@ public class SROEditorController {
                             if(sku.getId() != null) {
                                 selected.setSku(sku);
                                 selected.setQuantity(0);
-                                selected.setPriceExcludingTax(sku.getAvgPrice());
+//                                selected.setPriceExcludingTax(sku.getAvgPrice());
                                 selected.setAmountExcludingTax(BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP));
 
                                 //todo
@@ -575,7 +575,8 @@ public class SROEditorController {
             if(param.getValue().getSku() == null) {
                 return new SimpleObjectProperty<>("");
             } else {
-                return new SimpleObjectProperty<>(param.getValue().getSku().getAvgPrice().toString());
+                return new SimpleObjectProperty<>("");
+//                return new SimpleObjectProperty<>(param.getValue().getSku().getAvgPrice().toString());
             }
         });
         //不含税金额
@@ -583,7 +584,8 @@ public class SROEditorController {
             if(param.getValue().getSku() == null) {
                 return new SimpleObjectProperty<>("");
             } else {
-                return new SimpleObjectProperty<>(param.getValue().getSku().getAvgPrice().multiply(new BigDecimal(param.getValue().getQuantity())).setScale(2, RoundingMode.HALF_UP).toString());
+                return new SimpleObjectProperty<>("");
+//                return new SimpleObjectProperty<>(param.getValue().getSku().getAvgPrice().multiply(new BigDecimal(param.getValue().getQuantity())).setScale(2, RoundingMode.HALF_UP).toString());
             }
         });
         //仓库
@@ -627,7 +629,8 @@ public class SROEditorController {
             if(param.getValue().getSku() == null) {
                 return new SimpleObjectProperty<>("");
             } else {
-                return new SimpleObjectProperty<>(param.getValue().getSku().getAvgPrice().toString());
+                return new SimpleObjectProperty<>("");
+//                return new SimpleObjectProperty<>(param.getValue().getSku().getAvgPrice().toString());
             }
         });
         //货位
@@ -918,47 +921,6 @@ public class SROEditorController {
                 return new SimpleObjectProperty<>("");
             }
         });
-        //创建日期
-        colDateCreated.setCellValueFactory(param -> {
-            if(param.getValue().getSku() == null) {
-                return new SimpleObjectProperty<>("");
-            } else {
-                return new SimpleObjectProperty<>(format.format(param.getValue().getSku().getDateCreated()));
-            }
-        });
-        //创建者
-        colCreator.setCellValueFactory(param -> {
-            if(param.getValue().getSku() == null) {
-                return new SimpleObjectProperty<>("");
-            } else {
-                return new SimpleObjectProperty<>(param.getValue().getSku().getCreator());
-            }
-        });
-        //更新时间
-        colDateUpdated.setCellValueFactory(param -> {
-            if(param.getValue().getSku() == null) {
-                return new SimpleObjectProperty<>("");
-            } else {
-                return new SimpleObjectProperty<>(format.format(param.getValue().getSku().getDateUpdated()));
-            }
-        });
-        //更新者
-        colUpdator.setCellValueFactory(param -> {
-            if(param.getValue().getSku() == null) {
-                return new SimpleObjectProperty<>("");
-            } else {
-                return new SimpleObjectProperty<>(param.getValue().getSku().getUpdater());
-            }
-        });
-        //更新次数
-        colUpdateCount.setCellValueFactory(param -> {
-            if(param.getValue().getSku() == null) {
-                return new SimpleObjectProperty<>("");
-            } else {
-                return new SimpleObjectProperty<>(param.getValue().getSku().getUpdatedCount()+"");
-            }
-        });
-
         tableView.setOnMouseClicked((MouseEvent event) -> {
             if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2){
                 SalesReturnOrderItem selected = tableView.getSelectionModel().getSelectedItem();
@@ -1398,7 +1360,7 @@ public class SROEditorController {
                 SalesReturnOrderItem item = tableView.getSelectionModel().getSelectedItem();
                 item.setSku(sku);
                 item.setQuantity(0);
-                item.setPriceExcludingTax(sku.getAvgPrice());
+//                item.setPriceExcludingTax(sku.getAvgPrice());
                 item.setAmountExcludingTax(BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP));
 
                 tableView.refresh();

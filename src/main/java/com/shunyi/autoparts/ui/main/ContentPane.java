@@ -1,13 +1,12 @@
 package com.shunyi.autoparts.ui.main;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.*;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @Description: 主界面内容面板
@@ -29,6 +28,20 @@ public class ContentPane extends BorderPane {
         this.setPadding(new Insets(5));
         viewport.setId("contentpane_bg");
         this.setCenter(tabPane);
+        tabPane.getSelectionModel().selectedItemProperty().addListener(
+            new ChangeListener<Tab>() {
+                @Override
+                public void changed(ObservableValue<? extends Tab> ov, Tab t, Tab t1) {
+                    changing();
+                }
+            }
+        );
+    }
+
+    private void changing() {
+        if(tabPane.getSelectionModel().getSelectedItem() != null) {
+            ((TabExt)tabPane.getSelectionModel().getSelectedItem()).getTabContent().reload();
+        }
     }
 
     public TabPane getTabPane() {
@@ -39,7 +52,7 @@ public class ContentPane extends BorderPane {
         this.tabPane = tabPane;
     }
 
-    public void addNewTab(NewTab newTab) {
+    public void addNewTab(TabExt newTab) {
         Tab existedTab = null;
         ObservableList<Tab> list = tabPane.getTabs();
         for(Tab tab : list) {

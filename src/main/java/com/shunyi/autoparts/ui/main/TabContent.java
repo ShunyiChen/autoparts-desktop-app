@@ -12,5 +12,7 @@ public abstract class TabContent extends BorderPane {
 
     protected abstract void reload();
 
-    protected abstract void willClose();
+    protected abstract void dispose();
+
+    protected abstract String getTitle();
 }

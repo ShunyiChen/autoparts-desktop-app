@@ -1,6 +1,7 @@
 package com.shunyi.autoparts.ui.sales;
 
 import com.shunyi.autoparts.ui.MainApp;
+import com.shunyi.autoparts.ui.common.Constants;
 import com.shunyi.autoparts.ui.main.TabContent;
 import javafx.beans.binding.DoubleBinding;
 import javafx.fxml.FXMLLoader;
@@ -14,7 +15,6 @@ import java.io.IOException;
  * @CreateDate: 2020/5/9
  */
 public class SRO extends TabContent {
-
     private MainApp application;
     private SROController sroController;
 
@@ -53,7 +53,12 @@ public class SRO extends TabContent {
     }
 
     @Override
-    protected void willClose() {
+    protected void dispose() {
 
+    }
+
+    @Override
+    protected String getTitle() {
+        return Constants.SALES_RETURN_ORDER;
     }
 }

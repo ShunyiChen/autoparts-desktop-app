@@ -24,7 +24,6 @@ import java.util.Set;
  * @Version: 1.0
  */
 public class StoreDropListController {
-
     private Set<TabContent> affectedTabContentSet;
     @FXML
     private Label storeLabel;
@@ -65,6 +64,7 @@ public class StoreDropListController {
                 Env.getInstance().put(Env.CURRENT_STORE, storeComboBox.getValue());
                 affectedTabContentSet.forEach(e -> {
                     e.reload();
+                    System.out.println("切换店铺为"+storeComboBox.getValue()+" 重新加载"+e.getTitle());
                 });
             });
     }

@@ -1,6 +1,7 @@
 package com.shunyi.autoparts.ui.stocktaking;
 
 import com.shunyi.autoparts.ui.MainApp;
+import com.shunyi.autoparts.ui.common.Constants;
 import com.shunyi.autoparts.ui.main.TabContent;
 import javafx.beans.binding.DoubleBinding;
 import javafx.fxml.FXMLLoader;
@@ -14,7 +15,6 @@ import java.io.IOException;
  * @CreateDate: 2020/5/13
  */
 public class STO extends TabContent {
-
     private MainApp application;
     private STOController stController;
 
@@ -53,7 +53,12 @@ public class STO extends TabContent {
     }
 
     @Override
-    protected void willClose() {
+    protected void dispose() {
 
+    }
+
+    @Override
+    protected String getTitle() {
+        return Constants.STOCKTAKING_ORDER;
     }
 }

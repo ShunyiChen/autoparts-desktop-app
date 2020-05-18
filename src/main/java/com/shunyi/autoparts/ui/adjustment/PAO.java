@@ -1,6 +1,7 @@
 package com.shunyi.autoparts.ui.adjustment;
 
 import com.shunyi.autoparts.ui.MainApp;
+import com.shunyi.autoparts.ui.common.Constants;
 import com.shunyi.autoparts.ui.main.TabContent;
 import com.shunyi.autoparts.ui.stocktaking.STOController;
 import javafx.beans.binding.DoubleBinding;
@@ -53,7 +54,12 @@ public class PAO extends TabContent {
     }
 
     @Override
-    protected void willClose() {
+    protected void dispose() {
 
+    }
+
+    @Override
+    protected String getTitle() {
+        return Constants.PRICE_ADJUSTMENT_ORDER;
     }
 }

@@ -1,6 +1,7 @@
 package com.shunyi.autoparts.ui.system;
 
 import com.shunyi.autoparts.ui.MainApp;
+import com.shunyi.autoparts.ui.common.Constants;
 import com.shunyi.autoparts.ui.main.TabContent;
 import javafx.beans.binding.DoubleBinding;
 import javafx.fxml.FXMLLoader;
@@ -15,7 +16,6 @@ import java.io.IOException;
  * @Version: 1.0
  */
 public class SystemSettings extends TabContent {
-
     private MainApp application;
     private SystemSettingsController controller;
 
@@ -62,7 +62,12 @@ public class SystemSettings extends TabContent {
     }
 
     @Override
-    protected void willClose() {
+    protected void dispose() {
 
+    }
+
+    @Override
+    protected String getTitle() {
+        return Constants.SYSTEM_SETTINGS;
     }
 }

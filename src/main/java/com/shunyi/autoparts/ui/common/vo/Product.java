@@ -1,12 +1,11 @@
 package com.shunyi.autoparts.ui.common.vo;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
 /**
  * @description 配件VO
- * @author Shunyi Chen
- * @date 2020/4/4
+ * @author Shunyi
+ * @date 2020/5/18
  */
 public class Product {
     /** 自增ID */
@@ -67,27 +66,12 @@ public class Product {
     private String  foreignCurrencyPrice;
     /** 紧缺件 */
     private Boolean shortage;
-    /** 创建时间 */
-    private Date dateCreated;
-    /** 创建者 */
-    private String creator;
-    /** 更新时间 */
-    private Date dateUpdated;
-    /** 更新者 */
-    private String updater;
-    /** 更新次数 */
-    private Integer updatedCount;
-    /** 删除时间 */
-    private Date dateDeleted;
-    /** 删除标记 */
-    private Boolean deleteFlag;
-    /** 删除者 */
-    private String deleter;
+
 
     public Product() {
     }
 
-    public Product(Long id, String code, Category category, String name, Unit unit, String barCode, Car car, String relevantModels, Place place, Brand brand, String englishName, Import imported, String commonNumber, String materials, Company company, Integer packingQuantity, String weight, String manual, Supplier supplier, BigDecimal purchasingPrice1, BigDecimal purchasingPrice2, BigDecimal purchasingPrice3, BigDecimal sellingPrice1, BigDecimal sellingPrice2, BigDecimal sellingPrice3, BigDecimal bottomPrice, String foreignCurrencyUnit, String foreignCurrencyPrice, Boolean shortage, Date dateCreated, String creator, Date dateUpdated, String updater, Integer updatedCount, Date dateDeleted, Boolean deleteFlag, String deleter) {
+    public Product(Long id, String code, Category category, String name, Unit unit, String barCode, Car car, String relevantModels, Place place, Brand brand, String englishName, Import imported, String commonNumber, String materials, Company company, Integer packingQuantity, String weight, String manual, Supplier supplier, BigDecimal purchasingPrice1, BigDecimal purchasingPrice2, BigDecimal purchasingPrice3, BigDecimal sellingPrice1, BigDecimal sellingPrice2, BigDecimal sellingPrice3, BigDecimal bottomPrice, String foreignCurrencyUnit, String foreignCurrencyPrice, Boolean shortage) {
         this.id = id;
         this.code = code;
         this.category = category;
@@ -117,14 +101,6 @@ public class Product {
         this.foreignCurrencyUnit = foreignCurrencyUnit;
         this.foreignCurrencyPrice = foreignCurrencyPrice;
         this.shortage = shortage;
-        this.dateCreated = dateCreated;
-        this.creator = creator;
-        this.dateUpdated = dateUpdated;
-        this.updater = updater;
-        this.updatedCount = updatedCount;
-        this.dateDeleted = dateDeleted;
-        this.deleteFlag = deleteFlag;
-        this.deleter = deleter;
     }
 
     public Long getId() {
@@ -359,70 +335,6 @@ public class Product {
         this.shortage = shortage;
     }
 
-    public Date getDateCreated() {
-        return dateCreated;
-    }
-
-    public void setDateCreated(Date dateCreated) {
-        this.dateCreated = dateCreated;
-    }
-
-    public String getCreator() {
-        return creator;
-    }
-
-    public void setCreator(String creator) {
-        this.creator = creator;
-    }
-
-    public Date getDateUpdated() {
-        return dateUpdated;
-    }
-
-    public void setDateUpdated(Date dateUpdated) {
-        this.dateUpdated = dateUpdated;
-    }
-
-    public String getUpdater() {
-        return updater;
-    }
-
-    public void setUpdater(String updater) {
-        this.updater = updater;
-    }
-
-    public Integer getUpdatedCount() {
-        return updatedCount;
-    }
-
-    public void setUpdatedCount(Integer updatedCount) {
-        this.updatedCount = updatedCount;
-    }
-
-    public Date getDateDeleted() {
-        return dateDeleted;
-    }
-
-    public void setDateDeleted(Date dateDeleted) {
-        this.dateDeleted = dateDeleted;
-    }
-
-    public Boolean getDeleteFlag() {
-        return deleteFlag;
-    }
-
-    public void setDeleteFlag(Boolean deleteFlag) {
-        this.deleteFlag = deleteFlag;
-    }
-
-    public String getDeleter() {
-        return deleter;
-    }
-
-    public void setDeleter(String deleter) {
-        this.deleter = deleter;
-    }
-
     @Override
     public String toString() {
         return "Product{" +
@@ -455,14 +367,6 @@ public class Product {
                 ", foreignCurrencyUnit='" + foreignCurrencyUnit + '\'' +
                 ", foreignCurrencyPrice='" + foreignCurrencyPrice + '\'' +
                 ", shortage=" + shortage +
-                ", dateCreated=" + dateCreated +
-                ", creator='" + creator + '\'' +
-                ", dateUpdated=" + dateUpdated +
-                ", updater='" + updater + '\'' +
-                ", updatedCount=" + updatedCount +
-                ", dateDeleted=" + dateDeleted +
-                ", deleteFlag=" + deleteFlag +
-                ", deleter='" + deleter + '\'' +
                 '}';
     }
 }

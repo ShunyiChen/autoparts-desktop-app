@@ -1,14 +1,13 @@
 package com.shunyi.autoparts.ui.common.vo;
 
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
  * @description 产品SKU VO
- * @author Shunyi Chen
- * @date 2020/4/4
+ * @author Shunyi
+ * @date 2020/5/18
  */
 public class SKU {
     /** 自增ID */
@@ -25,6 +24,16 @@ public class SKU {
     private String skuBarCode;
     /** 库存数量 */
     private Integer stockQty;
+    /** 库存平均价 */
+    private Integer stockAvgPrice;
+    /** 库存金额 */
+    private Integer stockAmount;
+    /** 进货平均价 */
+    private BigDecimal purchaseAvgPrice;
+    /** 进货金额 */
+    private BigDecimal purchaseAmount;
+    /** 均摊价 */
+    private BigDecimal capitationPrice;
     /** 属性字符串 */
     private String properties;
     /** 折扣% */
@@ -33,32 +42,14 @@ public class SKU {
     private String status;
     /** 备注 */
     private String notes;
-    /** 进货平均价 */
-    private BigDecimal avgPrice;
     /** SKU与货位映射集合 */
     private Set<SKUSlotMapping> skuSlotMappingSet = new HashSet<>();
     /** SKU图片列表 */
     private Set<SKUPhoto> photos = new HashSet<>();
-    /** 创建时间 */
-    private Date dateCreated;
-    /** 创建者 */
-    private String creator;
-    /** 更新时间 */
-    private Date dateUpdated;
-    /** 更新者 */
-    private String updater;
-    /** 更新次数 */
-    private Integer updatedCount;
-    /** 删除时间 */
-    private Date dateDeleted;
-    /** 删除标记 */
-    private Boolean deleteFlag;
-    /** 删除者 */
-    private String deleter;
 
     public SKU() {}
 
-    public SKU(Long id, Product product, String skuCode, String skuName, String specification, String skuBarCode, Integer stockQty, String properties, String discountPercentage, String status, String notes, BigDecimal avgPrice, Set<SKUSlotMapping> skuSlotMappingSet, Set<SKUPhoto> photos, Date dateCreated, String creator, Date dateUpdated, String updater, Integer updatedCount, Date dateDeleted, Boolean deleteFlag, String deleter) {
+    public SKU(Long id, Product product, String skuCode, String skuName, String specification, String skuBarCode, Integer stockQty, Integer stockAvgPrice, Integer stockAmount, BigDecimal purchaseAvgPrice, BigDecimal purchaseAmount, BigDecimal capitationPrice, String properties, String discountPercentage, String status, String notes, Set<SKUSlotMapping> skuSlotMappingSet, Set<SKUPhoto> photos) {
         this.id = id;
         this.product = product;
         this.skuCode = skuCode;
@@ -66,21 +57,17 @@ public class SKU {
         this.specification = specification;
         this.skuBarCode = skuBarCode;
         this.stockQty = stockQty;
+        this.stockAvgPrice = stockAvgPrice;
+        this.stockAmount = stockAmount;
+        this.purchaseAvgPrice = purchaseAvgPrice;
+        this.purchaseAmount = purchaseAmount;
+        this.capitationPrice = capitationPrice;
         this.properties = properties;
         this.discountPercentage = discountPercentage;
         this.status = status;
         this.notes = notes;
-        this.avgPrice = avgPrice;
         this.skuSlotMappingSet = skuSlotMappingSet;
         this.photos = photos;
-        this.dateCreated = dateCreated;
-        this.creator = creator;
-        this.dateUpdated = dateUpdated;
-        this.updater = updater;
-        this.updatedCount = updatedCount;
-        this.dateDeleted = dateDeleted;
-        this.deleteFlag = deleteFlag;
-        this.deleter = deleter;
     }
 
     public Long getId() {
@@ -139,6 +126,46 @@ public class SKU {
         this.stockQty = stockQty;
     }
 
+    public Integer getStockAvgPrice() {
+        return stockAvgPrice;
+    }
+
+    public void setStockAvgPrice(Integer stockAvgPrice) {
+        this.stockAvgPrice = stockAvgPrice;
+    }
+
+    public Integer getStockAmount() {
+        return stockAmount;
+    }
+
+    public void setStockAmount(Integer stockAmount) {
+        this.stockAmount = stockAmount;
+    }
+
+    public BigDecimal getPurchaseAvgPrice() {
+        return purchaseAvgPrice;
+    }
+
+    public void setPurchaseAvgPrice(BigDecimal purchaseAvgPrice) {
+        this.purchaseAvgPrice = purchaseAvgPrice;
+    }
+
+    public BigDecimal getPurchaseAmount() {
+        return purchaseAmount;
+    }
+
+    public void setPurchaseAmount(BigDecimal purchaseAmount) {
+        this.purchaseAmount = purchaseAmount;
+    }
+
+    public BigDecimal getCapitationPrice() {
+        return capitationPrice;
+    }
+
+    public void setCapitationPrice(BigDecimal capitationPrice) {
+        this.capitationPrice = capitationPrice;
+    }
+
     public String getProperties() {
         return properties;
     }
@@ -171,14 +198,6 @@ public class SKU {
         this.notes = notes;
     }
 
-    public BigDecimal getAvgPrice() {
-        return avgPrice;
-    }
-
-    public void setAvgPrice(BigDecimal avgPrice) {
-        this.avgPrice = avgPrice;
-    }
-
     public Set<SKUSlotMapping> getSkuSlotMappingSet() {
         return skuSlotMappingSet;
     }
@@ -195,70 +214,6 @@ public class SKU {
         this.photos = photos;
     }
 
-    public Date getDateCreated() {
-        return dateCreated;
-    }
-
-    public void setDateCreated(Date dateCreated) {
-        this.dateCreated = dateCreated;
-    }
-
-    public String getCreator() {
-        return creator;
-    }
-
-    public void setCreator(String creator) {
-        this.creator = creator;
-    }
-
-    public Date getDateUpdated() {
-        return dateUpdated;
-    }
-
-    public void setDateUpdated(Date dateUpdated) {
-        this.dateUpdated = dateUpdated;
-    }
-
-    public String getUpdater() {
-        return updater;
-    }
-
-    public void setUpdater(String updater) {
-        this.updater = updater;
-    }
-
-    public Integer getUpdatedCount() {
-        return updatedCount;
-    }
-
-    public void setUpdatedCount(Integer updatedCount) {
-        this.updatedCount = updatedCount;
-    }
-
-    public Date getDateDeleted() {
-        return dateDeleted;
-    }
-
-    public void setDateDeleted(Date dateDeleted) {
-        this.dateDeleted = dateDeleted;
-    }
-
-    public Boolean getDeleteFlag() {
-        return deleteFlag;
-    }
-
-    public void setDeleteFlag(Boolean deleteFlag) {
-        this.deleteFlag = deleteFlag;
-    }
-
-    public String getDeleter() {
-        return deleter;
-    }
-
-    public void setDeleter(String deleter) {
-        this.deleter = deleter;
-    }
-
     @Override
     public String toString() {
         return "SKU{" +
@@ -269,21 +224,17 @@ public class SKU {
                 ", specification='" + specification + '\'' +
                 ", skuBarCode='" + skuBarCode + '\'' +
                 ", stockQty=" + stockQty +
+                ", stockAvgPrice=" + stockAvgPrice +
+                ", stockAmount=" + stockAmount +
+                ", purchaseAvgPrice=" + purchaseAvgPrice +
+                ", purchaseAmount=" + purchaseAmount +
+                ", capitationPrice=" + capitationPrice +
                 ", properties='" + properties + '\'' +
                 ", discountPercentage='" + discountPercentage + '\'' +
                 ", status='" + status + '\'' +
                 ", notes='" + notes + '\'' +
-                ", avgPrice=" + avgPrice +
                 ", skuSlotMappingSet=" + skuSlotMappingSet +
                 ", photos=" + photos +
-                ", dateCreated=" + dateCreated +
-                ", creator='" + creator + '\'' +
-                ", dateUpdated=" + dateUpdated +
-                ", updater='" + updater + '\'' +
-                ", updatedCount=" + updatedCount +
-                ", dateDeleted=" + dateDeleted +
-                ", deleteFlag=" + deleteFlag +
-                ", deleter='" + deleter + '\'' +
                 '}';
     }
 }

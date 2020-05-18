@@ -257,7 +257,7 @@ public class ProductEditorController {
             txtBottomPrice.setText(product.getBottomPrice().toString());
             txtSpec.setText(sku.getSpecification());
             txtDiscountPercentage.setText(sku.getDiscountPercentage());
-            txtAvgPrice.setText(sku.getAvgPrice().toString());
+//            txtAvgPrice.setText(sku.getAvgPrice().toString());
             txtNotes.setText(sku.getNotes());
             checkBoxAvailable.setSelected(sku.getStatus().equals("可用"));
             checkBoxShortage.setSelected(product.getShortage());
@@ -316,7 +316,6 @@ public class ProductEditorController {
             product.setForeignCurrencyUnit(txtForeignCurrencyUnit.getText());
             product.setForeignCurrencyPrice(txtForeignCurrencyPrice.getText());
             product.setShortage(checkBoxShortage.isSelected());
-            product.setUpdater(Env.getInstance().currentUser());
             try {
                 String json = GoogleJson.GET().toJson(product);
                 HttpClient.PUT("/products/"+product.getId(), json);
@@ -332,10 +331,9 @@ public class ProductEditorController {
                 sku.setSkuBarCode(product.getBarCode());
                 sku.setSpecification(txtSpec.getText());
                 sku.setDiscountPercentage(txtDiscountPercentage.getText());
-                sku.setAvgPrice(NumberValidationUtils.isRealNumber(txtAvgPrice.getText())? new BigDecimal(txtAvgPrice.getText()).setScale(2, RoundingMode.HALF_UP): BigDecimal.ZERO);
+//                sku.setAvgPrice(NumberValidationUtils.isRealNumber(txtAvgPrice.getText())? new BigDecimal(txtAvgPrice.getText()).setScale(2, RoundingMode.HALF_UP): BigDecimal.ZERO);
                 sku.setNotes(txtNotes.getText());
                 sku.setStatus(checkBoxAvailable.isSelected()?"可用":"不可用");
-                sku.setUpdater(Env.getInstance().currentUser());
                 try {
                     String json = GoogleJson.GET().toJson(sku);
                     HttpClient.PUT("/sku/"+sku.getId(), json);
@@ -402,10 +400,9 @@ public class ProductEditorController {
             sku.setSpecification(txtSpec.getText());
             sku.setStockQty(0); //默认库存数为0
             sku.setDiscountPercentage(txtDiscountPercentage.getText());
-            sku.setAvgPrice(NumberValidationUtils.isRealNumber(txtAvgPrice.getText())? new BigDecimal(txtAvgPrice.getText()).setScale(2, RoundingMode.HALF_UP): BigDecimal.ZERO);
+//            sku.setAvgPrice(NumberValidationUtils.isRealNumber(txtAvgPrice.getText())? new BigDecimal(txtAvgPrice.getText()).setScale(2, RoundingMode.HALF_UP): BigDecimal.ZERO);
             sku.setNotes(txtNotes.getText());
             sku.setStatus(checkBoxAvailable.isSelected()?"可用":"不可用");
-            sku.setUpdater(Env.getInstance().currentUser());
             json = GoogleJson.GET().toJson(sku);
             try {
                 String idStr = HttpClient.POST("/sku", json);
