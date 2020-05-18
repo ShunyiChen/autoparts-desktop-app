@@ -23,6 +23,7 @@ public class Constants {
     public static final String SYSTEM_SETTINGS = "系统设置";
     public static final String ROOT = "root";
     public static final String EMPTY = "";
+    public static final String ROOT_CATEGORY = "全部分类";
     public static final String AVAILABLE = "可用";
     public static final String UNAVAILABLE = "不可用";
     /** 采购订单状态 */
@@ -56,4 +57,7 @@ public class Constants {
     /** 创建日期pattern */
     public static final String PATTERN_DATETIME = "yyyy-MM-dd HH:mm:ss";
     public static final String PATTERN_DATE = "yyyy-MM-dd";
+
+
+
 }

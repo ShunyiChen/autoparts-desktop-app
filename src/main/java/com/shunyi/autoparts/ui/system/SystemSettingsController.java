@@ -968,7 +968,7 @@ public class SystemSettingsController {
     }
 
     private void initVFSTree() {
-        VFSCategory rootCategory = new VFSCategory(0L, "所有分类", -1L, Constants.PARENT_TRUE);
+        VFSCategory rootCategory = new VFSCategory(0L, Constants.ROOT_CATEGORY,-1L, Constants.PARENT_TRUE);
         TreeItem<VFSCategory> rootItem = new TreeItem<>(rootCategory);
         vfsTree.setRoot(rootItem);
         initVFSCategoryNodes(rootItem);

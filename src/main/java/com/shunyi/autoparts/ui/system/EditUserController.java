@@ -163,7 +163,7 @@ public class EditUserController {
     private void creatingUser() {
         //新建用户与店铺关系
         String encryptedPassword = encoder.encode(txtPassword.getText());
-        User createdUser = new User(0L, txtUserName.getText(), "", "", "", "", "", encryptedPassword, boxEnabled.isSelected(), new HashSet<UserStoreMapping>(), new HashSet<UserRoleMapping>(), null, Env.getInstance().getStringValue(Env.CURRENT_USER), null, null, null, null, Constants.DELETE_FLAG_FALSE, null);
+        User createdUser = new User(0L, txtUserName.getText(), "", "", "", "", "", encryptedPassword, boxEnabled.isSelected(), new HashSet<UserStoreMapping>(), new HashSet<UserRoleMapping>());
         String json = GoogleJson.GET().toJson(createdUser);
         try {
             String idStr = HttpClient.POST("/users", json);
@@ -172,19 +172,16 @@ public class EditUserController {
             vBoxStore.getChildren().forEach(item -> {
                 CheckBox checkBox = (CheckBox) item;
                 if(checkBox.isSelected()) {
-                    String shopId = checkBox.getUserData().toString();
-
-                    UserStoreMapping.Id id = new UserStoreMapping.Id(Long.valueOf(idStr), Long.valueOf(shopId));
+                    String storeId = checkBox.getUserData().toString();
+                    UserStoreMapping.Id id = new UserStoreMapping.Id(Long.valueOf(idStr), Long.valueOf(storeId));
                     UserStoreMapping mapping = new UserStoreMapping();
                     mapping.setId(id);
                     createdUser.getUserStoreMappingSet().add(mapping);
-
                     listIds.add(id);
                 }
             });
             json = GoogleJson.GET().toJson(listIds.toArray(new UserStoreMapping.Id[listIds.size()]));
             HttpClient.POST("/userstoremappings", json);
-
         } catch (IOException e) {
             e.printStackTrace();
         }

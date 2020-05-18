@@ -148,7 +148,7 @@ public class MaintenanceController {
     }
 
     private void initTreeViewForSKUDetails() {
-        TreeItem<Category> root = new TreeItem<>(new Category(0L, "所有分类", -1L, Constants.PARENT_TRUE, new Store()));
+        TreeItem<Category> root = new TreeItem<>(new Category(0L, Constants.ROOT_CATEGORY, -1L, Constants.PARENT_TRUE, new Store()));
         initTreeNodes(root);
         treeView.setRoot(root);
         treeView.setCellFactory(p -> new TextFieldTreeCell<>(new StringConverter<>() {
