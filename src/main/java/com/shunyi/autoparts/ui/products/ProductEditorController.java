@@ -219,6 +219,7 @@ public class ProductEditorController {
 
         //初始化选中的值
         if(sku != null) {
+            btnSaveAndQuit.setText("更 新");
             Product product = sku.getProduct();
             buttonPanel.getChildren().clear();
             buttonPanel.getChildren().addAll(btnCancel, btnSaveAndQuit);
@@ -254,7 +255,7 @@ public class ProductEditorController {
             txtForeignCurrencyPrice.setText(product.getForeignCurrencyPrice());
             txtBottomPrice.setText(product.getBottomPrice().toString());
             txtSpec.setText(sku.getSpecification());
-            txtDiscountPercentage.setText(sku.getDiscountPercentage());
+            txtDiscountPercentage.setText(sku.getDiscount().toString());
 //            txtAvgPrice.setText(sku.getAvgPrice().toString());
             txtNotes.setText(sku.getNotes());
 //            checkBoxAvailable.setSelected(sku.getStatus().equals("可用"));
@@ -328,7 +329,7 @@ public class ProductEditorController {
                 sku.setSkuName(product.getName());
                 sku.setSkuBarCode(product.getBarCode());
                 sku.setSpecification(txtSpec.getText());
-                sku.setDiscountPercentage(txtDiscountPercentage.getText());
+                sku.setDiscount(new BigDecimal(txtDiscountPercentage.getText()));
 //                sku.setAvgPrice(NumberValidationUtils.isRealNumber(txtAvgPrice.getText())? new BigDecimal(txtAvgPrice.getText()).setScale(2, RoundingMode.HALF_UP): BigDecimal.ZERO);
                 sku.setNotes(txtNotes.getText());
 //                sku.setStatus(checkBoxAvailable.isSelected()?"可用":"不可用");
@@ -396,8 +397,8 @@ public class ProductEditorController {
             sku.setSkuName(product.getName());
             sku.setSkuBarCode(product.getBarCode());
             sku.setSpecification(txtSpec.getText());
-            sku.setStockQty(0); //默认库存数为0
-            sku.setDiscountPercentage(txtDiscountPercentage.getText());
+            sku.setStockQty(Constants.ZERO);
+            sku.setDiscount(new BigDecimal(txtDiscountPercentage.getText()));
             sku.setNotes(txtNotes.getText());
             sku.setEnabled(checkBoxAvailable.isSelected());
             json = GoogleJson.GET().toJson(sku);

@@ -35,7 +35,7 @@ public class SKU {
     /** 属性字符串 */
     private String properties;
     /** 折扣% */
-    private String discountPercentage;
+    private BigDecimal discount;
     /** 可用状态 */
     private Boolean enabled;
     /** 备注 */
@@ -47,7 +47,7 @@ public class SKU {
 
     public SKU() {}
 
-    public SKU(Long id, Product product, String skuCode, String skuName, String specification, String skuBarCode, Integer stockQty, Integer stockAvgPrice, Integer stockAmount, BigDecimal purchaseAvgPrice, BigDecimal purchaseAmount, String properties, String discountPercentage, Boolean enabled, String notes, Set<SKUSlotMapping> skuSlotMappingSet, Set<SKUPhoto> photos) {
+    public SKU(Long id, Product product, String skuCode, String skuName, String specification, String skuBarCode, Integer stockQty, Integer stockAvgPrice, Integer stockAmount, BigDecimal purchaseAvgPrice, BigDecimal purchaseAmount, String properties, BigDecimal discount, Boolean enabled, String notes, Set<SKUSlotMapping> skuSlotMappingSet, Set<SKUPhoto> photos) {
         this.id = id;
         this.product = product;
         this.skuCode = skuCode;
@@ -60,7 +60,7 @@ public class SKU {
         this.purchaseAvgPrice = purchaseAvgPrice;
         this.purchaseAmount = purchaseAmount;
         this.properties = properties;
-        this.discountPercentage = discountPercentage;
+        this.discount = discount;
         this.enabled = enabled;
         this.notes = notes;
         this.skuSlotMappingSet = skuSlotMappingSet;
@@ -163,12 +163,12 @@ public class SKU {
         this.properties = properties;
     }
 
-    public String getDiscountPercentage() {
-        return discountPercentage;
+    public BigDecimal getDiscount() {
+        return discount;
     }
 
-    public void setDiscountPercentage(String discountPercentage) {
-        this.discountPercentage = discountPercentage;
+    public void setDiscount(BigDecimal discount) {
+        this.discount = discount;
     }
 
     public Boolean getEnabled() {
@@ -218,7 +218,7 @@ public class SKU {
                 ", purchaseAvgPrice=" + purchaseAvgPrice +
                 ", purchaseAmount=" + purchaseAmount +
                 ", properties='" + properties + '\'' +
-                ", discountPercentage='" + discountPercentage + '\'' +
+                ", discount='" + discount + '\'' +
                 ", enabled='" + enabled + '\'' +
                 ", notes='" + notes + '\'' +
                 ", skuSlotMappingSet=" + skuSlotMappingSet +

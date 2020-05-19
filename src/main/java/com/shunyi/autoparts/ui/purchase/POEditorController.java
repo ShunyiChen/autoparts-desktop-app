@@ -279,9 +279,12 @@ public class POEditorController {
     /** 总数量 */
     @FXML
     private Label labelTotalQty;
-    /** 总金额 */
+    /** 不含税金额 */
     @FXML
-    private Label labelTotalAmount;
+    private Label labelTotalAmountWithoutTax;
+    /** 含税金额 */
+    @FXML
+    private Label labelTotalAmountWithTax;
 
     /**
      * Constructor
@@ -474,7 +477,11 @@ public class POEditorController {
                             if(sku.getId() != null) {
                                 selected.setSku(sku);
                                 selected.setQuantity(0);
-                                selected.setAmountExcludingTax(BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP));
+//                                selected.setPriceExcludingTax(new BigDecimal("0.00").setScale(2, RoundingMode.HALF_UP));
+//                                selected.setPriceIncludingTax(BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP));
+//                                selected.setAmountExcludingTax(BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP));
+//                                selected.setAmountIncludingTax(BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP));
+//                                selected.setTaxAmount(BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP));
                                 data.set(t.getTablePosition().getRow(), selected);
                                 updateSummary();
                             } else {
@@ -538,7 +545,13 @@ public class POEditorController {
         });
         //不含税单价
         colPriceExcludingTax.setCellFactory(cellFactory);
-        colPriceExcludingTax.setCellValueFactory(new PropertyValueFactory<>("priceExcludingTax"));
+        colPriceExcludingTax.setCellValueFactory(param -> {
+            if(param.getValue().getPriceExcludingTax() == null) {
+                return new SimpleObjectProperty<>("0.00");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getPriceExcludingTax().setScale(2, RoundingMode.HALF_UP).toString());
+            }
+        });
         colPriceExcludingTax.setOnEditCommit(t -> {
             ObservableList<PurchaseOrderItem> data = t.getTableView().getItems();
             if(data != null) {
@@ -551,6 +564,15 @@ public class POEditorController {
                             selected.setPriceExcludingTax(new BigDecimal(newValue).setScale(2, RoundingMode.HALF_UP));
                             //不含税金额
                             selected.setAmountExcludingTax(selected.getPriceExcludingTax().multiply(new BigDecimal(selected.getQuantity())).setScale(2, RoundingMode.HALF_UP));
+
+                            //税额=不含税价*税率
+                            BigDecimal rate = selected.getTaxRate().divide(new BigDecimal(100));
+                            selected.setTaxAmount(rate.multiply(selected.getPriceExcludingTax()).setScale(2, RoundingMode.HALF_UP));
+                            //不含税价+税额=含税价（总金额）
+                            selected.setPriceIncludingTax(selected.getPriceExcludingTax().add(selected.getTaxAmount()).setScale(2, RoundingMode.HALF_UP));
+                            //含税金额
+                            selected.setAmountIncludingTax(new BigDecimal(selected.getQuantity()).multiply(selected.getPriceIncludingTax()).setScale(2, RoundingMode.HALF_UP));
+
                             data.set(t.getTablePosition().getRow(), selected);
                             updateSummary();
                         }
@@ -559,8 +581,13 @@ public class POEditorController {
             }
         });
         //不含税金额
-        colAmountExcludingTax.setCellValueFactory(new PropertyValueFactory<PurchaseOrderItem, String>("amountExcludingTax"));
-
+        colAmountExcludingTax.setCellValueFactory(param -> {
+            if(param.getValue().getSku() == null) {
+                return new SimpleObjectProperty<>("0.00");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getAmountExcludingTax().setScale(2, RoundingMode.HALF_UP).toString());
+            }
+        });
         //仓库
         colWarehouse.setCellValueFactory(param -> {
             return new SimpleObjectProperty<>(Env.getInstance().currentStore().getWarehouse().getName());
@@ -568,7 +595,7 @@ public class POEditorController {
         //本库现库存数
         colStockQty.setCellValueFactory(param -> {
             if(param.getValue().getSku() == null) {
-                return new SimpleObjectProperty<>("");
+                return new SimpleObjectProperty<>("0");
             } else {
                 return new SimpleObjectProperty<>(param.getValue().getSku().getStockQty().toString());
             }
@@ -607,7 +634,13 @@ public class POEditorController {
         });
         //均摊单价
         colCapitationPrice.setCellFactory(cellFactory);
-        colCapitationPrice.setCellValueFactory(new PropertyValueFactory<>("capitationPrice"));
+        colCapitationPrice.setCellValueFactory(param -> {
+            if(param.getValue().getCapitationPrice() != null) {
+                return new SimpleObjectProperty<>(param.getValue().getCapitationPrice().setScale(2, RoundingMode.HALF_UP).toString());
+            } else {
+                return new SimpleObjectProperty<>("0.00");
+            }
+        });
         colCapitationPrice.setOnEditCommit(t -> {
             ObservableList<PurchaseOrderItem> data = t.getTableView().getItems();
             if(data != null) {
@@ -625,7 +658,6 @@ public class POEditorController {
                 }
             }
         });
-
         //货位
         colSlots.setCellValueFactory(param -> {
             if(param.getValue().getSku() == null) {
@@ -868,74 +900,99 @@ public class POEditorController {
         });
         //折扣%
         colDiscountPercentage.setCellValueFactory(param -> {
-            if(param.getValue().getSku() == null) {
-                return new SimpleObjectProperty<>("");
+            if(param.getValue().getSku() != null && param.getValue().getSku().getDiscount() != null) {
+                return new SimpleObjectProperty<>(param.getValue().getSku().getDiscount().toString());
             } else {
-                return new SimpleObjectProperty<>(param.getValue().getSku().getDiscountPercentage());
+                return new SimpleObjectProperty<>("0.00");
             }
         });
-        //税率
+        //税率%
+        colTaxRate.setCellFactory(cellFactory);
         colTaxRate.setCellValueFactory(param -> {
-            if(param.getValue().getSku() == null) {
-                return new SimpleObjectProperty<>("");
+            if(param.getValue().getTaxRate() != null) {
+                return new SimpleObjectProperty<>(param.getValue().getTaxRate().setScale(2, RoundingMode.HALF_UP).toString());
             } else {
-                return new SimpleObjectProperty<>("");
+                return new SimpleObjectProperty<>("0.00");
+            }
+        });
+        colTaxRate.setOnEditCommit(t -> {
+            ObservableList<PurchaseOrderItem> data = t.getTableView().getItems();
+            if(data != null) {
+                if(t.getTablePosition().getRow() < data.size()) {
+                    PurchaseOrderItem selected = data.get( t.getTablePosition().getRow());
+                    if(selected != null) {
+                        String newValue = t.getNewValue();
+                        if(NumberValidationUtils.isRealNumber(newValue)) {
+                            //税率
+                            selected.setTaxRate(new BigDecimal(newValue));
+                            //税额=不含税价*税率
+                            BigDecimal rate = selected.getTaxRate().divide(new BigDecimal(100));
+                            selected.setTaxAmount(rate.multiply(selected.getPriceExcludingTax()).setScale(2, RoundingMode.HALF_UP));
+                            //不含税价+税额=含税价（总金额）
+                            selected.setPriceIncludingTax(selected.getPriceExcludingTax().add(selected.getTaxAmount()).setScale(2, RoundingMode.HALF_UP));
+                            //含税金额
+                            selected.setAmountIncludingTax(new BigDecimal(selected.getQuantity()).multiply(selected.getPriceIncludingTax()).setScale(2, RoundingMode.HALF_UP));
+                            data.set(t.getTablePosition().getRow(), selected);
+                            updateSummary();
+                        }
+                    }
+                }
             }
         });
         //税额
         colTaxAmount.setCellValueFactory(param -> {
-            if(param.getValue().getSku() == null) {
-                return new SimpleObjectProperty<>("");
+            if(param.getValue().getTaxAmount() != null) {
+                return new SimpleObjectProperty<>(param.getValue().getTaxAmount().setScale(2, RoundingMode.HALF_UP).toString());
             } else {
-                return new SimpleObjectProperty<>("");
+                return new SimpleObjectProperty<>("0.00");
             }
         });
         //含税单价
         colPriceIncludingTax.setCellValueFactory(param -> {
-            if(param.getValue().getSku() == null) {
-                return new SimpleObjectProperty<>("");
+            if(param.getValue().getPriceExcludingTax() == null) {
+                return new SimpleObjectProperty<>("0.00");
             } else {
-                return new SimpleObjectProperty<>(param.getValue().getPriceIncludingTax().toString());
+                return new SimpleObjectProperty<>(param.getValue().getPriceIncludingTax().setScale(2, RoundingMode.HALF_UP).toString());
             }
         });
         //含税金额
         colAmountIncludingTax.setCellValueFactory(param -> {
-            if(param.getValue().getSku() == null) {
-                return new SimpleObjectProperty<>("");
+            if(param.getValue().getSku() != null && param.getValue().getAmountIncludingTax() != null) {
+                return new SimpleObjectProperty<>(param.getValue().getAmountIncludingTax().setScale(2, RoundingMode.HALF_UP).toString());
             } else {
-                return new SimpleObjectProperty<>(param.getValue().getPriceIncludingTax().multiply(new BigDecimal(param.getValue().getQuantity())).setScale(2, RoundingMode.HALF_UP).toString());
+                return new SimpleObjectProperty<>("0.00");
             }
         });
         //库存平均价
         colStockAvgPrice.setCellValueFactory(param -> {
-            if(param.getValue().getSku() == null) {
-                return new SimpleObjectProperty<>("");
-            } else {
+            if(param.getValue().getSku() != null && param.getValue().getSku().getStockAvgPrice() != null) {
                 return new SimpleObjectProperty<>(param.getValue().getSku().getStockAvgPrice().toString());
+            } else {
+                return new SimpleObjectProperty<>("0.00");
             }
         });
         //库存金额
         colStockAmount.setCellValueFactory(param -> {
-            if(param.getValue().getSku() == null) {
-                return new SimpleObjectProperty<>("");
-            } else {
+            if(param.getValue().getSku() != null && param.getValue().getSku().getStockAmount() != null) {
                 return new SimpleObjectProperty<>(param.getValue().getSku().getStockAmount().toString());
+            } else {
+                return new SimpleObjectProperty<>("0.00");
             }
         });
         //进货平均价
-        colStockAvgPrice.setCellValueFactory(param -> {
+        colPurchaseAvgPrice.setCellValueFactory(param -> {
             if(param.getValue().getSku() != null && param.getValue().getSku().getPurchaseAvgPrice() != null) {
                 return new SimpleObjectProperty<>(param.getValue().getSku().getPurchaseAvgPrice().toString());
             } else {
-                return new SimpleObjectProperty<>("");
+                return new SimpleObjectProperty<>("0.00");
             }
         });
         //进货金额
-        colStockAmount.setCellValueFactory(param -> {
+        colPurchaseAmount.setCellValueFactory(param -> {
             if(param.getValue().getSku() != null && param.getValue().getSku().getPurchaseAmount() != null) {
                 return new SimpleObjectProperty<>(param.getValue().getSku().getPurchaseAmount().toString());
             } else {
-                return new SimpleObjectProperty<>("");
+                return new SimpleObjectProperty<>("0.00");
             }
         });
     }
@@ -943,21 +1000,25 @@ public class POEditorController {
     private void updateSummary() {
         int totalRecords = 0;
         BigDecimal totalQty = BigDecimal.ZERO;
-        BigDecimal totalAmount = BigDecimal.ZERO;
+        BigDecimal totalAmountWithoutTax = BigDecimal.ZERO;
+        BigDecimal totalAmountWithTax = BigDecimal.ZERO;
         ObservableList<PurchaseOrderItem> list = tableView.getItems();
         for(PurchaseOrderItem item : list) {
             totalRecords++;
             totalQty = totalQty.add(new BigDecimal(item.getQuantity()));
-            totalAmount = totalAmount.add(item.getAmountExcludingTax());
+            totalAmountWithoutTax = totalAmountWithoutTax.add(item.getAmountExcludingTax());
+            totalAmountWithTax = totalAmountWithTax.add(item.getAmountIncludingTax());
         }
         labelRecords.setText(totalRecords+"");
         labelTotalQty.setText(totalQty.toString());
-        labelTotalAmount.setText(totalAmount.toString());
+        //不含税金额
+        labelTotalAmountWithoutTax.setText(totalAmountWithoutTax.toString());
+        //含税金额
+        labelTotalAmountWithTax.setText(totalAmountWithTax.toString());
         //货款金额
-        txtPurchaseAmount.setText(totalAmount.toString());
+        txtPurchaseAmount.setText(totalAmountWithoutTax.toString());
         //应付总额
-        txtAmountPayable.setText(totalAmount.toString());
-
+        txtAmountPayable.setText(totalAmountWithoutTax.toString());
     }
 
     @FXML

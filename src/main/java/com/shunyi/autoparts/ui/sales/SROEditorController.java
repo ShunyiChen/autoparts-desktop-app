@@ -886,7 +886,7 @@ public class SROEditorController {
             if(param.getValue().getSku() == null) {
                 return new SimpleObjectProperty<>("");
             } else {
-                return new SimpleObjectProperty<>(param.getValue().getSku().getDiscountPercentage());
+                return new SimpleObjectProperty<>(param.getValue().getSku().getDiscount().toString());
             }
         });
         //税率
