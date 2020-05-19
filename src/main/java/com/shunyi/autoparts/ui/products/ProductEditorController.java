@@ -255,10 +255,8 @@ public class ProductEditorController {
             txtForeignCurrencyPrice.setText(product.getForeignCurrencyPrice());
             txtBottomPrice.setText(product.getBottomPrice().toString());
             txtSpec.setText(sku.getSpecification());
-            txtDiscountPercentage.setText(sku.getDiscount().toString());
-//            txtAvgPrice.setText(sku.getAvgPrice().toString());
+            txtDiscountPercentage.setText(sku.getDiscount() != null ? sku.getDiscount().toString():"");
             txtNotes.setText(sku.getNotes());
-//            checkBoxAvailable.setSelected(sku.getStatus().equals("可用"));
             checkBoxShortage.setSelected(product.getShortage());
         }
     }
@@ -330,9 +328,8 @@ public class ProductEditorController {
                 sku.setSkuBarCode(product.getBarCode());
                 sku.setSpecification(txtSpec.getText());
                 sku.setDiscount(new BigDecimal(txtDiscountPercentage.getText()));
-//                sku.setAvgPrice(NumberValidationUtils.isRealNumber(txtAvgPrice.getText())? new BigDecimal(txtAvgPrice.getText()).setScale(2, RoundingMode.HALF_UP): BigDecimal.ZERO);
                 sku.setNotes(txtNotes.getText());
-//                sku.setStatus(checkBoxAvailable.isSelected()?"可用":"不可用");
+                sku.setEnabled(checkBoxAvailable.isSelected());
                 try {
                     String json = GoogleJson.GET().toJson(sku);
                     HttpClient.PUT("/sku/"+sku.getId(), json);
@@ -398,7 +395,7 @@ public class ProductEditorController {
             sku.setSkuBarCode(product.getBarCode());
             sku.setSpecification(txtSpec.getText());
             sku.setStockQty(Constants.ZERO);
-            sku.setDiscount(new BigDecimal(txtDiscountPercentage.getText()));
+            sku.setDiscount(NumberValidationUtils.isRealNumber(txtDiscountPercentage.getText())?new BigDecimal(txtDiscountPercentage.getText()):BigDecimal.ZERO);
             sku.setNotes(txtNotes.getText());
             sku.setEnabled(checkBoxAvailable.isSelected());
             json = GoogleJson.GET().toJson(sku);

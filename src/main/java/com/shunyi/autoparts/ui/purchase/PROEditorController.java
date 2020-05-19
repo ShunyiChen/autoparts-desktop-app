@@ -441,6 +441,7 @@ public class PROEditorController {
         Supplier supplier = new Supplier();
         supplier.setCode(comboBoxSupplierCode.getValue());
         purchaseOrder.setSupplier(supplier);
+        purchaseOrder.setWarehouse(Env.getInstance().currentStore().getWarehouse());
         SKU sku = new SKU();
         sku.setSkuCode(skuCode);
         PurchaseOrderItem condition = new PurchaseOrderItem();
@@ -449,7 +450,7 @@ public class PROEditorController {
         String json = GoogleJson.GET().toJson(condition);
         String orderNo = null;
         try {
-            orderNo = HttpClient.POST("/purchaseOrderItems/orderNo", json);
+            orderNo = HttpClient.POST("/purchaseOrderItems/fetchOrderNo", json);
         } catch (IOException e) {
             e.printStackTrace();
         }

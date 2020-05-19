@@ -52,6 +52,9 @@ public class POEditorController {
     private Payment payment;
     /** 账号 */
     private Account account;
+    /** 仓库 */
+    private Warehouse warehouse;
+
     @FXML
     private Button btnSave;
     @FXML
@@ -62,6 +65,9 @@ public class POEditorController {
     /** 单号 */
     @FXML
     private TextField txtOrderNo;
+    /** 库存 */
+    @FXML
+    private ComboBox<String> comboBoxWarehouse;
     /** 供应商编码 */
     @FXML
     private ComboBox<String> comboBoxSupplierCode;
@@ -110,9 +116,22 @@ public class POEditorController {
     /** 本次付款 */
     @FXML
     private TextField txtPaymentAmount;
-    /**经办人 */
+    /** 经办人 */
     @FXML
     private TextField txtOperator;
+    /** 代垫摘要 */
+    @FXML
+    private TextField txtSummary;
+    /** 代垫摘要 */
+    @FXML
+    private DatePicker txtRepaymentDate;
+    /** 入库 */
+    @FXML
+    private CheckBox checkboxWarehousing;
+    /** 付款 */
+    @FXML
+    private CheckBox checkboxPaying;
+
     /** 采购订单明细表 */
     @FXML
     private TableView<PurchaseOrderItem> tableView;
@@ -331,12 +350,23 @@ public class POEditorController {
             txtPurchaseAmount.setText(po.getPurchaseAmount().toString());
             //代垫费用
             txtDisbursement.setText(po.getDisbursementAmount().toString());
+            //代垫摘要
+            txtSummary.setText(po.getSummary());
+            //还款日期
+            if(po.getRepaymentDate() != null) {
+                LocalDate repaymentDate = po.getRepaymentDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                txtRepaymentDate.setValue(repaymentDate);
+            }
             //本次优惠
             txtDiscountAmount.setText(po.getDiscountAmount().toString());
             //应付总额
             txtAmountPayable.setText(po.getAmountPayable().toString());
             //本次付款
             txtPaymentAmount.setText(po.getPaymentAmount().toString());
+            //入库
+            checkboxWarehousing.setSelected(po.getWarehousing());
+            //付款
+            checkboxPaying.setSelected(po.getPaying());
             //账号
             comboBoxAccount.setValue(po.getAccount());
             try {
@@ -392,6 +422,9 @@ public class POEditorController {
     }
 
     private void initInputFields() {
+        //仓库
+        comboBoxWarehouse.getItems().addAll(Env.getInstance().currentStore().getWarehouse().getName());
+        comboBoxWarehouse.getSelectionModel().select(0);
         //订单日期
         orderDate.setValue(LocalDate.now());
         //单号
@@ -477,11 +510,6 @@ public class POEditorController {
                             if(sku.getId() != null) {
                                 selected.setSku(sku);
                                 selected.setQuantity(0);
-//                                selected.setPriceExcludingTax(new BigDecimal("0.00").setScale(2, RoundingMode.HALF_UP));
-//                                selected.setPriceIncludingTax(BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP));
-//                                selected.setAmountExcludingTax(BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP));
-//                                selected.setAmountIncludingTax(BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP));
-//                                selected.setTaxAmount(BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP));
                                 data.set(t.getTablePosition().getRow(), selected);
                                 updateSummary();
                             } else {
@@ -963,6 +991,7 @@ public class POEditorController {
                 return new SimpleObjectProperty<>("0.00");
             }
         });
+
         //库存平均价
         colStockAvgPrice.setCellValueFactory(param -> {
             if(param.getValue().getSku() != null && param.getValue().getSku().getStockAvgPrice() != null) {
@@ -1173,7 +1202,7 @@ public class POEditorController {
 
     @FXML
     private void addItem() {
-        PurchaseOrderItem item = new PurchaseOrderItem(Constants.ID, null, null, Constants.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO,"");
+        PurchaseOrderItem item = new PurchaseOrderItem(Constants.ID, null, null, Constants.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, "");
         addItem(item);
     }
 
@@ -1203,8 +1232,13 @@ public class POEditorController {
         content.append("\n应付货款金额: "+txtPurchaseAmount.getText()+" 元 \n");
         content.append("\n代垫费用金额: "+txtDisbursement.getText()+" 元 \n");
         content.append("\n本次优惠金额: "+txtDiscountAmount.getText()+" 元 \n");
-        content.append("\n总计应付金额: "+txtAmountPayable.getText()+" 元 \n");
-        content.append("\n本次实付金额: "+txtPaymentAmount.getText()+" 元 \n\n");
+        content.append("\n总计应付金额: "+txtAmountPayable.getText()+" 元 \n\n");
+
+        content.append("\n本次实付金额: "+txtPaymentAmount.getText()+" 元 \n");
+        content.append("\n用于货款结算: "+txtPurchaseAmount.getText()+" 元 \n");
+        content.append("\n用于代垫费用: "+txtDisbursement.getText()+" 元 \n\n");
+
+        content.append("\n结算同时自动入库: "+(checkboxWarehousing.isSelected()?"是":"否")+"\n\n");
 
         Alert alertConfirm = new Alert(Alert.AlertType.CONFIRMATION, "", ButtonType.NO, ButtonType.YES);
         alertConfirm.setHeaderText(header);
@@ -1215,8 +1249,100 @@ public class POEditorController {
         });
     }
 
+    private boolean validate() {
+        try {
+            warehouse = HttpClient.GET("/warehouses/name/"+comboBoxWarehouse.getValue(), Warehouse.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if(orderDate.getValue() == null) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
+            alert.setHeaderText("单据日期不能空");
+            alert.show();
+            return false;
+        }
+        else if(warehouse.getId() == null) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
+            alert.setHeaderText("不存在的仓库");
+            alert.show();
+            return false;
+        }
+        else if(supplier == null) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
+            alert.setHeaderText("不存在的供应商");
+            alert.show();
+            return false;
+        }
+        else if(comboBoxInvoiceType.getValue() == null) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
+            alert.setHeaderText("不存在的发票类型");
+            alert.show();
+            return false;
+        }
+        else if(txtOperator.getText().equals("")) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
+            alert.setHeaderText("经办人不能空");
+            alert.show();
+            return false;
+        }
+        else if(comboBoxPayments.getValue() == null) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
+            alert.setHeaderText("不存在的结算方式");
+            alert.show();
+            return false;
+        }
+        else if(txtPaymentAmount.getText().equals("") || !NumberValidationUtils.isRealNumber(txtPaymentAmount.getText())) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
+            alert.setHeaderText("本次付款输入无效");
+            alert.show();
+            return false;
+        }
+        else if(comboBoxAccount.getValue() == null) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
+            alert.setHeaderText("不存在的账号");
+            alert.show();
+            return false;
+        }
+        return true;
+    }
+
     /**
-     * 插入或更新
+     * 执行结算
+     */
+    private void execute(String orderStatus, boolean warehousing, PurchaseOrderItem item) {
+        //如果订单状态为已结算，则执行结算
+        if(orderStatus.equals(Constants.CLOSED)) {
+            //是否入库
+            if(warehousing) {
+                //以下更新SKU库存数量和进货平均单价
+                SKU sku = null;
+                try {
+                    sku = HttpClient.GET("/sku/"+item.getSku().getId(), SKU.class);
+                    BigDecimal purchaseAvgPrice = BigDecimal.ZERO;
+                    BigDecimal totalPurchaseAmount = BigDecimal.ZERO;
+                    int totalQty = 0;
+                    String json = GoogleJson.GET().toJson(item);
+                    String results = HttpClient.POST("/purchaseOrderItems/search", json);
+                    PurchaseOrderItem[] items = GoogleJson.GET().fromJson(results, PurchaseOrderItem[].class);
+                    //平均进货价格计算公式， 平均价格 = (10M + 9N)/(M+N)，（注10元进货M件，9元进货N件）
+                    for(PurchaseOrderItem i : items) {
+                        totalPurchaseAmount = totalPurchaseAmount.add(i.getPriceExcludingTax().multiply(new BigDecimal(i.getQuantity())));
+                        totalQty += i.getQuantity();
+                    }
+                    purchaseAvgPrice = totalPurchaseAmount.divide(new BigDecimal(totalQty), 2, RoundingMode.HALF_UP);
+                    sku.setPurchaseAvgPrice(purchaseAvgPrice);
+                    sku.setStockQty(sku.getStockQty() + item.getQuantity());
+                    json = GoogleJson.GET().toJson(sku);
+                    HttpClient.PUT("/sku/"+sku.getId(), json);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    /**
+     * 创建或更新采购单
      *
      * @param status
      */
@@ -1230,6 +1356,8 @@ public class POEditorController {
             po.setOrderDate(date);
             //单号
             po.setOrderNo(txtOrderNo.getText());
+            //仓库
+            po.setWarehouse(warehouse);
             //供应商
             po.setSupplier(supplier);
             //发票类型
@@ -1250,6 +1378,13 @@ public class POEditorController {
             po.setPurchaseAmount(NumberValidationUtils.isRealNumber(txtPurchaseAmount.getText())?new BigDecimal(txtPurchaseAmount.getText()):BigDecimal.ZERO);
             //代垫费用
             po.setDisbursementAmount(NumberValidationUtils.isRealNumber(txtDisbursement.getText())?new BigDecimal(txtDisbursement.getText()):BigDecimal.ZERO);
+            //代垫摘要
+            po.setSummary(txtSummary.getText());
+            //还款日期
+            if(txtRepaymentDate.getValue() != null) {
+                Date repaymentDate = Date.from(txtRepaymentDate.getValue().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+                po.setRepaymentDate(repaymentDate);
+            }
             //本次优惠
             po.setDiscountAmount(NumberValidationUtils.isRealNumber(txtDiscountAmount.getText())?new BigDecimal(txtDiscountAmount.getText()):BigDecimal.ZERO);
             //应付总额
@@ -1268,13 +1403,20 @@ public class POEditorController {
             po.setTotalAmountExcludingTax(BigDecimal.ZERO);
             //含税金额
             po.setTotalAmountIncludingTax(BigDecimal.ZERO);
-            //仓库
-            po.setWarehouse(Env.getInstance().currentStore().getWarehouse());
             //状态
             po.setStatus(status);
+            //入库
+            po.setWarehousing(checkboxWarehousing.isSelected());
+            //付款
+            po.setPaying(checkboxPaying.isSelected());
             //创建人
             po.setCreator(Env.getInstance().currentUser());
-            //创建采购订单对象
+            //未税金额
+            po.setTotalAmountExcludingTax(new BigDecimal(labelTotalAmountWithoutTax.getText()));
+            //含税金额
+            po.setTotalAmountIncludingTax(new BigDecimal(labelTotalAmountWithTax.getText()));
+
+            //创建采购订单
             String json = GoogleJson.GET().toJson(po);
             try {
                 String idStr = HttpClient.POST("/purchaseOrders", json);
@@ -1294,15 +1436,8 @@ public class POEditorController {
                     } catch (IOException e2) {
                         e2.printStackTrace();
                     }
-                    //如果结算，则处理入库数量
-                    if(status.equals(Constants.CLOSED)) {
-                        String json2 = GoogleJson.GET().toJson(e.getQuantity());
-                        try {
-                            HttpClient.PUT("/sku/stockQty/"+e.getSku().getId(), json2);
-                        } catch (IOException ex) {
-                            ex.printStackTrace();
-                        }
-                    }
+                    //执行结算
+                    execute(status, checkboxWarehousing.isSelected(), e);
                 }
             });
             callback.call(po);
@@ -1312,25 +1447,37 @@ public class POEditorController {
             po.setId(this.po.getId());
             LocalDate localDate = orderDate.getValue();
             Date date = Date.from(localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+            //单据日期
             po.setOrderDate(date);
+            //单号
             po.setOrderNo(txtOrderNo.getText());
+            //仓库
+            po.setWarehouse(warehouse);
+            //供应商
             po.setSupplier(supplier);
+            //发票类型
             po.setInvoiceType(comboBoxInvoiceType.getValue());
+            //发票No
             po.setInvoiceNo(txtInvoiceNo.getText());
+            //运费
             po.setFreight(NumberValidationUtils.isRealNumber(txtFreight.getText())?new BigDecimal(txtFreight.getText()):BigDecimal.ZERO);
+            //备注
             po.setNotes(txtNotes.getText());
+            //经办人
             po.setOperator(txtOperator.getText());
+            //操作员
+            po.setUserName(txtLoginAccount.getText());
+            //结算方式
             po.setPayment(comboBoxPayments.getValue());
-            //进货数量
-            po.setPurchaseQty(Integer.parseInt(labelTotalQty.getText()));
-            //已入库数量
-            po.setStockedQty(status.equals(Constants.CLOSED)?po.getPurchaseQty():0);
-            //退货数量合计
-            po.setReturnedTotalQty(0);
             //货款金额
             po.setPurchaseAmount(NumberValidationUtils.isRealNumber(txtPurchaseAmount.getText())?new BigDecimal(txtPurchaseAmount.getText()):BigDecimal.ZERO);
             //代垫费用
             po.setDisbursementAmount(NumberValidationUtils.isRealNumber(txtDisbursement.getText())?new BigDecimal(txtDisbursement.getText()):BigDecimal.ZERO);
+            //代垫摘要
+            po.setSummary(txtSummary.getText());
+            //还款日期
+            Date repaymentDate = Date.from(txtRepaymentDate.getValue().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+            po.setRepaymentDate(repaymentDate);
             //本次优惠
             po.setDiscountAmount(NumberValidationUtils.isRealNumber(txtDiscountAmount.getText())?new BigDecimal(txtDiscountAmount.getText()):BigDecimal.ZERO);
             //应付总额
@@ -1339,14 +1486,30 @@ public class POEditorController {
             po.setPaymentAmount(NumberValidationUtils.isRealNumber(txtAmountPayable.getText())?new BigDecimal(txtPaymentAmount.getText()):BigDecimal.ZERO);
             //账号
             po.setAccount(comboBoxAccount.getValue());
-            //系统登录账号
-            po.setUserName(txtLoginAccount.getText());
-            //仓库
-            po.setWarehouse(Env.getInstance().currentStore().getWarehouse());
+            //进货数量
+            po.setPurchaseQty(Integer.parseInt(labelTotalQty.getText()));
+            //已入库数量
+            po.setStockedQty(status.equals(Constants.CLOSED)?po.getPurchaseQty():0);
+            //退货数量合计
+            po.setReturnedTotalQty(0);
+            //未税金额
+            po.setTotalAmountExcludingTax(BigDecimal.ZERO);
+            //含税金额
+            po.setTotalAmountIncludingTax(BigDecimal.ZERO);
             //状态
             po.setStatus(status);
+            //入库
+            po.setWarehousing(checkboxWarehousing.isSelected());
+            //付款
+            po.setPaying(checkboxPaying.isSelected());
             //创建人
             po.setCreator(Env.getInstance().currentUser());
+            //未税金额
+            po.setTotalAmountExcludingTax(new BigDecimal(labelTotalAmountWithoutTax.getText()));
+            //含税金额
+            po.setTotalAmountIncludingTax(new BigDecimal(labelTotalAmountWithTax.getText()));
+
+            //更新采购单
             String json = GoogleJson.GET().toJson(po);
             try {
                 HttpClient.PUT("/purchaseOrders/"+po.getId(), json);
@@ -1373,15 +1536,8 @@ public class POEditorController {
                             e2.printStackTrace();
                         }
                     }
-                    //如果结算，则处理入库数量
-                    if(status.equals(Constants.CLOSED)) {
-                        String json2 = GoogleJson.GET().toJson(e.getQuantity());
-                        try {
-                            HttpClient.PUT("/sku/stockQty/"+e.getSku().getId(), json2);
-                        } catch (IOException ex) {
-                            ex.printStackTrace();
-                        }
-                    }
+                    //执行结算
+                    execute(status, checkboxWarehousing.isSelected(), e);
                 }
             });
             //删除已经移除的行
@@ -1398,13 +1554,17 @@ public class POEditorController {
 
     @FXML
     private void save() {
-        saveOrUpdate(Constants.UNCLOSED);
-        dialog.close();
+        if(validate()) {
+            saveOrUpdate(Constants.UNCLOSED);
+            dialog.close();
+        }
     }
 
     @FXML
     private void submit() {
-        confirmAndSubmit();
+        if(validate()) {
+            confirmAndSubmit();
+        }
     }
 
     private void openProductChooser() {
@@ -1415,7 +1575,6 @@ public class POEditorController {
                 PurchaseOrderItem item = tableView.getSelectionModel().getSelectedItem();
                 item.setSku(sku);
                 item.setQuantity(0);
-//                item.setPriceExcludingTax(sku.getAvgPrice());
                 item.setAmountExcludingTax(BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP));
 
                 tableView.refresh();

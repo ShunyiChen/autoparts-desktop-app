@@ -43,6 +43,8 @@ public class PurchaseOrder {
     private BigDecimal purchaseAmount;
     /** 垫付费用 */
     private BigDecimal disbursementAmount;
+    /** 垫付摘要 */
+    private String summary;
     /** 本次优惠 */
     private BigDecimal discountAmount;
     /** 应付总额 */
@@ -71,10 +73,14 @@ public class PurchaseOrder {
     private Date fromDate;
     /** 结束日期 */
     private Date toDate;
+    /** 入库 */
+    private Boolean warehousing;
+    /** 付款 */
+    private Boolean paying;
 
     public PurchaseOrder() {}
 
-    public PurchaseOrder(Long id, String orderNo, Date orderDate, Warehouse warehouse, Supplier supplier, String invoiceType, String invoiceNo, BigDecimal freight, String notes, String operator, String userName, String payment, Integer purchaseQty, Integer stockedQty, Integer returnedTotalQty, BigDecimal purchaseAmount, BigDecimal disbursementAmount, BigDecimal discountAmount, BigDecimal amountPayable, BigDecimal paymentAmount, String account, BigDecimal repaymentAmount, Date repaymentDate, BigDecimal totalAmountExcludingTax, BigDecimal totalAmountIncludingTax, String status, Date dateCreated, String creator, String dateType, Date fromDate, Date toDate) {
+    public PurchaseOrder(Long id, String orderNo, Date orderDate, Warehouse warehouse, Supplier supplier, String invoiceType, String invoiceNo, BigDecimal freight, String notes, String operator, String userName, String payment, Integer purchaseQty, Integer stockedQty, Integer returnedTotalQty, BigDecimal purchaseAmount, BigDecimal disbursementAmount, String summary, BigDecimal discountAmount, BigDecimal amountPayable, BigDecimal paymentAmount, String account, BigDecimal repaymentAmount, Date repaymentDate, BigDecimal totalAmountExcludingTax, BigDecimal totalAmountIncludingTax, String status, Date dateCreated, String creator, String dateType, Date fromDate, Date toDate, Boolean warehousing, Boolean paying) {
         this.id = id;
         this.orderNo = orderNo;
         this.orderDate = orderDate;
@@ -92,6 +98,7 @@ public class PurchaseOrder {
         this.returnedTotalQty = returnedTotalQty;
         this.purchaseAmount = purchaseAmount;
         this.disbursementAmount = disbursementAmount;
+        this.summary = summary;
         this.discountAmount = discountAmount;
         this.amountPayable = amountPayable;
         this.paymentAmount = paymentAmount;
@@ -106,6 +113,8 @@ public class PurchaseOrder {
         this.dateType = dateType;
         this.fromDate = fromDate;
         this.toDate = toDate;
+        this.warehousing = warehousing;
+        this.paying = paying;
     }
 
     public Long getId() {
@@ -356,4 +365,27 @@ public class PurchaseOrder {
         this.toDate = toDate;
     }
 
+    public String getSummary() {
+        return summary;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
+    }
+
+    public Boolean getWarehousing() {
+        return warehousing;
+    }
+
+    public void setWarehousing(Boolean warehousing) {
+        this.warehousing = warehousing;
+    }
+
+    public Boolean getPaying() {
+        return paying;
+    }
+
+    public void setPaying(Boolean paying) {
+        this.paying = paying;
+    }
 }

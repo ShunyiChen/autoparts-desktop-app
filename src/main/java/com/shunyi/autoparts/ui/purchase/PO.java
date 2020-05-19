@@ -53,7 +53,7 @@ public class PO extends TabContent {
 
     @Override
     protected void dispose() {
-
+        poController.clean();
     }
 
     @Override
