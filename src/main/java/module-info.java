@@ -3,6 +3,7 @@ module desktopapp {
     requires javafx.fxml;
     requires javafx.base;
     requires javafx.graphics;
+    requires javafx.web;
     requires org.apache.commons.lang3;
     requires okhttp3;
     requires com.google.gson;

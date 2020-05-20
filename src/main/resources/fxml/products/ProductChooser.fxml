@@ -122,7 +122,6 @@
                         <TableColumn fx:id="colSupplier" prefWidth="150.0" text="供应商" />
                         <TableColumn fx:id="colCompany" prefWidth="150.0" text="材料所属公司" />
                         <TableColumn fx:id="colDiscountPercentage" prefWidth="150.0" text="折扣%" />
-                        <TableColumn fx:id="colAvgPrice" prefWidth="150.0" text="平均价" />
                         <TableColumn fx:id="colPurchasingPrice1" prefWidth="150.0" text="一级进价" />
                         <TableColumn fx:id="colPurchasingPrice2" prefWidth="150.0" text="二级进价" />
                         <TableColumn fx:id="colPurchasingPrice3" prefWidth="150.0" text="三级进价" />

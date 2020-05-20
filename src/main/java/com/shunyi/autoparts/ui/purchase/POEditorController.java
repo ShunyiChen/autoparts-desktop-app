@@ -1329,8 +1329,10 @@ public class POEditorController {
                         totalPurchaseAmount = totalPurchaseAmount.add(i.getPriceExcludingTax().multiply(new BigDecimal(i.getQuantity())));
                         totalQty += i.getQuantity();
                     }
-                    purchaseAvgPrice = totalPurchaseAmount.divide(new BigDecimal(totalQty), 2, RoundingMode.HALF_UP);
-                    sku.setPurchaseAvgPrice(purchaseAvgPrice);
+                    if(totalQty > 0) {
+                        purchaseAvgPrice = totalPurchaseAmount.divide(new BigDecimal(totalQty), 2, RoundingMode.HALF_UP);
+                        sku.setPurchaseAvgPrice(purchaseAvgPrice);
+                    }
                     sku.setStockQty(sku.getStockQty() + item.getQuantity());
                     json = GoogleJson.GET().toJson(sku);
                     HttpClient.PUT("/sku/"+sku.getId(), json);

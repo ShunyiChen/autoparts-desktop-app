@@ -85,8 +85,6 @@ public class ProductChooserController {
     @FXML
     private TableColumn colDiscountPercentage;
     @FXML
-    private TableColumn colAvgPrice;
-    @FXML
     private TableColumn<SKU, String> colPurchasingPrice1;
     @FXML
     private TableColumn<SKU, String> colPurchasingPrice2;
@@ -329,7 +327,6 @@ public class ProductChooserController {
         colSupplier.setCellValueFactory(param -> new SimpleObjectProperty(param.getValue().getProduct().getSupplier()));
         colCompany.setCellValueFactory(param -> new SimpleObjectProperty(param.getValue().getProduct().getCompany()));
         colDiscountPercentage.setCellValueFactory(new PropertyValueFactory<SKU, String>("discount"));
-        colAvgPrice.setCellValueFactory(new PropertyValueFactory<SKU, String>("purchaseAvgPrice"));
         colPurchasingPrice1.setCellValueFactory(param -> new SimpleObjectProperty(param.getValue().getProduct().getPurchasingPrice1()));
         colPurchasingPrice2.setCellValueFactory(param -> new SimpleObjectProperty(param.getValue().getProduct().getPurchasingPrice2()));
         colPurchasingPrice3.setCellValueFactory(param -> new SimpleObjectProperty(param.getValue().getProduct().getPurchasingPrice3()));
@@ -340,10 +337,34 @@ public class ProductChooserController {
         colShortage.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getProduct().getShortage()?"是":"否"));
         colStatus.setCellValueFactory(new PropertyValueFactory<SKU, String>("enabled"));
         colNotes.setCellValueFactory(new PropertyValueFactory<SKU, String>("notes"));
-        colStockAvgPrice.setCellValueFactory(new PropertyValueFactory<SKU, String>("stockAvgPrice"));
-        colStockAmount.setCellValueFactory(new PropertyValueFactory<SKU, String>("stockAmount"));
-        colPurchaseAvgPrice.setCellValueFactory(new PropertyValueFactory<SKU, String>("purchaseAvgPrice"));
-        colPurchaseAmount.setCellValueFactory(new PropertyValueFactory<SKU, String>("purchaseAmount"));
+        colStockAvgPrice.setCellValueFactory(param -> {
+            if(param.getValue().getStockAvgPrice() == null) {
+                return new SimpleObjectProperty<>("0.00");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getStockAvgPrice().toString());
+            }
+        });
+        colStockAmount.setCellValueFactory(param -> {
+            if(param.getValue().getStockAmount() == null) {
+                return new SimpleObjectProperty<>("0.00");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getStockAmount().toString());
+            }
+        });
+        colPurchaseAvgPrice.setCellValueFactory(param -> {
+            if(param.getValue().getPurchaseAvgPrice() == null) {
+                return new SimpleObjectProperty<>("0.00");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getPurchaseAvgPrice().toString());
+            }
+        });
+        colPurchaseAmount.setCellValueFactory(param -> {
+            if(param.getValue().getPurchaseAmount() == null) {
+                return new SimpleObjectProperty<>("0.00");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getPurchaseAmount().toString());
+            }
+        });
 
         colSlot.setCellValueFactory(param -> {
             StringBuilder slots = new StringBuilder();
@@ -467,27 +488,8 @@ public class ProductChooserController {
         alertConfirm.setHeaderText("请确认是否要删除配件？");
         alertConfirm.showAndWait().filter(response -> response == ButtonType.YES).ifPresent(response -> {
             try {
-//                //删除商品所有SKU
-//                SKU[] skuArray = HttpClient.GET("/sku/products/"+selectedProduct.getId(), SKU[].class);
-//                Arrays.asList(skuArray).forEach(e -> {
-//                    try {
-//                        HttpClient.DELETE("/sku/"+e.getId());
-//                    } catch (IOException ex) {
-//                        ex.printStackTrace();
-//                    }
-//                });
-//                //删除商品基本属性
-//                BasicAttributes[] basicAttributes = HttpClient.GET("/basic/attributes/products/"+selectedProduct.getId(), BasicAttributes[].class);
-//                Arrays.asList(basicAttributes).forEach(e -> {
-//                    try {
-//                        HttpClient.DELETE("/basic/attributes/"+e.getId());
-//                    } catch (IOException ex) {
-//                        ex.printStackTrace();
-//                    }
-//                });
-                //删除商品，同时删除sku
+                //删除配件，同时删除其SKU和属性
                String res = HttpClient.DELETE("/products/"+selectedSKU.getProduct().getId());
-                System.out.println("res="+res);
                if(res.equals("1")) {
                    tableView.getItems().remove(selectedSKU);
                } else {
@@ -495,7 +497,6 @@ public class ProductChooserController {
                    alert.setHeaderText("当前配件正在使用中，无法删除");
                    alert.show();
                }
-
             } catch (IOException e) {
                 e.printStackTrace();
             }

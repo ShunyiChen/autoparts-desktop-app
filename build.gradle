@@ -9,17 +9,15 @@ plugins {
 project.sourceCompatibility=1.11
 project.targetCompatibility=1.11
 
-//repositories {
-//    mavenCentral()
-//}
 repositories {
-    maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+    maven { url "https://maven.aliyun.com/nexus/content/groups/public/" }
+    mavenCentral()
 }
 
 
 javafx {
     version = "13.0.1"
-    modules = [ 'javafx.controls', 'javafx.fxml' ]
+    modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.web']
 }
 
 mainClassName = "$moduleName/com.shunyi.autoparts.ui.MainApp"
