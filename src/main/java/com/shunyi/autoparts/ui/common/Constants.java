@@ -44,9 +44,6 @@ public class Constants {
     public static final BigDecimal AVG_PRICE = BigDecimal.ZERO;
 
 
-
-
-
     /** 初始ID值 */
     public static final Long ID = 0L;
     /** 根节点父ID值 */

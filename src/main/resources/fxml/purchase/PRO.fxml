@@ -171,29 +171,25 @@
         <columns>
             <TableColumn fx:id="colOrderNo" prefWidth="220.0" text="采购退货单号" />
             <TableColumn fx:id="colOrderDate" prefWidth="120.0" text="采购退货日期" />
-            <TableColumn fx:id="colSupplierCode" prefWidth="120.0" text="供应商编码" />
+            <TableColumn fx:id="colSupplierCode" prefWidth="150.0" text="供应商编码" />
             <TableColumn fx:id="colSupplierName" prefWidth="120.0" text="供应商名称" />
-            <TableColumn fx:id="colWarehouse" prefWidth="120.0" text="仓库名称" />
-            <TableColumn fx:id="colOperator" prefWidth="120.0" text="经办人" />
-            <TableColumn fx:id="colUserName" prefWidth="120.0" text="操作员" />
-            <TableColumn fx:id="colReturnQty" prefWidth="120.0" text="退货数量" />
-            <TableColumn fx:id="colReturnedTotalQty" prefWidth="120.0" text="退货数量合计" />
-            <TableColumn fx:id="colAmountExcludingTax" prefWidth="120.0" text="未税金额" />
-            <TableColumn fx:id="colAmountIncludingTax" prefWidth="75.0" text="含税金额" />
-            <TableColumn fx:id="colAmountExcludingTax1" prefWidth="120.0" text="税额" />
-            <TableColumn fx:id="colAmountExcludingTax11" prefWidth="120.0" text="费用金额" />
-            <TableColumn fx:id="colAmountExcludingTax111" prefWidth="120.0" text="费用已付金额" />
-            <TableColumn fx:id="colAmountExcludingTax1111" prefWidth="120.0" text="货款已付金额" />
-            <TableColumn fx:id="colAmountExcludingTax11111" prefWidth="120.0" text="应付总额" />
-            <TableColumn fx:id="colPayment" prefWidth="90.0" text="结算方式" />
-            <TableColumn fx:id="colInvoiceType" prefWidth="75.0" text="发票类型" />
-            <TableColumn fx:id="colNotes" prefWidth="88.0" text="备注" />
-            <TableColumn fx:id="colStatus" prefWidth="75.0" text="状态" />
-            <TableColumn fx:id="colRepaymentDate" prefWidth="75.0" text="还款日期" />
-            <TableColumn fx:id="colDisbursementAmount" prefWidth="75.0" text="代垫金额" />
-            <TableColumn fx:id="colRepaymentAmount" prefWidth="75.0" text="已还金额" />
-            <TableColumn fx:id="colDiscountAmount" prefWidth="75.0" text="优惠金额" />
-            <TableColumn fx:id="colAccount" prefWidth="90.0" text="账号" />
+            <TableColumn fx:id="colReturnQty" prefWidth="150.0" text="退回数量" />
+            <TableColumn fx:id="colAmountIncludingTax" prefWidth="150.0" text="含税金额" />
+            <TableColumn fx:id="colAmountExcludingTax" prefWidth="150.0" text="未税金额" />
+            <TableColumn fx:id="colTaxAmount" prefWidth="150.0" text="税额" />
+            <TableColumn fx:id="colTotalFees" prefWidth="150.0" text="费用金额" />
+            <TableColumn fx:id="colTotalFeesPaid" prefWidth="150.0" text="费用已付金额" />
+            <TableColumn fx:id="colGoodsPaymentPaid" prefWidth="150.0" text="货款已付金额" />
+            <TableColumn fx:id="colAmountPayable" prefWidth="150.0" text="应付总额" />
+            <TableColumn fx:id="colTotalPaymentAmount" prefWidth="150.0" text="付款金额合计" />
+            <TableColumn fx:id="colWarehouse" prefWidth="150.0" text="仓库名称" />
+            <TableColumn fx:id="colOperator" prefWidth="150.0" text="经办人" />
+            <TableColumn fx:id="colUserName" prefWidth="150.0" text="操作员" />
+            <TableColumn fx:id="colPayment" prefWidth="150.0" text="结算方式" />
+            <TableColumn fx:id="colInvoiceType" prefWidth="150.0" text="发票类型" />
+            <TableColumn fx:id="colInvoiceNo" prefWidth="150.0" text="发票No" />
+            <TableColumn fx:id="colNotes" prefWidth="150.0" text="备注" />
+            <TableColumn fx:id="colStatus" prefWidth="150.0" text="状态" />
         </columns>
          <BorderPane.margin>
             <Insets bottom="30.0" />

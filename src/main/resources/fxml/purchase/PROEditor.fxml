@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
@@ -26,30 +27,48 @@
                   </Label>
                </left>
                <right>
-                  <VBox prefHeight="58.0" prefWidth="274.0" BorderPane.alignment="CENTER">
+                  <FlowPane alignment="CENTER_RIGHT" prefHeight="67.0" prefWidth="560.0" BorderPane.alignment="CENTER">
                      <children>
-                        <FlowPane alignment="CENTER_LEFT" prefHeight="37.0" prefWidth="245.0">
+                        <VBox prefHeight="67.0" prefWidth="240.0">
                            <children>
-                              <Label fx:id="date" text="单据日期:" textFill="WHITE">
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font>
-                              </Label>
-                              <DatePicker fx:id="orderDate" prefHeight="23.0" prefWidth="200.0" />
+                              <FlowPane alignment="CENTER_LEFT" prefHeight="37.0" prefWidth="248.0">
+                                 <children>
+                                    <Label fx:id="date1" text="仓  库:" textFill="WHITE">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <ComboBox fx:id="comboBoxWarehouse" prefHeight="23.0" prefWidth="194.0" />
+                                 </children>
+                              </FlowPane>
                            </children>
-                        </FlowPane>
-                        <FlowPane alignment="CENTER_LEFT" layoutX="10.0" layoutY="10.0" prefHeight="37.0" prefWidth="245.0">
+                        </VBox>
+                        <VBox prefHeight="58.0" prefWidth="274.0">
                            <children>
-                              <Label fx:id="no" alignment="CENTER" prefHeight="19.0" prefWidth="60.0" text="单   号:" textFill="WHITE">
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font>
-                              </Label>
-                              <TextField fx:id="txtOrderNo" editable="false" prefHeight="23.0" prefWidth="200.0" />
+                              <FlowPane alignment="CENTER_LEFT" prefHeight="34.0" prefWidth="274.0">
+                                 <children>
+                                    <Label fx:id="date" text="单据日期:" textFill="WHITE">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <DatePicker fx:id="orderDate" prefHeight="23.0" prefWidth="200.0" />
+                                 </children>
+                              </FlowPane>
+                              <FlowPane alignment="CENTER_LEFT" layoutX="10.0" layoutY="10.0" prefHeight="26.0" prefWidth="274.0">
+                                 <children>
+                                    <Label fx:id="no" alignment="CENTER" prefHeight="19.0" prefWidth="60.0" text="单   号:" textFill="WHITE">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <TextField fx:id="txtOrderNo" editable="false" prefHeight="23.0" prefWidth="200.0" />
+                                 </children>
+                              </FlowPane>
                            </children>
-                        </FlowPane>
+                        </VBox>
                      </children>
-                  </VBox>
+                  </FlowPane>
                </right>
             </BorderPane>
             <FlowPane alignment="CENTER_LEFT" layoutX="10.0" layoutY="56.0" prefHeight="38.0" prefWidth="1164.0">
@@ -120,22 +139,12 @@
                         <Font size="14.0" />
                      </font>
                   </TextField>
-                  <Label alignment="CENTER_RIGHT" layoutX="234.0" layoutY="25.0" prefHeight="19.0" prefWidth="74.0" text="运费:">
+                  <Label alignment="CENTER_RIGHT" layoutX="444.0" layoutY="25.0" prefHeight="19.0" prefWidth="75.0" text="备注:">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="txtFreight" layoutX="294.0" layoutY="20.0" prefHeight="29.0" prefWidth="170.0">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </TextField>
-                  <Label alignment="CENTER_RIGHT" layoutX="444.0" layoutY="25.0" prefHeight="19.0" prefWidth="109.0" text="备注:">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </Label>
-                  <TextField fx:id="txtNotes" layoutX="490.0" layoutY="20.0" prefHeight="29.0" prefWidth="170.0">
+                  <TextField fx:id="txtNotes" layoutX="490.0" layoutY="20.0" prefHeight="29.0" prefWidth="449.0">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -169,15 +178,25 @@
            <!-- 原采购单号 -->
            <TableColumn fx:id="colOriginalOrderNo" prefWidth="300.0" text="原进货单号" />
            <!-- SKU编码 -->
-           <TableColumn fx:id="colSkuCode" prefWidth="125.0" text="SKU编码" />
+           <TableColumn fx:id="colSkuCode" prefWidth="150.0" text="配件编码" />
            <!-- SKU名称 -->
-           <TableColumn fx:id="colSkuName" prefWidth="125.0" text="SKU名称" />
+           <TableColumn fx:id="colSkuName" prefWidth="150.0" text="名称" />
            <!-- 规格 -->
-           <TableColumn fx:id="colSpecification" prefWidth="125.0" text="规格" />
+           <TableColumn fx:id="colSpecification" prefWidth="150.0" text="规格" />
            <!-- 单位 -->
            <TableColumn fx:id="colUnit" prefWidth="125.0" text="单位" />
            <!-- 数量 -->
            <TableColumn fx:id="colQty" prefWidth="125.0" text="数量" />
+           <!-- 含税单价 -->
+           <TableColumn fx:id="colPriceIncludingTax" prefWidth="125.0" text="含税单价" />
+           <!-- 含税金额 -->
+           <TableColumn fx:id="colAmountIncludingTax" prefWidth="125.0" text="含税金额" />
+           <!-- 可退货数量 -->
+           <TableColumn fx:id="colReturnableQty" prefWidth="125.0" text="可退货数量" />
+           <!-- 备注 -->
+           <TableColumn fx:id="colNotes" prefWidth="125.0" text="备注" />
+           <!-- 货位 -->
+           <TableColumn fx:id="colSlots" prefWidth="125.0" text="货位" />
            <!-- 不含税单价 -->
            <TableColumn fx:id="colPriceExcludingTax" prefWidth="125.0" text="不含税单价" />
            <!-- 不含税金额 -->
@@ -186,14 +205,8 @@
            <TableColumn fx:id="colWarehouse" prefWidth="125.0" text="仓库" />
            <!-- 本库现库存数 -->
            <TableColumn fx:id="colStockQty" prefWidth="125.0" text="本库现库存数" />
-           <!-- 备注 -->
-           <TableColumn fx:id="colNotes" prefWidth="125.0" text="备注" />
            <!-- SKU条形码 -->
            <TableColumn fx:id="colSkuBarCode" prefWidth="125.0" text="SKU条形码" />
-           <!-- 进货平均价 -->
-           <TableColumn fx:id="colAvgPrice" prefWidth="125.0" text="进货平均价" />
-           <!-- 货位 -->
-           <TableColumn fx:id="colSlots" prefWidth="125.0" text="货位" />
            <!-- 图片 -->
            <TableColumn fx:id="colPhotos" prefWidth="125.0" text="图片" />
            <!-- 产品类别 -->
@@ -255,29 +268,17 @@
            <!-- 折扣% -->
            <TableColumn fx:id="colDiscountPercentage" prefWidth="125.0" text="折扣%" />
            <!-- 税率 -->
-           <TableColumn fx:id="colTaxRate" prefWidth="125.0" text="税率" />
+           <TableColumn fx:id="colTaxRate" prefWidth="125.0" text="税率%" />
            <!-- 税额 -->
            <TableColumn fx:id="colTaxAmount" prefWidth="125.0" text="税额" />
-           <!-- 含税单价 -->
-           <TableColumn fx:id="colPriceIncludingTax" prefWidth="125.0" text="含税单价" />
-           <!-- 含税金额 -->
-           <TableColumn fx:id="colAmountIncludingTax" prefWidth="125.0" text="含税金额" />
-           <!-- 创建时间 -->
-           <TableColumn fx:id="colDateCreated" prefWidth="125.0" text="创建时间" />
-           <!-- 创建者 -->
-           <TableColumn fx:id="colCreator" prefWidth="125.0" text="创建者" />
-           <!-- 更新时间 -->
-           <TableColumn fx:id="colDateUpdated" prefWidth="125.0" text="更新时间" />
-           <!-- 更新者 -->
-           <TableColumn fx:id="colUpdator" prefWidth="125.0" text="更新者" />
-           <!-- 更新次数 -->
-           <TableColumn fx:id="colUpdateCount" prefWidth="125.0" text="更新次数" />
-           <!-- 删除时间 -->
-           <TableColumn fx:id="colDateDeleted" prefWidth="125.0" text="删除时间" />
-           <!-- 删除标记 -->
-           <TableColumn fx:id="colDeleteFlag" prefWidth="125.0" text="删除标记" />
-           <!-- 删除者 -->
-           <TableColumn fx:id="colDeleter" prefWidth="125.0" text="删除者" />
+           <!-- 库存平均价 -->
+           <TableColumn fx:id="colStockAvgPrice" prefWidth="125.0" text="库存平均价" />
+           <!-- 库存金额 -->
+           <TableColumn fx:id="colStockAmount" prefWidth="125.0" text="库存金额" />
+           <!-- 进货平均价 -->
+           <TableColumn fx:id="colPurchaseAvgPrice" prefWidth="125.0" text="进货平均价" />
+           <!-- 进货金额 -->
+           <TableColumn fx:id="colPurchaseAmount" prefWidth="125.0" text="进货金额" />
         </columns>
       </TableView>
    </center>
@@ -299,7 +300,7 @@
                         <Insets right="5.0" />
                      </FlowPane.margin>
                   </Label>
-                  <Label fx:id="labelRecords" layoutX="10.0" layoutY="13.0" prefHeight="19.0" prefWidth="91.0" text="1" textFill="#3f51b5">
+                  <Label fx:id="labelRecords" layoutX="10.0" layoutY="13.0" prefHeight="19.0" prefWidth="91.0" text="0" textFill="#3f51b5">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -317,7 +318,7 @@
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <Label alignment="CENTER_RIGHT" layoutX="313.0" layoutY="13.0" prefHeight="15.0" prefWidth="70.0" text="总金额:" textFill="#3f51b5">
+                  <Label alignment="CENTER_RIGHT" layoutX="313.0" layoutY="13.0" prefHeight="19.0" prefWidth="83.0" text="不含税金额:" textFill="#3f51b5">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -325,7 +326,20 @@
                         <Insets right="5.0" />
                      </FlowPane.margin>
                   </Label>
-                  <Label fx:id="labelTotalAmount" layoutX="383.0" layoutY="13.0" prefHeight="19.0" prefWidth="91.0" text="0.00" textFill="#3f51b5">
+                  <Label fx:id="labelTotalAmountWithoutTax" layoutX="383.0" layoutY="13.0" prefHeight="19.0" prefWidth="91.0" text="0.00" textFill="#3f51b5">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <Label alignment="CENTER_RIGHT" layoutX="484.0" layoutY="12.0" prefHeight="15.0" prefWidth="70.0" text="含税金额:" textFill="#3f51b5">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                     <FlowPane.margin>
+                        <Insets right="5.0" />
+                     </FlowPane.margin>
+                  </Label>
+                  <Label fx:id="labelTotalAmountWithTax" layoutX="572.0" layoutY="12.0" prefHeight="19.0" prefWidth="97.0" text="0.00" textFill="#3f51b5">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -333,6 +347,7 @@
                </children></FlowPane>
             <FlowPane alignment="CENTER_RIGHT" prefHeight="38.0">
                <children>
+                  <CheckBox fx:id="checkboxWarehousingOut" mnemonicParsing="false" selected="true" text="出库" />
                   <Label alignment="CENTER_RIGHT" prefHeight="19.0" prefWidth="88.0" text="经办人:">
                      <font>
                         <Font size="14.0" />
@@ -353,12 +368,12 @@
                   </Label>
                   <ComboBox fx:id="comboBoxPayments" prefHeight="29.0" prefWidth="150.0" />
                   <Button mnemonicParsing="false" onAction="#openPaymentChooser" prefHeight="28.0" prefWidth="29.0" text="..." />
-                  <Label alignment="CENTER_RIGHT" layoutX="219.0" layoutY="20.0" prefHeight="19.0" prefWidth="75.0" text="系统账号:">
+                  <Label alignment="CENTER_RIGHT" layoutX="219.0" layoutY="20.0" prefHeight="19.0" prefWidth="75.0" text="操作员:">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="txtLoginAccount" editable="false" layoutX="1019.0" layoutY="13.0" prefHeight="29.0" prefWidth="150.0">
+                  <TextField fx:id="txtUserName" editable="false" layoutX="1019.0" layoutY="13.0" prefHeight="29.0" prefWidth="150.0">
                      <font>
                         <Font size="14.0" />
                      </font>

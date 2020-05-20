@@ -5,6 +5,9 @@ import com.shunyi.autoparts.ui.common.vo.*;
 import com.shunyi.autoparts.ui.products.ProductChooserController;
 import com.shunyi.autoparts.ui.supplier.SupplierChooserController;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.binding.StringBinding;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -19,6 +22,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -27,7 +31,6 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
@@ -51,6 +54,8 @@ public class PROEditorController {
     private Supplier supplier;
     /** 发票类型 */
     private InvoiceType invoiceType;
+    /** 仓库 */
+    private Warehouse warehouse;
     /** 结算方式 */
     private Payment payment;
     @FXML
@@ -63,6 +68,9 @@ public class PROEditorController {
     /** 单号 */
     @FXML
     private TextField txtOrderNo;
+    /** 库存 */
+    @FXML
+    private ComboBox<String> comboBoxWarehouse;
     /** 供应商选择按钮 */
     @FXML
     private Button btnSupplierChooser;
@@ -84,19 +92,16 @@ public class PROEditorController {
     /** 发票号 */
     @FXML
     private TextField txtInvoiceNo;
-    /** 运费 */
-    @FXML
-    private TextField txtFreight;
     /** 备注 */
     @FXML
     private TextField txtNotes;
     /** 结算方式 */
     @FXML
     private ComboBox<String> comboBoxPayments;
-    /** 系统账号 */
+    /** 操作员 */
     @FXML
-    private TextField txtLoginAccount;
-    /**经办人 */
+    private TextField txtUserName;
+    /** 经办人 */
     @FXML
     private TextField txtOperator;
     /** 采购订单明细表 */
@@ -123,6 +128,15 @@ public class PROEditorController {
     /** 数量 */
     @FXML
     private TableColumn<PurchaseReturnOrderItem, String> colQty;
+    /** 含税单价 */
+    @FXML
+    private TableColumn<PurchaseReturnOrderItem, String> colPriceIncludingTax;
+    /** 含税金额 */
+    @FXML
+    private TableColumn<PurchaseReturnOrderItem, String> colAmountIncludingTax;
+    /** 可退货数量 */
+    @FXML
+    private TableColumn<PurchaseReturnOrderItem, String> colReturnableQty;
     /** 不含税单价 */
     @FXML
     private TableColumn<PurchaseReturnOrderItem, String> colPriceExcludingTax;
@@ -141,9 +155,6 @@ public class PROEditorController {
     /** SKU条形码 */
     @FXML
     private TableColumn<PurchaseReturnOrderItem, String> colSkuBarCode;
-    /** 进货平均价 */
-    @FXML
-    private TableColumn<PurchaseReturnOrderItem, String> colAvgPrice;
     /** 货位 */
     @FXML
     private TableColumn<PurchaseReturnOrderItem, String> colSlots;
@@ -153,9 +164,6 @@ public class PROEditorController {
     /** 类别 */
     @FXML
     private TableColumn<PurchaseReturnOrderItem, String> colCategory;
-    /** 产品条形码 */
-    @FXML
-    private TableColumn<PurchaseReturnOrderItem, String> colBarCode;
     /** 产品编码 */
     @FXML
     private TableColumn<PurchaseReturnOrderItem, String> colCode;
@@ -246,45 +254,33 @@ public class PROEditorController {
     /** 税额 */
     @FXML
     private TableColumn<PurchaseReturnOrderItem, String> colTaxAmount;
-    /** 含税单价 */
+    /** 库存平均价 */
     @FXML
-    private TableColumn<PurchaseReturnOrderItem, String> colPriceIncludingTax;
-    /** 含税金额 */
+    private TableColumn<PurchaseReturnOrderItem, String> colStockAvgPrice;
+    /** 库存金额 */
     @FXML
-    private TableColumn<PurchaseReturnOrderItem, String> colAmountIncludingTax;
-    /** 创建时间 */
+    private TableColumn<PurchaseReturnOrderItem, String> colStockAmount;
+    /** 进货平均价 */
     @FXML
-    private TableColumn<PurchaseReturnOrderItem, String> colDateCreated;
-    /** 创建者 */
+    private TableColumn<PurchaseReturnOrderItem, String> colPurchaseAvgPrice;
+    /** 进货金额 */
     @FXML
-    private TableColumn<PurchaseReturnOrderItem, String> colCreator;
-    /** 更新时间 */
-    @FXML
-    private TableColumn<PurchaseReturnOrderItem, String> colDateUpdated;
-    /** 更新者 */
-    @FXML
-    private TableColumn<PurchaseReturnOrderItem, String> colUpdator;
-    /** 更新次数 */
-    @FXML
-    private TableColumn<PurchaseReturnOrderItem, String> colUpdateCount;
-    /** 删除时间 */
-    @FXML
-    private TableColumn<PurchaseReturnOrderItem, String> colDateDeleted;
-    /** 删除标记 */
-    @FXML
-    private TableColumn<PurchaseReturnOrderItem, String> colDeleteFlag;
-    /** 删除者 */
-    @FXML
-    private TableColumn<PurchaseReturnOrderItem, String> colDeleter;
+    private TableColumn<PurchaseReturnOrderItem, String> colPurchaseAmount;
     /** 总记录数 */
     @FXML
     private Label labelRecords;
     /** 总数量 */
     @FXML
     private Label labelTotalQty;
-    /** 总金额 */
+    /** 不含税金额 */
     @FXML
-    private Label labelTotalAmount;
+    private Label labelTotalAmountWithoutTax;
+    /** 含税金额 */
+    @FXML
+    private Label labelTotalAmountWithTax;
+    /** 出库 */
+    @FXML
+    private CheckBox checkboxWarehousingOut;
 
     /**
      * Constructor
@@ -309,34 +305,24 @@ public class PROEditorController {
             orderDate.setValue(localDate);
             //单号
             txtOrderNo.setText(pro.getOrderNo());
+            //仓库
+            comboBoxWarehouse.setValue(pro.getWarehouse().getName());
             //供应商编码
             comboBoxSupplierCode.setValue(pro.getSupplier().getCode());
             //发票类型
             comboBoxInvoiceType.setValue(pro.getInvoiceType());
             //发票No
             txtInvoiceNo.setText(pro.getInvoiceNo());
-            //运费
-            txtFreight.setText(pro.getFreight()+"");
             //备注
             txtNotes.setText(pro.getNotes());
             //经办人
             txtOperator.setText(pro.getOperator());
             //结算方式
             comboBoxPayments.setValue(pro.getPayment());
-            //系统账号
-            txtLoginAccount.setText(pro.getUserName());
-//            //货款金额
-//            txtPurchaseAmount.setText(pro.getPurchaseAmount().toString());
-//            //代垫费用
-//            txtDisbursement.setText(pro.getDisbursementAmount().toString());
-//            //本次优惠
-//            txtDiscountAmount.setText(pro.getDiscountAmount().toString());
-//            //应付总额
-//            txtAmountPayable.setText(pro.getAmountPayable().toString());
-//            //本次付款
-//            txtPaymentAmount.setText(pro.getPaymentAmount().toString());
-//            //账号
-//            comboBoxAccount.setValue(pro.getAccount());
+            //操作员
+            txtUserName.setText(pro.getUserName());
+            //出库
+            checkboxWarehousingOut.setSelected(pro.getWarehousingOut());
             try {
                 PurchaseReturnOrderItem[] items = HttpClient.GET("/purchaseReturnOrderItems/order/"+pro.getId(), PurchaseReturnOrderItem[].class);
                 for(PurchaseReturnOrderItem item : items) {
@@ -345,7 +331,6 @@ public class PROEditorController {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
             initSupplier();
             updateSummary();
         }
@@ -390,6 +375,9 @@ public class PROEditorController {
     }
 
     private void initInputFields() {
+        //仓库
+        comboBoxWarehouse.getItems().addAll(Env.getInstance().currentStore().getWarehouse().getName());
+        comboBoxWarehouse.getSelectionModel().select(0);
         //订单日期
         orderDate.setValue(LocalDate.now());
         //单号
@@ -433,10 +421,10 @@ public class PROEditorController {
         new AutoCompleteBox(comboBoxInvoiceType);
         new AutoCompleteBox(comboBoxPayments);
 
-        txtLoginAccount.setText(Env.getInstance().currentUser());
+        txtUserName.setText(Env.getInstance().currentUser());
     }
 
-    private String fetchOriginalOrderNo(String skuCode) {
+    private PurchaseOrderItem findLastPurchaseOrderItem(String skuCode) {
         PurchaseOrder purchaseOrder = new PurchaseOrder();
         Supplier supplier = new Supplier();
         supplier.setCode(comboBoxSupplierCode.getValue());
@@ -448,26 +436,43 @@ public class PROEditorController {
         condition.setPurchaseOrder(purchaseOrder);
         condition.setSku(sku);
         String json = GoogleJson.GET().toJson(condition);
-        String orderNo = null;
+        PurchaseOrderItem purchaseOrderItem = null;
+        //获取最近采购订单明细
         try {
-            orderNo = HttpClient.POST("/purchaseOrderItems/fetchOrderNo", json);
+            String data = HttpClient.POST("/purchaseOrderItems/lastItem", json);
+            purchaseOrderItem = GoogleJson.GET().fromJson(data, PurchaseOrderItem.class);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return orderNo;
+        return purchaseOrderItem;
     }
 
     private void initTable() {
-        SimpleDateFormat format = new SimpleDateFormat(Constants.PATTERN_DATETIME);
         String css = getClass().getResource("/css/styles.css").toExternalForm();
         tableView.getStylesheets().add(css);
         tableView.setId("my-table");
         tableView.setEditable(true);
 
+
+        tableView.setRowFactory(tableView -> {
+            ObservableList selectedRowIndexes = tableView.getSelectionModel().getSelectedIndices();
+            final TableRow<PurchaseReturnOrderItem> row = new TableRow<>();
+            BooleanBinding selectedRow = Bindings.createBooleanBinding(() ->
+                    selectedRowIndexes.contains(new Integer(row.getIndex())), row.indexProperty(), selectedRowIndexes);
+            selectedRow.addListener((observable, oldValue, newValue) ->
+//                    row.pseudoClassStateChanged(selectedRowPseudoClass, newValue)
+//                            System.out.println(newValue)
+
+//                            row.setTextFill(Color.RED)
+                    row. setStyle("-fx-background-color: red")
+            );
+            return row ;
+        });
+
+
         //行号
         colRowNumber.setCellFactory(new RowNumberTableCell<>());
-
-        //原采购单号
+        //原进货单号
         colOriginalOrderNo.setCellValueFactory(param -> {
             if(param.getValue().getOriginalOrderNo() == null) {
                 return new SimpleObjectProperty<>("");
@@ -475,7 +480,6 @@ public class PROEditorController {
                 return new SimpleObjectProperty<>(param.getValue().getOriginalOrderNo());
             }
         });
-
         //SKU编码
         colSkuCode.setCellFactory(TextFieldTableCell.forTableColumn());
         colSkuCode.setCellValueFactory(param -> {
@@ -498,16 +502,18 @@ public class PROEditorController {
                             if(sku.getId() != null) {
                                 selected.setSku(sku);
                                 selected.setQuantity(0);
-//                                selected.setPriceExcludingTax(sku.getAvgPrice());
-                                selected.setAmountExcludingTax(BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP));
+                                PurchaseOrderItem lastItem = findLastPurchaseOrderItem(sku.getSkuCode());
+                                if(lastItem.getId() != null) {
+                                    //原采购单号
+                                    String originalOrderNo = lastItem.getPurchaseOrder().getOrderNo();
+                                    selected.setOriginalOrderNo(originalOrderNo);
+                                    //可退货数量
+                                    selected.setReturnableQty(lastItem.getQuantity());
+                                    data.set(t.getTablePosition().getRow(), selected);
+                                    updateSummary();
+                                } else {
 
-                                //取原采购单号
-                                String originalOrderNo = fetchOriginalOrderNo(sku.getSkuCode());
-                                selected.setOriginalOrderNo(originalOrderNo);
-
-                                data.set(t.getTablePosition().getRow(), selected);
-                                updateSummary();
-
+                                }
                             } else {
                                 Platform.runLater(() -> {
                                     openProductChooser();
@@ -536,7 +542,7 @@ public class PROEditorController {
                 return new SimpleObjectProperty<>(param.getValue().getSku().getSpecification() );
             }
         });
-        //规格
+        //单位
         colUnit.setCellValueFactory(param -> {
             if(param.getValue().getSku() == null) {
                 return new SimpleObjectProperty<>("");
@@ -546,7 +552,13 @@ public class PROEditorController {
         });
         //数量
         colQty.setCellFactory(cellFactory);
-        colQty.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        colQty.setCellValueFactory(param -> {
+            if(param.getValue().getQuantity() == null) {
+                return new SimpleObjectProperty<>("0");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getQuantity().toString());
+            }
+        });
         colQty.setOnEditCommit(t -> {
             ObservableList<PurchaseReturnOrderItem> data = t.getTableView().getItems();
             if(data != null) {
@@ -555,12 +567,14 @@ public class PROEditorController {
                     if(selected != null) {
                         String newValue = t.getNewValue();
                         if(NumberValidationUtils.isPositiveInteger(newValue)) {
-                            //Item数量
+                            //数量
                             selected.setQuantity(Integer.parseInt(newValue));
-                            //Item不含税金额
-                            selected.setAmountExcludingTax(new BigDecimal(selected.getQuantity()).multiply(selected.getPriceExcludingTax()).setScale(2, RoundingMode.HALF_UP));
-                            //Item金额
-                            selected.setAmount(selected.getAmountExcludingTax());
+                            if(selected.getQuantity() > selected.getReturnableQty()) {
+//                                t.getTablePosition().getRow().setStyle("-fx-background-color: red");
+
+                            }
+                            //含税金额
+                            selected.setAmountIncludingTax(new BigDecimal(selected.getQuantity()).multiply(selected.getPriceIncludingTax()).setScale(2, RoundingMode.HALF_UP));
                             data.set(t.getTablePosition().getRow(), selected);
                             updateSummary();
                         }
@@ -568,22 +582,92 @@ public class PROEditorController {
                 }
             }
         });
-        //不含税单价
-        colPriceExcludingTax.setCellValueFactory(param -> {
+        //含税单价
+        colPriceIncludingTax.setCellFactory(cellFactory);
+        colPriceIncludingTax.setCellValueFactory(param -> {
+            if(param.getValue().getSku() == null) {
+                return new SimpleObjectProperty<>("0.00");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getPriceIncludingTax().toString());
+            }
+        });
+        colPriceIncludingTax.setOnEditCommit((EventHandler<TableColumn.CellEditEvent<PurchaseReturnOrderItem, String>>) t -> {
+            ObservableList<PurchaseReturnOrderItem> data = t.getTableView().getItems();
+            if(data != null) {
+                if(t.getTablePosition().getRow() < data.size()) {
+                    PurchaseReturnOrderItem selected = data.get( t.getTablePosition().getRow());
+                    if(selected != null) {
+                        String priceIncludingTaxStr = t.getNewValue();
+                        if(NumberValidationUtils.isRealNumber(priceIncludingTaxStr)) {
+                            //含税单价
+                            selected.setPriceIncludingTax(new BigDecimal(priceIncludingTaxStr).setScale(2, RoundingMode.HALF_UP));
+                            //含税金额
+                            selected.setAmountIncludingTax(new BigDecimal(selected.getQuantity()).multiply(selected.getPriceIncludingTax()).setScale(2, RoundingMode.HALF_UP));
+                            data.set(t.getTablePosition().getRow(), selected);
+                            updateSummary();
+                        }
+                    }
+                }
+            }
+        });
+        //含税金额
+        colAmountIncludingTax.setCellValueFactory(param -> {
+            if(param.getValue().getAmountIncludingTax() == null) {
+                return new SimpleObjectProperty<>("0.00");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getAmountIncludingTax().toString());
+            }
+        });
+        //可退货数量
+        colReturnableQty.setCellValueFactory(param -> {
+            if(param.getValue().getReturnableQty() != null) {
+                return new SimpleObjectProperty<>(param.getValue().getReturnableQty().toString());
+            } else {
+                return new SimpleObjectProperty<>("0");
+            }
+        });
+        //备注
+        colNotes.setCellFactory(cellFactory);
+        colNotes.setCellValueFactory(new PropertyValueFactory<>("notes"));
+        colNotes.setOnEditCommit(t -> {
+            ObservableList<PurchaseReturnOrderItem> data = t.getTableView().getItems();
+            if(data != null) {
+                if(t.getTablePosition().getRow() < data.size()) {
+                    PurchaseReturnOrderItem selected = data.get( t.getTablePosition().getRow());
+                    if(selected != null) {
+                        String newValue = t.getNewValue();
+                        selected.setNotes(newValue);
+                        data.set(t.getTablePosition().getRow(), selected);
+                    }
+                }
+            }
+        });
+        //货位
+        colSlots.setCellValueFactory(param -> {
             if(param.getValue().getSku() == null) {
                 return new SimpleObjectProperty<>("");
             } else {
-                return new SimpleObjectProperty<>("");
-//                return new SimpleObjectProperty<>(param.getValue().getSku().getAvgPrice().toString());
+                StringBuilder stb = new StringBuilder();
+                param.getValue().getSku().getSkuSlotMappingSet().stream().sorted(Comparator.comparingLong(e -> e.getSlot().getId())).forEach(e -> {
+                    stb.append(e.getSlot().getName());
+                });
+                return new SimpleObjectProperty<>(stb.toString());
+            }
+        });
+        //不含税单价
+        colPriceExcludingTax.setCellValueFactory(param -> {
+            if(param.getValue().getPriceExcludingTax() == null) {
+                return new SimpleObjectProperty<>("0.00");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getPriceExcludingTax().toString());
             }
         });
         //不含税金额
         colAmountExcludingTax.setCellValueFactory(param -> {
-            if(param.getValue().getSku() == null) {
-                return new SimpleObjectProperty<>("");
+            if(param.getValue().getAmountExcludingTax() == null) {
+                return new SimpleObjectProperty<>("0.00");
             } else {
-                return new SimpleObjectProperty<>("");
-//                return new SimpleObjectProperty<>(param.getValue().getSku().getAvgPrice().multiply(new BigDecimal(param.getValue().getQuantity())).setScale(2, RoundingMode.HALF_UP).toString());
+                return new SimpleObjectProperty<>(param.getValue().getAmountExcludingTax().toString());
             }
         });
         //仓库
@@ -604,43 +688,6 @@ public class PROEditorController {
                 return new SimpleObjectProperty<>("");
             } else {
                 return new SimpleObjectProperty<>(param.getValue().getSku().getSkuCode());
-            }
-        });
-        //备注
-        colNotes.setCellFactory(cellFactory);
-        colNotes.setCellValueFactory(new PropertyValueFactory<>("notes"));
-        colNotes.setOnEditCommit(t -> {
-            ObservableList<PurchaseReturnOrderItem> data = t.getTableView().getItems();
-            if(data != null) {
-                if(t.getTablePosition().getRow() < data.size()) {
-                    PurchaseReturnOrderItem selected = data.get( t.getTablePosition().getRow());
-                    if(selected != null) {
-                        String newValue = t.getNewValue();
-                        selected.setNotes(newValue);
-                        data.set(t.getTablePosition().getRow(), selected);
-                    }
-                }
-            }
-        });
-        //进货平均价
-        colAvgPrice.setCellValueFactory(param -> {
-            if(param.getValue().getSku() == null) {
-                return new SimpleObjectProperty<>("");
-            } else {
-                return new SimpleObjectProperty<>("");
-//                return new SimpleObjectProperty<>(param.getValue().getSku().getAvgPrice().toString());
-            }
-        });
-        //货位
-        colSlots.setCellValueFactory(param -> {
-            if(param.getValue().getSku() == null) {
-                return new SimpleObjectProperty<>("");
-            } else {
-                StringBuilder stb = new StringBuilder();
-                param.getValue().getSku().getSkuSlotMappingSet().stream().sorted(Comparator.comparingLong(e -> e.getSlot().getId())).forEach(e -> {
-                    stb.append(e.getSlot().getName());
-                });
-                return new SimpleObjectProperty<>(stb.toString());
             }
         });
         //图片
@@ -903,26 +950,44 @@ public class PROEditorController {
                 return new SimpleObjectProperty<>("");
             }
         });
-        //含税单价
-        colPriceIncludingTax.setCellValueFactory(param -> {
-            if(param.getValue().getSku() == null) {
-                return new SimpleObjectProperty<>("");
+        //库存平均价
+        colStockAvgPrice.setCellValueFactory(param -> {
+            if(param.getValue().getSku() != null && param.getValue().getSku().getStockAvgPrice() != null) {
+                return new SimpleObjectProperty<>(param.getValue().getSku().getStockAvgPrice().toString());
             } else {
-                return new SimpleObjectProperty<>("");
+                return new SimpleObjectProperty<>("0.00");
             }
         });
-        //含税金额
-        colAmountIncludingTax.setCellValueFactory(param -> {
-            if(param.getValue().getSku() == null) {
-                return new SimpleObjectProperty<>("");
+        //库存金额
+        colStockAmount.setCellValueFactory(param -> {
+            if(param.getValue().getSku() != null && param.getValue().getSku().getStockAmount() != null) {
+                return new SimpleObjectProperty<>(param.getValue().getSku().getStockAmount().toString());
             } else {
-                return new SimpleObjectProperty<>("");
+                return new SimpleObjectProperty<>("0.00");
+            }
+        });
+        //进货平均价
+        colPurchaseAvgPrice.setCellValueFactory(param -> {
+            if(param.getValue().getSku() != null && param.getValue().getSku().getPurchaseAvgPrice() != null) {
+                return new SimpleObjectProperty<>(param.getValue().getSku().getPurchaseAvgPrice().toString());
+            } else {
+                return new SimpleObjectProperty<>("0.00");
+            }
+        });
+        //进货金额
+        colPurchaseAmount.setCellValueFactory(param -> {
+            if(param.getValue().getSku() != null && param.getValue().getSku().getPurchaseAmount() != null) {
+                return new SimpleObjectProperty<>(param.getValue().getSku().getPurchaseAmount().toString());
+            } else {
+                return new SimpleObjectProperty<>("0.00");
             }
         });
         tableView.setOnMouseClicked((MouseEvent event) -> {
             if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2){
                 PurchaseReturnOrderItem selected = tableView.getSelectionModel().getSelectedItem();
-                openPurchaseOrderEditor(selected.getOriginalOrderNo());
+                if(!selected.getOriginalOrderNo().equals("")) {
+                    openPurchaseOrderEditor(selected.getOriginalOrderNo());
+                }
             }
         });
     }
@@ -976,16 +1041,21 @@ public class PROEditorController {
     private void updateSummary() {
         int totalRecords = 0;
         BigDecimal totalQty = BigDecimal.ZERO;
-        BigDecimal totalAmount = BigDecimal.ZERO;
+        BigDecimal totalAmountWithoutTax = BigDecimal.ZERO;
+        BigDecimal totalAmountWithTax = BigDecimal.ZERO;
         ObservableList<PurchaseReturnOrderItem> list = tableView.getItems();
         for(PurchaseReturnOrderItem item : list) {
             totalRecords++;
             totalQty = totalQty.add(new BigDecimal(item.getQuantity()));
-            totalAmount = totalAmount.add(item.getAmountExcludingTax());
+            totalAmountWithoutTax = totalAmountWithoutTax.add(item.getAmountExcludingTax());
+            totalAmountWithTax = totalAmountWithTax.add(item.getAmountIncludingTax());
         }
         labelRecords.setText(totalRecords+"");
         labelTotalQty.setText(totalQty.toString());
-        labelTotalAmount.setText(totalAmount.toString());
+        //不含税金额
+        labelTotalAmountWithoutTax.setText(totalAmountWithoutTax.toString());
+        //含税金额
+        labelTotalAmountWithTax.setText(totalAmountWithTax.toString());
     }
 
     @FXML
@@ -1117,7 +1187,7 @@ public class PROEditorController {
 
     @FXML
     private void addItem() {
-        PurchaseReturnOrderItem item = new PurchaseReturnOrderItem(Constants.ID, "", null, null, Constants.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO,"");
+        PurchaseReturnOrderItem item = new PurchaseReturnOrderItem(Constants.ID, "", null, null, Constants.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO,  BigDecimal.ZERO, BigDecimal.ZERO, Constants.EMPTY, Constants.ZERO);
         addItem(item);
         disableSupplierFields(true);
     }
@@ -1143,6 +1213,86 @@ public class PROEditorController {
         dialog.close();
     }
 
+    private boolean validate() {
+        try {
+            warehouse = HttpClient.GET("/warehouses/name/"+comboBoxWarehouse.getValue(), Warehouse.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if(orderDate.getValue() == null) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
+            alert.setHeaderText("单据日期不能空");
+            alert.show();
+            return false;
+        }
+        else if(warehouse.getId() == null) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
+            alert.setHeaderText("不存在的仓库");
+            alert.show();
+            return false;
+        }
+        else if(supplier == null) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
+            alert.setHeaderText("不存在的供应商");
+            alert.show();
+            return false;
+        }
+        else if(comboBoxInvoiceType.getValue() == null) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
+            alert.setHeaderText("不存在的发票类型");
+            alert.show();
+            return false;
+        }
+        else if(txtOperator.getText().equals("")) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
+            alert.setHeaderText("经办人不能空");
+            alert.show();
+            return false;
+        }
+        else if(comboBoxPayments.getValue() == null) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
+            alert.setHeaderText("不存在的结算方式");
+            alert.show();
+            return false;
+        }
+        return true;
+    }
+
+
+    private void execute(String orderStatus, boolean warehousingOut, PurchaseReturnOrderItem item) {
+        //如果订单状态为已结算，则执行结算
+        if(orderStatus.equals(Constants.CLOSED)) {
+            //是否出库
+            if(warehousingOut) {
+                //以下更新SKU库存数量和进货平均单价
+                SKU sku = null;
+                try {
+                    sku = HttpClient.GET("/sku/"+item.getSku().getId(), SKU.class);
+                    BigDecimal purchaseAvgPrice = BigDecimal.ZERO;
+                    BigDecimal totalPurchaseAmount = BigDecimal.ZERO;
+                    int totalQty = 0;
+                    String json = GoogleJson.GET().toJson(item);
+                    String results = HttpClient.POST("/purchaseOrderItems/search", json);
+                    PurchaseOrderItem[] items = GoogleJson.GET().fromJson(results, PurchaseOrderItem[].class);
+                    //平均进货价格计算公式， 平均价格 = (10M + 9N)/(M+N)，（注10元进货M件，9元进货N件）
+                    for(PurchaseOrderItem i : items) {
+                        totalPurchaseAmount = totalPurchaseAmount.add(i.getPriceExcludingTax().multiply(new BigDecimal(i.getQuantity())));
+                        totalQty += i.getQuantity();
+                    }
+                    if(totalQty > 0) {
+                        purchaseAvgPrice = totalPurchaseAmount.divide(new BigDecimal(totalQty), 2, RoundingMode.HALF_UP);
+                        sku.setPurchaseAvgPrice(purchaseAvgPrice);
+                    }
+                    sku.setStockQty(sku.getStockQty() - item.getQuantity());
+                    json = GoogleJson.GET().toJson(sku);
+                    HttpClient.PUT("/sku/"+sku.getId(), json);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
     /**
      * 确认提交
      */
@@ -1150,13 +1300,9 @@ public class PROEditorController {
         String header = "采购退货单: "+txtOrderNo.getText()+"\n请谨慎确定以下数据:\n";
         StringBuilder content = new StringBuilder();
         content.append("============================================\n");
-        content.append("\n退货总金额: "+labelTotalAmount.getText()+" 元 \n");
-//        content.append("\n代垫费用金额: "+txtDisbursement.getText()+" 元 \n");
-//        content.append("\n应付货款金额: "+txtPurchaseAmount.getText()+" 元 \n");
-//        content.append("\n代垫费用金额: "+txtDisbursement.getText()+" 元 \n");
-//        content.append("\n本次优惠金额: "+txtDiscountAmount.getText()+" 元 \n");
-//        content.append("\n总计应付金额: "+txtAmountPayable.getText()+" 元 \n");
-//        content.append("\n本次实付金额: "+txtPaymentAmount.getText()+" 元 \n\n");
+        content.append("\n退货含税金额: "+labelTotalAmountWithTax.getText()+" 元 \n");
+        content.append("\n退货不含税金额: "+labelTotalAmountWithoutTax.getText()+" 元 \n\n");
+        content.append("\n结算同时自动出库: "+(checkboxWarehousingOut.isSelected()?"是":"否")+"\n\n");
 
         Alert alertConfirm = new Alert(Alert.AlertType.CONFIRMATION, "", ButtonType.NO, ButtonType.YES);
         alertConfirm.setHeaderText(header);
@@ -1168,24 +1314,6 @@ public class PROEditorController {
     }
 
     /**
-     * 减库存数
-     *
-     * @param status
-     * @param item
-     */
-    private void minusStockQty(String status, PurchaseReturnOrderItem item) {
-        //如果结算，则处理入库数量
-        if(status.equals(Constants.CLOSED)) {
-            String json2 = GoogleJson.GET().toJson(0 - item.getQuantity());
-            try {
-                HttpClient.PUT("/sku/stockQty/"+item.getSku().getId(), json2);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-        }
-    }
-
-    /**
      * 插入或更新
      *
      * @param status
@@ -1194,44 +1322,39 @@ public class PROEditorController {
         if(pro == null) {
             //插入新记录
             pro = new PurchaseReturnOrder();
+            //订单日期
             LocalDate localDate = orderDate.getValue();
             Date date = Date.from(localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
             pro.setOrderDate(date);
+            //单号
             pro.setOrderNo(txtOrderNo.getText());
+            //仓库
+            pro.setWarehouse(warehouse);
+            //供应商
             pro.setSupplier(supplier);
+            //发票类型
             pro.setInvoiceType(comboBoxInvoiceType.getValue());
+            //发票No
             pro.setInvoiceNo(txtInvoiceNo.getText());
-            pro.setFreight(NumberValidationUtils.isRealNumber(txtFreight.getText())?new BigDecimal(txtFreight.getText()):BigDecimal.ZERO);
+            //备注
             pro.setNotes(txtNotes.getText());
+            //经办人
             pro.setOperator(txtOperator.getText());
+            //结算方式
             pro.setPayment(comboBoxPayments.getValue());
+            //操作员
+            pro.setUserName(txtUserName.getText());
             //退货数量
             pro.setReturnQty(Integer.parseInt(labelTotalQty.getText()));
-//            //已入库数量
-//            pro.setWarehouseQty(pro.getWarehouseQty());
-            //退货数量合计
-            pro.setReturnedTotalQty(0);
-//            //货款金额
-//            pro.setPurchaseAmount(NumberValidationUtils.isRealNumber(txtPurchaseAmount.getText())?new BigDecimal(txtPurchaseAmount.getText()):BigDecimal.ZERO);
-//            //代垫费用
-//            pro.setDisbursementAmount(NumberValidationUtils.isRealNumber(txtDisbursement.getText())?new BigDecimal(txtDisbursement.getText()):BigDecimal.ZERO);
-//            //本次优惠
-//            pro.setDiscountAmount(NumberValidationUtils.isRealNumber(txtDiscountAmount.getText())?new BigDecimal(txtDiscountAmount.getText()):BigDecimal.ZERO);
-//            //应付总额
-//            pro.setAmountPayable(NumberValidationUtils.isRealNumber(txtAmountPayable.getText())?new BigDecimal(txtAmountPayable.getText()):BigDecimal.ZERO);
-//            //本次付款
-//            pro.setPaymentAmount(NumberValidationUtils.isRealNumber(txtAmountPayable.getText())?new BigDecimal(txtPaymentAmount.getText()):BigDecimal.ZERO);
-//            //账号
-//            pro.setAccount(comboBoxAccount.getValue());
-            //系统登录账号
-            pro.setUserName(txtLoginAccount.getText());
-            //仓库
-            pro.setWarehouse(Env.getInstance().currentStore().getWarehouse());
             //状态
             pro.setStatus(status);
             //创建人
             pro.setCreator(Env.getInstance().currentUser());
-            //创建采购退货单对象
+            //含税金额
+            pro.setTotalAmountIncludingTax(new BigDecimal(labelTotalAmountWithTax.getText()));
+            //未税金额
+            pro.setTotalAmountExcludingTax(new BigDecimal(labelTotalAmountWithoutTax.getText()));
+            //创建采购退货单
             String json = GoogleJson.GET().toJson(pro);
             try {
                 String idStr = HttpClient.POST("/purchaseReturnOrders", json);
@@ -1251,52 +1374,48 @@ public class PROEditorController {
                     } catch (IOException e2) {
                         e2.printStackTrace();
                     }
-                    //更新库存数量
-                    minusStockQty(status, e);
+                    //执行结算
+                    execute(status, checkboxWarehousingOut.isSelected(), e);
                 }
             });
             callback.call(pro);
+
         } else {
             //更新原有记录
             PurchaseReturnOrder pro = new PurchaseReturnOrder();
             pro.setId(this.pro.getId());
+            //订单日期
             LocalDate localDate = orderDate.getValue();
             Date date = Date.from(localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
             pro.setOrderDate(date);
+            //单号
             pro.setOrderNo(txtOrderNo.getText());
+            //仓库
+            pro.setWarehouse(warehouse);
+            //供应商
             pro.setSupplier(supplier);
+            //发票类型
             pro.setInvoiceType(comboBoxInvoiceType.getValue());
+            //发票No
             pro.setInvoiceNo(txtInvoiceNo.getText());
-            pro.setFreight(NumberValidationUtils.isRealNumber(txtFreight.getText())?new BigDecimal(txtFreight.getText()):BigDecimal.ZERO);
+            //备注
             pro.setNotes(txtNotes.getText());
+            //经办人
             pro.setOperator(txtOperator.getText());
+            //结算方式
             pro.setPayment(comboBoxPayments.getValue());
+            //操作员
+            pro.setUserName(txtUserName.getText());
             //退货数量
             pro.setReturnQty(Integer.parseInt(labelTotalQty.getText()));
-            //已入库数量
-//            pro.setWarehouseQty(pro.getPurchaseQty());
-            //退货数量合计
-            pro.setReturnedTotalQty(0);
-//            //货款金额
-//            pro.setPurchaseAmount(NumberValidationUtils.isRealNumber(txtPurchaseAmount.getText())?new BigDecimal(txtPurchaseAmount.getText()):BigDecimal.ZERO);
-//            //代垫费用
-//            pro.setDisbursementAmount(NumberValidationUtils.isRealNumber(txtDisbursement.getText())?new BigDecimal(txtDisbursement.getText()):BigDecimal.ZERO);
-//            //本次优惠
-//            pro.setDiscountAmount(NumberValidationUtils.isRealNumber(txtDiscountAmount.getText())?new BigDecimal(txtDiscountAmount.getText()):BigDecimal.ZERO);
-//            //应付总额
-//            pro.setAmountPayable(NumberValidationUtils.isRealNumber(txtAmountPayable.getText())?new BigDecimal(txtAmountPayable.getText()):BigDecimal.ZERO);
-//            //本次付款
-//            pro.setPaymentAmount(NumberValidationUtils.isRealNumber(txtAmountPayable.getText())?new BigDecimal(txtPaymentAmount.getText()):BigDecimal.ZERO);
-//            //账号
-//            pro.setAccount(comboBoxAccount.getValue());
-            //系统登录账号
-            pro.setUserName(txtLoginAccount.getText());
-            //仓库
-            pro.setWarehouse(Env.getInstance().currentStore().getWarehouse());
             //状态
             pro.setStatus(status);
             //创建人
             pro.setCreator(Env.getInstance().currentUser());
+            //含税金额
+            pro.setTotalAmountIncludingTax(new BigDecimal(labelTotalAmountWithTax.getText()));
+            //未税金额
+            pro.setTotalAmountExcludingTax(new BigDecimal(labelTotalAmountWithoutTax.getText()));
             String json = GoogleJson.GET().toJson(pro);
             try {
                 HttpClient.PUT("/purchaseReturnOrders/"+pro.getId(), json);
@@ -1323,8 +1442,8 @@ public class PROEditorController {
                             e2.printStackTrace();
                         }
                     }
-                    //更新库存数量
-                    minusStockQty(status, e);
+                    //执行结算
+                    execute(status, checkboxWarehousingOut.isSelected(), e);
                 }
             });
             //删除已经移除的行
@@ -1358,9 +1477,6 @@ public class PROEditorController {
                 PurchaseReturnOrderItem item = tableView.getSelectionModel().getSelectedItem();
                 item.setSku(sku);
                 item.setQuantity(0);
-//                item.setPriceExcludingTax(sku.getAvgPrice());
-                item.setAmountExcludingTax(BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP));
-
                 tableView.refresh();
                 tableView.getSelectionModel().select(item);
                 updateSummary();

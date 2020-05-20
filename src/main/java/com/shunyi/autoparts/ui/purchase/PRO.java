@@ -15,7 +15,6 @@ import java.io.IOException;
  * @CreateDate: 2020/5/9
  */
 public class PRO extends TabContent {
-
     private MainApp application;
     private PROController proController;
 
@@ -49,13 +48,10 @@ public class PRO extends TabContent {
 
     @Override
     protected void reload() {
-        proController.clean();
-        proController.initialize(application);
     }
 
     @Override
     protected void dispose() {
-
     }
 
     @Override

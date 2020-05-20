@@ -18,12 +18,6 @@ public class PurchaseReturnOrderItem {
     private SKU sku;
     /** 数量 */
     private Integer quantity;
-    /** 金额 */
-    private BigDecimal amount;
-    /** 折扣 */
-    private BigDecimal discount;
-    /** 折后金额 */
-    private BigDecimal discountedAmount;
     /** 税率% */
     private BigDecimal taxRate;
     /** 税额 */
@@ -38,18 +32,17 @@ public class PurchaseReturnOrderItem {
     private BigDecimal amountExcludingTax;
     /** 备注 */
     private String notes;
+    /** 可退货数量 */
+    private Integer returnableQty;
 
     public PurchaseReturnOrderItem() {}
 
-    public PurchaseReturnOrderItem(Long id, String originalOrderNo, PurchaseReturnOrder purchaseReturnOrder, SKU sku, Integer quantity, BigDecimal amount, BigDecimal discount, BigDecimal discountedAmount, BigDecimal taxRate, BigDecimal taxAmount, BigDecimal priceIncludingTax, BigDecimal amountIncludingTax, BigDecimal priceExcludingTax, BigDecimal amountExcludingTax, String notes) {
+    public PurchaseReturnOrderItem(Long id, String originalOrderNo, PurchaseReturnOrder purchaseReturnOrder, SKU sku, Integer quantity, BigDecimal taxRate, BigDecimal taxAmount, BigDecimal priceIncludingTax, BigDecimal amountIncludingTax, BigDecimal priceExcludingTax, BigDecimal amountExcludingTax, String notes, Integer returnableQty) {
         this.id = id;
         this.originalOrderNo = originalOrderNo;
         this.purchaseReturnOrder = purchaseReturnOrder;
         this.sku = sku;
         this.quantity = quantity;
-        this.amount = amount;
-        this.discount = discount;
-        this.discountedAmount = discountedAmount;
         this.taxRate = taxRate;
         this.taxAmount = taxAmount;
         this.priceIncludingTax = priceIncludingTax;
@@ -57,6 +50,7 @@ public class PurchaseReturnOrderItem {
         this.priceExcludingTax = priceExcludingTax;
         this.amountExcludingTax = amountExcludingTax;
         this.notes = notes;
+        this.returnableQty = returnableQty;
     }
 
     public Long getId() {
@@ -97,30 +91,6 @@ public class PurchaseReturnOrderItem {
 
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
-    }
-
-    public BigDecimal getAmount() {
-        return amount;
-    }
-
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
-    }
-
-    public BigDecimal getDiscount() {
-        return discount;
-    }
-
-    public void setDiscount(BigDecimal discount) {
-        this.discount = discount;
-    }
-
-    public BigDecimal getDiscountedAmount() {
-        return discountedAmount;
-    }
-
-    public void setDiscountedAmount(BigDecimal discountedAmount) {
-        this.discountedAmount = discountedAmount;
     }
 
     public BigDecimal getTaxRate() {
@@ -179,6 +149,14 @@ public class PurchaseReturnOrderItem {
         this.notes = notes;
     }
 
+    public Integer getReturnableQty() {
+        return returnableQty;
+    }
+
+    public void setReturnableQty(Integer returnableQty) {
+        this.returnableQty = returnableQty;
+    }
+
     @Override
     public String toString() {
         return "PurchaseReturnOrderItem{" +
@@ -187,15 +165,13 @@ public class PurchaseReturnOrderItem {
                 ", purchaseReturnOrder=" + purchaseReturnOrder +
                 ", sku=" + sku +
                 ", quantity=" + quantity +
-                ", amount=" + amount +
-                ", discount=" + discount +
-                ", discountedAmount=" + discountedAmount +
                 ", taxRate=" + taxRate +
                 ", taxAmount=" + taxAmount +
                 ", priceIncludingTax=" + priceIncludingTax +
                 ", amountIncludingTax=" + amountIncludingTax +
                 ", priceExcludingTax=" + priceExcludingTax +
                 ", amountExcludingTax=" + amountExcludingTax +
+                ", returnableQty=" + returnableQty +
                 ", notes='" + notes + '\'' +
                 '}';
     }

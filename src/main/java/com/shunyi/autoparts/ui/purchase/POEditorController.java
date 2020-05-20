@@ -330,6 +330,8 @@ public class POEditorController {
             orderDate.setValue(localDate);
             //单号
             txtOrderNo.setText(po.getOrderNo());
+            //仓库
+            comboBoxWarehouse.setValue(po.getWarehouse().getName());
             //供应商编码
             comboBoxSupplierCode.setValue(po.getSupplier().getCode());
             //发票类型
@@ -991,7 +993,6 @@ public class POEditorController {
                 return new SimpleObjectProperty<>("0.00");
             }
         });
-
         //库存平均价
         colStockAvgPrice.setCellValueFactory(param -> {
             if(param.getValue().getSku() != null && param.getValue().getSku().getStockAvgPrice() != null) {

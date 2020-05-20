@@ -420,14 +420,14 @@ public class POController {
     }
 
 
-    public void clean() {
-        tableView.getItems().clear();
-        comboBoxSupplier.getItems().clear();
-        comboBoxInvoiceType.getItems().clear();
-        comboBoxPayment.getItems().clear();
-        comboBoxWarehouse.getItems().clear();
-        comboBoxStatus.getItems().clear();
-    }
+//    public void clean() {
+//        tableView.getItems().clear();
+//        comboBoxSupplier.getItems().clear();
+//        comboBoxInvoiceType.getItems().clear();
+//        comboBoxPayment.getItems().clear();
+//        comboBoxWarehouse.getItems().clear();
+//        comboBoxStatus.getItems().clear();
+//    }
 
     public void initialize(MainApp application) {
         this.application = application;

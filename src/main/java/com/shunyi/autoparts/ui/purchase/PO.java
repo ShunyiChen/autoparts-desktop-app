@@ -47,13 +47,11 @@ public class PO extends TabContent {
 
     @Override
     protected void reload() {
-        poController.clean();
-        poController.initialize(application);
+
     }
 
     @Override
     protected void dispose() {
-        poController.clean();
     }
 
     @Override
