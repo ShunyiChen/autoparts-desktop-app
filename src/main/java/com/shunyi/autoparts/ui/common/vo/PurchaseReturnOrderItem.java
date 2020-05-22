@@ -34,6 +34,8 @@ public class PurchaseReturnOrderItem {
     private String notes;
     /** 可退货数量 */
     private Integer returnableQty;
+    /** 异常 */
+    private boolean exceptional;
 
     public PurchaseReturnOrderItem() {}
 
@@ -157,6 +159,14 @@ public class PurchaseReturnOrderItem {
         this.returnableQty = returnableQty;
     }
 
+    public boolean isExceptional() {
+        return exceptional;
+    }
+
+    public void setExceptional(boolean exceptional) {
+        this.exceptional = exceptional;
+    }
+
     @Override
     public String toString() {
         return "PurchaseReturnOrderItem{" +
@@ -172,6 +182,7 @@ public class PurchaseReturnOrderItem {
                 ", priceExcludingTax=" + priceExcludingTax +
                 ", amountExcludingTax=" + amountExcludingTax +
                 ", returnableQty=" + returnableQty +
+                ", exceptional=" + exceptional +
                 ", notes='" + notes + '\'' +
                 '}';
     }

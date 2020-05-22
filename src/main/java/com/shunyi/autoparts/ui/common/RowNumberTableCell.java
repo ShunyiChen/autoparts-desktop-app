@@ -6,11 +6,10 @@ import javafx.util.Callback;
 
 /**
  * @Description: 表格行号单元格
- * @Author: Shunyi Chen
+ * @Author: Shunyi
  * @CreateDate: 2020/4/6 20:12
- * @Version: 1.0
  */
-public class RowNumberTableCell<S, T> implements Callback<TableColumn<S, T>, TableCell<S, T>> {
+public class RowNumberTableCell<S, T> implements Callback<TableColumn<S, T>, TableCell<S, T>>{
 
     @Override
     public TableCell<S, T> call(TableColumn<S, T> param) {

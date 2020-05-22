@@ -484,7 +484,7 @@ public class PROController {
             }
         });
         //退货日期
-        SimpleDateFormat format = new SimpleDateFormat(Constants.PATTERN_DATETIME);
+        SimpleDateFormat format = new SimpleDateFormat(Constants.PATTERN_DATE);
         colOrderDate.setCellValueFactory(param -> {
             if(param.getValue().getOrderDate() == null) {
                 return new SimpleObjectProperty<>("");

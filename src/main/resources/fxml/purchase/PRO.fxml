@@ -189,7 +189,7 @@
             <TableColumn fx:id="colInvoiceType" prefWidth="150.0" text="发票类型" />
             <TableColumn fx:id="colInvoiceNo" prefWidth="150.0" text="发票No" />
             <TableColumn fx:id="colNotes" prefWidth="150.0" text="备注" />
-            <TableColumn fx:id="colStatus" prefWidth="150.0" text="状态" />
+            <TableColumn fx:id="colStatus" prefWidth="150.0" text="订单状态" />
         </columns>
          <BorderPane.margin>
             <Insets bottom="30.0" />

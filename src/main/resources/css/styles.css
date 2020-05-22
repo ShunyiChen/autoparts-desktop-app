@@ -1,3 +1,12 @@
+#error .text{
+    -fx-fill : red;
+}
+
+#not-error .text {
+    //-fx-fill : black;
+   // -fx-text-background-color: white;
+}
+
 .label {
     -fx-text-fill: rgb(108,108,108);
 }

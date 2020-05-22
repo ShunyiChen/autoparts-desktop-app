@@ -5,9 +5,6 @@ import com.shunyi.autoparts.ui.common.vo.*;
 import com.shunyi.autoparts.ui.products.ProductChooserController;
 import com.shunyi.autoparts.ui.supplier.SupplierChooserController;
 import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
-import javafx.beans.binding.BooleanBinding;
-import javafx.beans.binding.StringBinding;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -22,7 +19,6 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -447,29 +443,44 @@ public class PROEditorController {
         return purchaseOrderItem;
     }
 
+    /**
+     * If it exists then return true, otherwise return false.
+     *
+     * @return
+     */
+    private boolean itemExistCheck(PurchaseReturnOrderItem proi) {
+        ObservableList<PurchaseReturnOrderItem> data = tableView.getItems();
+        for(PurchaseReturnOrderItem item : data) {
+            if(item == proi) {
+                continue;
+            }
+            if(proi.getSku().getSkuCode().equals(item.getSku().getSkuCode())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private void initTable() {
         String css = getClass().getResource("/css/styles.css").toExternalForm();
         tableView.getStylesheets().add(css);
         tableView.setId("my-table");
         tableView.setEditable(true);
 
-
-        tableView.setRowFactory(tableView -> {
-            ObservableList selectedRowIndexes = tableView.getSelectionModel().getSelectedIndices();
-            final TableRow<PurchaseReturnOrderItem> row = new TableRow<>();
-            BooleanBinding selectedRow = Bindings.createBooleanBinding(() ->
-                    selectedRowIndexes.contains(new Integer(row.getIndex())), row.indexProperty(), selectedRowIndexes);
-            selectedRow.addListener((observable, oldValue, newValue) ->
-//                    row.pseudoClassStateChanged(selectedRowPseudoClass, newValue)
-//                            System.out.println(newValue)
-
-//                            row.setTextFill(Color.RED)
-                    row. setStyle("-fx-background-color: red")
-            );
-            return row ;
+        //表格输入校验
+        tableView.setRowFactory(row -> new TableRow<PurchaseReturnOrderItem>() {
+            @Override
+            public void updateItem(PurchaseReturnOrderItem item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item == null) {
+                    setStyle("");
+                } else if(item.isExceptional()) {//(item.getQuantity() > item.getReturnableQty() || StringUtils.isEmpty(item.getOriginalOrderNo()) || itemExistCheck(item)) {
+                    this.setId("error");
+                } else {
+                    this.setId("not-error");
+                }
+            }
         });
-
-
         //行号
         colRowNumber.setCellFactory(new RowNumberTableCell<>());
         //原进货单号
@@ -509,11 +520,13 @@ public class PROEditorController {
                                     selected.setOriginalOrderNo(originalOrderNo);
                                     //可退货数量
                                     selected.setReturnableQty(lastItem.getQuantity());
-                                    data.set(t.getTablePosition().getRow(), selected);
-                                    updateSummary();
-                                } else {
-
                                 }
+
+                                //设置输入异常
+                                selected.setExceptional(selected.getQuantity() > selected.getReturnableQty() || StringUtils.isEmpty(selected.getOriginalOrderNo()) || itemExistCheck(selected));
+
+                                data.set(t.getTablePosition().getRow(), selected);
+                                updateSummary();
                             } else {
                                 Platform.runLater(() -> {
                                     openProductChooser();
@@ -551,6 +564,7 @@ public class PROEditorController {
             }
         });
         //数量
+//        colQty.setCellFactory(new ColorfulTableCell<>());
         colQty.setCellFactory(cellFactory);
         colQty.setCellValueFactory(param -> {
             if(param.getValue().getQuantity() == null) {
@@ -569,14 +583,14 @@ public class PROEditorController {
                         if(NumberValidationUtils.isPositiveInteger(newValue)) {
                             //数量
                             selected.setQuantity(Integer.parseInt(newValue));
-                            if(selected.getQuantity() > selected.getReturnableQty()) {
-//                                t.getTablePosition().getRow().setStyle("-fx-background-color: red");
-
-                            }
                             //含税金额
                             selected.setAmountIncludingTax(new BigDecimal(selected.getQuantity()).multiply(selected.getPriceIncludingTax()).setScale(2, RoundingMode.HALF_UP));
+                            //设置输入异常
+                            selected.setExceptional(selected.getQuantity() > selected.getReturnableQty() || StringUtils.isEmpty(selected.getOriginalOrderNo()) || itemExistCheck(selected));
+
                             data.set(t.getTablePosition().getRow(), selected);
                             updateSummary();
+
                         }
                     }
                 }
@@ -655,11 +669,31 @@ public class PROEditorController {
             }
         });
         //不含税单价
+        colPriceExcludingTax.setCellFactory(cellFactory);
         colPriceExcludingTax.setCellValueFactory(param -> {
             if(param.getValue().getPriceExcludingTax() == null) {
                 return new SimpleObjectProperty<>("0.00");
             } else {
                 return new SimpleObjectProperty<>(param.getValue().getPriceExcludingTax().toString());
+            }
+        });
+        colPriceExcludingTax.setOnEditCommit((EventHandler<TableColumn.CellEditEvent<PurchaseReturnOrderItem, String>>) t -> {
+            ObservableList<PurchaseReturnOrderItem> data = t.getTableView().getItems();
+            if(data != null) {
+                if(t.getTablePosition().getRow() < data.size()) {
+                    PurchaseReturnOrderItem selected = data.get( t.getTablePosition().getRow());
+                    if(selected != null) {
+                        String priceExcludingTaxStr = t.getNewValue();
+                        if(NumberValidationUtils.isRealNumber(priceExcludingTaxStr)) {
+                            //不含税单价
+                            selected.setPriceExcludingTax(new BigDecimal(priceExcludingTaxStr).setScale(2, RoundingMode.HALF_UP));
+                            //不含税金额
+                            selected.setAmountExcludingTax(new BigDecimal(selected.getQuantity()).multiply(selected.getPriceExcludingTax()).setScale(2, RoundingMode.HALF_UP));
+                            data.set(t.getTablePosition().getRow(), selected);
+                            updateSummary();
+                        }
+                    }
+                }
             }
         });
         //不含税金额
@@ -915,7 +949,7 @@ public class PROEditorController {
             if(param.getValue().getSku() == null) {
                 return new SimpleObjectProperty<>("");
             } else {
-                return new SimpleObjectProperty<>(param.getValue().getSku().getEnabled().toString());
+                return new SimpleObjectProperty<>(param.getValue().getSku().getEnabled()?Constants.AVAILABLE:Constants.UNAVAILABLE);
             }
         });
         //SKU属性
@@ -1045,17 +1079,19 @@ public class PROEditorController {
         BigDecimal totalAmountWithTax = BigDecimal.ZERO;
         ObservableList<PurchaseReturnOrderItem> list = tableView.getItems();
         for(PurchaseReturnOrderItem item : list) {
-            totalRecords++;
-            totalQty = totalQty.add(new BigDecimal(item.getQuantity()));
-            totalAmountWithoutTax = totalAmountWithoutTax.add(item.getAmountExcludingTax());
-            totalAmountWithTax = totalAmountWithTax.add(item.getAmountIncludingTax());
+            if(item.getSku() != null && !item.isExceptional()) {
+                totalRecords++;
+                totalQty = totalQty.add(new BigDecimal(item.getQuantity()));
+                totalAmountWithoutTax = totalAmountWithoutTax.add(item.getAmountExcludingTax());
+                totalAmountWithTax = totalAmountWithTax.add(item.getAmountIncludingTax());
+            }
         }
         labelRecords.setText(totalRecords+"");
         labelTotalQty.setText(totalQty.toString());
         //不含税金额
-        labelTotalAmountWithoutTax.setText(totalAmountWithoutTax.toString());
+        labelTotalAmountWithoutTax.setText(totalAmountWithoutTax.setScale(2, RoundingMode.HALF_UP).toString());
         //含税金额
-        labelTotalAmountWithTax.setText(totalAmountWithTax.toString());
+        labelTotalAmountWithTax.setText(totalAmountWithTax.setScale(2, RoundingMode.HALF_UP).toString());
     }
 
     @FXML
@@ -1258,33 +1294,17 @@ public class PROEditorController {
         return true;
     }
 
-
     private void execute(String orderStatus, boolean warehousingOut, PurchaseReturnOrderItem item) {
         //如果订单状态为已结算，则执行结算
         if(orderStatus.equals(Constants.CLOSED)) {
             //是否出库
             if(warehousingOut) {
-                //以下更新SKU库存数量和进货平均单价
+                //以下更新SKU库存数量
                 SKU sku = null;
                 try {
                     sku = HttpClient.GET("/sku/"+item.getSku().getId(), SKU.class);
-                    BigDecimal purchaseAvgPrice = BigDecimal.ZERO;
-                    BigDecimal totalPurchaseAmount = BigDecimal.ZERO;
-                    int totalQty = 0;
-                    String json = GoogleJson.GET().toJson(item);
-                    String results = HttpClient.POST("/purchaseOrderItems/search", json);
-                    PurchaseOrderItem[] items = GoogleJson.GET().fromJson(results, PurchaseOrderItem[].class);
-                    //平均进货价格计算公式， 平均价格 = (10M + 9N)/(M+N)，（注10元进货M件，9元进货N件）
-                    for(PurchaseOrderItem i : items) {
-                        totalPurchaseAmount = totalPurchaseAmount.add(i.getPriceExcludingTax().multiply(new BigDecimal(i.getQuantity())));
-                        totalQty += i.getQuantity();
-                    }
-                    if(totalQty > 0) {
-                        purchaseAvgPrice = totalPurchaseAmount.divide(new BigDecimal(totalQty), 2, RoundingMode.HALF_UP);
-                        sku.setPurchaseAvgPrice(purchaseAvgPrice);
-                    }
                     sku.setStockQty(sku.getStockQty() - item.getQuantity());
-                    json = GoogleJson.GET().toJson(sku);
+                    String json = GoogleJson.GET().toJson(sku);
                     HttpClient.PUT("/sku/"+sku.getId(), json);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -1300,8 +1320,8 @@ public class PROEditorController {
         String header = "采购退货单: "+txtOrderNo.getText()+"\n请谨慎确定以下数据:\n";
         StringBuilder content = new StringBuilder();
         content.append("============================================\n");
-        content.append("\n退货含税金额: "+labelTotalAmountWithTax.getText()+" 元 \n");
-        content.append("\n退货不含税金额: "+labelTotalAmountWithoutTax.getText()+" 元 \n\n");
+        content.append("\n含税金额: "+labelTotalAmountWithTax.getText()+" 元 \n");
+        content.append("\n不含税金额: "+labelTotalAmountWithoutTax.getText()+" 元 \n\n");
         content.append("\n结算同时自动出库: "+(checkboxWarehousingOut.isSelected()?"是":"否")+"\n\n");
 
         Alert alertConfirm = new Alert(Alert.AlertType.CONFIRMATION, "", ButtonType.NO, ButtonType.YES);
@@ -1354,6 +1374,8 @@ public class PROEditorController {
             pro.setTotalAmountIncludingTax(new BigDecimal(labelTotalAmountWithTax.getText()));
             //未税金额
             pro.setTotalAmountExcludingTax(new BigDecimal(labelTotalAmountWithoutTax.getText()));
+            //出库
+            pro.setWarehousingOut(checkboxWarehousingOut.isSelected());
             //创建采购退货单
             String json = GoogleJson.GET().toJson(pro);
             try {
@@ -1365,7 +1387,7 @@ public class PROEditorController {
             //创建采购退货单明细
             ObservableList<PurchaseReturnOrderItem> items = tableView.getItems();
             items.forEach(e -> {
-                if(e.getSku() != null && !StringUtils.isEmpty(e.getOriginalOrderNo())) {
+                if(e.getSku() != null && !e.isExceptional()) {
                     e.setPurchaseReturnOrder(pro);
                     String data = GoogleJson.GET().toJson(e);
                     try {
@@ -1416,6 +1438,8 @@ public class PROEditorController {
             pro.setTotalAmountIncludingTax(new BigDecimal(labelTotalAmountWithTax.getText()));
             //未税金额
             pro.setTotalAmountExcludingTax(new BigDecimal(labelTotalAmountWithoutTax.getText()));
+            //出库
+            pro.setWarehousingOut(checkboxWarehousingOut.isSelected());
             String json = GoogleJson.GET().toJson(pro);
             try {
                 HttpClient.PUT("/purchaseReturnOrders/"+pro.getId(), json);
@@ -1425,7 +1449,7 @@ public class PROEditorController {
             //更新或创建采购订单明细
             ObservableList<PurchaseReturnOrderItem> items = tableView.getItems();
             items.forEach(e -> {
-                if(e.getSku() != null && !StringUtils.isEmpty(e.getOriginalOrderNo())) {
+                if(e.getSku() != null && !e.isExceptional()) {
                     e.setPurchaseReturnOrder(pro);
                     String data = GoogleJson.GET().toJson(e);
                     if(e.getId() == 0L) {
@@ -1460,13 +1484,17 @@ public class PROEditorController {
 
     @FXML
     private void save() {
-        saveOrUpdate(Constants.UNCLOSED);
-        dialog.close();
+        if(validate()) {
+            saveOrUpdate(Constants.UNCLOSED);
+            dialog.close();
+        }
     }
 
     @FXML
     private void submit() {
-        confirmAndSubmit();
+        if(validate()) {
+            confirmAndSubmit();
+        }
     }
 
     private void openProductChooser() {
@@ -1509,4 +1537,33 @@ public class PROEditorController {
         dialog.centerOnScreen();
         dialog.show();
     }
+//
+//    class TableRowControl extends TableRow<PurchaseReturnOrderItem> {
+//
+//        public TableRowControl() {
+//            super();
+////            this.setOnMouseClicked(new EventHandler<MouseEvent>() {
+////                @Override
+////                public void handle(MouseEvent event) {
+////                    if (event.getButton().equals(MouseButton.PRIMARY)
+////                            && event.getClickCount() == 2
+////                            && TableRowControl.this.getIndex() < tableView.getItems().size()) {
+////                        //doSomething
+////                        System.out.println("do some");
+////                    }
+////                }
+////            });
+////            PurchaseReturnOrderItem selectedItem = this.getItem();
+////            if(selectedItem.getQuantity() > 5) {
+////                this.setStyle("-fx-background-color: green");
+////            }
+//            tableView.getItems().forEach(e -> {
+//                if(e.getQuantity() > 5) {
+//                    this.getTableView().this.setStyle("-fx-background-color: green");
+//                } else {
+//                    TableRowControl.this.setStyle("-fx-background-color: red");
+//                }
+//            });
+//        }
+//    }
 }
