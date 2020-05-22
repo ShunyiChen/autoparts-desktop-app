@@ -39,14 +39,14 @@ public class SalesOrder {
     private String notes;
     /** 经办人 */
     private String operator;
-    /** 系统登录账号 */
+    /** 操作员 */
     private String userName;
     /** 结算方式 */
     private String payment;
     /** 销售数量 */
     private Integer salesQty;
-    /** 已入库数量 */
-    private Integer warehouseQty;
+    /** 已出库数量 */
+    private Integer outboundQty;
     /** 退货数量合计 */
     private Integer returnedTotalQty;
     /** 货款金额 */
@@ -57,6 +57,8 @@ public class SalesOrder {
     private BigDecimal discountAmount;
     /** 应收总额 */
     private BigDecimal amountReceivable;
+    /** 已开票总额 */
+    private BigDecimal totalInvoiceAmount;
     /** 本次收款 */
     private BigDecimal payeeAmount;
     /** 本次欠款 */
@@ -67,6 +69,12 @@ public class SalesOrder {
     private BigDecimal repaymentAmount;
     /** 还款日期 */
     private Date repaymentDate;
+    /** 未税金额 */
+    private BigDecimal totalAmountExcludingTax;
+    /** 含税金额 */
+    private BigDecimal totalAmountIncludingTax;
+    /** 总额 */
+    private BigDecimal totalAmount;
     /** 订单状态 */
     private String status;
     /** 创建时间 */
@@ -79,10 +87,14 @@ public class SalesOrder {
     private Date fromDate;
     /** 结束日期 */
     private Date toDate;
+    /** 出库 */
+    private Boolean warehousingOut;
+    /** 收款 */
+    private Boolean gathering;
 
     public SalesOrder() {}
 
-    public SalesOrder(Long id, String orderNo, Date orderDate, Warehouse warehouse, Consumer consumer, String invoiceType, String invoiceNo, Delivery delivery, BigDecimal freight, String deliveryAddress, String consignee, String tel, boolean freightStationCollection, String notes, String operator, String userName, String payment, Integer salesQty, Integer warehouseQty, Integer returnedTotalQty, BigDecimal purchaseAmount, BigDecimal disbursementAmount, BigDecimal discountAmount, BigDecimal amountReceivable, BigDecimal payeeAmount, BigDecimal amountOwed, String account, BigDecimal repaymentAmount, Date repaymentDate, String status, Date dateCreated, String creator, String dateType, Date fromDate, Date toDate) {
+    public SalesOrder(Long id, String orderNo, Date orderDate, Warehouse warehouse, Consumer consumer, String invoiceType, String invoiceNo, Delivery delivery, BigDecimal freight, String deliveryAddress, String consignee, String tel, boolean freightStationCollection, String notes, String operator, String userName, String payment, Integer salesQty, Integer outboundQty, Integer returnedTotalQty, BigDecimal purchaseAmount, BigDecimal disbursementAmount, BigDecimal discountAmount, BigDecimal amountReceivable, BigDecimal totalInvoiceAmount, BigDecimal payeeAmount, BigDecimal amountOwed, String account, BigDecimal repaymentAmount, Date repaymentDate, BigDecimal totalAmountExcludingTax, BigDecimal totalAmountIncludingTax, BigDecimal totalAmount, String status, Date dateCreated, String creator, String dateType, Date fromDate, Date toDate, Boolean warehousingOut, Boolean gathering) {
         this.id = id;
         this.orderNo = orderNo;
         this.orderDate = orderDate;
@@ -101,23 +113,29 @@ public class SalesOrder {
         this.userName = userName;
         this.payment = payment;
         this.salesQty = salesQty;
-        this.warehouseQty = warehouseQty;
+        this.outboundQty = outboundQty;
         this.returnedTotalQty = returnedTotalQty;
         this.purchaseAmount = purchaseAmount;
         this.disbursementAmount = disbursementAmount;
         this.discountAmount = discountAmount;
         this.amountReceivable = amountReceivable;
+        this.totalInvoiceAmount = totalInvoiceAmount;
         this.payeeAmount = payeeAmount;
         this.amountOwed = amountOwed;
         this.account = account;
         this.repaymentAmount = repaymentAmount;
         this.repaymentDate = repaymentDate;
+        this.totalAmountExcludingTax = totalAmountExcludingTax;
+        this.totalAmountIncludingTax = totalAmountIncludingTax;
+        this.totalAmount = totalAmount;
         this.status = status;
         this.dateCreated = dateCreated;
         this.creator = creator;
         this.dateType = dateType;
         this.fromDate = fromDate;
         this.toDate = toDate;
+        this.warehousingOut = warehousingOut;
+        this.gathering = gathering;
     }
 
     public Long getId() {
@@ -264,12 +282,12 @@ public class SalesOrder {
         this.salesQty = salesQty;
     }
 
-    public Integer getWarehouseQty() {
-        return warehouseQty;
+    public Integer getOutboundQty() {
+        return outboundQty;
     }
 
-    public void setWarehouseQty(Integer warehouseQty) {
-        this.warehouseQty = warehouseQty;
+    public void setOutboundQty(Integer outboundQty) {
+        this.outboundQty = outboundQty;
     }
 
     public Integer getReturnedTotalQty() {
@@ -398,5 +416,53 @@ public class SalesOrder {
 
     public void setToDate(Date toDate) {
         this.toDate = toDate;
+    }
+
+    public Boolean getWarehousingOut() {
+        return warehousingOut;
+    }
+
+    public void setWarehousingOut(Boolean warehousingOut) {
+        this.warehousingOut = warehousingOut;
+    }
+
+    public Boolean getGathering() {
+        return gathering;
+    }
+
+    public void setGathering(Boolean gathering) {
+        this.gathering = gathering;
+    }
+
+    public BigDecimal getTotalAmountExcludingTax() {
+        return totalAmountExcludingTax;
+    }
+
+    public void setTotalAmountExcludingTax(BigDecimal totalAmountExcludingTax) {
+        this.totalAmountExcludingTax = totalAmountExcludingTax;
+    }
+
+    public BigDecimal getTotalAmountIncludingTax() {
+        return totalAmountIncludingTax;
+    }
+
+    public void setTotalAmountIncludingTax(BigDecimal totalAmountIncludingTax) {
+        this.totalAmountIncludingTax = totalAmountIncludingTax;
+    }
+
+    public BigDecimal getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(BigDecimal totalAmount) {
+        this.totalAmount = totalAmount;
+    }
+
+    public BigDecimal getTotalInvoiceAmount() {
+        return totalInvoiceAmount;
+    }
+
+    public void setTotalInvoiceAmount(BigDecimal totalInvoiceAmount) {
+        this.totalInvoiceAmount = totalInvoiceAmount;
     }
 }

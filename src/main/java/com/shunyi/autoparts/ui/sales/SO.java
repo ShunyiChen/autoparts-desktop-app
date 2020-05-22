@@ -48,13 +48,10 @@ public class SO extends TabContent {
 
     @Override
     protected void reload() {
-        soController.clean();
-        soController.initialize(application);
     }
 
     @Override
     protected void dispose() {
-
     }
 
     @Override

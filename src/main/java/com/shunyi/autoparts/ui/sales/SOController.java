@@ -75,6 +75,8 @@ public class SOController {
     @FXML
     private TableColumn<SalesOrder, String> colOrderDate;
     @FXML
+    private TableColumn<SalesOrder, String> colConsumerCode;
+    @FXML
     private TableColumn<SalesOrder, String> colConsumerName;
     @FXML
     private TableColumn<SalesOrder, String> colWarehouse;
@@ -85,17 +87,19 @@ public class SOController {
     @FXML
     private TableColumn<SalesOrder, String> colSalesQty;
     @FXML
-    private TableColumn<SalesOrder, String> colWarehouseQty;
-    @FXML
     private TableColumn<SalesOrder, String> colReturnedTotalQty;
     @FXML
     private TableColumn<SalesOrder, String> colAmountExcludingTax;
-//    @FXML
-//    private TableColumn<SalesOrder, String> colAmountIncludingTax;
+    @FXML
+    private TableColumn<SalesOrder, String> colAmountIncludingTax;
+    @FXML
+    private TableColumn<SalesOrder, String> colTotalAmount;
     @FXML
     private TableColumn<SalesOrder, String> colPayment;
     @FXML
     private TableColumn<SalesOrder, String> colInvoiceType;
+    @FXML
+    private TableColumn<SalesOrder, String> colInvoiceNo;
     @FXML
     private TableColumn<SalesOrder, String> colNotes;
     @FXML
@@ -106,6 +110,12 @@ public class SOController {
     private TableColumn<SalesOrder, String> colDisbursementAmount;
     @FXML
     private TableColumn<SalesOrder, String> colRepaymentAmount;
+    @FXML
+    private TableColumn<SalesOrder, String> colReceivedAmount;
+    @FXML
+    private TableColumn<SalesOrder, String> colTotalInvoiceAmount;
+    @FXML
+    private TableColumn<SalesOrder, String> colOutboundQty;
     @FXML
     private TableColumn<SalesOrder, String> colDiscountAmount;
     @FXML
@@ -420,7 +430,6 @@ public class SOController {
         dialog.show();
     }
 
-
     public void clean() {
         tableView.getItems().clear();
     }
@@ -490,12 +499,20 @@ public class SOController {
             }
         });
         //订单日期
-        SimpleDateFormat format = new SimpleDateFormat(Constants.PATTERN_DATETIME);
+        SimpleDateFormat format = new SimpleDateFormat(Constants.PATTERN_DATE);
         colOrderDate.setCellValueFactory(param -> {
             if(param.getValue().getOrderDate() == null) {
                 return new SimpleObjectProperty<>("");
             } else {
                 return new SimpleObjectProperty<>(format.format(param.getValue().getOrderDate()));
+            }
+        });
+        //客户编码
+        colConsumerCode.setCellValueFactory(param -> {
+            if(param.getValue().getConsumer() == null) {
+                return new SimpleObjectProperty<>("");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getConsumer().getCode());
             }
         });
         //客户名称
@@ -538,38 +555,38 @@ public class SOController {
                 return new SimpleObjectProperty<>(param.getValue().getSalesQty().intValue()+"");
             }
         });
-        //入库数量
-        colWarehouseQty.setCellValueFactory(param -> {
-            if(param.getValue().getWarehouseQty() == null) {
-                return new SimpleObjectProperty<>("");
+        //出库数量
+        colOutboundQty.setCellValueFactory(param -> {
+            if(param.getValue().getOutboundQty() == null) {
+                return new SimpleObjectProperty<>("0");
             } else {
-                return new SimpleObjectProperty<>(param.getValue().getWarehouseQty().intValue()+"");
+                return new SimpleObjectProperty<>(param.getValue().getOutboundQty()+"");
             }
         });
         //退货数量合计
         colReturnedTotalQty.setCellValueFactory(param -> {
             if(param.getValue().getReturnedTotalQty() == null) {
-                return new SimpleObjectProperty<>("");
+                return new SimpleObjectProperty<>("0.00");
             } else {
                 return new SimpleObjectProperty<>(param.getValue().getReturnedTotalQty().intValue()+"");
             }
         });
         //未税金额
         colAmountExcludingTax.setCellValueFactory(param -> {
-            if(param.getValue().getAmountReceivable() == null) {
-                return new SimpleObjectProperty<>("");
+            if(param.getValue().getTotalAmountExcludingTax() == null) {
+                return new SimpleObjectProperty<>("0.00");
             } else {
-                return new SimpleObjectProperty<>(param.getValue().getAmountReceivable().setScale(2, RoundingMode.HALF_UP).toString());
+                return new SimpleObjectProperty<>(param.getValue().getTotalAmountExcludingTax().setScale(2, RoundingMode.HALF_UP).toString());
             }
         });
-//        //含税金额
-//        colAmountIncludingTax.setCellValueFactory(param -> {
-//            if(param.getValue().getAmountPayable() == null) {
-//                return new SimpleObjectProperty<>("");
-//            } else {
-//                return new SimpleObjectProperty<>(param.getValue().getAmountPayable().setScale(2, RoundingMode.HALF_UP).toString());
-//            }
-//        });
+        //含税金额
+        colAmountIncludingTax.setCellValueFactory(param -> {
+            if(param.getValue().getTotalAmountIncludingTax() == null) {
+                return new SimpleObjectProperty<>("0.00");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getTotalAmountIncludingTax().setScale(2, RoundingMode.HALF_UP).toString());
+            }
+        });
         //结算方式
         colPayment.setCellValueFactory(param -> {
             if(param.getValue().getPayment() == null) {
@@ -578,12 +595,44 @@ public class SOController {
                 return new SimpleObjectProperty<>(param.getValue().getPayment());
             }
         });
+        //金额
+        colTotalAmount.setCellValueFactory(param -> {
+            if(param.getValue().getTotalAmount() == null) {
+                return new SimpleObjectProperty<>("0.00");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getTotalAmount().toString());
+            }
+        });
+        //已收款总额
+        colReceivedAmount.setCellValueFactory(param -> {
+            if(param.getValue().getAmountReceivable() == null) {
+                return new SimpleObjectProperty<>("0.00");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getAmountReceivable().toString());
+            }
+        });
+        //已开票总额
+        colTotalInvoiceAmount.setCellValueFactory(param -> {
+            if(param.getValue().getTotalInvoiceAmount() == null) {
+                return new SimpleObjectProperty<>("0.00");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getTotalInvoiceAmount().toString());
+            }
+        });
         //发票类型
         colInvoiceType.setCellValueFactory(param -> {
             if(param.getValue().getInvoiceType() == null) {
                 return new SimpleObjectProperty<>("");
             } else {
                 return new SimpleObjectProperty<>(param.getValue().getInvoiceType());
+            }
+        });
+        //发票No
+        colInvoiceNo.setCellValueFactory(param -> {
+            if(param.getValue().getInvoiceNo() == null) {
+                return new SimpleObjectProperty<>("");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getInvoiceNo());
             }
         });
         //备注
@@ -613,7 +662,7 @@ public class SOController {
         //代垫金额
         colDisbursementAmount.setCellValueFactory(param -> {
             if(param.getValue().getDisbursementAmount() == null) {
-                return new SimpleObjectProperty<>("");
+                return new SimpleObjectProperty<>("0.00");
             } else {
                 return new SimpleObjectProperty<>(param.getValue().getDisbursementAmount().setScale(2, RoundingMode.HALF_UP).toString());
             }
@@ -621,7 +670,7 @@ public class SOController {
         //已还金额
         colRepaymentAmount.setCellValueFactory(param -> {
             if(param.getValue().getRepaymentAmount() == null) {
-                return new SimpleObjectProperty<>("");
+                return new SimpleObjectProperty<>("0.00");
             } else {
                 return new SimpleObjectProperty<>(param.getValue().getRepaymentAmount().setScale(2, RoundingMode.HALF_UP).toString());
             }
@@ -629,7 +678,7 @@ public class SOController {
         //优惠金额
         colDiscountAmount.setCellValueFactory(param -> {
             if(param.getValue().getDisbursementAmount() == null) {
-                return new SimpleObjectProperty<>("");
+                return new SimpleObjectProperty<>("0.00");
             } else {
                 return new SimpleObjectProperty<>(param.getValue().getDisbursementAmount().setScale(2, RoundingMode.HALF_UP).toString());
             }

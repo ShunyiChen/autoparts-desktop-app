@@ -48,13 +48,10 @@ public class SRO extends TabContent {
 
     @Override
     protected void reload() {
-        sroController.clean();
-        sroController.initialize(application);
     }
 
     @Override
     protected void dispose() {
-
     }
 
     @Override

@@ -566,6 +566,15 @@ public class POEditorController {
                             //不含税金额
                             selected.setAmountExcludingTax(selected.getPriceExcludingTax().multiply(new BigDecimal(selected.getQuantity())).setScale(2, RoundingMode.HALF_UP));
 
+                            //税额=不含税价*税率
+                            BigDecimal rate = selected.getTaxRate().divide(new BigDecimal(100));
+                            selected.setTaxAmount(rate.multiply(selected.getPriceExcludingTax()).setScale(2, RoundingMode.HALF_UP));
+                            //不含税价+税额=含税价（总金额）
+                            selected.setPriceIncludingTax(selected.getPriceExcludingTax().add(selected.getTaxAmount()).setScale(2, RoundingMode.HALF_UP));
+                            //含税金额
+                            selected.setAmountIncludingTax(new BigDecimal(selected.getQuantity()).multiply(selected.getPriceIncludingTax()).setScale(2, RoundingMode.HALF_UP));
+
+
                             data.set(t.getTablePosition().getRow(), selected);
                             updateSummary();
                         }
@@ -803,7 +812,7 @@ public class POEditorController {
         //包装数量
         colPackingQuantity.setCellValueFactory(param -> {
             if(param.getValue().getSku() == null) {
-                return new SimpleObjectProperty<>("");
+                return new SimpleObjectProperty<>("0");
             } else {
                 return new SimpleObjectProperty<>(param.getValue().getSku().getProduct().getPackingQuantity().toString());
             }
@@ -835,7 +844,7 @@ public class POEditorController {
         //一级进价
         colPurchasingPrice1.setCellValueFactory(param -> {
             if(param.getValue().getSku() == null) {
-                return new SimpleObjectProperty<>("");
+                return new SimpleObjectProperty<>("0.00");
             } else {
                 return new SimpleObjectProperty<>(param.getValue().getSku().getProduct().getPurchasingPrice1().toString());
             }
@@ -843,7 +852,7 @@ public class POEditorController {
         //二级进价
         colPurchasingPrice2.setCellValueFactory(param -> {
             if(param.getValue().getSku() == null) {
-                return new SimpleObjectProperty<>("");
+                return new SimpleObjectProperty<>("0.00");
             } else {
                 return new SimpleObjectProperty<>(param.getValue().getSku().getProduct().getPurchasingPrice2().toString());
             }
@@ -851,7 +860,7 @@ public class POEditorController {
         //三级进价
         colPurchasingPrice3.setCellValueFactory(param -> {
             if(param.getValue().getSku() == null) {
-                return new SimpleObjectProperty<>("");
+                return new SimpleObjectProperty<>("0.00");
             } else {
                 return new SimpleObjectProperty<>(param.getValue().getSku().getProduct().getPurchasingPrice3().toString());
             }
@@ -859,7 +868,7 @@ public class POEditorController {
         //一级销价
         colSellingPrice1.setCellValueFactory(param -> {
             if(param.getValue().getSku() == null) {
-                return new SimpleObjectProperty<>("");
+                return new SimpleObjectProperty<>("0.00");
             } else {
                 return new SimpleObjectProperty<>(param.getValue().getSku().getProduct().getSellingPrice1().toString());
             }
@@ -867,7 +876,7 @@ public class POEditorController {
         //二级销价
         colSellingPrice2.setCellValueFactory(param -> {
             if(param.getValue().getSku() == null) {
-                return new SimpleObjectProperty<>("");
+                return new SimpleObjectProperty<>("0.00");
             } else {
                 return new SimpleObjectProperty<>(param.getValue().getSku().getProduct().getSellingPrice2().toString());
             }
@@ -875,7 +884,7 @@ public class POEditorController {
         //三级销价
         colSellingPrice3.setCellValueFactory(param -> {
             if(param.getValue().getSku() == null) {
-                return new SimpleObjectProperty<>("");
+                return new SimpleObjectProperty<>("0.00");
             } else {
                 return new SimpleObjectProperty<>(param.getValue().getSku().getProduct().getSellingPrice3().toString());
             }
@@ -883,7 +892,7 @@ public class POEditorController {
         //最低销价
         colBottomPrice.setCellValueFactory(param -> {
             if(param.getValue().getSku() == null) {
-                return new SimpleObjectProperty<>("");
+                return new SimpleObjectProperty<>("0.00");
             } else {
                 return new SimpleObjectProperty<>(param.getValue().getSku().getProduct().getBottomPrice().toString());
             }
@@ -899,7 +908,7 @@ public class POEditorController {
         //外币价格
         colForeignCurrencyPrice.setCellValueFactory(param -> {
             if(param.getValue().getSku() == null) {
-                return new SimpleObjectProperty<>("");
+                return new SimpleObjectProperty<>("0.00");
             } else {
                 return new SimpleObjectProperty<>(param.getValue().getSku().getProduct().getForeignCurrencyPrice());
             }
@@ -978,11 +987,31 @@ public class POEditorController {
             }
         });
         //含税单价
+        colPriceIncludingTax.setCellFactory(cellFactory);
         colPriceIncludingTax.setCellValueFactory(param -> {
-            if(param.getValue().getPriceExcludingTax() == null) {
+            if(param.getValue().getPriceIncludingTax() == null) {
                 return new SimpleObjectProperty<>("0.00");
             } else {
-                return new SimpleObjectProperty<>(param.getValue().getPriceIncludingTax().setScale(2, RoundingMode.HALF_UP).toString());
+                return new SimpleObjectProperty<>(param.getValue().getPriceIncludingTax().toString());
+            }
+        });
+        colPriceIncludingTax.setOnEditCommit((EventHandler<TableColumn.CellEditEvent<PurchaseOrderItem, String>>) t -> {
+            ObservableList<PurchaseOrderItem> data = t.getTableView().getItems();
+            if(data != null) {
+                if(t.getTablePosition().getRow() < data.size()) {
+                    PurchaseOrderItem selected = data.get( t.getTablePosition().getRow());
+                    if(selected != null) {
+                        String priceIncludingTaxStr = t.getNewValue();
+                        if(NumberValidationUtils.isRealNumber(priceIncludingTaxStr)) {
+                            //含税单价
+                            selected.setPriceIncludingTax(new BigDecimal(priceIncludingTaxStr).setScale(2, RoundingMode.HALF_UP));
+                            //含税金额
+                            selected.setAmountIncludingTax(new BigDecimal(selected.getQuantity()).multiply(selected.getPriceIncludingTax()).setScale(2, RoundingMode.HALF_UP));
+                            data.set(t.getTablePosition().getRow(), selected);
+                            updateSummary();
+                        }
+                    }
+                }
             }
         });
         //含税金额
@@ -1034,10 +1063,12 @@ public class POEditorController {
         BigDecimal totalAmountWithTax = BigDecimal.ZERO;
         ObservableList<PurchaseOrderItem> list = tableView.getItems();
         for(PurchaseOrderItem item : list) {
-            totalRecords++;
-            totalQty = totalQty.add(new BigDecimal(item.getQuantity()));
-            totalAmountWithoutTax = totalAmountWithoutTax.add(item.getAmountExcludingTax());
-            totalAmountWithTax = totalAmountWithTax.add(item.getAmountIncludingTax());
+            if(item.getSku() != null) {
+                totalRecords++;
+                totalQty = totalQty.add(new BigDecimal(item.getQuantity()));
+                totalAmountWithoutTax = totalAmountWithoutTax.add(item.getAmountExcludingTax());
+                totalAmountWithTax = totalAmountWithTax.add(item.getAmountIncludingTax());
+            }
         }
         labelRecords.setText(totalRecords+"");
         labelTotalQty.setText(totalQty.toString());
@@ -1402,10 +1433,10 @@ public class POEditorController {
             po.setStockedQty(status.equals(Constants.CLOSED)?po.getPurchaseQty():0);
             //退货数量合计
             po.setReturnedTotalQty(0);
-            //未税金额
-            po.setTotalAmountExcludingTax(BigDecimal.ZERO);
             //含税金额
-            po.setTotalAmountIncludingTax(BigDecimal.ZERO);
+            po.setTotalAmountIncludingTax(new BigDecimal(labelTotalAmountWithTax.getText()));
+            //未税金额
+            po.setTotalAmountExcludingTax(new BigDecimal(labelTotalAmountWithoutTax.getText()));
             //状态
             po.setStatus(status);
             //入库
