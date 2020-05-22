@@ -86,6 +86,25 @@ public class SROController {
     private TableColumn<SalesReturnOrder, String> colAmountExcludingTax;
     @FXML
     private TableColumn<SalesReturnOrder, String> colAmountIncludingTax;
+
+    @FXML
+    private TableColumn<SalesReturnOrder, String> colTaxAmount;
+    @FXML
+    private TableColumn<SalesReturnOrder, String> colTotalAmount;
+    @FXML
+    private TableColumn<SalesReturnOrder, String> colReturnedExpenses;
+    /** 货款已退金额 */
+    @FXML
+    private TableColumn<SalesReturnOrder, String> colReturnedSalesAmount;
+    /** 代垫费用已退金额 */
+    @FXML
+    private TableColumn<SalesReturnOrder, String> colDisbursementReturnedAmount;
+    /** 已退款总额 */
+    @FXML
+    private TableColumn<SalesReturnOrder, String> colTotalReturnedAmount;
+    /** 代垫费用金额 */
+    @FXML
+    private TableColumn<SalesReturnOrder, String> colDisbursementAmount;
     @FXML
     private TableColumn<SalesReturnOrder, String> colPayment;
     @FXML
@@ -94,17 +113,6 @@ public class SROController {
     private TableColumn<SalesReturnOrder, String> colNotes;
     @FXML
     private TableColumn<SalesReturnOrder, String> colStatus;
-    @FXML
-    private TableColumn<SalesReturnOrder, String> colRepaymentDate;
-    @FXML
-    private TableColumn<SalesReturnOrder, String> colDisbursementAmount;
-    @FXML
-    private TableColumn<SalesReturnOrder, String> colRepaymentAmount;
-    @FXML
-    private TableColumn<SalesReturnOrder, String> colDiscountAmount;
-    @FXML
-    private TableColumn<SalesReturnOrder, String> colAccount;
-
     @FXML
     private void create() {
         Callback<SalesReturnOrder, String> callback = new Callback<SalesReturnOrder, String>() {
@@ -488,7 +496,7 @@ public class SROController {
             }
         });
         //订单日期
-        SimpleDateFormat format = new SimpleDateFormat(Constants.PATTERN_DATETIME);
+        SimpleDateFormat format = new SimpleDateFormat(Constants.PATTERN_DATE);
         colOrderDate.setCellValueFactory(param -> {
             if(param.getValue().getOrderDate() == null) {
                 return new SimpleObjectProperty<>("");
@@ -496,7 +504,7 @@ public class SROController {
                 return new SimpleObjectProperty<>(format.format(param.getValue().getOrderDate()));
             }
         });
-        //供应商编码
+        //客户编码
         colConsumerCode.setCellValueFactory(param -> {
             if(param.getValue().getConsumer() == null) {
                 return new SimpleObjectProperty<>("");
@@ -504,12 +512,84 @@ public class SROController {
                 return new SimpleObjectProperty<>(param.getValue().getConsumer().getCode());
             }
         });
-        //供应商名称
+        //客户名称
         colConsumerName.setCellValueFactory(param -> {
             if(param.getValue().getConsumer() == null) {
                 return new SimpleObjectProperty<>("");
             } else {
                 return new SimpleObjectProperty<>(param.getValue().getConsumer().getName());
+            }
+        });
+        //退货数量
+        colReturnQty.setCellValueFactory(param -> {
+            if(param.getValue().getReturnQty() == null) {
+                return new SimpleObjectProperty<>("0.00");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getReturnQty().intValue()+"");
+            }
+        });
+        //未税金额
+        colAmountExcludingTax.setCellValueFactory(param -> {
+            if(param.getValue().getAmountExcludingTax() == null) {
+                return new SimpleObjectProperty<>("0.00");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getAmountExcludingTax().setScale(2, RoundingMode.HALF_UP).toString());
+            }
+        });
+        //含税金额
+        colAmountIncludingTax.setCellValueFactory(param -> {
+            if(param.getValue().getAmountIncludingTax() == null) {
+                return new SimpleObjectProperty<>("");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getAmountIncludingTax().setScale(2, RoundingMode.HALF_UP).toString());
+            }
+        });
+        //税额
+        colTaxAmount.setCellValueFactory(param -> {
+            if(param.getValue().getTaxAmount() == null) {
+                return new SimpleObjectProperty<>("0.00");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getTaxAmount().setScale(2, RoundingMode.HALF_UP).toString());
+            }
+        });
+        //总额
+        colTotalAmount.setCellValueFactory(param -> {
+            if(param.getValue().getTotalAmount() == null) {
+                return new SimpleObjectProperty<>("0.00");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getTotalAmount().setScale(2, RoundingMode.HALF_UP).toString());
+            }
+        });
+        //代垫费用金额
+        colDisbursementAmount.setCellValueFactory(param -> {
+            if(param.getValue().getDisbursementAmount() == null) {
+                return new SimpleObjectProperty<>("0.00");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getDisbursementAmount().setScale(2, RoundingMode.HALF_UP).toString());
+            }
+        });
+        //货款已退金额
+        colReturnedSalesAmount.setCellValueFactory(param -> {
+            if(param.getValue().getTotalReturnedAmount() == null) {
+                return new SimpleObjectProperty<>("0.00");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getTotalReturnedAmount().setScale(2, RoundingMode.HALF_UP).toString());
+            }
+        });
+        //代垫费用已退金额
+        colDisbursementReturnedAmount.setCellValueFactory(param -> {
+            if(param.getValue().getDisbursementReturnedAmount() == null) {
+                return new SimpleObjectProperty<>("0.00");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getDisbursementReturnedAmount().setScale(2, RoundingMode.HALF_UP).toString());
+            }
+        });
+        //已退款总额
+        colTotalReturnedAmount.setCellValueFactory(param -> {
+            if(param.getValue().getTotalReturnedAmount() == null) {
+                return new SimpleObjectProperty<>("0.00");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getTotalReturnedAmount().setScale(2, RoundingMode.HALF_UP).toString());
             }
         });
         //仓库名称
@@ -534,38 +614,6 @@ public class SROController {
                 return new SimpleObjectProperty<>("");
             } else {
                 return new SimpleObjectProperty<>(param.getValue().getUserName());
-            }
-        });
-        //进货数量
-        colReturnQty.setCellValueFactory(param -> {
-            if(param.getValue().getReturnQty() == null) {
-                return new SimpleObjectProperty<>("");
-            } else {
-                return new SimpleObjectProperty<>(param.getValue().getReturnQty().intValue()+"");
-            }
-        });
-//        //入库数量
-//        colWarehouseQty.setCellValueFactory(param -> {
-//            if(param.getValue().getWarehouseQty() == null) {
-//                return new SimpleObjectProperty<>("");
-//            } else {
-//                return new SimpleObjectProperty<>(param.getValue().getWarehouseQty().intValue()+"");
-//            }
-//        });
-        //未税金额
-        colAmountExcludingTax.setCellValueFactory(param -> {
-            if(param.getValue().getAmountExcludingTax() == null) {
-                return new SimpleObjectProperty<>("");
-            } else {
-                return new SimpleObjectProperty<>(param.getValue().getAmountExcludingTax().setScale(2, RoundingMode.HALF_UP).toString());
-            }
-        });
-        //含税金额
-        colAmountIncludingTax.setCellValueFactory(param -> {
-            if(param.getValue().getAmountIncludingTax() == null) {
-                return new SimpleObjectProperty<>("");
-            } else {
-                return new SimpleObjectProperty<>(param.getValue().getAmountIncludingTax().setScale(2, RoundingMode.HALF_UP).toString());
             }
         });
         //结算方式
@@ -598,46 +646,6 @@ public class SROController {
                 return new SimpleObjectProperty<>("");
             } else {
                 return new SimpleObjectProperty<>(param.getValue().getStatus());
-            }
-        });
-        //还款日期
-        colRepaymentDate.setCellValueFactory(param -> {
-            if(param.getValue().getRepaymentDate() == null) {
-                return new SimpleObjectProperty<>("");
-            } else {
-                return new SimpleObjectProperty<>(format.format(param.getValue().getRepaymentDate()));
-            }
-        });
-        //代垫金额
-        colDisbursementAmount.setCellValueFactory(param -> {
-            if(param.getValue().getDisbursementAmount() == null) {
-                return new SimpleObjectProperty<>("");
-            } else {
-                return new SimpleObjectProperty<>(param.getValue().getDisbursementAmount().setScale(2, RoundingMode.HALF_UP).toString());
-            }
-        });
-        //已还金额
-        colRepaymentAmount.setCellValueFactory(param -> {
-            if(param.getValue().getRepaymentAmount() == null) {
-                return new SimpleObjectProperty<>("");
-            } else {
-                return new SimpleObjectProperty<>(param.getValue().getRepaymentAmount().setScale(2, RoundingMode.HALF_UP).toString());
-            }
-        });
-        //优惠金额
-        colDiscountAmount.setCellValueFactory(param -> {
-            if(param.getValue().getDisbursementAmount() == null) {
-                return new SimpleObjectProperty<>("");
-            } else {
-                return new SimpleObjectProperty<>(param.getValue().getDisbursementAmount().setScale(2, RoundingMode.HALF_UP).toString());
-            }
-        });
-        //账号
-        colAccount.setCellValueFactory(param -> {
-            if(param.getValue().getAccount() == null) {
-                return new SimpleObjectProperty<>("");
-            } else {
-                return new SimpleObjectProperty<>(param.getValue().getAccount());
             }
         });
 

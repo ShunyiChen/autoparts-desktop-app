@@ -58,15 +58,15 @@ public class PROEditorController {
     private Button btnSave;
     @FXML
     private Button btnSubmit;
+    /** 仓库 */
+    @FXML
+    private ComboBox<String> comboBoxWarehouse;
     /** 单据日期 */
     @FXML
     private DatePicker orderDate;
     /** 单号 */
     @FXML
     private TextField txtOrderNo;
-    /** 库存 */
-    @FXML
-    private ComboBox<String> comboBoxWarehouse;
     /** 供应商选择按钮 */
     @FXML
     private Button btnSupplierChooser;
@@ -474,7 +474,7 @@ public class PROEditorController {
                 super.updateItem(item, empty);
                 if (item == null) {
                     setStyle("");
-                } else if(item.isExceptional()) {//(item.getQuantity() > item.getReturnableQty() || StringUtils.isEmpty(item.getOriginalOrderNo()) || itemExistCheck(item)) {
+                } else if(item.isExceptional()) {
                     this.setId("error");
                 } else {
                     this.setId("not-error");
@@ -521,10 +521,8 @@ public class PROEditorController {
                                     //可退货数量
                                     selected.setReturnableQty(lastItem.getQuantity());
                                 }
-
                                 //设置输入异常
                                 selected.setExceptional(selected.getQuantity() > selected.getReturnableQty() || StringUtils.isEmpty(selected.getOriginalOrderNo()) || itemExistCheck(selected));
-
                                 data.set(t.getTablePosition().getRow(), selected);
                                 updateSummary();
                             } else {
@@ -835,7 +833,7 @@ public class PROEditorController {
         //包装数量
         colPackingQuantity.setCellValueFactory(param -> {
             if(param.getValue().getSku() == null) {
-                return new SimpleObjectProperty<>("");
+                return new SimpleObjectProperty<>("0");
             } else {
                 return new SimpleObjectProperty<>(param.getValue().getSku().getProduct().getPackingQuantity().toString());
             }
@@ -963,25 +961,25 @@ public class PROEditorController {
         //折扣%
         colDiscountPercentage.setCellValueFactory(param -> {
             if(param.getValue().getSku() == null) {
-                return new SimpleObjectProperty<>("");
+                return new SimpleObjectProperty<>("0.00");
             } else {
                 return new SimpleObjectProperty<>(param.getValue().getSku().getDiscount().toString());
             }
         });
-        //税率
+        //税率%
         colTaxRate.setCellValueFactory(param -> {
-            if(param.getValue().getSku() == null) {
-                return new SimpleObjectProperty<>("");
+            if(param.getValue().getTaxRate() == null) {
+                return new SimpleObjectProperty<>("0.00");
             } else {
-                return new SimpleObjectProperty<>("");
+                return new SimpleObjectProperty<>(param.getValue().getTaxRate().toString());
             }
         });
         //税额
         colTaxAmount.setCellValueFactory(param -> {
-            if(param.getValue().getSku() == null) {
-                return new SimpleObjectProperty<>("");
+            if(param.getValue().getTaxAmount() == null) {
+                return new SimpleObjectProperty<>("0.00");
             } else {
-                return new SimpleObjectProperty<>("");
+                return new SimpleObjectProperty<>(param.getValue().getTaxAmount().toString());
             }
         });
         //库存平均价
@@ -1240,7 +1238,6 @@ public class PROEditorController {
         if(tableView.getItems().size() == 0) {
             disableSupplierFields(false);
         }
-
         updateSummary();
     }
 

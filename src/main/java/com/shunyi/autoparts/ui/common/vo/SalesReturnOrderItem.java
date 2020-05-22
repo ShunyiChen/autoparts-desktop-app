@@ -38,12 +38,19 @@ public class SalesReturnOrderItem {
     private BigDecimal amountExcludingTax;
     /** 备注 */
     private String notes;
+    /** 可退货数量 */
+    private Integer returnableQty;
+    /** 异常 */
+    private boolean exceptional;
+    /** 开单价格 */
+    private BigDecimal billingPrice;
+    /** 开单金额 */
+    private BigDecimal billingAmount;
 
     public SalesReturnOrderItem() {
-
     }
 
-    public SalesReturnOrderItem(Long id, String originalOrderNo, SalesReturnOrder salesReturnOrder, SKU sku, Integer quantity, BigDecimal amount, BigDecimal discount, BigDecimal discountedAmount, BigDecimal taxRate, BigDecimal taxAmount, BigDecimal priceIncludingTax, BigDecimal amountIncludingTax, BigDecimal priceExcludingTax, BigDecimal amountExcludingTax, String notes) {
+    public SalesReturnOrderItem(Long id, String originalOrderNo, SalesReturnOrder salesReturnOrder, SKU sku, Integer quantity, BigDecimal amount, BigDecimal discount, BigDecimal discountedAmount, BigDecimal taxRate, BigDecimal taxAmount, BigDecimal priceIncludingTax, BigDecimal amountIncludingTax, BigDecimal priceExcludingTax, BigDecimal amountExcludingTax, String notes, Integer returnableQty, boolean exceptional, BigDecimal billingPrice, BigDecimal billingAmount) {
         this.id = id;
         this.originalOrderNo = originalOrderNo;
         this.salesReturnOrder = salesReturnOrder;
@@ -59,6 +66,10 @@ public class SalesReturnOrderItem {
         this.priceExcludingTax = priceExcludingTax;
         this.amountExcludingTax = amountExcludingTax;
         this.notes = notes;
+        this.returnableQty = returnableQty;
+        this.exceptional = exceptional;
+        this.billingPrice = billingPrice;
+        this.billingAmount = billingAmount;
     }
 
     public Long getId() {
@@ -179,5 +190,37 @@ public class SalesReturnOrderItem {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    public Integer getReturnableQty() {
+        return returnableQty;
+    }
+
+    public void setReturnableQty(Integer returnableQty) {
+        this.returnableQty = returnableQty;
+    }
+
+    public boolean isExceptional() {
+        return exceptional;
+    }
+
+    public void setExceptional(boolean exceptional) {
+        this.exceptional = exceptional;
+    }
+
+    public BigDecimal getBillingPrice() {
+        return billingPrice;
+    }
+
+    public void setBillingPrice(BigDecimal billingPrice) {
+        this.billingPrice = billingPrice;
+    }
+
+    public BigDecimal getBillingAmount() {
+        return billingAmount;
+    }
+
+    public void setBillingAmount(BigDecimal billingAmount) {
+        this.billingAmount = billingAmount;
     }
 }

@@ -19,26 +19,8 @@ public class SalesReturnOrder {
     private Warehouse warehouse;
     /** 客户 */
     private Consumer consumer;
-    /** 发票类型 */
-    private String invoiceType;
-    /** 发票号 */
-    private String invoiceNo;
-    /** 运费 */
-    private BigDecimal freight;
-    /** 备注 */
-    private String notes;
-    /** 经办人 */
-    private String operator;
-    /** 系统登录账号 */
-    private String userName;
-    /** 结算方式 */
-    private String payment;
-    /** 退货数量 */
+    /** 数量合计 */
     private Integer returnQty;
-    /** 已入库数量 */
-    private Integer warehouseQty;
-    /** 退货数量合计 */
-    private Integer returnedTotalQty;
     /** 含税金额 */
     private BigDecimal amountIncludingTax;
     /** 不含税金额 */
@@ -47,34 +29,34 @@ public class SalesReturnOrder {
     private BigDecimal taxAmount;
     /** 总额 */
     private BigDecimal totalAmount;
-    /** 费用金额 */
-    private BigDecimal expenses;
-    /** 费用已退金额 */
-    private BigDecimal returnedExpenses;
+    /** 代垫费用金额 */
+    private BigDecimal disbursementAmount;
     /** 货款已退金额 */
     private BigDecimal returnedSalesAmount;
-    /** 已退款金额 */
+    /** 代垫费用已退金额 */
+    private BigDecimal disbursementReturnedAmount;
+    /** 已退款总额 */
     private BigDecimal totalReturnedAmount;
-    /** 垫付费用 */
-    private BigDecimal disbursementAmount;
-    /** 本次优惠 */
-    private BigDecimal discountAmount;
-    /** 本次付款 */
-    private BigDecimal paymentAmount;
-    /** 账号 */
-    private String account;
-    /** 还款金额 */
-    private BigDecimal repaymentAmount;
-    /** 还款日期 */
-    private Date repaymentDate;
-    /** 已还金额 */
-    private Date paidAmount;
+    /** 发票类型 */
+    private String invoiceType;
+    /** 发票号 */
+    private String invoiceNo;
+    /** 备注 */
+    private String notes;
+    /** 经办人 */
+    private String operator;
+    /** 操作员 */
+    private String userName;
+    /** 结算方式 */
+    private String payment;
     /** 订单状态 */
     private String status;
     /** 创建时间 */
     private Date dateCreated;
     /** 创建者 */
     private String creator;
+    /** 入库 */
+    private Boolean warehousing;
     /** 搜索日期类型 */
     private String dateType;
     /** 起始日期 */
@@ -84,40 +66,31 @@ public class SalesReturnOrder {
 
     public SalesReturnOrder() {}
 
-    public SalesReturnOrder(Long id, String orderNo, Date orderDate, Warehouse warehouse, Consumer consumer, String invoiceType, String invoiceNo, BigDecimal freight, String notes, String operator, String userName, String payment, Integer returnQty, Integer warehouseQty, Integer returnedTotalQty, BigDecimal amountIncludingTax, BigDecimal amountExcludingTax, BigDecimal taxAmount, BigDecimal totalAmount, BigDecimal expenses, BigDecimal returnedExpenses, BigDecimal returnedSalesAmount, BigDecimal totalReturnedAmount, BigDecimal disbursementAmount, BigDecimal discountAmount, BigDecimal paymentAmount, String account, BigDecimal repaymentAmount, Date repaymentDate, Date paidAmount, String status, Date dateCreated, String creator, String dateType, Date fromDate, Date toDate) {
+    public SalesReturnOrder(Long id, String orderNo, Date orderDate, Warehouse warehouse, Consumer consumer, Integer returnQty, BigDecimal amountIncludingTax, BigDecimal amountExcludingTax, BigDecimal taxAmount, BigDecimal totalAmount, BigDecimal disbursementAmount, BigDecimal returnedSalesAmount, BigDecimal disbursementReturnedAmount, BigDecimal totalReturnedAmount, String invoiceType, String invoiceNo, String notes, String operator, String userName, String payment, String status, Date dateCreated, String creator, Boolean warehousing, String dateType, Date fromDate, Date toDate) {
         this.id = id;
         this.orderNo = orderNo;
         this.orderDate = orderDate;
         this.warehouse = warehouse;
         this.consumer = consumer;
-        this.invoiceType = invoiceType;
-        this.invoiceNo = invoiceNo;
-        this.freight = freight;
-        this.notes = notes;
-        this.operator = operator;
-        this.userName = userName;
-        this.payment = payment;
         this.returnQty = returnQty;
-        this.warehouseQty = warehouseQty;
-        this.returnedTotalQty = returnedTotalQty;
         this.amountIncludingTax = amountIncludingTax;
         this.amountExcludingTax = amountExcludingTax;
         this.taxAmount = taxAmount;
         this.totalAmount = totalAmount;
-        this.expenses = expenses;
-        this.returnedExpenses = returnedExpenses;
-        this.returnedSalesAmount = returnedSalesAmount;
-        this.totalReturnedAmount = totalReturnedAmount;
         this.disbursementAmount = disbursementAmount;
-        this.discountAmount = discountAmount;
-        this.paymentAmount = paymentAmount;
-        this.account = account;
-        this.repaymentAmount = repaymentAmount;
-        this.repaymentDate = repaymentDate;
-        this.paidAmount = paidAmount;
+        this.returnedSalesAmount = returnedSalesAmount;
+        this.disbursementReturnedAmount = disbursementReturnedAmount;
+        this.totalReturnedAmount = totalReturnedAmount;
+        this.invoiceType = invoiceType;
+        this.invoiceNo = invoiceNo;
+        this.notes = notes;
+        this.operator = operator;
+        this.userName = userName;
+        this.payment = payment;
         this.status = status;
         this.dateCreated = dateCreated;
         this.creator = creator;
+        this.warehousing = warehousing;
         this.dateType = dateType;
         this.fromDate = fromDate;
         this.toDate = toDate;
@@ -179,14 +152,6 @@ public class SalesReturnOrder {
         this.invoiceNo = invoiceNo;
     }
 
-    public BigDecimal getFreight() {
-        return freight;
-    }
-
-    public void setFreight(BigDecimal freight) {
-        this.freight = freight;
-    }
-
     public String getNotes() {
         return notes;
     }
@@ -227,22 +192,6 @@ public class SalesReturnOrder {
         this.returnQty = returnQty;
     }
 
-    public Integer getWarehouseQty() {
-        return warehouseQty;
-    }
-
-    public void setWarehouseQty(Integer warehouseQty) {
-        this.warehouseQty = warehouseQty;
-    }
-
-    public Integer getReturnedTotalQty() {
-        return returnedTotalQty;
-    }
-
-    public void setReturnedTotalQty(Integer returnedTotalQty) {
-        this.returnedTotalQty = returnedTotalQty;
-    }
-
     public BigDecimal getAmountIncludingTax() {
         return amountIncludingTax;
     }
@@ -275,22 +224,6 @@ public class SalesReturnOrder {
         this.totalAmount = totalAmount;
     }
 
-    public BigDecimal getExpenses() {
-        return expenses;
-    }
-
-    public void setExpenses(BigDecimal expenses) {
-        this.expenses = expenses;
-    }
-
-    public BigDecimal getReturnedExpenses() {
-        return returnedExpenses;
-    }
-
-    public void setReturnedExpenses(BigDecimal returnedExpenses) {
-        this.returnedExpenses = returnedExpenses;
-    }
-
     public BigDecimal getReturnedSalesAmount() {
         return returnedSalesAmount;
     }
@@ -313,54 +246,6 @@ public class SalesReturnOrder {
 
     public void setDisbursementAmount(BigDecimal disbursementAmount) {
         this.disbursementAmount = disbursementAmount;
-    }
-
-    public BigDecimal getDiscountAmount() {
-        return discountAmount;
-    }
-
-    public void setDiscountAmount(BigDecimal discountAmount) {
-        this.discountAmount = discountAmount;
-    }
-
-    public BigDecimal getPaymentAmount() {
-        return paymentAmount;
-    }
-
-    public void setPaymentAmount(BigDecimal paymentAmount) {
-        this.paymentAmount = paymentAmount;
-    }
-
-    public String getAccount() {
-        return account;
-    }
-
-    public void setAccount(String account) {
-        this.account = account;
-    }
-
-    public BigDecimal getRepaymentAmount() {
-        return repaymentAmount;
-    }
-
-    public void setRepaymentAmount(BigDecimal repaymentAmount) {
-        this.repaymentAmount = repaymentAmount;
-    }
-
-    public Date getRepaymentDate() {
-        return repaymentDate;
-    }
-
-    public void setRepaymentDate(Date repaymentDate) {
-        this.repaymentDate = repaymentDate;
-    }
-
-    public Date getPaidAmount() {
-        return paidAmount;
-    }
-
-    public void setPaidAmount(Date paidAmount) {
-        this.paidAmount = paidAmount;
     }
 
     public String getStatus() {
@@ -409,5 +294,21 @@ public class SalesReturnOrder {
 
     public void setToDate(Date toDate) {
         this.toDate = toDate;
+    }
+
+    public BigDecimal getDisbursementReturnedAmount() {
+        return disbursementReturnedAmount;
+    }
+
+    public void setDisbursementReturnedAmount(BigDecimal disbursementReturnedAmount) {
+        this.disbursementReturnedAmount = disbursementReturnedAmount;
+    }
+
+    public Boolean getWarehousing() {
+        return warehousing;
+    }
+
+    public void setWarehousing(Boolean warehousing) {
+        this.warehousing = warehousing;
     }
 }
