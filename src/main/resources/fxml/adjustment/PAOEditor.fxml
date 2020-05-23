@@ -97,9 +97,9 @@
            <!-- 行号 -->
            <TableColumn fx:id="colRowNumber" prefWidth="60.0" text="行号" />
            <!-- SKU编码 -->
-           <TableColumn fx:id="colSkuCode" prefWidth="118.0" text="SKU编码" />
+           <TableColumn fx:id="colSkuCode" prefWidth="180.0" text="配件编码" />
            <!-- SKU名称 -->
-           <TableColumn fx:id="colSkuName" prefWidth="257.0" text="SKU名称" />
+           <TableColumn fx:id="colSkuName" prefWidth="195.0" text="名称" />
            <!-- 规格 -->
            <TableColumn fx:id="colSpecification" prefWidth="192.0" text="规格" />
            <!-- 单位 -->

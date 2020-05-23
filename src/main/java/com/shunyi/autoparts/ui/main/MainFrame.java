@@ -150,18 +150,6 @@ public class MainFrame extends BorderPane {
                 return null;
             }
         });
-        //盘点单
-        ClickableItem inventoryingOrder = new ClickableItem(icons.account_multiple(), Constants.STOCKTAKING_ORDER, new Callback() {
-            @Override
-            public Object call(Object param) {
-                toolbar.setTitle(Constants.STOCKTAKING_ORDER);
-                if(stocktakingTab == null) {
-                    stocktakingTab = new TabExt(new STO(application));
-                }
-                contentPane.addNewTab(stocktakingTab);
-                return null;
-            }
-        });
         //调价单
         ClickableItem priceAdjustmentOrder = new ClickableItem(icons.warehouse(), Constants.PRICE_ADJUSTMENT_ORDER, new Callback() {
             @Override
@@ -171,6 +159,18 @@ public class MainFrame extends BorderPane {
                     priceAdjustmentOrderTab = new TabExt(new PAO(application));
                 }
                 contentPane.addNewTab(priceAdjustmentOrderTab);
+                return null;
+            }
+        });
+        //盘点单
+        ClickableItem inventoryingOrder = new ClickableItem(icons.account_multiple(), Constants.STOCKTAKING_ORDER, new Callback() {
+            @Override
+            public Object call(Object param) {
+                toolbar.setTitle(Constants.STOCKTAKING_ORDER);
+                if(stocktakingTab == null) {
+                    stocktakingTab = new TabExt(new STO(application));
+                }
+                contentPane.addNewTab(stocktakingTab);
                 return null;
             }
         });
@@ -211,7 +211,7 @@ public class MainFrame extends BorderPane {
                 return null;
             }
         });
-        navigation.addClickableItem(purchaseView, salesView, purchaseOrder, purchaseReturnOrder, salesOrder, salesReturnOrder, inventoryingOrder, priceAdjustmentOrder, inventoryDetails, dataMaintaining, systemSettings);
+        navigation.addClickableItem(purchaseView, salesView, purchaseOrder, purchaseReturnOrder, salesOrder, salesReturnOrder, priceAdjustmentOrder, inventoryingOrder, inventoryDetails, dataMaintaining, systemSettings);
 
         Platform.runLater(() -> purchaseView.fire());
     }

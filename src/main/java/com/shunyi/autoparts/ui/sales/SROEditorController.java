@@ -323,22 +323,12 @@ public class SROEditorController {
             txtNotes.setText(pro.getNotes());
             //经办人
             txtOperator.setText(pro.getOperator());
+            //操作员
+            txtLoginAccount.setText(pro.getUserName());
             //结算方式
             comboBoxPayments.setValue(pro.getPayment());
-            //系统账号
-            txtLoginAccount.setText(pro.getUserName());
-//            //货款金额
-//            txtPurchaseAmount.setText(pro.getPurchaseAmount().toString());
-//            //代垫费用
-//            txtDisbursement.setText(pro.getDisbursementAmount().toString());
-//            //本次优惠
-//            txtDiscountAmount.setText(pro.getDiscountAmount().toString());
-//            //应付总额
-//            txtAmountPayable.setText(pro.getAmountPayable().toString());
-//            //本次付款
-//            txtPaymentAmount.setText(pro.getPaymentAmount().toString());
-//            //账号
-//            comboBoxAccount.setValue(pro.getAccount());
+            //入库
+            checkBoxWarehousing.setSelected(pro.getWarehousing());
             try {
                 SalesReturnOrderItem[] items = HttpClient.GET("/salesReturnOrderItems/order/"+pro.getId(), SalesReturnOrderItem[].class);
                 for(SalesReturnOrderItem item : items) {
