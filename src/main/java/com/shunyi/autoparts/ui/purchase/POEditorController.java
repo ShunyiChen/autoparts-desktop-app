@@ -487,7 +487,6 @@ public class POEditorController {
         tableView.getStylesheets().add(css);
         tableView.setId("my-table");
         tableView.setEditable(true);
-
         //行号
         colRowNumber.setCellFactory(new RowNumberTableCell<>());
         //SKU编码

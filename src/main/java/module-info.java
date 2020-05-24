@@ -14,8 +14,10 @@ module desktopapp {
     requires commons.vfs2;
     requires commons.logging;
     requires org.apache.commons.io;
+    requires lombok;
 
     exports com.shunyi.autoparts.ui;
+    exports com.shunyi.autoparts.ui.report;
     exports com.shunyi.autoparts.ui.purchase;
     exports com.shunyi.autoparts.ui.sales;
     exports com.shunyi.autoparts.ui.system;
@@ -38,6 +40,7 @@ module desktopapp {
     opens com.shunyi.autoparts.ui.adjustment;
     opens com.shunyi.autoparts.ui.maintenance;
     opens com.shunyi.autoparts.ui.login;
+    opens com.shunyi.autoparts.ui.report;
     opens com.shunyi.autoparts.ui.purchase to javafx.fxml;
     opens com.shunyi.autoparts.ui.sales to javafx.fxml;
     opens com.shunyi.autoparts.ui to javafx.fxml;

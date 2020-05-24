@@ -6,6 +6,7 @@ import com.shunyi.autoparts.ui.common.vo.InvoiceType;
 import com.shunyi.autoparts.ui.common.vo.Payment;
 import com.shunyi.autoparts.ui.common.vo.PurchaseOrder;
 import com.shunyi.autoparts.ui.common.vo.Supplier;
+import com.shunyi.autoparts.ui.report.ReportTemplateChooserController;
 import com.shunyi.autoparts.ui.supplier.SupplierChooserController;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
@@ -17,9 +18,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.transform.Scale;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -238,24 +237,44 @@ public class POController {
 
     @FXML
     private void print() {
-        HBox node = new HBox();
-        Label s = new Label("dsdsddsds");
-        node.getChildren().add(s);
-
-        Printer printer = Printer.getDefaultPrinter();
-        PageLayout pageLayout = printer.createPageLayout(Paper.NA_LETTER, PageOrientation.PORTRAIT, Printer.MarginType.DEFAULT);
-        double scaleX = pageLayout.getPrintableWidth() / node.getBoundsInParent().getWidth();
-        double scaleY = pageLayout.getPrintableHeight() / node.getBoundsInParent().getHeight();
-        node.getTransforms().add(new Scale(scaleX, scaleY));
-
-        PrinterJob job = PrinterJob.createPrinterJob();
-        if (job != null) {
-            boolean success = job.printPage(node);
-            if (success) {
-                job.endJob();
-            }
+        PurchaseOrder selected = tableView.getSelectionModel().getSelectedItem();
+        if(selected != null && selected.getStatus().equals(Constants.CLOSED)) {
+            openReportTemplateChooser(selected);
+        } else {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
+            alert.setHeaderText("请选择一个已结算订单打印");
+            alert.show();
+            return;
         }
     }
+
+    private void openReportTemplateChooser(PurchaseOrder selected) {
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource(
+                        "/fxml/report/ReportTemplateChooser.fxml"
+                )
+        );
+        VBox root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Scene scene = new Scene(root);
+        Stage dialog = new Stage();
+        ReportTemplateChooserController controller = loader.getController();
+        controller.initialize(dialog, selected.getOrderNo());
+        dialog.setTitle("选择报表打印模板");
+        dialog.initOwner(application.getStage());
+        dialog.setResizable(false);
+        dialog.setMaximized(false);
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.setScene(scene);
+        // center stage on screen
+        dialog.centerOnScreen();
+        dialog.show();
+    }
+
 
     @FXML
     private void search() {
@@ -418,16 +437,6 @@ public class POController {
         dialog.centerOnScreen();
         dialog.show();
     }
-
-
-//    public void clean() {
-//        tableView.getItems().clear();
-//        comboBoxSupplier.getItems().clear();
-//        comboBoxInvoiceType.getItems().clear();
-//        comboBoxPayment.getItems().clear();
-//        comboBoxWarehouse.getItems().clear();
-//        comboBoxStatus.getItems().clear();
-//    }
 
     public void initialize(MainApp application) {
         this.application = application;

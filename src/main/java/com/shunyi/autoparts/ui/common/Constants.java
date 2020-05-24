@@ -30,6 +30,8 @@ public class Constants {
     public static final String CLOSED = "已结订单";
     /** 采购订单状态 */
     public static final String UNCLOSED = "未结订单";
+    /** 报表文件类型 */
+    public static final String PDF = "pdf";
 
     /** 升序 */
     public static final String ASC = "升序";

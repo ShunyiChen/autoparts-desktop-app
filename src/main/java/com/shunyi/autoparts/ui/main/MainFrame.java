@@ -186,18 +186,18 @@ public class MainFrame extends BorderPane {
                 return null;
             }
         });
-        //数据维护
-        ClickableItem dataMaintaining = new ClickableItem(icons.car_door(), Constants.DATA_MAINTENANCE, new Callback() {
-            @Override
-            public Object call(Object param) {
-                toolbar.setTitle(Constants.DATA_MAINTENANCE);
-                if(dataMaintainingTab == null) {
-                    dataMaintainingTab = new TabExt(new Maintenance(application));
-                }
-                contentPane.addNewTab(dataMaintainingTab);
-                return null;
-            }
-        });
+//        //数据维护
+//        ClickableItem dataMaintaining = new ClickableItem(icons.car_door(), Constants.DATA_MAINTENANCE, new Callback() {
+//            @Override
+//            public Object call(Object param) {
+//                toolbar.setTitle(Constants.DATA_MAINTENANCE);
+//                if(dataMaintainingTab == null) {
+//                    dataMaintainingTab = new TabExt(new Maintenance(application));
+//                }
+//                contentPane.addNewTab(dataMaintainingTab);
+//                return null;
+//            }
+//        });
 
         // 系统设置
         ClickableItem systemSettings = new ClickableItem(icons.settings_transfer_outline(), Constants.SYSTEM_SETTINGS, new Callback() {
@@ -211,7 +211,7 @@ public class MainFrame extends BorderPane {
                 return null;
             }
         });
-        navigation.addClickableItem(purchaseView, salesView, purchaseOrder, purchaseReturnOrder, salesOrder, salesReturnOrder, priceAdjustmentOrder, inventoryingOrder, inventoryDetails, dataMaintaining, systemSettings);
+        navigation.addClickableItem(purchaseView, salesView, purchaseOrder, purchaseReturnOrder, salesOrder, salesReturnOrder, priceAdjustmentOrder, inventoryingOrder, inventoryDetails, systemSettings);
 
         Platform.runLater(() -> purchaseView.fire());
     }

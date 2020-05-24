@@ -36,7 +36,7 @@ public class IA extends TabContent {
             e.printStackTrace();
         }
         controller = loader.getController();
-        controller.initialize(application.getStage());
+        controller.initialize(application);
         //主面板右侧宽度
         DoubleBinding wBinding = application.getStage().widthProperty().subtract(application.getMainFrame().getNavigation().widthProperty().add(35));
         root.prefWidthProperty().bind(wBinding);
@@ -47,12 +47,10 @@ public class IA extends TabContent {
 
     @Override
     protected void reload() {
-        controller.initialize(application.getStage());
     }
 
     @Override
     protected void dispose() {
-
     }
 
     @Override
