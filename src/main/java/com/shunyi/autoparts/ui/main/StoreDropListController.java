@@ -30,11 +30,10 @@ public class StoreDropListController {
     @FXML
     private ComboBox<Store> storeComboBox;
 
-
     public void prepare(Set<TabContent> affectedTabContentSet) {
         this.affectedTabContentSet = affectedTabContentSet;
         storeLabel.setStyle("-fx-font-size: 14;-fx-text-fill: rgb(255,255,255);");
-        storeComboBox.setStyle("-fx-font-size: 14;");
+        storeComboBox.setStyle("-fx-font-size: 14px;");
         String userName = Env.getInstance().getStringValue(Env.CURRENT_USER);
         try {
             User user = HttpClient.GET("/users/username/"+userName, User.class);
