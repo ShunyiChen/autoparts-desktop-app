@@ -70,7 +70,7 @@ public class LoginController {
         ThreadFactory namedThreadFactory = (Runnable r) -> new Thread(r, "TreeInfo_thread_pool_" + r.hashCode());
 
         //Common Thread Pool
-        ExecutorService pool = new ThreadPoolExecutor(1, 200,
+        ExecutorService pool = new ThreadPoolExecutor(1, 50,
                 0L, TimeUnit.MILLISECONDS,
                 new LinkedBlockingQueue<Runnable>(1024), namedThreadFactory, new ThreadPoolExecutor.AbortPolicy());
 
@@ -99,8 +99,9 @@ public class LoginController {
                     Platform.runLater(() ->  progressBar.setProgress(0.2d));
                     try {
                         String data = HttpClient.POST("/authenticate", json, "");
-                        Platform.runLater(() ->  progressBar.setProgress(0.9d));
-
+                        Platform.runLater(() ->  {
+                            progressBar.setProgress(0.9d);
+                        });
                         AuthenticationResponse res = GoogleJson.GET().fromJson(data, AuthenticationResponse.class);
                         Platform.runLater(() ->  progressBar.setProgress(0.95d));
 
@@ -126,7 +127,8 @@ public class LoginController {
                             Platform.runLater(() ->  progressBar.setProgress(1.0d));
                         }
 
-                    } catch (IOException e) {
+                    }
+                    catch (IOException e) {
                         Platform.runLater(() -> {
                             Alert alert = new Alert(Alert.AlertType.INFORMATION);
                             alert.setTitle("身份验证失败");
@@ -139,9 +141,6 @@ public class LoginController {
                 return 0;
             }
         };
-
-//        executor.execute(task);
-//        executor.shutdown();
 
         pool.execute(task);
         pool.shutdown();//gracefully shutdown

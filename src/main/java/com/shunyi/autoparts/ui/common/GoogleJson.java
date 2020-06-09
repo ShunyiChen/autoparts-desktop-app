@@ -8,6 +8,6 @@ public class GoogleJson {
 
      public static Gson GET() {
          GsonBuilder builder = new GsonBuilder();
-         return builder.setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").create();
+         return builder.setDateFormat(Constants.PATTERN_DATETIME).create();
      }
 }

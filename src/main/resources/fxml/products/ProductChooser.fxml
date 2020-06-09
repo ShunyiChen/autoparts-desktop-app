@@ -146,9 +146,9 @@
       </SplitPane>
    </center>
    <top>
-      <VBox prefHeight="100.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+      <VBox prefHeight="62.0" prefWidth="1244.0" BorderPane.alignment="CENTER">
          <children>
-            <BorderPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: rgb(63,81,181);">
+            <BorderPane prefHeight="200.0" prefWidth="1244.0" style="-fx-background-color: rgb(63,81,181);">
                <left>
                   <Label fx:id="headerText" alignment="CENTER" prefHeight="42.0" prefWidth="207.0" text="配件选择器" textFill="WHITE" BorderPane.alignment="CENTER">
                      <font>
