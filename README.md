@@ -21,4 +21,4 @@ To build: .\gradle build
 Authors
 =======
 
-PLAYBOOK HACKS was created by `Shunyi Chen`
+Autoparts-desktop-app was created by `Shunyi Chen`
