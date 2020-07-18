@@ -7,7 +7,7 @@
 <?import javafx.scene.text.Font?>
 
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="435.0" fx:controller="com.shunyi.autoparts.ui.products.AttributeNameEditorController" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="435.0" fx:controller="com.shunyi.autoparts.ui.products.AttributeNameEditorController" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <CheckBox fx:id="boxAllowAlias" layoutX="27.0" layoutY="27.0" mnemonicParsing="false" text="是否允许别名">
          <font>

@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="490.0" prefWidth="745.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.shunyi.autoparts.ui.products.LogoManagementController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="490.0" prefWidth="745.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.shunyi.autoparts.ui.products.LogoManagementController">
    <children>
       <ScrollPane prefHeight="445.0" prefWidth="693.0">
          <content>
@@ -19,17 +19,17 @@
       </ScrollPane>
       <FlowPane alignment="CENTER" hgap="10.0" prefHeight="52.0" prefWidth="745.0">
          <children>
-            <Button fx:id="btnUpload" mnemonicParsing="false" onAction="#upload" text="上传新图标">
+            <Button fx:id="btnUpload" mnemonicParsing="false"  text="上传新图标">
                <font>
                   <Font size="14.0" />
                </font>
             </Button>
-            <Button fx:id="btnRemove" mnemonicParsing="false" onAction="#remove" text="删  除">
+            <Button fx:id="btnRemove" mnemonicParsing="false"   text="删  除">
                <font>
                   <Font size="14.0" />
                </font>
             </Button>
-            <Button fx:id="btnChoose" mnemonicParsing="false" onAction="#choose" text="选  择">
+            <Button fx:id="btnChoose" mnemonicParsing="false"   text="选  择">
                <font>
                   <Font size="14.0" />
                </font>

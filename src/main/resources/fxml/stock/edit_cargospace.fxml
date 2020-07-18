@@ -13,7 +13,7 @@
 <?import javafx.scene.text.Font?>
 
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="197.0" prefWidth="600.0" fx:controller="com.shunyi.autoparts.ui.stock.EditSlotController" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="197.0" prefWidth="600.0"   xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <GridPane>
         <columnConstraints>
@@ -76,7 +76,7 @@
                         <Font size="14.0" />
                      </font>
                   </TextField>
-                  <Button mnemonicParsing="false" text="Button" onAction="#choose">
+                  <Button mnemonicParsing="false" text="Button"  >
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -125,17 +125,17 @@
       </GridPane>
       <FlowPane alignment="CENTER" hgap="10.0" prefHeight="51.0" prefWidth="600.0">
          <children>
-            <Button mnemonicParsing="false" text="取   消" onAction="#cancel">
+            <Button mnemonicParsing="false" text="取   消"  >
                <font>
                   <Font size="14.0" />
                </font>
             </Button>
-            <Button fx:id="btnSaveAndClose" mnemonicParsing="false" text="保存并关闭" onAction="#saveAndClose">
+            <Button fx:id="btnSaveAndClose" mnemonicParsing="false" text="保存并关闭"  >
                <font>
                   <Font size="14.0" />
                </font>
             </Button>
-            <Button fx:id="btnContinueAdding" mnemonicParsing="false" text="继续添加" onAction="#continueAdd">
+            <Button fx:id="btnContinueAdding" mnemonicParsing="false" text="继续添加"  >
                <font>
                   <Font size="14.0" />
                </font>

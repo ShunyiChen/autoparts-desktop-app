@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="93.0" prefWidth="289.0" spacing="10.0" fx:controller="com.shunyi.autoparts.ui.products.UnitEditorController" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" >
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="93.0" prefWidth="289.0" spacing="10.0" fx:controller="com.shunyi.autoparts.ui.products.UnitEditorController" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" >
    <children>
       <FlowPane alignment="CENTER_LEFT" layoutX="10.0" layoutY="20.0">
          <children>

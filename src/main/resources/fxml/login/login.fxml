@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<StackPane prefHeight="400.0" prefWidth="745.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.shunyi.autoparts.ui.login.LoginController">
+<StackPane prefHeight="400.0" prefWidth="745.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.shunyi.autoparts.ui.login.LoginController">
   <children>
       <VBox prefHeight="200.0" prefWidth="100.0">
          <children>

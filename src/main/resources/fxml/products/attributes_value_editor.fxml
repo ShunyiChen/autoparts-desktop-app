@@ -7,7 +7,7 @@
 <?import javafx.scene.text.Font?>
 
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="435.0" fx:controller="com.shunyi.autoparts.ui.products.AttributeValueEditorController" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="435.0" fx:controller="com.shunyi.autoparts.ui.products.AttributeValueEditorController" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <ColorPicker fx:id="colorPicker" layoutX="105.0" layoutY="22.0" prefHeight="30.0" prefWidth="99.0" />
       <Label fx:id="colorLabel" layoutX="27.0" layoutY="27.0" text="选择颜色:">

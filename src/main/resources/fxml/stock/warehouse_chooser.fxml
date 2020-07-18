@@ -8,12 +8,12 @@
 <?import javafx.scene.text.Font?>
 
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="433.0" prefWidth="332.0" fx:controller="com.shunyi.autoparts.ui.stock.WarehouseChooserController" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="433.0" prefWidth="332.0"  xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <TreeView fx:id="treeView" prefHeight="432.0" prefWidth="332.0" />
       <FlowPane alignment="CENTER" prefHeight="88.0" prefWidth="600.0">
          <children>
-            <Button mnemonicParsing="false" text="取   消" onAction="#cancel">
+            <Button mnemonicParsing="false" text="取   消"  >
                <font>
                   <Font size="14.0" />
                </font>
@@ -21,7 +21,7 @@
                   <Insets right="10.0" />
                </FlowPane.margin>
             </Button>
-            <Button fx:id="btnChooser" mnemonicParsing="false" text="选   择" onAction="#choose">
+            <Button fx:id="btnChooser" mnemonicParsing="false" text="选   择"  >
                <font>
                   <Font size="14.0" />
                </font>

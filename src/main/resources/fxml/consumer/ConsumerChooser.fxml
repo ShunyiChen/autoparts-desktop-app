@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="648.0" prefWidth="937.0" fx:controller="com.shunyi.autoparts.ui.consumer.ConsumerChooserController" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" >
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="648.0" prefWidth="937.0" fx:controller="com.shunyi.autoparts.ui.consumer.ConsumerChooserController" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" >
    <children>
       <SplitPane dividerPositions="0.2" prefHeight="609.0" prefWidth="1148.0">
          <items>
