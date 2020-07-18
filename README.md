@@ -1,17 +1,24 @@
-# desktop-app
 
-A desktop application for invoicing system
+*******
+Autoparts-desktop-app
+*******
+Autoparts-desktop-app is a desktop client for invoicing system, 
+and it provides the modular functionality including Purchase order management,
+Sale order management, Inventory management modules and other modules that
+can provide customers with "customization" products and services.
 
-## Main technologies:  
-1.OpenJDK13
-2.JavaFX SDK11+
-3.OkHttp3
-4.Json
-5.FXML
+Installing environmental
+=======
+OpenJDK12  
+JavaFX SDK11+     
+OkHttp3  
 
+Running commands
+=======
+To run: .\gradle run  
+To build: .\gradle build  
 
-## run:
-.\gradle run
+Authors
+=======
 
-## build:
-.\gradle build
+Autoparts-desktop-app was created by `Shunyi Chen`
