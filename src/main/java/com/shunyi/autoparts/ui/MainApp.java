@@ -13,6 +13,8 @@ import org.apache.commons.vfs2.FileSystemManager;
 import org.apache.commons.vfs2.VFS;
 
 import java.io.IOException;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 /**
  * @Description: 程序入口类
@@ -29,6 +31,19 @@ public class MainApp extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+        //i18n
+        Locale currentLocale = Locale.getDefault();
+        Locale locale = new Locale("en_US");
+        ResourceBundle hundle = ResourceBundle.getBundle("i18n.labelText", currentLocale);
+//        System.out.println(hundle.getLocale().getCountry());
+        // For example
+//        FXMLLoader loader = new FXMLLoader(
+//                getClass().getResource(
+//                        "/fxml/products/CarChooser.fxml"
+//                ), hundle
+//        );
+
+
         this.stage = stage;
         scene = new Scene(new Pane());
         scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
