@@ -2,7 +2,6 @@
 *******
 Autoparts-desktop-app
 *******
-
 Autoparts-desktop-app is a desktop client for invoicing system, 
 and it provides the modular functionality including Purchase order management,
 Sale order management, Inventory management modules and other modules that
@@ -14,12 +13,10 @@ OpenJDK12
 JavaFX SDK11+     
 OkHttp3  
 
-How to run the app
+Running commands
 =======
-## run:
-.\gradle run
-## build:
-.\gradle build
+To run: .\gradle run  
+To build: .\gradle build  
 
 Authors
 =======
