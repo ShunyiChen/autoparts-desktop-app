@@ -9,7 +9,6 @@ module desktopapp {
     requires com.google.gson;
     requires com.h2database;
     requires com.fasterxml.jackson.annotation;
-    requires itextpdf;
     requires spring.security.crypto;
     requires commons.vfs2;
     requires commons.logging;
