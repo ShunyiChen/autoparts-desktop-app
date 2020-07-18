@@ -1,15 +1,27 @@
-# desktop-app
 
-It's a desktop application which can be wrote in javafx
+*******
+Autoparts-desktop-app
+*******
 
-## Software requirements:  
-1.OpenJDK12  
-2.JavaFX SDK11+     
-3.OkHttp3  
-4.Apache commons-lang3  
+Autoparts-desktop-app is a desktop client for invoicing system, 
+and it provides the modular functionality including Purchase order management,
+Sale order management, Inventory management modules and other modules that
+can provide customers with "customization" products and services.
 
+Installing environmental
+=======
+OpenJDK12  
+JavaFX SDK11+     
+OkHttp3  
+
+How to run the app
+=======
 ## run:
 .\gradle run
-
 ## build:
 .\gradle build
+
+Authors
+=======
+
+PLAYBOOK HACKS was created by `Shunyi Chen`
