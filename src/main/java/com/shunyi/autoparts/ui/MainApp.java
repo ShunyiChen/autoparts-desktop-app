@@ -11,6 +11,8 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import org.apache.commons.vfs2.FileSystemManager;
 import org.apache.commons.vfs2.VFS;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.io.IOException;
 import java.util.Locale;
@@ -31,6 +33,11 @@ public class MainApp extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+
+        PasswordEncoder encoder = new BCryptPasswordEncoder(10);
+        String pass = encoder.encode("123456");
+        System.err.println(pass);
+
         //i18n
         Locale currentLocale = Locale.getDefault();
         Locale locale = new Locale("en_US");

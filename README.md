@@ -1,4 +1,6 @@
 
+**Upgrading...**
+
 *******
 Autoparts-desktop-app
 *******
@@ -7,13 +9,14 @@ and it provides the modular functionality including Purchase order management,
 Sale order management, Inventory management modules and other modules that
 can provide customers with "customization" products and services.
 
-Installing environmental
+Environment:
 =======
-OpenJDK12  
-JavaFX SDK11+     
-OkHttp3  
+jdk-14.0.1_windows-x64  
+openjfx 15.0.1     
+OkHttp3
+gradle-6.8.2
 
-Running commands
+Run
 =======
 To run: .\gradle run  
 To build: .\gradle build  
