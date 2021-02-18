@@ -25,3 +25,7 @@ Authors
 =======
 
 Autoparts-desktop-app was created by `Shunyi Chen`
+
+
+
+支持插件
